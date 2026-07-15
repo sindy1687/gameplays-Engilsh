@@ -1,0 +1,3158 @@
+{
+  "category1": [
+    {
+      "zh": "我",
+      "en": "I"
+    },
+    {
+      "zh": "你；你們",
+      "en": "you"
+    },
+    {
+      "zh": "他",
+      "en": "he"
+    },
+    {
+      "zh": "她",
+      "en": "she"
+    },
+    {
+      "zh": "牠；它",
+      "en": "it"
+    },
+    {
+      "zh": "我們",
+      "en": "we"
+    },
+    {
+      "zh": "他們",
+      "en": "they"
+    },
+    {
+      "zh": "男孩",
+      "en": "boy"
+    },
+    {
+      "zh": "女孩",
+      "en": "girl"
+    },
+    {
+      "zh": "嬰兒",
+      "en": "baby"
+    },
+    {
+      "zh": "一個",
+      "en": "an"
+    },
+    {
+      "zh": "一個",
+      "en": "a an"
+    },
+    {
+      "zh": "這 那",
+      "en": "the"
+    },
+    {
+      "zh": "這",
+      "en": "this"
+    },
+    {
+      "zh": "那",
+      "en": "that"
+    },
+    {
+      "zh": "這些",
+      "en": "these"
+    },
+    {
+      "zh": "那些",
+      "en": "those"
+    },
+    {
+      "zh": "是；成為",
+      "en": "be"
+    },
+    {
+      "zh": "是",
+      "en": "is"
+    },
+    {
+      "zh": "是",
+      "en": "are"
+    },
+    {
+      "zh": "助動詞",
+      "en": "do"
+    },
+    {
+      "zh": "做",
+      "en": "does"
+    },
+    {
+      "zh": "爸爸",
+      "en": "father"
+    },
+    {
+      "zh": "媽媽",
+      "en": "mother"
+    }
+  ],
+  "category2": [
+    {
+      "zh": "兒子",
+      "en": "son"
+    },
+    {
+      "zh": "女兒",
+      "en": "daughter"
+    },
+    {
+      "zh": "(外)祖母",
+      "en": "grandmother"
+    },
+    {
+      "zh": "(外)祖父",
+      "en": "grandfather"
+    },
+    {
+      "zh": "哥哥；弟弟",
+      "en": "brother"
+    },
+    {
+      "zh": "姊姊；妹妹",
+      "en": "sister"
+    },
+    {
+      "zh": "零",
+      "en": "zero"
+    },
+    {
+      "zh": "一",
+      "en": "one"
+    },
+    {
+      "zh": "二",
+      "en": "two"
+    },
+    {
+      "zh": "三",
+      "en": "three"
+    },
+    {
+      "zh": "四",
+      "en": "four"
+    },
+    {
+      "zh": "五",
+      "en": "five"
+    },
+    {
+      "zh": "六",
+      "en": "six"
+    },
+    {
+      "zh": "七",
+      "en": "seven"
+    },
+    {
+      "zh": "八",
+      "en": "eight"
+    },
+    {
+      "zh": "九",
+      "en": "nine"
+    },
+    {
+      "zh": "十",
+      "en": "ten"
+    },
+    {
+      "zh": "十一",
+      "en": "eleven"
+    },
+    {
+      "zh": "十二",
+      "en": "twelve"
+    },
+    {
+      "zh": "學校",
+      "en": "school"
+    }
+  ],
+  "category3": [
+    {
+      "zh": "班級；課程",
+      "en": "class"
+    },
+    {
+      "zh": "學生",
+      "en": "student"
+    },
+    {
+      "zh": "老師",
+      "en": "teacher"
+    },
+    {
+      "zh": "朋友",
+      "en": "friend"
+    },
+    {
+      "zh": "書",
+      "en": "book"
+    },
+    {
+      "zh": "椅子",
+      "en": "chair"
+    },
+    {
+      "zh": "書桌",
+      "en": "desk"
+    },
+    {
+      "zh": "桌子",
+      "en": "table"
+    },
+    {
+      "zh": "筆",
+      "en": "pen"
+    },
+    {
+      "zh": "鉛筆",
+      "en": "pencil"
+    },
+    {
+      "zh": "尺",
+      "en": "ruler"
+    },
+    {
+      "zh": "橡皮擦",
+      "en": "eraser"
+    },
+    {
+      "zh": "麥可筆",
+      "en": "marker"
+    },
+    {
+      "zh": "盒子；箱子",
+      "en": "box"
+    },
+    {
+      "zh": "鉛筆盒",
+      "en": "pencil box"
+    },
+    {
+      "zh": "地圖",
+      "en": "map"
+    },
+    {
+      "zh": "顏色",
+      "en": "color"
+    },
+    {
+      "zh": "紅色",
+      "en": "red"
+    },
+    {
+      "zh": "綠色",
+      "en": "green"
+    },
+    {
+      "zh": "藍色",
+      "en": "blue"
+    }
+  ],
+  "category4": [
+    {
+      "zh": "黃色",
+      "en": "yellow"
+    },
+    {
+      "zh": "粉紅色",
+      "en": "pink"
+    },
+    {
+      "zh": "黑色",
+      "en": "black"
+    },
+    {
+      "zh": "白色",
+      "en": "white"
+    },
+    {
+      "zh": "臉",
+      "en": "face"
+    },
+    {
+      "zh": "眼睛",
+      "en": "eye"
+    },
+    {
+      "zh": "眼睛",
+      "en": "eyes"
+    },
+    {
+      "zh": "鼻子",
+      "en": "nose"
+    },
+    {
+      "zh": "耳朵",
+      "en": "ear"
+    },
+    {
+      "zh": "耳朵",
+      "en": "ears"
+    },
+    {
+      "zh": "嘴巴",
+      "en": "mouth"
+    },
+    {
+      "zh": "頭",
+      "en": "head"
+    },
+    {
+      "zh": "頭髮",
+      "en": "hair"
+    },
+    {
+      "zh": "手",
+      "en": "hand"
+    },
+    {
+      "zh": "腿",
+      "en": "leg"
+    },
+    {
+      "zh": "貓",
+      "en": "cat"
+    },
+    {
+      "zh": "狗",
+      "en": "dog"
+    },
+    {
+      "zh": "鳥",
+      "en": "bird"
+    },
+    {
+      "zh": "熊",
+      "en": "bear"
+    },
+    {
+      "zh": "鴨",
+      "en": "duck"
+    },
+    {
+      "zh": "雞",
+      "en": "chicken"
+    },
+    {
+      "zh": "老鼠",
+      "en": "mouse"
+    }
+  ],
+  "category5": [
+    {
+      "zh": "豬",
+      "en": "pig"
+    },
+    {
+      "zh": "兔子",
+      "en": "rabbit"
+    },
+    {
+      "zh": "狐狸",
+      "en": "fox"
+    },
+    {
+      "zh": "獅子",
+      "en": "lion"
+    },
+    {
+      "zh": "老虎",
+      "en": "tiger"
+    },
+    {
+      "zh": "羊",
+      "en": "sheep"
+    },
+    {
+      "zh": "猴子",
+      "en": "monkey"
+    },
+    {
+      "zh": "大象",
+      "en": "elephant"
+    },
+    {
+      "zh": "馬",
+      "en": "horse"
+    },
+    {
+      "zh": "青蛙",
+      "en": "frog"
+    },
+    {
+      "zh": "螞蟻",
+      "en": "ant"
+    },
+    {
+      "zh": "蜜蜂",
+      "en": "bee"
+    },
+    {
+      "zh": "蛇",
+      "en": "snake"
+    },
+    {
+      "zh": "寵物",
+      "en": "pet"
+    },
+    {
+      "zh": "動物",
+      "en": "animal"
+    },
+    {
+      "zh": "我的",
+      "en": "my"
+    },
+    {
+      "zh": "你的",
+      "en": "your"
+    },
+    {
+      "zh": "他的",
+      "en": "his"
+    },
+    {
+      "zh": "她的",
+      "en": "her"
+    },
+    {
+      "zh": "牠的",
+      "en": "its"
+    }
+  ],
+  "category6": [
+    {
+      "zh": "我們的",
+      "en": "our"
+    },
+    {
+      "zh": "他們的",
+      "en": "their"
+    },
+    {
+      "zh": "是",
+      "en": "is"
+    },
+    {
+      "zh": "不",
+      "en": "no"
+    },
+    {
+      "zh": "不",
+      "en": "not"
+    },
+    {
+      "zh": "好",
+      "en": "good"
+    },
+    {
+      "zh": "醫生",
+      "en": "doctor"
+    },
+    {
+      "zh": "護士",
+      "en": "nurse"
+    },
+    {
+      "zh": "歌手",
+      "en": "singer"
+    },
+    {
+      "zh": "演員",
+      "en": "actor"
+    },
+    {
+      "zh": "廚師",
+      "en": "chef"
+    },
+    {
+      "zh": "駕駛員",
+      "en": "driver"
+    },
+    {
+      "zh": "工程師",
+      "en": "engineer"
+    },
+    {
+      "zh": "農夫",
+      "en": "farmer"
+    },
+    {
+      "zh": "工人",
+      "en": "worker"
+    },
+    {
+      "zh": "名字",
+      "en": "name"
+    },
+    {
+      "zh": "先生",
+      "en": "mr."
+    },
+    {
+      "zh": "太太",
+      "en": "mrs."
+    },
+    {
+      "zh": "水果",
+      "en": "fruit"
+    },
+    {
+      "zh": "蘋果",
+      "en": "apple"
+    }
+  ],
+  "category7": [
+    {
+      "zh": "梨子",
+      "en": "pear"
+    },
+    {
+      "zh": "桃子",
+      "en": "peach"
+    },
+    {
+      "zh": "葡萄",
+      "en": "grape"
+    },
+    {
+      "zh": "葡萄",
+      "en": "grapes"
+    },
+    {
+      "zh": "香蕉",
+      "en": "banana"
+    },
+    {
+      "zh": "水",
+      "en": "water"
+    },
+    {
+      "zh": "牛奶",
+      "en": "milk"
+    },
+    {
+      "zh": "可口可樂",
+      "en": "cola"
+    },
+    {
+      "zh": "果汁",
+      "en": "juice"
+    },
+    {
+      "zh": "咖啡",
+      "en": "coffee"
+    },
+    {
+      "zh": "茶",
+      "en": "tea"
+    },
+    {
+      "zh": "蛋",
+      "en": "egg"
+    },
+    {
+      "zh": "蛋糕",
+      "en": "cake"
+    },
+    {
+      "zh": "魚；魚肉",
+      "en": "fish"
+    },
+    {
+      "zh": "米；米飯",
+      "en": "rice"
+    },
+    {
+      "zh": "早餐",
+      "en": "breakfast"
+    },
+    {
+      "zh": "午餐",
+      "en": "lunch"
+    },
+    {
+      "zh": "晚餐",
+      "en": "dinner"
+    },
+    {
+      "zh": "吃",
+      "en": "eat"
+    },
+    {
+      "zh": "喝；飲料",
+      "en": "drink"
+    },
+    {
+      "zh": "睡",
+      "en": "sleep"
+    }
+  ],
+  "category8": [
+    {
+      "zh": "讀；閱讀",
+      "en": "read"
+    },
+    {
+      "zh": "玩",
+      "en": "play"
+    },
+    {
+      "zh": "去",
+      "en": "go"
+    },
+    {
+      "zh": "喜歡",
+      "en": "like"
+    },
+    {
+      "zh": "聽",
+      "en": "listen"
+    },
+    {
+      "zh": "音樂",
+      "en": "music"
+    },
+    {
+      "zh": "電影",
+      "en": "movie"
+    },
+    {
+      "zh": "漫畫書",
+      "en": "comic book"
+    },
+    {
+      "zh": "電腦",
+      "en": "computer"
+    },
+    {
+      "zh": "公車",
+      "en": "bus"
+    },
+    {
+      "zh": "汽車",
+      "en": "car"
+    },
+    {
+      "zh": "腳踏車",
+      "en": "bicycle"
+    },
+    {
+      "zh": "計程車",
+      "en": "taxi"
+    },
+    {
+      "zh": "火車",
+      "en": "train"
+    },
+    {
+      "zh": "船；艦",
+      "en": "ship"
+    },
+    {
+      "zh": "打電話；叫",
+      "en": "call"
+    },
+    {
+      "zh": "打開",
+      "en": "open"
+    },
+    {
+      "zh": "關上",
+      "en": "close"
+    },
+    {
+      "zh": "看",
+      "en": "watch"
+    },
+    {
+      "zh": "看",
+      "en": "look"
+    }
+  ],
+  "category9": [
+    {
+      "zh": "看",
+      "en": "see"
+    },
+    {
+      "zh": "高的",
+      "en": "tall"
+    },
+    {
+      "zh": "長的",
+      "en": "long"
+    },
+    {
+      "zh": "短的；矮的",
+      "en": "short"
+    },
+    {
+      "zh": "大的",
+      "en": "big"
+    },
+    {
+      "zh": "小的",
+      "en": "small"
+    },
+    {
+      "zh": "好的",
+      "en": "good"
+    },
+    {
+      "zh": "壞的",
+      "en": "bad"
+    },
+    {
+      "zh": "美好的",
+      "en": "nice"
+    },
+    {
+      "zh": "快樂的",
+      "en": "happy"
+    },
+    {
+      "zh": "傷心的",
+      "en": "sad"
+    },
+    {
+      "zh": "肥胖的",
+      "en": "fat"
+    },
+    {
+      "zh": "瘦的；薄的",
+      "en": "thin"
+    },
+    {
+      "zh": "強壯的",
+      "en": "strong"
+    },
+    {
+      "zh": "可愛的",
+      "en": "cute"
+    },
+    {
+      "zh": "生病的",
+      "en": "sick"
+    },
+    {
+      "zh": "疲倦的",
+      "en": "tired"
+    },
+    {
+      "zh": "憤怒的",
+      "en": "angry"
+    },
+    {
+      "zh": "餓的",
+      "en": "hungry"
+    },
+    {
+      "zh": "渴的",
+      "en": "thirsty"
+    }
+  ],
+  "category10": [
+    {
+      "zh": "阿姨",
+      "en": "aunt"
+    },
+    {
+      "zh": "叔叔",
+      "en": "uncle"
+    },
+    {
+      "zh": "堂/表兄弟姊妹",
+      "en": "cousin"
+    },
+    {
+      "zh": "父(母)親",
+      "en": "parent"
+    },
+    {
+      "zh": "家庭；家人",
+      "en": "family"
+    },
+    {
+      "zh": "住",
+      "en": "live"
+    },
+    {
+      "zh": "食物",
+      "en": "food"
+    },
+    {
+      "zh": "牛肉",
+      "en": "beef"
+    },
+    {
+      "zh": "豬肉",
+      "en": "pork"
+    },
+    {
+      "zh": "湯",
+      "en": "soup"
+    },
+    {
+      "zh": "熱狗",
+      "en": "hot dog"
+    },
+    {
+      "zh": "三明治",
+      "en": "sandwich"
+    },
+    {
+      "zh": "番茄",
+      "en": "tomato"
+    },
+    {
+      "zh": "柳橙",
+      "en": "orange"
+    },
+    {
+      "zh": "蔬菜",
+      "en": "vegetable"
+    },
+    {
+      "zh": "麵包",
+      "en": "bread"
+    },
+    {
+      "zh": "派",
+      "en": "pie"
+    },
+    {
+      "zh": "披薩",
+      "en": "pizza"
+    },
+    {
+      "zh": "冰淇淋",
+      "en": "ice cream"
+    },
+    {
+      "zh": "糖果",
+      "en": "candy"
+    }
+  ],
+  "category11": [
+    {
+      "zh": "餅乾",
+      "en": "cookie"
+    },
+    {
+      "zh": "漢堡",
+      "en": "hamburger"
+    },
+    {
+      "zh": "游泳",
+      "en": "swim"
+    },
+    {
+      "zh": "跳舞",
+      "en": "dance"
+    },
+    {
+      "zh": "跑",
+      "en": "run"
+    },
+    {
+      "zh": "跳",
+      "en": "jump"
+    },
+    {
+      "zh": "唱",
+      "en": "sing"
+    },
+    {
+      "zh": "飛；飛行",
+      "en": "fly"
+    },
+    {
+      "zh": "可以",
+      "en": "can"
+    },
+    {
+      "zh": "有；吃",
+      "en": "have"
+    },
+    {
+      "zh": "騎",
+      "en": "ride"
+    },
+    {
+      "zh": "駕駛；開車",
+      "en": "drive"
+    },
+    {
+      "zh": "走",
+      "en": "walk"
+    },
+    {
+      "zh": "拿；搭乘",
+      "en": "take"
+    },
+    {
+      "zh": "寫",
+      "en": "write"
+    },
+    {
+      "zh": "學習；讀書",
+      "en": "study"
+    },
+    {
+      "zh": "做",
+      "en": "do"
+    },
+    {
+      "zh": "做；製作",
+      "en": "make"
+    },
+    {
+      "zh": "遊戲；比賽",
+      "en": "game"
+    },
+    {
+      "zh": "電腦遊戲",
+      "en": "computer game"
+    }
+  ],
+  "category12": [
+    {
+      "zh": "卡片",
+      "en": "card"
+    },
+    {
+      "zh": "鋼琴",
+      "en": "piano"
+    },
+    {
+      "zh": "吉他",
+      "en": "guitar"
+    },
+    {
+      "zh": "歌曲",
+      "en": "song"
+    },
+    {
+      "zh": "球",
+      "en": "ball"
+    },
+    {
+      "zh": "棒球",
+      "en": "baseball"
+    },
+    {
+      "zh": "籃球",
+      "en": "basketball"
+    },
+    {
+      "zh": "足球",
+      "en": "soccer"
+    },
+    {
+      "zh": "風箏",
+      "en": "kite"
+    },
+    {
+      "zh": "娃娃",
+      "en": "doll"
+    },
+    {
+      "zh": "春天",
+      "en": "spring"
+    },
+    {
+      "zh": "夏天",
+      "en": "summer"
+    },
+    {
+      "zh": "秋天",
+      "en": "autumn"
+    },
+    {
+      "zh": "秋天",
+      "en": "fall"
+    },
+    {
+      "zh": "冬天",
+      "en": "winter"
+    },
+    {
+      "zh": "太陽",
+      "en": "sun"
+    },
+    {
+      "zh": "月亮",
+      "en": "moon"
+    },
+    {
+      "zh": "星星",
+      "en": "star"
+    },
+    {
+      "zh": "雨",
+      "en": "rain"
+    },
+    {
+      "zh": "熱的",
+      "en": "hot"
+    },
+    {
+      "zh": "冷的",
+      "en": "cold"
+    }
+  ],
+  "category13": [
+    {
+      "zh": "晴朗的",
+      "en": "clear"
+    },
+    {
+      "zh": "下雨的",
+      "en": "rainy"
+    },
+    {
+      "zh": "多雲的",
+      "en": "cloudy"
+    },
+    {
+      "zh": "有風的",
+      "en": "windy"
+    },
+    {
+      "zh": "暖和的",
+      "en": "warm"
+    },
+    {
+      "zh": "涼爽的；很酷的",
+      "en": "cool"
+    },
+    {
+      "zh": "天氣",
+      "en": "weather"
+    },
+    {
+      "zh": "誰",
+      "en": "who"
+    },
+    {
+      "zh": "什麼",
+      "en": "what"
+    },
+    {
+      "zh": "當…的時候",
+      "en": "when"
+    },
+    {
+      "zh": "如何",
+      "en": "how"
+    },
+    {
+      "zh": "哪裡",
+      "en": "where"
+    },
+    {
+      "zh": "哪一個",
+      "en": "which"
+    },
+    {
+      "zh": "這裡",
+      "en": "here"
+    },
+    {
+      "zh": "那裡",
+      "en": "there"
+    },
+    {
+      "zh": "在…之內",
+      "en": "inside"
+    },
+    {
+      "zh": "在…之上",
+      "en": "on"
+    },
+    {
+      "zh": "在…地點",
+      "en": "at"
+    },
+    {
+      "zh": "在…之下",
+      "en": "under"
+    },
+    {
+      "zh": "從；由",
+      "en": "from"
+    }
+  ],
+  "category14": [
+    {
+      "zh": "外的",
+      "en": "outside"
+    },
+    {
+      "zh": "在…外側",
+      "en": "outside of"
+    },
+    {
+      "zh": "根據",
+      "en": "according to"
+    },
+    {
+      "zh": "根據",
+      "en": "by"
+    },
+    {
+      "zh": "為了",
+      "en": "for"
+    },
+    {
+      "zh": "向；往",
+      "en": "toward"
+    },
+    {
+      "zh": "向；往",
+      "en": "to"
+    },
+    {
+      "zh": "與；用…",
+      "en": "with"
+    },
+    {
+      "zh": "和；而且",
+      "en": "and"
+    },
+    {
+      "zh": "但是",
+      "en": "but"
+    },
+    {
+      "zh": "衣服",
+      "en": "clothes"
+    },
+    {
+      "zh": "大衣",
+      "en": "coat"
+    },
+    {
+      "zh": "夾克",
+      "en": "jacket"
+    },
+    {
+      "zh": "褲子",
+      "en": "pants"
+    },
+    {
+      "zh": "T恤",
+      "en": "t-shirt"
+    },
+    {
+      "zh": "短褲",
+      "en": "shorts"
+    },
+    {
+      "zh": "裙子",
+      "en": "skirt"
+    },
+    {
+      "zh": "襯衫",
+      "en": "shirt"
+    },
+    {
+      "zh": "洋裝",
+      "en": "dress"
+    },
+    {
+      "zh": "(短)襪子",
+      "en": "socks"
+    },
+    {
+      "zh": "鞋子",
+      "en": "shoes"
+    },
+    {
+      "zh": "梳子 動梳",
+      "en": "comb"
+    }
+  ],
+  "category15": [
+    {
+      "zh": "袋子；提袋",
+      "en": "bag"
+    },
+    {
+      "zh": "帽子(有邊的)",
+      "en": "hat"
+    },
+    {
+      "zh": "雨傘",
+      "en": "umbrella"
+    },
+    {
+      "zh": "身體",
+      "en": "body"
+    },
+    {
+      "zh": "牙齒",
+      "en": "tooth"
+    },
+    {
+      "zh": "牙齒",
+      "en": "teeth"
+    },
+    {
+      "zh": "背部",
+      "en": "back"
+    },
+    {
+      "zh": "脖子",
+      "en": "neck"
+    },
+    {
+      "zh": "唇",
+      "en": "lip"
+    },
+    {
+      "zh": "唇",
+      "en": "lips"
+    },
+    {
+      "zh": "手指頭",
+      "en": "finger"
+    },
+    {
+      "zh": "腳；足",
+      "en": "foot"
+    },
+    {
+      "zh": "天；日子",
+      "en": "day"
+    },
+    {
+      "zh": "星期一",
+      "en": "Monday"
+    },
+    {
+      "zh": "星期二",
+      "en": "Tuesday"
+    },
+    {
+      "zh": "星期三",
+      "en": "Wednesday"
+    },
+    {
+      "zh": "星期四",
+      "en": "Thursday"
+    },
+    {
+      "zh": "星期五",
+      "en": "Friday"
+    },
+    {
+      "zh": "星期六",
+      "en": "Saturday"
+    },
+    {
+      "zh": "星期日",
+      "en": "Sunday"
+    },
+    {
+      "zh": "週；一星期",
+      "en": "week"
+    },
+    {
+      "zh": "週末",
+      "en": "weekend"
+    }
+  ],
+  "category16": [
+    {
+      "zh": "月",
+      "en": "month"
+    },
+    {
+      "zh": "年",
+      "en": "year"
+    },
+    {
+      "zh": "早晨；上午",
+      "en": "morning"
+    },
+    {
+      "zh": "午後",
+      "en": "afternoon"
+    },
+    {
+      "zh": "傍晚；晚上",
+      "en": "evening"
+    },
+    {
+      "zh": "夜；晚上",
+      "en": "night"
+    },
+    {
+      "zh": "今天",
+      "en": "today"
+    },
+    {
+      "zh": "今天晚上",
+      "en": "tonight"
+    },
+    {
+      "zh": "明天",
+      "en": "tomorrow"
+    },
+    {
+      "zh": "昨天",
+      "en": "yesterday"
+    },
+    {
+      "zh": "時間；期間",
+      "en": "time"
+    },
+    {
+      "zh": "…點鐘",
+      "en": "o'clock"
+    },
+    {
+      "zh": "上午",
+      "en": "a.m."
+    },
+    {
+      "zh": "下午",
+      "en": "p.m."
+    },
+    {
+      "zh": "現在",
+      "en": "now"
+    },
+    {
+      "zh": "最後的 最後地",
+      "en": "last"
+    },
+    {
+      "zh": "晚的 晚地",
+      "en": "late"
+    },
+    {
+      "zh": "下個 下次的",
+      "en": "next"
+    },
+    {
+      "zh": "教室",
+      "en": "classroom"
+    },
+    {
+      "zh": "同學",
+      "en": "classmate"
+    }
+  ],
+  "category17": [
+    {
+      "zh": "黑板",
+      "en": "blackboard"
+    },
+    {
+      "zh": "筆記本",
+      "en": "notebook"
+    },
+    {
+      "zh": "紙",
+      "en": "paper"
+    },
+    {
+      "zh": "圖畫",
+      "en": "picture"
+    },
+    {
+      "zh": "英文",
+      "en": "English"
+    },
+    {
+      "zh": "中文；中國人",
+      "en": "Chinese"
+    },
+    {
+      "zh": "數學",
+      "en": "math"
+    },
+    {
+      "zh": "體育",
+      "en": "PE"
+    },
+    {
+      "zh": "嗨",
+      "en": "hi"
+    },
+    {
+      "zh": "哈囉",
+      "en": "hello"
+    },
+    {
+      "zh": "再見",
+      "en": "goodbye"
+    },
+    {
+      "zh": "說；演說",
+      "en": "speak"
+    },
+    {
+      "zh": "說",
+      "en": "say"
+    },
+    {
+      "zh": "問",
+      "en": "ask"
+    },
+    {
+      "zh": "回答；答案",
+      "en": "answer"
+    },
+    {
+      "zh": "說話",
+      "en": "talk"
+    },
+    {
+      "zh": "問題",
+      "en": "question"
+    },
+    {
+      "zh": "畫",
+      "en": "draw"
+    },
+    {
+      "zh": "穿",
+      "en": "wear"
+    },
+    {
+      "zh": "打掃 乾淨的",
+      "en": "clean"
+    }
+  ],
+  "category18": [
+    {
+      "zh": "洗",
+      "en": "wash"
+    },
+    {
+      "zh": "遇見",
+      "en": "meet"
+    },
+    {
+      "zh": "過來",
+      "en": "come"
+    },
+    {
+      "zh": "想要",
+      "en": "want"
+    },
+    {
+      "zh": "幫助",
+      "en": "help"
+    },
+    {
+      "zh": "使用",
+      "en": "use"
+    },
+    {
+      "zh": "新的",
+      "en": "new"
+    },
+    {
+      "zh": "年老的",
+      "en": "old"
+    },
+    {
+      "zh": "快速的",
+      "en": "fast"
+    },
+    {
+      "zh": "慢的",
+      "en": "slow"
+    },
+    {
+      "zh": "漂亮的",
+      "en": "pretty"
+    },
+    {
+      "zh": "漂亮的",
+      "en": "beautiful"
+    },
+    {
+      "zh": "英俊的",
+      "en": "handsome"
+    },
+    {
+      "zh": "聰明的",
+      "en": "smart"
+    },
+    {
+      "zh": "美好的",
+      "en": "nice"
+    },
+    {
+      "zh": "樂趣",
+      "en": "fun"
+    },
+    {
+      "zh": "很棒的",
+      "en": "great"
+    },
+    {
+      "zh": "乏味的",
+      "en": "boring"
+    },
+    {
+      "zh": "一些",
+      "en": "some"
+    },
+    {
+      "zh": "非常；很",
+      "en": "very"
+    },
+    {
+      "zh": "也；太",
+      "en": "too"
+    }
+  ],
+  "category19": [
+    {
+      "zh": "房子；房屋",
+      "en": "house"
+    },
+    {
+      "zh": "客廳",
+      "en": "living room"
+    },
+    {
+      "zh": "廚房",
+      "en": "kitchen"
+    },
+    {
+      "zh": "寢室",
+      "en": "bedroom"
+    },
+    {
+      "zh": "浴室",
+      "en": "bathroom"
+    },
+    {
+      "zh": "門",
+      "en": "door"
+    },
+    {
+      "zh": "家",
+      "en": "home"
+    },
+    {
+      "zh": "房間",
+      "en": "room"
+    },
+    {
+      "zh": "牆壁",
+      "en": "wall"
+    },
+    {
+      "zh": "床",
+      "en": "bed"
+    },
+    {
+      "zh": "玩具",
+      "en": "toy"
+    },
+    {
+      "zh": "窗戶",
+      "en": "window"
+    },
+    {
+      "zh": "電視",
+      "en": "TV"
+    },
+    {
+      "zh": "電話",
+      "en": "telephone"
+    },
+    {
+      "zh": "電話",
+      "en": "phone"
+    },
+    {
+      "zh": "風扇",
+      "en": "fan"
+    },
+    {
+      "zh": "沙發",
+      "en": "sofa"
+    },
+    {
+      "zh": "鎖匙",
+      "en": "key"
+    },
+    {
+      "zh": "盤子；碟子",
+      "en": "plate"
+    },
+    {
+      "zh": "碗",
+      "en": "bowl"
+    },
+    {
+      "zh": "筷子",
+      "en": "chopsticks"
+    }
+  ],
+  "category20": [
+    {
+      "zh": "杯子",
+      "en": "cup"
+    },
+    {
+      "zh": "玻璃杯",
+      "en": "glass"
+    },
+    {
+      "zh": "動物園",
+      "en": "zoo"
+    },
+    {
+      "zh": "公園",
+      "en": "park"
+    },
+    {
+      "zh": "農場",
+      "en": "farm"
+    },
+    {
+      "zh": "店舖",
+      "en": "shop"
+    },
+    {
+      "zh": "店舖",
+      "en": "store"
+    },
+    {
+      "zh": "書店",
+      "en": "bookstore"
+    },
+    {
+      "zh": "醫院",
+      "en": "hospital"
+    },
+    {
+      "zh": "銀行",
+      "en": "bank"
+    },
+    {
+      "zh": "圖書館",
+      "en": "library"
+    },
+    {
+      "zh": "超級市場",
+      "en": "supermarket"
+    },
+    {
+      "zh": "台灣",
+      "en": "Taiwan"
+    },
+    {
+      "zh": "美國",
+      "en": "USA"
+    },
+    {
+      "zh": "花",
+      "en": "flower"
+    },
+    {
+      "zh": "樹",
+      "en": "tree"
+    },
+    {
+      "zh": "旅遊",
+      "en": "travel"
+    },
+    {
+      "zh": "夢想",
+      "en": "dream"
+    },
+    {
+      "zh": "捷運",
+      "en": "MRT"
+    },
+    {
+      "zh": "一百(的)",
+      "en": "hundred"
+    },
+    {
+      "zh": "元",
+      "en": "dollar"
+    }
+  ],
+  "category800": [
+    {
+      "zh": "美國人",
+      "en": "American"
+    },
+    {
+      "zh": "博士；醫生",
+      "en": "Dr."
+    },
+    {
+      "zh": "復活節",
+      "en": "Easter"
+    },
+    {
+      "zh": "父親節",
+      "en": "Father's Day"
+    },
+    {
+      "zh": "萬聖節",
+      "en": "Halloween"
+    },
+    {
+      "zh": "網際網路",
+      "en": "Internet"
+    },
+    {
+      "zh": "中秋節",
+      "en": "Moon Festival"
+    },
+    {
+      "zh": "母親節",
+      "en": "Mother's Day"
+    },
+    {
+      "zh": "小姐",
+      "en": "Ms."
+    },
+    {
+      "zh": "中華民國",
+      "en": "R.O.C."
+    },
+    {
+      "zh": "教師節",
+      "en": "Teacher's Day"
+    },
+    {
+      "zh": "大約；關於",
+      "en": "about"
+    },
+    {
+      "zh": "到國外；在國外",
+      "en": "abroad"
+    },
+    {
+      "zh": "橫越；穿過",
+      "en": "across"
+    },
+    {
+      "zh": "女演員",
+      "en": "actress"
+    },
+    {
+      "zh": "害怕的",
+      "en": "afraid"
+    },
+    {
+      "zh": "在…之後",
+      "en": "after"
+    },
+    {
+      "zh": "再一次",
+      "en": "again"
+    },
+    {
+      "zh": "同意",
+      "en": "agree"
+    },
+    {
+      "zh": "空氣",
+      "en": "air"
+    },
+    {
+      "zh": "飛機",
+      "en": "airplane"
+    },
+    {
+      "zh": "機場",
+      "en": "airport"
+    },
+    {
+      "zh": "全部的；整個的",
+      "en": "all"
+    },
+    {
+      "zh": "幾乎",
+      "en": "almost"
+    },
+    {
+      "zh": "沿著",
+      "en": "along"
+    },
+    {
+      "zh": "已經",
+      "en": "already"
+    },
+    {
+      "zh": "也",
+      "en": "also"
+    },
+    {
+      "zh": "雖然",
+      "en": "although"
+    },
+    {
+      "zh": "另一個的",
+      "en": "another"
+    },
+    {
+      "zh": "任何事情",
+      "en": "anything"
+    },
+    {
+      "zh": "公寓",
+      "en": "apartment"
+    },
+    {
+      "zh": "出現",
+      "en": "appear"
+    },
+    {
+      "zh": "手臂",
+      "en": "arm"
+    },
+    {
+      "zh": "在…附近",
+      "en": "around"
+    },
+    {
+      "zh": "到達",
+      "en": "arrive"
+    },
+    {
+      "zh": "作為；依照",
+      "en": "as"
+    },
+    {
+      "zh": "攻擊",
+      "en": "attack"
+    },
+    {
+      "zh": "離…多遠",
+      "en": "away"
+    },
+    {
+      "zh": "羽球",
+      "en": "badminton"
+    },
+    {
+      "zh": "烘焙",
+      "en": "bake"
+    },
+    {
+      "zh": "麵包店",
+      "en": "bakery"
+    },
+    {
+      "zh": "樂團",
+      "en": "band"
+    },
+    {
+      "zh": "烤肉；烤肉野餐",
+      "en": "barbecue"
+    },
+    {
+      "zh": "基地；總部",
+      "en": "base"
+    },
+    {
+      "zh": "籃子",
+      "en": "basket"
+    },
+    {
+      "zh": "澡",
+      "en": "bath"
+    },
+    {
+      "zh": "海灘",
+      "en": "beach"
+    },
+    {
+      "zh": "因為",
+      "en": "because"
+    },
+    {
+      "zh": "變成；成為",
+      "en": "become"
+    },
+    {
+      "zh": "在…之前",
+      "en": "before"
+    },
+    {
+      "zh": "開始",
+      "en": "begin"
+    },
+    {
+      "zh": "相信",
+      "en": "believe"
+    },
+    {
+      "zh": "屬於",
+      "en": "belong"
+    },
+    {
+      "zh": "在旁邊",
+      "en": "beside"
+    },
+    {
+      "zh": "生日",
+      "en": "birthday"
+    },
+    {
+      "zh": "咬",
+      "en": "bite"
+    },
+    {
+      "zh": "毯子",
+      "en": "blanket"
+    },
+    {
+      "zh": "盲的",
+      "en": "blind"
+    },
+    {
+      "zh": "街區",
+      "en": "block"
+    },
+    {
+      "zh": "吹",
+      "en": "blow"
+    },
+    {
+      "zh": "船",
+      "en": "boat"
+    },
+    {
+      "zh": "感到厭煩的",
+      "en": "bored"
+    },
+    {
+      "zh": "出生的；天生的",
+      "en": "born"
+    },
+    {
+      "zh": "借入",
+      "en": "borrow"
+    },
+    {
+      "zh": "老闆；上司",
+      "en": "boss"
+    },
+    {
+      "zh": "兩者",
+      "en": "both"
+    },
+    {
+      "zh": "瓶子",
+      "en": "bottle"
+    },
+    {
+      "zh": "底部",
+      "en": "bottom"
+    },
+    {
+      "zh": "鞠躬",
+      "en": "bow"
+    },
+    {
+      "zh": "橋樑",
+      "en": "bridge"
+    },
+    {
+      "zh": "明亮的",
+      "en": "bright"
+    },
+    {
+      "zh": "攜帶；帶來",
+      "en": "bring"
+    },
+    {
+      "zh": "棕色(的)",
+      "en": "brown"
+    },
+    {
+      "zh": "蟲子",
+      "en": "bug"
+    },
+    {
+      "zh": "建造；建立",
+      "en": "build"
+    },
+    {
+      "zh": "發熱；燃燒",
+      "en": "burn"
+    },
+    {
+      "zh": "事業",
+      "en": "business"
+    },
+    {
+      "zh": "商人",
+      "en": "businessman"
+    },
+    {
+      "zh": "忙碌的",
+      "en": "busy"
+    },
+    {
+      "zh": "購買",
+      "en": "buy"
+    },
+    {
+      "zh": "籠子",
+      "en": "cage"
+    },
+    {
+      "zh": "照相機",
+      "en": "camera"
+    },
+    {
+      "zh": "蠟燭",
+      "en": "candle"
+    },
+    {
+      "zh": "帽子",
+      "en": "cap"
+    },
+    {
+      "zh": "關心；喜歡",
+      "en": "care"
+    },
+    {
+      "zh": "小心的",
+      "en": "careful"
+    },
+    {
+      "zh": "情況",
+      "en": "case"
+    },
+    {
+      "zh": "慶祝",
+      "en": "celebrate"
+    },
+    {
+      "zh": "分（錢）",
+      "en": "cent"
+    },
+    {
+      "zh": "公分",
+      "en": "centimeter"
+    },
+    {
+      "zh": "粉筆",
+      "en": "chalk"
+    },
+    {
+      "zh": "機會",
+      "en": "chance"
+    },
+    {
+      "zh": "零錢；改變",
+      "en": "change"
+    },
+    {
+      "zh": "便宜的",
+      "en": "cheap"
+    },
+    {
+      "zh": "作弊",
+      "en": "cheat"
+    },
+    {
+      "zh": "鼓舞；歡呼",
+      "en": "cheer"
+    },
+    {
+      "zh": "西洋棋",
+      "en": "chess"
+    },
+    {
+      "zh": "選擇",
+      "en": "choose"
+    },
+    {
+      "zh": "教堂",
+      "en": "church"
+    },
+    {
+      "zh": "圓圈",
+      "en": "circle"
+    },
+    {
+      "zh": "班長",
+      "en": "class leader"
+    },
+    {
+      "zh": "社團",
+      "en": "club"
+    },
+    {
+      "zh": "收集",
+      "en": "collect"
+    },
+    {
+      "zh": "舒適的",
+      "en": "comfortable"
+    },
+    {
+      "zh": "便利的",
+      "en": "convenient"
+    },
+    {
+      "zh": "抄寫；複製",
+      "en": "copy"
+    },
+    {
+      "zh": "跨越",
+      "en": "cross"
+    },
+    {
+      "zh": "哭；大叫",
+      "en": "cry"
+    },
+    {
+      "zh": "切；傷口",
+      "en": "cut"
+    },
+    {
+      "zh": "死亡的",
+      "en": "dead"
+    },
+    {
+      "zh": "處理",
+      "en": "deal"
+    },
+    {
+      "zh": "決定",
+      "en": "decide"
+    },
+    {
+      "zh": "死亡",
+      "en": "die"
+    },
+    {
+      "zh": "門鈴",
+      "en": "doorbell"
+    },
+    {
+      "zh": "點點",
+      "en": "dot"
+    },
+    {
+      "zh": "掉落；滴下",
+      "en": "drop"
+    },
+    {
+      "zh": "每一；每個",
+      "en": "each"
+    },
+    {
+      "zh": "地球",
+      "en": "earth"
+    },
+    {
+      "zh": "進入",
+      "en": "enter"
+    },
+    {
+      "zh": "信封",
+      "en": "envelope"
+    },
+    {
+      "zh": "曾經",
+      "en": "ever"
+    },
+    {
+      "zh": "每一個的",
+      "en": "every"
+    },
+    {
+      "zh": "例子",
+      "en": "example"
+    },
+    {
+      "zh": "優秀的",
+      "en": "excellent"
+    },
+    {
+      "zh": "感到興奮的",
+      "en": "excited"
+    },
+    {
+      "zh": "令人興奮的",
+      "en": "exciting"
+    },
+    {
+      "zh": "藉口；道歉；原諒",
+      "en": "excuse"
+    },
+    {
+      "zh": "經驗；經歷",
+      "en": "experience"
+    },
+    {
+      "zh": "事實",
+      "en": "fact"
+    },
+    {
+      "zh": "不及格；失敗",
+      "en": "fail"
+    },
+    {
+      "zh": "有名的",
+      "en": "famous"
+    },
+    {
+      "zh": "不多的；很少的",
+      "en": "few"
+    },
+    {
+      "zh": "裝滿",
+      "en": "fill"
+    },
+    {
+      "zh": "火",
+      "en": "fire"
+    },
+    {
+      "zh": "修理；確定",
+      "en": "fix"
+    },
+    {
+      "zh": "外國的",
+      "en": "foreign"
+    },
+    {
+      "zh": "新鮮的",
+      "en": "fresh"
+    },
+    {
+      "zh": "友善的",
+      "en": "friendly"
+    },
+    {
+      "zh": "大門",
+      "en": "gate"
+    },
+    {
+      "zh": "瓦斯；汽油",
+      "en": "gas"
+    },
+    {
+      "zh": "巨人；巨大的",
+      "en": "giant"
+    },
+    {
+      "zh": "高興的",
+      "en": "glad"
+    },
+    {
+      "zh": "膠水",
+      "en": "glue"
+    },
+    {
+      "zh": "鵝",
+      "en": "goose"
+    },
+    {
+      "zh": "公克",
+      "en": "gram"
+    },
+    {
+      "zh": "地面",
+      "en": "ground"
+    },
+    {
+      "zh": "種植；發展",
+      "en": "grow"
+    },
+    {
+      "zh": "芭樂",
+      "en": "guava"
+    },
+    {
+      "zh": "掛；懸吊",
+      "en": "hang"
+    },
+    {
+      "zh": "頭痛",
+      "en": "headache"
+    },
+    {
+      "zh": "重的",
+      "en": "heavy"
+    },
+    {
+      "zh": "母雞",
+      "en": "hen"
+    },
+    {
+      "zh": "她自己",
+      "en": "herself"
+    },
+    {
+      "zh": "躲藏",
+      "en": "hide"
+    },
+    {
+      "zh": "他自己",
+      "en": "himself"
+    },
+    {
+      "zh": "誠實的",
+      "en": "honest"
+    },
+    {
+      "zh": "希望",
+      "en": "hope"
+    },
+    {
+      "zh": "然而",
+      "en": "however"
+    },
+    {
+      "zh": "打獵",
+      "en": "hunt"
+    },
+    {
+      "zh": "匆忙；趕快",
+      "en": "hurry"
+    },
+    {
+      "zh": "冰",
+      "en": "ice"
+    },
+    {
+      "zh": "如果；是否",
+      "en": "if"
+    },
+    {
+      "zh": "英吋",
+      "en": "inch"
+    },
+    {
+      "zh": "興趣",
+      "en": "interest"
+    },
+    {
+      "zh": "感興趣的",
+      "en": "interested"
+    },
+    {
+      "zh": "面談；面試",
+      "en": "interview"
+    },
+    {
+      "zh": "到…之中",
+      "en": "into"
+    },
+    {
+      "zh": "它自己",
+      "en": "itself"
+    },
+    {
+      "zh": "喜悅",
+      "en": "joy"
+    },
+    {
+      "zh": "殺",
+      "en": "kill"
+    },
+    {
+      "zh": "公斤",
+      "en": "kilogram"
+    },
+    {
+      "zh": "敲；打",
+      "en": "knock"
+    },
+    {
+      "zh": "知識",
+      "en": "knowledge"
+    },
+    {
+      "zh": "檯燈",
+      "en": "lamp"
+    },
+    {
+      "zh": "燈籠；提燈",
+      "en": "lantern"
+    },
+    {
+      "zh": "大的",
+      "en": "large"
+    },
+    {
+      "zh": "笑",
+      "en": "laugh"
+    },
+    {
+      "zh": "懶散的",
+      "en": "lazy"
+    },
+    {
+      "zh": "領導",
+      "en": "lead"
+    },
+    {
+      "zh": "領導者",
+      "en": "leader"
+    },
+    {
+      "zh": "離開；遺忘",
+      "en": "leave"
+    },
+    {
+      "zh": "檸檬",
+      "en": "lemon"
+    },
+    {
+      "zh": "較少的",
+      "en": "less"
+    },
+    {
+      "zh": "讓",
+      "en": "let"
+    },
+    {
+      "zh": "蓋子",
+      "en": "lid"
+    },
+    {
+      "zh": "說謊；謊言",
+      "en": "lie"
+    },
+    {
+      "zh": "燈光；光線；輕的",
+      "en": "light"
+    },
+    {
+      "zh": "孤獨的",
+      "en": "lonely"
+    },
+    {
+      "zh": "大聲的；吵鬧的",
+      "en": "loud"
+    },
+    {
+      "zh": "低的",
+      "en": "low"
+    },
+    {
+      "zh": "生氣的；瘋狂的",
+      "en": "mad"
+    },
+    {
+      "zh": "魔力；魔術；魔術的",
+      "en": "magic"
+    },
+    {
+      "zh": "已婚的",
+      "en": "married"
+    },
+    {
+      "zh": "面具；口罩",
+      "en": "mask"
+    },
+    {
+      "zh": "踏墊；墊子",
+      "en": "mat"
+    },
+    {
+      "zh": "事情",
+      "en": "matter"
+    },
+    {
+      "zh": "中等的",
+      "en": "medium"
+    },
+    {
+      "zh": "會議",
+      "en": "meeting"
+    },
+    {
+      "zh": "百萬",
+      "en": "million"
+    },
+    {
+      "zh": "英里",
+      "en": "mile"
+    },
+    {
+      "zh": "現代的；時髦的",
+      "en": "modern"
+    },
+    {
+      "zh": "時刻",
+      "en": "moment"
+    },
+    {
+      "zh": "更多的",
+      "en": "more"
+    },
+    {
+      "zh": "最多的；多數的",
+      "en": "most"
+    },
+    {
+      "zh": "搬；感動",
+      "en": "move"
+    },
+    {
+      "zh": "泥巴",
+      "en": "mud"
+    },
+    {
+      "zh": "我自己",
+      "en": "myself"
+    },
+    {
+      "zh": "國家的",
+      "en": "national"
+    },
+    {
+      "zh": "大自然",
+      "en": "nature"
+    },
+    {
+      "zh": "鄰居",
+      "en": "neighbor"
+    },
+    {
+      "zh": "報紙",
+      "en": "newspaper"
+    },
+    {
+      "zh": "點頭",
+      "en": "nod"
+    },
+    {
+      "zh": "注意",
+      "en": "notice"
+    },
+    {
+      "zh": "油",
+      "en": "oil"
+    },
+    {
+      "zh": "結束；超過",
+      "en": "over"
+    },
+    {
+      "zh": "包裹；包裝",
+      "en": "package"
+    },
+    {
+      "zh": "包；裝箱",
+      "en": "pack"
+    },
+    {
+      "zh": "頁",
+      "en": "page"
+    },
+    {
+      "zh": "動畫圖；油漆",
+      "en": "paint"
+    },
+    {
+      "zh": "木瓜",
+      "en": "papaya"
+    },
+    {
+      "zh": "經過；通過",
+      "en": "pass"
+    },
+    {
+      "zh": "黏貼",
+      "en": "paste"
+    },
+    {
+      "zh": "或許",
+      "en": "perhaps"
+    },
+    {
+      "zh": "件；片",
+      "en": "piece"
+    },
+    {
+      "zh": "大頭針；別針",
+      "en": "pin"
+    },
+    {
+      "zh": "水管",
+      "en": "pipe"
+    },
+    {
+      "zh": "星球；行星",
+      "en": "planet"
+    },
+    {
+      "zh": "遊樂場；運動場",
+      "en": "playground"
+    },
+    {
+      "zh": "請；取悅",
+      "en": "please"
+    },
+    {
+      "zh": "快樂；喜悅",
+      "en": "pleasure"
+    },
+    {
+      "zh": "有禮貌的",
+      "en": "polite"
+    },
+    {
+      "zh": "池塘",
+      "en": "pond"
+    },
+    {
+      "zh": "爆米花",
+      "en": "popcorn"
+    },
+    {
+      "zh": "可能的",
+      "en": "possible"
+    },
+    {
+      "zh": "磅",
+      "en": "pound"
+    },
+    {
+      "zh": "準備",
+      "en": "preparation"
+    },
+    {
+      "zh": "獎品",
+      "en": "prize"
+    },
+    {
+      "zh": "公眾；公共的",
+      "en": "public"
+    },
+    {
+      "zh": "幼犬",
+      "en": "puppy"
+    },
+    {
+      "zh": "彩虹",
+      "en": "rainbow"
+    },
+    {
+      "zh": "準備好的",
+      "en": "ready"
+    },
+    {
+      "zh": "真實的",
+      "en": "real"
+    },
+    {
+      "zh": "重複",
+      "en": "repeat"
+    },
+    {
+      "zh": "休息",
+      "en": "rest"
+    },
+    {
+      "zh": "餐廳",
+      "en": "restaurant"
+    },
+    {
+      "zh": "廁所",
+      "en": "restroom"
+    },
+    {
+      "zh": "富有的；豐富的",
+      "en": "rich"
+    },
+    {
+      "zh": "上升；升起",
+      "en": "rise"
+    },
+    {
+      "zh": "河流",
+      "en": "river"
+    },
+    {
+      "zh": "石頭",
+      "en": "rock"
+    },
+    {
+      "zh": "滾動；晃動",
+      "en": "roll"
+    },
+    {
+      "zh": "排；列",
+      "en": "row"
+    },
+    {
+      "zh": "規則；統治；裁決",
+      "en": "rule"
+    },
+    {
+      "zh": "安全的",
+      "en": "safe"
+    },
+    {
+      "zh": "鹽",
+      "en": "salt"
+    },
+    {
+      "zh": "感到害怕的",
+      "en": "scared"
+    },
+    {
+      "zh": "螢幕",
+      "en": "screen"
+    },
+    {
+      "zh": "秘書",
+      "en": "secretary"
+    },
+    {
+      "zh": "種子",
+      "en": "seed"
+    },
+    {
+      "zh": "高中",
+      "en": "senior high school"
+    },
+    {
+      "zh": "嚴肅的；認真的",
+      "en": "serious"
+    },
+    {
+      "zh": "創立；擺設",
+      "en": "set"
+    },
+    {
+      "zh": "數個的",
+      "en": "several"
+    },
+    {
+      "zh": "形狀；樣子",
+      "en": "shape"
+    },
+    {
+      "zh": "鋒利的；劇烈的",
+      "en": "sharp"
+    },
+    {
+      "zh": "發光；照耀",
+      "en": "shine"
+    },
+    {
+      "zh": "害羞的",
+      "en": "shy"
+    },
+    {
+      "zh": "人行道",
+      "en": "sidewalk"
+    },
+    {
+      "zh": "視力；景象",
+      "en": "sight"
+    },
+    {
+      "zh": "簡單的",
+      "en": "simple"
+    },
+    {
+      "zh": "自從；因為",
+      "en": "since"
+    },
+    {
+      "zh": "尺寸",
+      "en": "size"
+    },
+    {
+      "zh": "滑動；滑坡",
+      "en": "slide"
+    },
+    {
+      "zh": "氣味；聞",
+      "en": "smell"
+    },
+    {
+      "zh": "微笑",
+      "en": "smile"
+    },
+    {
+      "zh": "菸；抽菸",
+      "en": "smoke"
+    },
+    {
+      "zh": "點心；小吃",
+      "en": "snack"
+    },
+    {
+      "zh": "某處",
+      "en": "somewhere"
+    },
+    {
+      "zh": "聲音；聽",
+      "en": "sound"
+    },
+    {
+      "zh": "空位；太空",
+      "en": "space"
+    },
+    {
+      "zh": "站住；攤子",
+      "en": "stand"
+    },
+    {
+      "zh": "奇怪的",
+      "en": "strange"
+    },
+    {
+      "zh": "愚笨的",
+      "en": "stupid"
+    },
+    {
+      "zh": "成功的",
+      "en": "successful"
+    },
+    {
+      "zh": "驚喜；(使)驚喜",
+      "en": "surprise"
+    },
+    {
+      "zh": "感到驚訝的",
+      "en": "surprised"
+    },
+    {
+      "zh": "甜美的",
+      "en": "sweet"
+    },
+    {
+      "zh": "搖擺；鞦韆",
+      "en": "swing"
+    },
+    {
+      "zh": "錄音帶",
+      "en": "tape"
+    },
+    {
+      "zh": "味道；嚐",
+      "en": "taste"
+    },
+    {
+      "zh": "比",
+      "en": "than"
+    },
+    {
+      "zh": "他們自己",
+      "en": "themselves"
+    },
+    {
+      "zh": "厚的",
+      "en": "thick"
+    },
+    {
+      "zh": "整齊的；整理",
+      "en": "tidy"
+    },
+    {
+      "zh": "繫；打結",
+      "en": "tie"
+    },
+    {
+      "zh": "工具",
+      "en": "tool"
+    },
+    {
+      "zh": "頂部",
+      "en": "top"
+    },
+    {
+      "zh": "總計；全部的",
+      "en": "total"
+    },
+    {
+      "zh": "觸摸；感動",
+      "en": "touch"
+    },
+    {
+      "zh": "交通",
+      "en": "traffic"
+    },
+    {
+      "zh": "款待；對待；處理",
+      "en": "treat"
+    },
+    {
+      "zh": "颱風",
+      "en": "typhoon"
+    },
+    {
+      "zh": "不快樂的",
+      "en": "unhappy"
+    },
+    {
+      "zh": "制服",
+      "en": "uniform"
+    },
+    {
+      "zh": "實用的",
+      "en": "useful"
+    },
+    {
+      "zh": "錄影帶",
+      "en": "video"
+    },
+    {
+      "zh": "西瓜",
+      "en": "watermelon"
+    },
+    {
+      "zh": "波浪；海浪",
+      "en": "wave"
+    },
+    {
+      "zh": "誰的",
+      "en": "whose"
+    },
+    {
+      "zh": "風",
+      "en": "wind"
+    },
+    {
+      "zh": "沒有",
+      "en": "without"
+    },
+    {
+      "zh": "你們自己",
+      "en": "yourselves"
+    },
+    {
+      "zh": "你自己",
+      "en": "yourself"
+    }
+  ],
+  "category1000": [
+    {
+      "zh": "拋棄",
+      "en": "abandon"
+    },
+    {
+      "zh": "能力",
+      "en": "ability"
+    },
+    {
+      "zh": "在...之上",
+      "en": "above"
+    },
+    {
+      "zh": "接受",
+      "en": "accept"
+    },
+    {
+      "zh": "意外",
+      "en": "accident"
+    },
+    {
+      "zh": "行動",
+      "en": "act"
+    },
+    {
+      "zh": "活躍的",
+      "en": "active"
+    },
+    {
+      "zh": "添加",
+      "en": "add"
+    },
+    {
+      "zh": "地址",
+      "en": "address"
+    },
+    {
+      "zh": "成年人",
+      "en": "adult"
+    },
+    {
+      "zh": "建議",
+      "en": "advice"
+    },
+    {
+      "zh": "年齡",
+      "en": "age"
+    },
+    {
+      "zh": "以前",
+      "en": "ago"
+    },
+    {
+      "zh": "鬧鐘",
+      "en": "alarm"
+    },
+    {
+      "zh": "允許",
+      "en": "allow"
+    },
+    {
+      "zh": "單獨的",
+      "en": "alone"
+    },
+    {
+      "zh": "總是",
+      "en": "always"
+    },
+    {
+      "zh": "驚人的",
+      "en": "amazing"
+    },
+    {
+      "zh": "美國",
+      "en": "America"
+    },
+    {
+      "zh": "在…之中",
+      "en": "among"
+    },
+    {
+      "zh": "任何的",
+      "en": "any"
+    },
+    {
+      "zh": "任何人",
+      "en": "anyone"
+    },
+    {
+      "zh": "區域",
+      "en": "area"
+    },
+    {
+      "zh": "藝術",
+      "en": "art"
+    },
+    {
+      "zh": "文章",
+      "en": "article"
+    },
+    {
+      "zh": "藝術家",
+      "en": "artist"
+    },
+    {
+      "zh": "啤酒",
+      "en": "beer"
+    },
+    {
+      "zh": "在?後面",
+      "en": "behind"
+    },
+    {
+      "zh": "鈴",
+      "en": "bell"
+    },
+    {
+      "zh": "在?下面",
+      "en": "below"
+    },
+    {
+      "zh": "最好的",
+      "en": "best"
+    },
+    {
+      "zh": "更好的",
+      "en": "better"
+    },
+    {
+      "zh": "在...之間",
+      "en": "between"
+    },
+    {
+      "zh": "超過",
+      "en": "beyond"
+    },
+    {
+      "zh": "大腦",
+      "en": "brain"
+    },
+    {
+      "zh": "樹枝；分行",
+      "en": "branch"
+    },
+    {
+      "zh": "勇敢的",
+      "en": "brave"
+    },
+    {
+      "zh": "打破；休息",
+      "en": "break"
+    },
+    {
+      "zh": "呼吸",
+      "en": "breathe"
+    },
+    {
+      "zh": "建築物",
+      "en": "building"
+    },
+    {
+      "zh": "奶油",
+      "en": "butter"
+    },
+    {
+      "zh": "鈕扣；按鈕",
+      "en": "button"
+    },
+    {
+      "zh": "計程車",
+      "en": "cab"
+    },
+    {
+      "zh": "咖啡館",
+      "en": "cafe"
+    },
+    {
+      "zh": "露營",
+      "en": "camp"
+    },
+    {
+      "zh": "搬運；攜帶",
+      "en": "carry"
+    },
+    {
+      "zh": "抓住",
+      "en": "catch"
+    },
+    {
+      "zh": "原因；導致",
+      "en": "cause"
+    },
+    {
+      "zh": "中心",
+      "en": "center"
+    },
+    {
+      "zh": "世紀",
+      "en": "century"
+    }
+  ]
+}
