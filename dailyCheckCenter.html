@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>每日簽到中心 - 英打小英雄</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="responsive_enhanced.css">
+    <style>
+        :root {
+            --primary-glow: #00ffff;
+            --secondary-glow: #9f78ff;
+            --accent-gold: #ffd700;
+            --accent-pink: #ff6b9d;
+            --dark-bg: #030409;
+            --glass-bg: rgba(15, 23, 42, 0.6);
+            --border-color: rgba(0, 255, 255, 0.2);
+            --text-primary: #e0e6f0;
+            --text-secondary: #8a99b3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family:
+                "Microsoft JhengHei",
+                "Noto Sans TC",
+                "Segoe UI Emoji",
+                "Apple Color Emoji",
+                "Noto Color Emoji",
+                "Inter",
+                sans-serif;
+            background-color: var(--dark-bg);
+            background-image:
+                radial-gradient(ellipse at top, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom, rgba(159, 120, 255, 0.1) 0%, transparent 50%),
+                url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2071&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 
+                0 0 5px #fff, 
+                0 0 10px var(--primary-glow), 
+                0 0 20px var(--primary-glow),
+                0 0 40px var(--secondary-glow);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            opacity: 0.9;
+        }
+
+        /* 玩家資訊區 */
+        .player-info {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+        }
+
+        .player-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-glow);
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .today-status {
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .today-status.checked {
+            background: linear-gradient(135deg, rgba(46, 213, 115, 0.3), rgba(39, 174, 96, 0.5));
+            border: 2px solid #2ed573;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(46, 213, 115, 0.6);
+        }
+
+        .today-status.unchecked {
+            background: linear-gradient(135deg, rgba(255, 159, 67, 0.3), rgba(243, 156, 18, 0.5));
+            border: 2px solid #ff9f43;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(255, 159, 67, 0.6);
+        }
+
+        .login-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .login-stat {
+            text-align: center;
+        }
+
+        .login-stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            text-shadow: 0 0 10px var(--accent-gold);
+        }
+
+        .login-stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* 大型簽到按鈕 */
+        .checkin-button-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .checkin-button {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--secondary-glow), var(--primary-glow));
+            color: #000;
+            font-size: 1.5rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 40px var(--secondary-glow);
+            position: relative;
+            overflow: hidden;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .checkin-button:hover:not(:disabled) {
+            transform: scale(1.1);
+            box-shadow: 0 0 60px var(--primary-glow);
+        }
+
+        .checkin-button:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+
+        .checkin-button:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            box-shadow: none;
+            cursor: not-allowed;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 40px var(--secondary-glow); }
+            50% { box-shadow: 0 0 60px var(--primary-glow); }
+        }
+
+        .checkin-button .icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* 統計卡片 */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            border-color: var(--primary-glow);
+        }
+
+        .stat-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-glow);
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            opacity: 0.8;
+        }
+
+        /* 七日簽到 */
+        .weekly-rewards {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+        }
+
+        .section-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-shadow: 0 0 8px var(--secondary-glow);
+        }
+
+        .weekly-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .day-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px 5px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .day-card.today {
+            border: 2px solid var(--primary-glow);
+            box-shadow: 0 0 15px var(--primary-glow);
+            animation: pulse-gold 2s infinite;
+        }
+
+        .day-card.claimed {
+            background: linear-gradient(135deg, rgba(46, 213, 115, 0.3), rgba(39, 174, 96, 0.5));
+            border-color: #2ed573;
+        }
+
+        .day-card.future {
+            opacity: 0.5;
+        }
+
+        .day-card .day-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .day-card .reward-icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .day-card .reward-value {
+            font-size: 0.8rem;
+            color: var(--text-primary);
+        }
+
+        .day-card .check-mark {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #2ed573;
+            color: #fff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        /* 月曆簽到 */
+        .calendar-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .month-year {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-shadow: 0 0 8px var(--secondary-glow);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
+        }
+
+        .nav-btn:hover {
+            background: rgba(0, 255, 255, 0.1);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px var(--primary-glow);
+            border-color: var(--primary-glow);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .weekday {
+            text-align: center;
+            padding: 15px 5px;
+            font-weight: 600;
+            color: var(--secondary-glow);
+            font-size: 1rem;
+            text-shadow: 0 0 5px var(--secondary-glow);
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid transparent;
+            overflow: visible;
+        }
+        
+        .calendar-day:not(.other-month):hover {
+            transform: scale(1.1);
+            border-color: var(--primary-glow);
+            background: rgba(0, 255, 255, 0.1);
+        }
+
+        .calendar-day.other-month {
+            color: var(--text-secondary);
+            opacity: 0.3;
+            cursor: default;
+        }
+
+        .calendar-day.today {
+            border: 2px solid var(--primary-glow);
+            color: var(--primary-glow);
+            box-shadow: 0 0 15px var(--primary-glow), inset 0 0 10px rgba(0, 255, 255, 0.2);
+        }
+        
+        .calendar-day.checked {
+            background: linear-gradient(135deg, rgba(46, 213, 115, 0.3), rgba(39, 174, 96, 0.5));
+            color: #fff;
+            border-color: #2ed573;
+            box-shadow: 0 0 20px rgba(46, 213, 115, 0.6);
+        }
+        
+        .calendar-day.checked.today {
+            border-width: 3px;
+            border-image: linear-gradient(45deg, #2ed573, var(--primary-glow)) 1;
+        }
+
+        .calendar-day.checked::after,
+        .calendar-day.makeup-checked::after {
+            content: '簽';
+            font-family: 'Inter', sans-serif;
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #2ed573, #27ae60);
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 8px;
+            box-shadow: 0 3px 12px rgba(46, 213, 115, 0.5);
+            z-index: 15;
+            border: 1px solid #fff;
+            pointer-events: none;
+        }
+        
+        .calendar-day.makeup-checked::after {
+            content: '補';
+            background: linear-gradient(135deg, #ff9f43, #f39c12);
+            box-shadow: 0 3px 12px rgba(255, 159, 67, 0.5);
+        }
+        
+        .calendar-day.can-makeup {
+            border: 2px dashed var(--accent-gold);
+            color: var(--accent-gold);
+            animation: pulse-gold 2s infinite;
+        }
+
+        @keyframes pulse-gold {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.7); }
+        }
+        
+        .calendar-day.missed {
+            background-color: rgba(231, 76, 60, 0.1);
+            border: 1px dashed rgba(231, 76, 60, 0.5);
+            color: rgba(231, 76, 60, 0.8);
+        }
+
+        /* 累積登入獎勵 */
+        .cumulative-rewards {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+        }
+
+        .reward-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .reward-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .reward-item:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-glow);
+        }
+
+        .reward-item.claimed {
+            background: linear-gradient(135deg, rgba(46, 213, 115, 0.3), rgba(39, 174, 96, 0.5));
+            border-color: #2ed573;
+        }
+
+        .reward-item .reward-icon {
+            font-size: 2.5rem;
+        }
+
+        .reward-item .reward-info {
+            flex: 1;
+        }
+
+        .reward-item .reward-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+
+        .reward-item .reward-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .reward-item .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .reward-item .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-glow), var(--accent-gold));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .reward-item .claim-btn {
+            background: linear-gradient(135deg, var(--secondary-glow), var(--primary-glow));
+            border: none;
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .reward-item .claim-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .reward-item .claim-btn:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        /* 簽到幣 */
+        .checkin-coin-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+        }
+
+        .coin-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .coin-icon {
+            font-size: 3rem;
+        }
+
+        .coin-amount {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            text-shadow: 0 0 10px var(--accent-gold);
+        }
+
+        .coin-shop {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .shop-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .shop-item:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-glow);
+        }
+
+        .shop-item .item-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .shop-item .item-name {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+
+        .shop-item .item-cost {
+            color: var(--accent-gold);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .shop-item .buy-btn {
+            background: linear-gradient(135deg, var(--secondary-glow), var(--primary-glow));
+            border: none;
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .shop-item .buy-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .shop-item .buy-btn:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        /* Actions */
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, var(--secondary-glow), var(--primary-glow));
+            border: none;
+            color: #000;
+            padding: 12px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 25px var(--secondary-glow);
+            text-transform: uppercase;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 40px var(--primary-glow);
+        }
+
+        .action-btn:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            box-shadow: none;
+        }
+        
+        .back-btn:hover {
+            background: rgba(0, 255, 255, 0.1);
+            color: #fff;
+            box-shadow: 0 0 25px var(--primary-glow);
+            border-color: var(--primary-glow);
+        }
+        
+        /* Star & Particle Animations */
+        @keyframes starFloat {
+            0% {
+                transform: scale(0) rotate(0deg) translate(var(--startX), var(--startY));
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5) rotate(360deg) translate(var(--endX), var(--endY));
+                opacity: 0;
+            }
+        }
+        
+        .star {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: #fff;
+            border-radius: 50%;
+            animation: starFloat 2s ease-out forwards;
+            z-index: 1000;
+            box-shadow: 0 0 10px 2px #fff, 0 0 20px 5px var(--primary-glow);
+        }
+        
+        @keyframes particleExplode {
+            from {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            to {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .particle {
+            position: fixed;
+            background: #fff;
+            border-radius: 50%;
+            animation: particleExplode 1.5s ease-out forwards;
+            z-index: 999;
+            box-shadow: 0 0 8px 1px var(--primary-glow);
+        }
+
+        .checkin-success {
+            font-family: 'JetBrains Mono', monospace;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--glass-bg);
+            border: 1px solid var(--primary-glow);
+            color: #fff;
+            padding: 25px 50px;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            z-index: 9999;
+            box-shadow: 0 10px 40px rgba(0, 255, 255, 0.3);
+            text-shadow: 0 0 10px var(--primary-glow);
+            animation: popupFadeIn 0.3s ease-out;
+        }
+
+        @keyframes popupFadeIn {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        /* 獎勵預覽 */
+        .reward-preview {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .reward-preview-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .reward-preview-items {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .reward-preview-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .reward-preview-item .icon {
+            font-size: 1.5rem;
+        }
+
+        .reward-preview-item .value {
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .header h1 { font-size: 2.2rem; }
+            .stats-container { grid-template-columns: 1fr 1fr; gap: 15px; }
+            .calendar-container { padding: 20px; }
+            .month-year { font-size: 1.5rem; }
+            .calendar-day { font-size: 1rem; }
+            .weekly-grid { grid-template-columns: repeat(4, 1fr); }
+            .actions { flex-direction: column; align-items: center; }
+            .action-btn { width: 100%; max-width: 300px; }
+            .checkin-button { width: 150px; height: 150px; font-size: 1.2rem; }
+            .checkin-button .icon { font-size: 2rem; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-container { grid-template-columns: 1fr; }
+            .calendar-grid { gap: 5px; }
+            .weekday { font-size: 0.8rem; }
+            .calendar-day { font-size: 0.9rem; }
+            .weekly-grid { grid-template-columns: repeat(2, 1fr); }
+            .login-stats { gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📅 每日簽到中心</h1>
+            <p>每日簽到領取獎勵，累積登入解鎖更多好禮</p>
+        </div>
+
+        <!-- 玩家資訊 -->
+        <div class="player-info">
+            <div class="player-name" id="playerName">玩家名稱</div>
+            <div class="today-status" id="todayStatus">❌ 尚未簽到</div>
+            <div class="login-stats">
+                <div class="login-stat">
+                    <div class="login-stat-value" id="currentStreak">0</div>
+                    <div class="login-stat-label">連續登入</div>
+                </div>
+                <div class="login-stat">
+                    <div class="login-stat-value" id="totalCheckins">0</div>
+                    <div class="login-stat-label">累積登入</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 大型簽到按鈕 -->
+        <div class="checkin-button-container">
+            <button class="checkin-button" id="checkinBtn" onclick="performDailyCheckin()">
+                <span class="icon">🎁</span>
+                <span id="checkinBtnText">點我簽到</span>
+            </button>
+            <div class="reward-preview" id="rewardPreview">
+                <div class="reward-preview-title">今日獎勵預覽</div>
+                <div class="reward-preview-items">
+                    <div class="reward-preview-item">
+                        <span class="icon">⭐</span>
+                        <span class="value">+50</span>
+                    </div>
+                    <div class="reward-preview-item">
+                        <span class="icon">🎫</span>
+                        <span class="value">+1</span>
+                    </div>
+                    <div class="reward-preview-item">
+                        <span class="icon">❤️</span>
+                        <span class="value">+1</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 統計卡片 -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" id="monthlyCheckins">0</div>
+                <div class="stat-label">本月簽到</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalStars">0</div>
+                <div class="stat-label">獲得星星</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="checkinCoins">0</div>
+                <div class="stat-label">簽到幣</div>
+            </div>
+        </div>
+
+        <!-- 七日簽到 -->
+        <div class="weekly-rewards">
+            <h2 class="section-title">🎯 七日簽到獎勵</h2>
+            <div class="weekly-grid" id="weeklyGrid"></div>
+        </div>
+
+        <!-- 月曆簽到 -->
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <div class="month-year" id="monthYear"></div>
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="previousMonth()">◀ 上月</button>
+                    <button class="nav-btn" onclick="nextMonth()">下月 ▶</button>
+                </div>
+            </div>
+
+            <div class="calendar-grid" id="calendarGrid"></div>
+
+            <div class="actions">
+                <button class="action-btn" onclick="makeupCheckin()" id="makeupBtn" disabled>
+                    補簽 (需100星星)
+                </button>
+                <button class="action-btn back-btn" onclick="goBack()">
+                    返回首頁
+                </button>
+            </div>
+        </div>
+
+        <!-- 累積登入獎勵 -->
+        <div class="cumulative-rewards">
+            <h2 class="section-title">🏆 累積登入獎勵</h2>
+            <div class="reward-list" id="cumulativeRewards"></div>
+        </div>
+
+        <!-- 簽到幣商店 -->
+        <div class="checkin-coin-section">
+            <h2 class="section-title">💰 簽到幣商店</h2>
+            <div class="coin-display">
+                <span class="coin-icon">🪙</span>
+                <span class="coin-amount" id="coinAmount">0</span>
+            </div>
+            <div class="coin-shop" id="coinShop"></div>
+        </div>
+    </div>
+
+    <script src="js/achievementSystem.js"></script>
+    <script>
+        // ==================== 資料初始化 ====================
+        const checkinSound = new Audio('sound/shine.mp3');
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+        
+        // 讀取簽到數據
+        let checkinData = JSON.parse(localStorage.getItem('checkinData')) || {};
+        let weeklyProgress = JSON.parse(localStorage.getItem('weeklyProgress')) || {};
+        let cumulativeClaimed = JSON.parse(localStorage.getItem('cumulativeClaimed')) || {};
+        let checkinCoins = parseInt(localStorage.getItem('checkinCoins') || '0');
+        
+        // 彈窗佇列系統
+        let popupQueue = [];
+        let isPopupShowing = false;
+        
+        // 將彈窗加入佇列
+        function enqueuePopup(popupData) {
+            popupQueue.push(popupData);
+            processPopupQueue();
+        }
+        
+        // 處理彈窗佇列
+        function processPopupQueue() {
+            if (isPopupShowing) return;
+            if (popupQueue.length === 0) return;
+            
+            isPopupShowing = true;
+            const popupData = popupQueue.shift();
+            showQueuedPopup(popupData);
+        }
+        
+        // 顯示佇列中的彈窗
+        function showQueuedPopup(popupData) {
+            const modal = document.createElement('div');
+            modal.className = 'checkin-success system-message';
+            
+            if (popupData.type === 'checkin') {
+                modal.innerHTML = popupData.message;
+            } else {
+                modal.textContent = popupData.message;
+            }
+            
+            modal.style.background = "var(--glass-bg)";
+            modal.style.borderColor = "#ff9f43";
+            modal.style.boxShadow = "0 10px 40px rgba(255, 159, 67, 0.3)";
+            modal.style.textShadow = "0 0 10px #ff9f43";
+            
+            document.body.appendChild(modal);
+            
+            // 如果是簽到成功，創建動畫
+            if (popupData.type === 'checkin') {
+                createStarAnimation();
+                createParticleEffect();
+            }
+            
+            setTimeout(() => {
+                if (modal.parentNode) modal.remove();
+                isPopupShowing = false;
+                processPopupQueue();
+            }, popupData.duration || 2500);
+        }
+        
+        // 七日簽到獎勵配置
+        // 簽到獎勵配置表 - 只使用專案現有資源
+        const dailyCheckRewards = {
+            stars: 20,
+            tickets: 1,
+            coins: 1
+        };
+
+        // 七日簽到獎勵配置 - 只使用專案現有資源
+        const weeklyRewards = [
+            { day: 1, icon: '⭐', value: 20, name: '星星', type: 'stars' },
+            { day: 2, icon: '⭐', value: 30, name: '星星', type: 'stars' },
+            { day: 3, icon: '🎫', value: 1, name: '普通抽卡券', type: 'normal_ticket' },
+            { day: 4, icon: '⭐', value: 50, name: '星星', type: 'stars' },
+            { day: 5, icon: '🎫', value: 1, name: '稀有抽卡券', type: 'rare_ticket' },
+            { day: 6, icon: '⭐', value: 80, name: '星星', type: 'stars' },
+            { day: 7, icon: '🎫', value: 1, name: '高級抽卡券', type: 'premium_ticket' }
+        ];
+
+        // 累積登入獎勵配置 - 只使用專案現有資源
+        const cumulativeRewards = [
+            { days: 3, icon: '⭐', value: 100, name: '100星星', type: 'stars' },
+            { days: 7, icon: '🎫', value: 3, name: '3張普通抽卡券', type: 'normal_ticket' },
+            { days: 15, icon: '🎫', value: 1, name: '1張稀有抽卡券', type: 'rare_ticket' },
+            { days: 30, icon: '🎫', value: 1, name: '1張高級抽卡券', type: 'premium_ticket' },
+            { days: 60, icon: '⭐', value: 500, name: '500星星', type: 'stars' },
+            { days: 100, icon: '⭐', value: 1000, name: '1000星星', type: 'stars' },
+            { days: 365, icon: '🎫', value: 5, name: '5張高級抽卡券', type: 'premium_ticket' }
+        ];
+
+        // 簽到幣商店配置 - 只使用專案現有資源
+        const coinShopItems = [
+            { id: 1, icon: '🎫', name: '普通抽卡券', cost: 5, action: 'normal_ticket' },
+            { id: 2, icon: '🎫', name: '稀有抽卡券', cost: 10, action: 'rare_ticket' },
+            { id: 3, icon: '⭐', name: '100星星', cost: 3, action: 'stars_100' }
+        ];
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('初始化每日簽到中心');
+            loadPlayerData();
+            renderWeeklyRewards();
+            renderCalendar();
+            renderCumulativeRewards();
+            renderCoinShop();
+            updateAllStats();
+        });
+
+        // ==================== 玩家資料 ====================
+        function loadPlayerData() {
+            const playerName = localStorage.getItem('playerName') || '未命名玩家';
+            document.getElementById('playerName').textContent = playerName;
+        }
+
+        // ==================== 每日簽到 ====================
+        function performDailyCheckin() {
+            const today = new Date().toDateString();
+
+            // 檢查今日是否已簽到
+            if (checkinData[today]) {
+                showSystemMessage('今日已經簽到過了');
+                return;
+            }
+
+            // 暫時禁用按鈕，避免重複點擊
+            const checkinBtn = document.getElementById('checkinBtn');
+            if (checkinBtn) checkinBtn.disabled = true;
+
+            // 從配置表讀取簽到獎勵
+            const rewards = { ...dailyCheckRewards };
+
+            // 發放獎勵
+            const rewardResult = distributeRewards(rewards);
+
+            // 如果獎勵發放失敗，使用預設補償
+            if (!rewardResult.success) {
+                showSystemMessage('獎勵設定異常，已改發星星補償');
+                const fallbackReward = { stars: 10 };
+                distributeRewards(fallbackReward);
+                rewards.stars = 10;
+                rewards.tickets = 0;
+                rewards.coins = 0;
+            }
+
+            // 記錄簽到
+            checkinData[today] = {
+                date: today,
+                timestamp: Date.now(),
+                isMakeup: false,
+                rewards: rewards
+            };
+            localStorage.setItem('checkinData', JSON.stringify(checkinData));
+
+            // 更新七日進度
+            updateWeeklyProgress();
+
+            // 播放音效
+            checkinSound.currentTime = 0;
+            checkinSound.play();
+
+            // 顯示簽到成功動畫
+            showCheckinSuccess(rewards);
+
+            // 更新UI
+            updateAllStats();
+            renderWeeklyRewards();
+            renderCalendar();
+        }
+
+        // 發放獎勵函數
+        function distributeRewards(rewards) {
+            try {
+                // 發放星星
+                if (rewards.stars > 0) {
+                    let currentStars = parseInt(localStorage.getItem('totalStars') || '0');
+                    currentStars += rewards.stars;
+                    localStorage.setItem('totalStars', currentStars.toString());
+                }
+
+                // 發放抽卡券（支援分類）
+                if (rewards.tickets > 0) {
+                    addGachaTicket('normal', rewards.tickets);
+                }
+
+                // 更新簽到幣
+                if (rewards.coins > 0) {
+                    checkinCoins += rewards.coins;
+                    localStorage.setItem('checkinCoins', checkinCoins.toString());
+                }
+
+                return { success: true };
+            } catch (error) {
+                console.error('獎勵發放失敗:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // 添加抽卡券（簡化版：只支援普通抽卡券）
+        function addGachaTicket(type, amount) {
+            // 確保資料已遷移到簡單整數結構
+            const ticketsData = localStorage.getItem('gachaTickets');
+            if (ticketsData && ticketsData.startsWith('{')) {
+                // 如果是舊的複雜結構，進行遷移
+                const oldTickets = JSON.parse(ticketsData);
+                let totalTickets = 0;
+                if (typeof oldTickets === 'object' && oldTickets !== null) {
+                    if (oldTickets.normal) totalTickets += parseInt(oldTickets.normal) || 0;
+                    if (oldTickets.rare) totalTickets += parseInt(oldTickets.rare) || 0;
+                    if (oldTickets.premium) totalTickets += parseInt(oldTickets.premium) || 0;
+                    if (oldTickets.ssr) totalTickets += parseInt(oldTickets.ssr) || 0;
+                    if (oldTickets.limited) totalTickets += parseInt(oldTickets.limited) || 0;
+                    if (oldTickets.theme && typeof oldTickets.theme === 'object') {
+                        Object.values(oldTickets.theme).forEach(count => {
+                            totalTickets += parseInt(count) || 0;
+                        });
+                    }
+                }
+                localStorage.setItem('gachaTickets', totalTickets.toString());
+            }
+
+            // 只處理普通抽卡券
+            if (type === 'normal') {
+                const currentTickets = parseInt(localStorage.getItem('gachaTickets') || '0');
+                const newTickets = currentTickets + amount;
+                localStorage.setItem('gachaTickets', newTickets.toString());
+            }
+        }
+
+        // 安全圖示函式
+        function getRewardIcon(type) {
+            const icons = {
+                stars: '⭐',
+                star: '⭐',
+                normal_ticket: '🎫',
+                rare_ticket: '🎫',
+                premium_ticket: '🎫',
+                ssr_ticket: '🎫',
+                limited_ticket: '🎫',
+                zodiac: '♈',
+                speed: '⚡',
+                task: '📋',
+                reward: '🎁'
+            };
+            return icons[type] || '🎁';
+        }
+
+        // 安全獎勵文字函式
+        function formatRewardText(reward) {
+            if (!reward || typeof reward !== 'object') {
+                return '獎勵：尚未設定';
+            }
+
+            const parts = [];
+
+            if (reward.stars > 0) parts.push(`⭐${reward.stars}`);
+            if (reward.normalTicket > 0) parts.push(`普通抽卡券 x${reward.normalTicket}`);
+            if (reward.rareTicket > 0) parts.push(`稀有抽卡券 x${reward.rareTicket}`);
+            if (reward.premiumTicket > 0) parts.push(`高級抽卡券 x${reward.premiumTicket}`);
+            if (reward.ssrTicket > 0) parts.push(`SSR必出券 x${reward.ssrTicket}`);
+            if (reward.limitedTicket > 0) parts.push(`限定抽卡券 x${reward.limitedTicket}`);
+
+            return parts.length ? `獎勵：${parts.join('、')}` : '獎勵：尚未設定';
+        }
+
+        function showCheckinSuccess(rewards) {
+            const message = `
+                今日簽到成功！<br>
+                ⭐ +${rewards.stars}<br>
+                🎫 +${rewards.tickets}<br>
+                🪙 +${rewards.coins}
+            `;
+            enqueuePopup({
+                message: message,
+                type: 'checkin',
+                duration: 2000
+            });
+        }
+
+        function createStarAnimation() {
+            const btn = document.getElementById('checkinBtn');
+            const rect = btn.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            for (let i = 0; i < 20; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = centerX + 'px';
+                star.style.top = centerY + 'px';
+
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 200 + 100;
+                const endX = (Math.cos(angle) * distance) + 'px';
+                const endY = (Math.sin(angle) * distance) + 'px';
+                
+                star.style.setProperty('--startX', '0px');
+                star.style.setProperty('--startY', '0px');
+                star.style.setProperty('--endX', endX);
+                star.style.setProperty('--endY', endY);
+                star.style.animationDelay = Math.random() * 0.5 + 's';
+                
+                document.body.appendChild(star);
+                
+                setTimeout(() => {
+                    if (star.parentNode) star.remove();
+                }, 2000);
+            }
+        }
+
+        function createParticleEffect() {
+            const btn = document.getElementById('checkinBtn');
+            const rect = btn.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            for (let i = 0; i < 40; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 50 + Math.random() * 100;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                particle.style.animationDelay = (i * 0.02) + 's';
+                
+                const size = 1 + Math.random() * 3;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                document.body.appendChild(particle);
+                
+                setTimeout(() => {
+                    if (particle.parentNode) particle.remove();
+                }, 1500);
+            }
+        }
+
+        // ==================== 七日簽到 ====================
+        function updateWeeklyProgress() {
+            const today = new Date();
+            const totalCheckins = Object.keys(checkinData).length;
+            const currentDayOfWeek = (totalCheckins % 7) + 1;
+            
+            weeklyProgress[currentDayOfWeek] = true;
+            localStorage.setItem('weeklyProgress', JSON.stringify(weeklyProgress));
+        }
+
+        function renderWeeklyRewards() {
+            const grid = document.getElementById('weeklyGrid');
+            grid.innerHTML = '';
+
+            const totalCheckins = Object.keys(checkinData).length;
+            const currentDayOfWeek = (totalCheckins % 7) + 1;
+
+            weeklyRewards.forEach((reward, index) => {
+                const dayNum = index + 1;
+                const isClaimed = weeklyProgress[dayNum];
+                const isToday = dayNum === currentDayOfWeek;
+                const isFuture = dayNum > currentDayOfWeek;
+
+                const card = document.createElement('div');
+                card.className = 'day-card';
+                if (isToday) card.classList.add('today');
+                if (isClaimed) card.classList.add('claimed');
+                if (isFuture) card.classList.add('future');
+
+                // 使用安全圖示函式
+                const safeIcon = getRewardIcon(reward.type);
+                const rewardText = reward.value > 0 ? `${reward.name} x${reward.value}` : reward.name;
+
+                card.innerHTML = `
+                    <div class="day-label">Day${dayNum}</div>
+                    <div class="reward-icon">${safeIcon}</div>
+                    <div class="reward-value">${rewardText}</div>
+                    ${isClaimed ? '<div class="check-mark">✓</div>' : ''}
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // ==================== 月曆簽到 ====================
+        function renderCalendar() {
+            const monthYear = document.getElementById('monthYear');
+            const calendarGrid = document.getElementById('calendarGrid');
+            
+            const monthNames = ['一月', '二月', '三月', '四月', '五月', '六月', 
+                               '七月', '八月', '九月', '十月', '十一月', '十二月'];
+            
+            monthYear.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+            
+            calendarGrid.innerHTML = '';
+            
+            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+            weekdays.forEach(day => {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'weekday';
+                dayElement.textContent = day;
+                calendarGrid.appendChild(dayElement);
+            });
+            
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+            
+            for (let i = 0; i < 42; i++) {
+                const date = new Date(startDate);
+                date.setDate(startDate.getDate() + i);
+                
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = date.getDate();
+                
+                const dateKey = formatDate(date);
+                const isToday = isSameDate(date, new Date());
+                const isChecked = checkinData[dateKey];
+                const isOtherMonth = date.getMonth() !== currentMonth;
+                const isMissed = isMissedDay(date);
+                const canMakeup = canMakeupDay(date);
+                
+                if (isOtherMonth) {
+                    dayElement.classList.add('other-month');
+                } else {
+                    if (isToday) dayElement.classList.add('today');
+                    if (isChecked) {
+                        dayElement.classList.add('checked');
+                        if (checkinData[dateKey].isMakeup) {
+                            dayElement.classList.add('makeup-checked');
+                        }
+                    } else if (canMakeup) {
+                        dayElement.classList.add('can-makeup');
+                        dayElement.onclick = () => performCheckin(date);
+                    } else if (isMissed) {
+                        dayElement.classList.add('missed');
+                    }
+                }
+                
+                calendarGrid.appendChild(dayElement);
+            }
+            
+            updateMakeupButton();
+        }
+
+        function performCheckin(date) {
+            const dateKey = formatDate(date);
+            
+            if (checkinData[dateKey]) {
+                showSystemMessage('這個日期已經簽到過了');
+                return;
+            }
+            
+            const isMakeup = !isSameDate(date, new Date());
+            let currentStars = parseInt(localStorage.getItem('totalStars') || '0');
+            
+            if (isMakeup && currentStars < 100) {
+                showSystemMessage('星星不足，無法補簽（需要100星星）');
+                return;
+            }
+            
+            if (isMakeup) {
+                currentStars -= 100;
+                localStorage.setItem('totalStars', currentStars.toString());
+            }
+            
+            // 計算獎勵
+            const rewards = { ...dailyCheckRewards };
+            
+            // 發放獎勵
+            const rewardResult = distributeRewards(rewards);
+            
+            // 如果獎勵發放失敗，使用預設補償
+            if (!rewardResult.success) {
+                showSystemMessage('獎勵設定異常，已改發星星補償');
+                const fallbackReward = { stars: 10 };
+                distributeRewards(fallbackReward);
+                rewards.stars = 10;
+                rewards.tickets = 0;
+                rewards.coins = 0;
+            }
+            
+            checkinData[dateKey] = {
+                date: dateKey,
+                timestamp: Date.now(),
+                isMakeup: isMakeup,
+                rewards: rewards
+            };
+            localStorage.setItem('checkinData', JSON.stringify(checkinData));
+            
+            // 更新七日進度
+            updateWeeklyProgress();
+            
+            checkinSound.currentTime = 0;
+            checkinSound.play();
+            
+            showCheckinSuccess(rewards);
+            updateAllStats();
+            renderCalendar();
+            renderWeeklyRewards();
+        }
+
+        function makeupCheckin() {
+            const makeupDays = getMakeupDays();
+            if (makeupDays.length === 0) {
+                showSystemMessage('沒有可以補簽的日期');
+                return;
+            }
+            
+            const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
+            if (currentStars < 100) {
+                showSystemMessage('星星不足，無法補簽（需要100星星）');
+                return;
+            }
+            
+            performCheckin(new Date(makeupDays[0]));
+        }
+
+        // 將補簽函式暴露到全局作用域
+        window.makeupCheckin = makeupCheckin;
+
+        function updateMakeupButton() {
+            const makeupBtn = document.getElementById('makeupBtn');
+            const makeupDays = getMakeupDays();
+            const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
+            const canMakeup = makeupDays.length > 0 && currentStars >= 100;
+            
+            makeupBtn.disabled = !canMakeup;
+            if (canMakeup) {
+                makeupBtn.textContent = `補簽 (${makeupDays.length}天，需100星星)`;
+            } else {
+                makeupBtn.textContent = '補簽 (需100星星)';
+            }
+        }
+
+        function getMakeupDays() {
+            const makeupDays = [];
+            const today = new Date();
+            
+            for (let i = 1; i <= 30; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() - i);
+                const dateKey = formatDate(date);
+                
+                if (!checkinData[dateKey] && !isFutureDate(date)) {
+                    makeupDays.push(dateKey);
+                }
+            }
+            
+            return makeupDays;
+        }
+
+        // ==================== 累積登入獎勵 ====================
+        function renderCumulativeRewards() {
+            const list = document.getElementById('cumulativeRewards');
+            list.innerHTML = '';
+            
+            const totalCheckins = Object.keys(checkinData).length;
+            
+            cumulativeRewards.forEach(reward => {
+                const isClaimed = cumulativeClaimed[reward.days];
+                const canClaim = totalCheckins >= reward.days && !isClaimed;
+                const progress = Math.min((totalCheckins / reward.days) * 100, 100);
+                
+                const item = document.createElement('div');
+                item.className = 'reward-item';
+                if (isClaimed) item.classList.add('claimed');
+                
+                item.innerHTML = `
+                    <div class="reward-icon">${reward.icon}</div>
+                    <div class="reward-info">
+                        <div class="reward-title">登入${reward.days}天</div>
+                        <div class="reward-desc">${reward.name}</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                    </div>
+                    <button class="claim-btn" onclick="claimCumulativeReward(${reward.days})" 
+                            ${isClaimed || !canClaim ? 'disabled' : ''}>
+                        ${isClaimed ? '已領取' : canClaim ? '領取' : `${reward.days - totalCheckins}天`}
+                    </button>
+                `;
+                
+                list.appendChild(item);
+            });
+        }
+
+        function claimCumulativeReward(days) {
+            const reward = cumulativeRewards.find(r => r.days === days);
+            if (!reward || cumulativeClaimed[days]) return;
+
+            const totalCheckins = Object.keys(checkinData).length;
+            if (totalCheckins < days) {
+                showSystemMessage('登入天數不足');
+                return;
+            }
+
+            // 根據獎勵類型發放
+            const rewardResult = distributeRewardByType(reward);
+
+            // 如果獎勵發放失敗，使用預設補償
+            if (!rewardResult.success) {
+                showSystemMessage('獎勵設定異常，已改發星星補償');
+                const fallbackReward = { type: 'stars', value: 50 };
+                distributeRewardByType(fallbackReward);
+            }
+
+            cumulativeClaimed[days] = true;
+            localStorage.setItem('cumulativeClaimed', JSON.stringify(cumulativeClaimed));
+
+            showSystemMessage(`領取成功！獲得 ${reward.name}`);
+            updateAllStats();
+            renderCumulativeRewards();
+        }
+
+        // 根據獎勵類型發放
+        function distributeRewardByType(reward) {
+            try {
+                switch (reward.type) {
+                    case 'stars':
+                        let currentStars = parseInt(localStorage.getItem('totalStars') || '0');
+                        currentStars += reward.value;
+                        localStorage.setItem('totalStars', currentStars.toString());
+                        break;
+                    case 'normal_ticket':
+                        addGachaTicket('normal', reward.value);
+                        break;
+                    case 'rare_ticket':
+                        // 轉換為普通抽卡券
+                        addGachaTicket('normal', reward.value);
+                        break;
+                    case 'premium_ticket':
+                        // 轉換為普通抽卡券
+                        addGachaTicket('normal', reward.value);
+                        break;
+                    default:
+                        return { success: false, error: 'Unknown reward type' };
+                }
+                return { success: true };
+            } catch (error) {
+                console.error('獎勵發放失敗:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // ==================== 簽到幣商店 ====================
+        function renderCoinShop() {
+            const shop = document.getElementById('coinShop');
+            shop.innerHTML = '';
+            
+            coinShopItems.forEach(item => {
+                const shopItem = document.createElement('div');
+                shopItem.className = 'shop-item';
+                
+                shopItem.innerHTML = `
+                    <div class="item-icon">${item.icon}</div>
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-cost">🪙 ${item.cost}</div>
+                    <button class="buy-btn" onclick="buyShopItem(${item.id})" 
+                            ${checkinCoins < item.cost ? 'disabled' : ''}>
+                        購買
+                    </button>
+                `;
+                
+                shop.appendChild(shopItem);
+            });
+            
+            document.getElementById('coinAmount').textContent = checkinCoins;
+        }
+
+        function buyShopItem(itemId) {
+            const item = coinShopItems.find(i => i.id === itemId);
+            if (!item || checkinCoins < item.cost) {
+                showSystemMessage('簽到幣不足');
+                return;
+            }
+
+            checkinCoins -= item.cost;
+            localStorage.setItem('checkinCoins', checkinCoins.toString());
+
+            // 根據商品類型發放物品
+            const rewardResult = distributeShopItem(item.action);
+
+            // 如果發放失敗，使用預設補償
+            if (!rewardResult.success) {
+                showSystemMessage('商品設定異常，已改發星星補償');
+                let stars = parseInt(localStorage.getItem('totalStars') || '0');
+                stars += 50;
+                localStorage.setItem('totalStars', stars.toString());
+            }
+
+            showSystemMessage(`購買成功！獲得 ${item.name}`);
+            updateAllStats();
+            renderCoinShop();
+        }
+
+        // 發放商店物品
+        function distributeShopItem(action) {
+            try {
+                switch(action) {
+                    case 'normal_ticket':
+                        addGachaTicket('normal', 1);
+                        break;
+                    case 'rare_ticket':
+                        // 轉換為普通抽卡券
+                        addGachaTicket('normal', 1);
+                        break;
+                    case 'stars_100':
+                        let stars = parseInt(localStorage.getItem('totalStars') || '0');
+                        stars += 100;
+                        localStorage.setItem('totalStars', stars.toString());
+                        break;
+                    default:
+                        return { success: false, error: 'Unknown shop item' };
+                }
+                return { success: true };
+            } catch (error) {
+                console.error('商店物品發放失敗:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // ==================== 統計更新 ====================
+        function updateAllStats() {
+            const today = new Date().toDateString();
+            const isTodayChecked = checkinData[today];
+            const totalCheckins = Object.keys(checkinData).length;
+            const currentStreak = calculateCurrentStreak();
+            const monthlyCheckins = calculateMonthlyCheckins();
+            const totalStars = parseInt(localStorage.getItem('totalStars') || '0');
+            
+            // 更新玩家資訊
+            document.getElementById('todayStatus').textContent = isTodayChecked ? '✅ 今日已完成' : '❌ 尚未簽到';
+            document.getElementById('todayStatus').className = 'today-status ' + (isTodayChecked ? 'checked' : 'unchecked');
+            document.getElementById('currentStreak').textContent = currentStreak;
+            document.getElementById('totalCheckins').textContent = totalCheckins;
+            
+            // 更新統計卡片
+            document.getElementById('monthlyCheckins').textContent = monthlyCheckins;
+            document.getElementById('totalStars').textContent = totalStars;
+            document.getElementById('checkinCoins').textContent = checkinCoins;
+            
+            // 更新簽到按鈕
+            const checkinBtn = document.getElementById('checkinBtn');
+            const checkinBtnText = document.getElementById('checkinBtnText');
+            if (isTodayChecked) {
+                checkinBtn.disabled = true;
+                checkinBtnText.textContent = '今日已完成';
+            } else {
+                checkinBtn.disabled = false;
+                checkinBtnText.textContent = '點我簽到';
+            }
+        }
+
+        function calculateCurrentStreak() {
+            let streak = 0;
+            const today = new Date();
+            
+            for (let i = 0; i < 365; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() - i);
+                const dateKey = formatDate(date);
+                
+                if (checkinData[dateKey]) {
+                    streak++;
+                } else {
+                    break;
+                }
+            }
+            
+            return streak;
+        }
+
+        function calculateMonthlyCheckins() {
+            let count = 0;
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            
+            for (let date = new Date(firstDay); date <= lastDay; date.setDate(date.getDate() + 1)) {
+                const dateKey = formatDate(date);
+                if (checkinData[dateKey]) {
+                    count++;
+                }
+            }
+            
+            return count;
+        }
+
+        // ==================== 工具函數 ====================
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        function isSameDate(date1, date2) {
+            return date1.getFullYear() === date2.getFullYear() &&
+                   date1.getMonth() === date2.getMonth() &&
+                   date1.getDate() === date2.getDate();
+        }
+
+        function isFutureDate(date) {
+            const today = new Date();
+            today.setHours(23, 59, 59, 999);
+            return date > today;
+        }
+
+        function isMissedDay(date) {
+            const dateKey = formatDate(date);
+            const today = new Date();
+            return date < today && !checkinData[dateKey] && !isFutureDate(date);
+        }
+
+        function canMakeupDay(date) {
+            const dateKey = formatDate(date);
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today);
+            thirtyDaysAgo.setDate(today.getDate() - 30);
+            
+            return date >= thirtyDaysAgo && date < today && !checkinData[dateKey];
+        }
+
+        function previousMonth() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar();
+        }
+
+        function nextMonth() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar();
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        function showSystemMessage(message) {
+            enqueuePopup({
+                message: message,
+                type: 'system',
+                duration: 2500
+            });
+        }
+    </script>
+</body>
+</html>

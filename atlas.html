@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>星座圖鑑 - 英打小英雄</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <!-- TODO: css/shared.css file does not exist - commented out -->
+  <!-- <link rel="stylesheet" href="css/shared.css"> -->
+  <link rel="stylesheet" href="responsive_enhanced.css">
+  <style>
+    /* 防止水平滾動 */
+    html {
+      overflow-x: hidden;
+    }
+    
+    /* 確保所有元素都在視窗範圍內 */
+    * {
+      box-sizing: border-box;
+      max-width: 100%;
+    }
+    
+    /* 全局 */
+    body { 
+      margin: 0; 
+      padding: 0;
+      font-family: 'Orbitron', sans-serif; 
+      background: linear-gradient(to bottom, #020111 0%, #000010 100%);
+      color: #fff;
+      min-height: 100vh;
+      width: 100%;
+      overflow-x: hidden;
+    }
+    h1 { 
+      text-align: center; 
+      color: #00ffff; 
+      text-shadow: 0 0 12px #00ffff, 0 0 32px #a259ff;
+      margin: 20px 0;
+      font-size: 2rem;
+    }
+
+    /* 分頁按鈕 */
+    .tabs { 
+      display: flex; 
+      justify-content: center; 
+      gap: 16px; 
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .tab-btn { 
+      padding: 12px 28px;
+      background: rgba(10, 20, 40, 0.5);
+      color: #00ffff;
+      border: 2px solid #00ffff88;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+      box-shadow: 0 0 12px #00ffff33, inset 0 0 12px #00ffff22;
+      position: relative;
+      overflow: hidden;
+    }
+    .tab-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(0, 255, 255, 0.4), transparent);
+      transition: left 0.5s ease;
+    }
+    .tab-btn:hover::before {
+      left: 100%;
+    }
+    .tab-btn.active:hover::before {
+      left: -100%;
+    }
+    .tab-btn:hover {
+      background: rgba(10, 20, 40, 0.8);
+      color: #ffffff;
+      border-color: #00ffff;
+      box-shadow: 0 0 24px #00ffff66, inset 0 0 16px #00ffff33;
+    }
+    .tab-btn.active, .tab-btn.active:hover { 
+      background: linear-gradient(90deg, #00ffff 0%, #a259ff 100%);
+      color: #000;
+      border-color: #a259ff;
+      box-shadow: 0 0 24px #00ffff, 0 0 32px #a259ff;
+    }
+
+    /* 內容區塊 */
+    .tab-content { 
+      display: none; 
+      padding: 0 20px;
+      animation: fadeIn 0.4s ease;
+    }
+    .tab-content.active { 
+      display: block;
+    }
+    @keyframes fadeIn { 
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 卡片網格 */
+    .grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 24px; 
+      max-width: 1200px;
+      width: 95%;
+      margin: 0 auto 40px;
+      padding: 20px;
+    }
+
+    /* 卡片樣式 */
+    .card { width:140px; height:220px; background:linear-gradient(145deg,#181818,#0a0a0a); border-radius:16px; padding:12px; position:relative; box-shadow:4px 4px 10px #0008,-4px -4px 10px #fff1; transition:.3s; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .card:hover { transform:translateY(-6px) scale(1.03); box-shadow:6px 6px 12px #000b,-6px -6px 12px #fff2; }
+    #tab1 .card { border:2px solid #00ffff; box-shadow: 0 0 16px #00ffff44; }
+    #tab2 .card { border:2px solid #ff99cc; box-shadow: 0 0 16px #ff99cc44; }
+    #tab3 .card { border:2px solid #ffd700; box-shadow: 0 0 16px #ffd70044; }
+    .card.locked::after { content:attr(data-locktext); position:absolute; top:10px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.8); padding:4px 8px; border-radius:8px; font-weight:700; color:#ff4; animation:glowText 1.5s infinite; }
+    @keyframes glowText {
+      0%, 100% { text-shadow: 0 0 6px #ffd700; }
+      50% { text-shadow: 0 0 12px #ffd700, 0 0 24px #00ffff; }
+    }
+
+    .card img { 
+      width: 80px; 
+      height: 80px; 
+      border-radius: 50%; 
+      object-fit: cover; 
+      margin-bottom: 10px; 
+      border: 2px solid #ffd700;
+      box-shadow: 0 0 16px #ffd70044;
+    }
+    .card-title { 
+      font-size: 1rem; 
+      font-weight: 700; 
+      margin-bottom: 6px; 
+      text-align: center;
+      color: #00ffff;
+      text-shadow: 0 0 6px #00ffff;
+    }
+    .card-desc { 
+      font-size: 0.8rem; 
+      color: #a0a0ff; 
+      text-align: center; 
+      margin-bottom: 8px;
+    }
+    .card-info { 
+      font-size: 0.75rem; 
+      color: #ffd700; 
+      text-align: center;
+      text-shadow: 0 0 4px #ffd700;
+    }
+    .stage-info {
+      font-size: 0.7rem;
+      color: #00ffff;
+      text-align: center;
+      margin-top: 6px;
+      text-shadow: 0 0 6px rgba(0, 255, 255, 0.7);
+    }
+    .stage-chip {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.65rem;
+      letter-spacing: 0.5px;
+      color: #00ffff;
+      border: 1px solid rgba(0, 255, 255, 0.4);
+      background: rgba(0, 0, 0, 0.5);
+      text-transform: uppercase;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    /* 返回按鈕與星星 */
+    .back-btn { 
+      position: absolute; 
+      top: 16px; 
+      left: 16px; 
+      background: linear-gradient(90deg, #00ffff 0%, #a259ff 100%);
+      color: #000; 
+      border: none; 
+      border-radius: 8px;
+      padding: 8px 16px; 
+      font-weight: bold; 
+      cursor: pointer; 
+      box-shadow: 0 0 16px #00ffff;
+      font-family: 'Orbitron', sans-serif;
+      transition: transform 0.2s, box-shadow 0.2s;
+      z-index: 1000;
+    }
+    .back-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 32px #00ffff;
+    }
+    #totalStarsDisplay { 
+      position: absolute; 
+      top: 16px; 
+      right: 16px; 
+      background: rgba(10, 20, 40, 0.85);
+      padding: 8px 14px;
+      border-radius: 10px; 
+      color: #ffd700; 
+      font-weight: bold; 
+      box-shadow: 0 0 12px #ffd700, 0 0 32px #00ffff;
+      border: 2px solid #00ffff;
+      font-size: 1.2rem;
+      z-index: 1000;
+    }
+
+    /* 播放/靜音 按鈕 */
+    #playAudio, #muteToggle {
+      position: fixed; 
+      bottom: 16px; 
+      right: 16px; 
+      z-index: 999;
+      background: rgba(10, 20, 40, 0.85);
+      color: #fff; 
+      border: 2px solid #00ffff;
+      padding: 8px;
+      border-radius: 50%; 
+      font-size: 1.2rem; 
+      cursor: pointer; 
+      box-shadow: 0 0 16px #00ffff;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    #playAudio:hover, #muteToggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 32px #00ffff;
+    }
+    #muteToggle { 
+      right: 64px; 
+      display: none; 
+    }
+
+    .practice-btn {
+      background: linear-gradient(100deg, #ffe066 0%, #ff6ec4 100%);
+      color: #222;
+      border: 3px solid #ffd700;
+      border-radius: 32px;
+      box-shadow: 0 0 24px #ffd70099, 0 0 8px #ff6ec499;
+      font-weight: bold;
+      font-size: 1.15rem;
+      padding: 14px 36px 14px 28px;
+      margin-left: 32px;
+      letter-spacing: 2px;
+      position: relative;
+      transition: all 0.25s cubic-bezier(.4,2,.6,1);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-shadow: 0 2px 8px #fff8;
+      z-index: 2;
+    }
+    .practice-btn::before {
+      content: '🃏';
+      font-size: 1.3em;
+      margin-right: 6px;
+      filter: drop-shadow(0 0 6px #ffd700cc);
+      animation: practice-glow 1.5s infinite alternate;
+    }
+    @keyframes practice-glow {
+      0% { filter: drop-shadow(0 0 6px #ffd700cc); }
+      100% { filter: drop-shadow(0 0 18px #ff6ec4cc); }
+    }
+    .practice-btn:hover {
+      background: linear-gradient(100deg, #ff6ec4 0%, #ffe066 100%);
+      color: #fff;
+      box-shadow: 0 0 48px #ffd700cc, 0 0 24px #ff6ec4cc;
+      transform: scale(1.08) rotate(-2deg);
+      border-color: #ff6ec4;
+    }
+
+    /* 響應式設計 */
+    /* 大螢幕優化 */
+    @media (min-width: 1200px) {
+      .grid {
+        max-width: 1400px;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 28px;
+        padding: 25px;
+      }
+      
+      .card {
+        width: 160px;
+        height: 240px;
+        padding: 15px;
+      }
+      
+      .card img {
+        width: 90px;
+        height: 90px;
+      }
+      
+      .card-title {
+        font-size: 1.1rem;
+      }
+      
+      .card-desc {
+        font-size: 0.85rem;
+      }
+      
+      .card-info {
+        font-size: 0.8rem;
+      }
+    }
+
+    /* 平板橫向 */
+    @media (max-width: 1024px) {
+      .grid {
+        width: 98%;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 20px;
+        padding: 18px;
+      }
+      
+      .card {
+        width: 130px;
+        height: 200px;
+        padding: 12px;
+      }
+      
+      .card img {
+        width: 70px;
+        height: 70px;
+      }
+      
+      .card-title {
+        font-size: 0.95rem;
+      }
+      
+      .card-desc {
+        font-size: 0.75rem;
+      }
+      
+      .card-info {
+        font-size: 0.7rem;
+      }
+      
+      h1 {
+        font-size: 2.2rem;
+      }
+      
+      .tabs {
+        padding: 15px;
+      }
+      
+      .tab-btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+      }
+      
+      .practice-btn {
+        padding: 10px 24px;
+        font-size: 1rem;
+      }
+      
+      .back-btn {
+        top: 12px;
+        left: 12px;
+        padding: 6px 12px;
+        font-size: 0.9rem;
+      }
+      
+      #totalStarsDisplay {
+        top: 12px;
+        right: 12px;
+        padding: 6px 12px;
+        font-size: 1rem;
+      }
+    }
+
+    /* 平板直向 */
+    @media (max-width: 768px) {
+      .grid {
+        width: 100%;
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 16px;
+        padding: 15px;
+      }
+      
+      .card {
+        width: 110px;
+        height: 170px;
+        padding: 10px;
+      }
+      
+      .card img {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .card-title {
+        font-size: 0.85rem;
+      }
+      
+      .card-desc {
+        font-size: 0.7rem;
+        line-height: 1.3;
+      }
+      
+      .card-info {
+        font-size: 0.65rem;
+      }
+      
+      h1 {
+        font-size: 2rem;
+        margin: 15px 0;
+      }
+      
+      .tabs {
+        padding: 12px;
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .tab-btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+      }
+      
+      .practice-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        margin-left: 0;
+      }
+      
+      .back-btn {
+        top: 10px;
+        left: 10px;
+        padding: 5px 10px;
+        font-size: 0.8rem;
+      }
+      
+      #totalStarsDisplay {
+        top: 10px;
+        right: 10px;
+        padding: 5px 10px;
+        font-size: 0.9rem;
+      }
+      
+      #playAudio, #muteToggle {
+        bottom: 12px;
+        font-size: 1rem;
+      }
+      
+      #muteToggle {
+        right: 52px;
+      }
+    }
+
+    /* 手機橫向 */
+    @media (max-width: 600px) {
+      .grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 12px;
+        padding: 12px;
+      }
+      
+      .card {
+        width: 100px;
+        height: 150px;
+        padding: 8px;
+      }
+      
+      .card img {
+        width: 50px;
+        height: 50px;
+      }
+      
+      .card-title {
+        font-size: 0.8rem;
+      }
+      
+      .card-desc {
+        font-size: 0.65rem;
+        line-height: 1.2;
+      }
+      
+      .card-info {
+        font-size: 0.6rem;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .tabs {
+        padding: 10px;
+      }
+      
+      .tab-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
+      
+      .practice-btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+      }
+      
+      .back-btn {
+        top: 8px;
+        left: 8px;
+        padding: 4px 8px;
+        font-size: 0.75rem;
+      }
+      
+      #totalStarsDisplay {
+        top: 8px;
+        right: 8px;
+        padding: 4px 8px;
+        font-size: 0.85rem;
+      }
+    }
+
+    /* 小螢幕手機 */
+    @media (max-width: 480px) {
+      .grid {
+        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+        gap: 10px;
+        padding: 10px;
+      }
+      
+      .card {
+        width: 90px;
+        height: 135px;
+        padding: 6px;
+      }
+      
+      .card img {
+        width: 45px;
+        height: 45px;
+      }
+      
+      .card-title {
+        font-size: 0.75rem;
+      }
+      
+      .card-desc {
+        font-size: 0.6rem;
+        line-height: 1.1;
+      }
+      
+      .card-info {
+        font-size: 0.55rem;
+      }
+      
+      h1 {
+        font-size: 1.6rem;
+      }
+      
+      .tabs {
+        padding: 8px;
+      }
+      
+      .tab-btn {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+      }
+      
+      .practice-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
+      
+      .back-btn {
+        top: 6px;
+        left: 6px;
+        padding: 3px 6px;
+        font-size: 0.7rem;
+      }
+      
+      #totalStarsDisplay {
+        top: 6px;
+        right: 6px;
+        padding: 3px 6px;
+        font-size: 0.8rem;
+      }
+      
+      #playAudio, #muteToggle {
+        bottom: 10px;
+        font-size: 0.9rem;
+        padding: 6px;
+      }
+      
+      #muteToggle {
+        right: 45px;
+      }
+    }
+
+    /* 極小螢幕 */
+    @media (max-width: 360px) {
+      .grid {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 8px;
+        padding: 8px;
+      }
+      
+      .card {
+        width: 80px;
+        height: 120px;
+        padding: 5px;
+      }
+      
+      .card img {
+        width: 40px;
+        height: 40px;
+      }
+      
+      .card-title {
+        font-size: 0.7rem;
+      }
+      
+      .card-desc {
+        font-size: 0.55rem;
+        line-height: 1;
+      }
+      
+      .card-info {
+        font-size: 0.5rem;
+      }
+      
+      h1 {
+        font-size: 1.4rem;
+      }
+      
+      .tabs {
+        padding: 6px;
+      }
+      
+      .tab-btn {
+        padding: 4px 8px;
+        font-size: 0.7rem;
+      }
+      
+      .practice-btn {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+      }
+      
+      .back-btn {
+        top: 5px;
+        left: 5px;
+        padding: 2px 5px;
+        font-size: 0.65rem;
+      }
+      
+      #totalStarsDisplay {
+        top: 5px;
+        right: 5px;
+        padding: 2px 5px;
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 背景音樂（不自動播放） -->
+  <audio id="bgm" src="sound/background.mp3" loop></audio>
+  <button id="playAudio">▶️</button>
+  <button id="muteToggle">🔈</button>
+
+  <!-- 點擊音效 -->
+  <audio id="clickSfx" src="sound/click.mp3" preload="auto"></audio>
+
+  <button class="back-btn" onclick="location.href='index.html'">← 返回首頁</button>
+  <div id="totalStarsDisplay">⭐ 總星數：<span id="displayStars">0</span></div>
+  <h1>🌠 星座圖鑑</h1>
+
+ <div class="tabs">
+    <button class="tab-btn active" data-target="tab1">星座＆彩蛋</button>
+    <button class="tab-btn" data-target="tab3">希臘神祇</button>
+    <button class="tab-btn" data-target="tab4">排行榜</button>
+    <button class="practice-btn" id="practiceBtn" style="display:inline-block;">練習關卡</button>
+</div>
+  <div id="tab1" class="tab-content active">
+    <div style="margin: 0 auto 12px; max-width: 400px;">
+      <div id="progressBar1Container" style="background:#222;border-radius:12px;overflow:hidden;height:28px;box-shadow:0 0 8px #00ffff55;margin-bottom:8px;">
+        <div id="progressBar1" style="height:100%;width:0;background:linear-gradient(90deg,#00ffff,#a259ff);transition:width 0.5s;"></div>
+      </div>
+      <div id="progressText1" style="text-align:center;color:#00ffff;font-weight:bold;"></div>
+    </div>
+    <div class="grid" id="atlasGrid"></div>
+  </div>
+  <div id="tab3" class="tab-content">
+    <div style="margin: 0 auto 12px; max-width: 400px;">
+      <div id="progressBar3Container" style="background:#222;border-radius:12px;overflow:hidden;height:28px;box-shadow:0 0 8px #ffd70055;margin-bottom:8px;">
+        <div id="progressBar3" style="height:100%;width:0;background:linear-gradient(90deg,#ffd700,#00ffff);transition:width 0.5s;"></div>
+      </div>
+      <div id="progressText3" style="text-align:center;color:#ffd700;font-weight:bold;"></div>
+    </div>
+    <div class="grid" id="greekGrid"></div>
+  </div>
+<div id="tab4" class="tab-content">
+  <h2 style="text-align:center;color:#00ffff;margin-top:10px;">⭐ 星座分數排行榜 ⭐</h2>
+  <div style="text-align:center;margin:10px auto 0;max-width:960px;">
+    <label for="rankingCategorySelect" style="color:#00ffff;font-weight:bold;margin-right:8px;">選擇關卡：</label>
+    <select id="rankingCategorySelect" style="padding:8px 12px;border-radius:10px;border:2px solid #00ffff;background:#111;color:#fff;font-family:'Orbitron',sans-serif;">
+      <option value="all">全部</option>
+      <option value="aries">牡羊座</option>
+      <option value="taurus">金牛座</option>
+      <option value="gemini">雙子座</option>
+      <option value="cancer">巨蟹座</option>
+      <option value="leo">獅子座</option>
+      <option value="virgo">處女座</option>
+      <option value="libra">天秤座</option>
+      <option value="scorpio">天蠍座</option>
+      <option value="sagittarius">射手座</option>
+      <option value="capricorn">摩羯座</option>
+      <option value="aquarius">水瓶座</option>
+      <option value="pisces">雙魚座</option>
+      <option value="andromeda">仙女座</option>
+      <option value="cygnus">天鵝座</option>
+      <option value="orion">獵戶座</option>
+      <option value="pegasus">飛馬座</option>
+      <option value="cassiopeia">仙后座</option>
+      <option value="phoenix">鳳凰座</option>
+      <option value="vela">船帆座</option>
+    </select>
+  </div>
+  <div id="rankingContainer"
+       style="max-width:960px;margin:16px auto 28px;padding:26px;background:#111;
+              border-radius:16px;box-shadow:0 0 16px #00ffff55;">
+      <p style="text-align:center;color:#aaa;">正在載入排行榜…</p>
+  </div>
+
+  <h2 style="text-align:center;color:#ffd700;margin-top:10px;">🏛️ 希臘神祉分數排行榜 🏛️</h2>
+  <div style="text-align:center;margin:10px auto 0;max-width:960px;">
+    <label for="greekRankingCategorySelect" style="color:#ffd700;font-weight:bold;margin-right:8px;">選擇神祉：</label>
+    <select id="greekRankingCategorySelect" style="padding:8px 12px;border-radius:10px;border:2px solid #ffd700;background:#111;color:#fff;font-family:'Orbitron',sans-serif;">
+      <option value="all">全部</option>
+      <option value="宙斯">宙斯</option>
+      <option value="赫拉">赫拉</option>
+      <option value="波塞頓">波塞頓</option>
+      <option value="得墨忒耳">得墨忒耳</option>
+      <option value="雅典娜">雅典娜</option>
+      <option value="阿波羅">阿波羅</option>
+      <option value="阿爾忒彌斯">阿爾忒彌斯</option>
+      <option value="阿瑞斯">阿瑞斯</option>
+      <option value="阿芙蘿黛蒂">阿芙蘿黛蒂</option>
+      <option value="赫菲斯托斯">赫菲斯托斯</option>
+      <option value="赫耳墨斯">赫耳墨斯</option>
+      <option value="赫斯提亞">赫斯提亞</option>
+      <option value="狄俄尼索斯">狄俄尼索斯</option>
+      <option value="哈迪斯">哈迪斯</option>
+      <option value="珀爾塞福涅">珀爾塞福涅</option>
+      <option value="厄洛斯">厄洛斯</option>
+      <option value="尼刻">尼刻</option>
+      <option value="蓋婭">蓋婭</option>
+      <option value="阿特拉斯">阿特拉斯</option>
+      <option value="克洛諾斯">克洛諾斯</option>
+      <option value="瑞亞">瑞亞</option>
+      <option value="普羅米修斯">普羅米修斯</option>
+    </select>
+  </div>
+  <div id="greekRankingContainer"
+       style="max-width:960px;margin:16px auto 28px;padding:26px;background:#111;
+              border-radius:16px;box-shadow:0 0 16px #ffd70055;">
+      <p style="text-align:center;color:#aaa;">正在載入排行榜…</p>
+  </div>
+</div>
+
+  <script src="js/achievementSystem.js"></script>
+  <script src="js/utils.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // ----- 開發者模式：輸入 "open" + Enter 解鎖所有關卡 -----
+    let keySequence = '';
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        if (keySequence.toLowerCase() === 'open') {
+          // 解鎖所有星座關卡
+          const atlasCategories = ["aries","taurus","gemini","cancer","leo","virgo","libra","scorpio",
+            "sagittarius","capricorn","aquarius","pisces","andromeda","cygnus","orion","pegasus",
+            "cassiopeia","scorpius","phoenix","vela"];
+          localStorage.setItem('unlocked', JSON.stringify(atlasCategories));
+          
+          // 解鎖所有希臘神祇關卡
+          const deities = ['宙斯', '赫拉', '波塞頓', '得墨忒耳', '雅典娜', '阿波羅', '阿爾忒彌斯', 
+            '阿瑞斯', '阿芙蘿黛蒂', '赫菲斯托斯', '赫耳墨斯', '赫斯提亞', '狄俄尼索斯', '哈迪斯', 
+            '珀爾塞福涅', '厄洛斯', '尼刻', '蓋婭', '阿特拉斯', '克洛諾斯', '瑞亞', '普羅米修斯'];
+          localStorage.setItem('unlockedGreek', JSON.stringify(deities));
+          
+          // 顯示解鎖成功訊息
+          alert('🎉 所有關卡已解鎖！');
+          
+          // 重新載入頁面以更新顯示
+          location.reload();
+        } else if (keySequence.toLowerCase() === 'close') {
+          // 鎖定所有星座關卡
+          localStorage.setItem('unlocked', JSON.stringify([]));
+          
+          // 鎖定所有希臘神祇關卡
+          localStorage.setItem('unlockedGreek', JSON.stringify([]));
+          
+          // 顯示鎖定成功訊息
+          alert('🔒 所有關卡已鎖定！');
+          
+          // 重新載入頁面以更新顯示
+          location.reload();
+        }
+        keySequence = '';
+      } else if (e.key.length === 1) {
+        keySequence += e.key;
+        // 限制序列長度
+        if (keySequence.length > 10) {
+          keySequence = keySequence.slice(-10);
+        }
+      }
+    });
+
+    // ----- 星星顯示 -----
+    let totalStars = Storage.getTotalStars();
+    function updateDisplayStars() {
+      const displayEl = document.getElementById('displayStars');
+      if (displayEl) {
+        displayEl.textContent = totalStars;
+      }
+    }
+    updateDisplayStars();
+    // 監聽星星更新事件
+    window.addEventListener('starsUpdated', (e) => {
+      totalStars = e.detail.totalStars;
+      updateDisplayStars();
+    });
+
+    // ----- 分頁切換 -----
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.target).classList.add('active');
+        // 控制練習關卡按鈕顯示
+        if(btn.dataset.target === 'tab1'){
+          document.getElementById('practiceBtn').style.display = 'inline-block';
+        }else{
+          document.getElementById('practiceBtn').style.display = 'none';
+        }
+        // 進入排行榜分頁時才載入資料
+        if (btn.dataset.target === 'tab4') {
+          loadRanking();
+        }
+      });
+    });
+    // 頁面載入時只在tab1顯示
+    document.getElementById('practiceBtn').style.display = 'inline-block';
+
+    // ----- 音樂 播放 & 靜音 -----
+    const bgm = document.getElementById('bgm');
+    const playBtn = document.getElementById('playAudio');
+    const muteBtn = document.getElementById('muteToggle');
+    bgm.volume = 0.5;
+    playBtn.addEventListener('click', () => {
+      bgm.play().then(() => {
+        playBtn.style.display = 'none';
+        muteBtn.style.display = 'block';
+      }).catch(e => console.warn('播放失敗', e));
+    });
+    muteBtn.addEventListener('click', () => {
+      bgm.muted = !bgm.muted;
+      muteBtn.textContent = bgm.muted ? '🔇' : '🔈';
+    });
+
+    // ----- 按鈕音效 -----
+    const clickSfx = document.getElementById('clickSfx');
+    document.querySelectorAll('.tab-btn, .back-btn, #playAudio, #muteToggle, .practice-btn')
+      .forEach(el => {
+        el.addEventListener('click', () => {
+          clickSfx.currentTime = 0;
+          clickSfx.play().catch(() => {});
+        });
+      });
+
+    // Tab1: 星座＆彩蛋
+    const atlasCategories = ["aries","taurus","gemini","cancer","leo","virgo","libra","scorpio",
+      "sagittarius","capricorn","aquarius","pisces","andromeda","cygnus","orion","pegasus",
+      "cassiopeia","scorpius","phoenix","vela"];
+    let costData = JSON.parse(localStorage.getItem('unlockCosts')||'{}');
+    if (!Object.keys(costData).length) {
+      atlasCategories.forEach(k => costData[k] = Math.floor(Math.random()*21)+10);
+      localStorage.setItem('unlockCosts', JSON.stringify(costData));
+    }
+    let unlockedList = JSON.parse(localStorage.getItem('unlocked')||'[]');
+    if (!unlockedList.length) {
+      unlockedList = atlasCategories.sort(() => 0.5 - Math.random()).slice(0,2);
+      localStorage.setItem('unlocked', JSON.stringify(unlockedList));
+    }
+    const descMap = {
+      aries:        '牡羊座，象徵勇氣與冒險。',
+      taurus:       '金牛座，代表穩定與毅力。',
+      gemini:       '雙子座，靈活聰明，喜歡交流。',
+      cancer:       '巨蟹座，溫柔體貼，家庭導向。',
+      leo:          '獅子座，領導力強，充滿自信。',
+      virgo:        '處女座，細心認真，注重細節。',
+      libra:        '天秤座，追求平衡與和諧。',
+      scorpio:      '天蠍座被稱為「火星的競爭者」。',
+      sagittarius: '射手座，熱愛自由與探索。',
+      capricorn:    '摩羯座，務實努力，堅持到底。',
+      aquarius:     '水瓶座，創新獨立，喜歡新奇。',
+      pisces:       '雙魚座，富有想像力與同理心。',
+      andromeda:    '仙女座，以其獨特的形狀和神話背景聞名。',
+      cygnus:       '天鵝座，這個星座的形狀像展翅飛翔的天鵝，因此得名。',
+      orion:        '獵戶座，獵戶腰帶由三顆亮星排列成直線，非常醒目。',
+      pegasus:      '飛馬座，英雄的勇氣與智慧。',
+      cassiopeia:   '仙后座，象徵傲慢的王后。',
+      phoenix:      '鳳凰座，象徵重生與不滅的生命，代表著希望與永恆。',
+      vela:         '船帆座，以其散開的帆布狀星群聞名，原屬大船座的一部分。'
+    };
+    let passedAtlas = JSON.parse(localStorage.getItem('passed_atlas')||'[]');
+    atlasCategories.forEach((key, index) => {
+      // 確保每個星座都有成本設定
+      const stageNumber = index + 1;
+      const stageStart = index * 20 + 1;
+      const stageEnd = (index + 1) * 20;
+      const stageLabel = `第${stageNumber}關 ${stageStart}-${stageEnd}`;
+      if (!costData[key]) {
+        costData[key] = Math.floor(Math.random()*21)+10;
+        localStorage.setItem('unlockCosts', JSON.stringify(costData));
+      }
+      const cost = costData[key], unlocked = unlockedList.includes(key);
+      const isCustom = false;
+      const title = key.toUpperCase();
+      const card = document.createElement('div');
+      card.className = 'card' + (unlocked ? '' : ' locked');
+      if (!unlocked) card.dataset.locktext = `${cost}⭐解鎖`;
+      card.innerHTML = `
+        <div class="card-title">${title}</div>
+        <div class="card-desc">${descMap[key]||''}</div>
+        <div class="card-info">${unlocked ? '已解鎖' : cost+'⭐解鎖'}</div>
+        <div class="stage-info">${stageLabel}</div>
+        ${passedAtlas.includes(key) ? '<div style="position:absolute;top:8px;right:10px;font-size:1.3em;color:#ffd700;">✔ 已通關</div>' : ''}
+      `;
+      card.addEventListener('click', () => {
+        clickSfx.currentTime = 0;
+        clickSfx.play().catch(() => {});
+        let cs = parseInt(localStorage.getItem('totalStars'),10)||0;
+        let ul = JSON.parse(localStorage.getItem('unlocked')||'[]');
+        if (!ul.includes(key)) {
+          if (cs>=cost) {
+            cs -= cost; 
+            Storage.setTotalStars(cs);
+            totalStars = cs; 
+            updateDisplayStars();
+            ul.push(key); 
+            Storage.set('unlocked', ul);
+            card.classList.remove('locked');
+            card.removeAttribute('data-locktext');
+            card.querySelector('.card-info').textContent = '已解鎖';
+          } else {
+            alert('星星不足，無法解鎖。');
+            return;
+          }
+        }
+        window.location.href = `quiz.html?category=${encodeURIComponent(key)}`;
+      });
+      document.getElementById('atlasGrid').appendChild(card);
+    });
+
+      // Tab3: 希臘神祇
+    (function() {
+      const deities = [
+        { name: '宙斯', url: 'zeus.html', img: 'https://i.pinimg.com/736x/f7/44/dc/f744dc2cd9f052369f1eda963bf3b547.jpg', desc: '雷電之王' },
+        { name: '赫拉', url: 'hera.html', img: 'https://images.nightcafe.studio/jobs/jrtc05QrGWfgcL9U7oQ5/jrtc05QrGWfgcL9U7oQ5--1--0kpbz.jpg?tr=w-1600,c-at_max', desc: '婚姻守護' },
+        { name: '波塞頓', url: 'poseidon.html', img: 'https://th.bing.com/th/id/OIP.ds9l0HmwcwlBZUt1_SOAUQHaLF?r=0&rs=1&pid=ImgDetMain&cb=idpwebpc2', desc: '震海之神' },
+        { name: '得墨忒耳', url: 'demeter.html', img: 'https://i.pinimg.com/736x/5e/55/f3/5e55f31c21d96c2055d39d07fa72ea2.jpg', desc: '豐饒女神' },
+        { name: '雅典娜', url: 'athena.html', img: 'https://i.pinimg.com/originals/45/09/04/45090436c02480c7d472774ba38bf682.jpg', desc: '智慧戰略' },
+        { name: '阿波羅', url: 'apollo.html', img: 'https://th.bing.com/th/id/OIP.nST24oXU5QbHwyzkNIDI0QHaHa?r=0&w=736&h=736&rs=1&pid=ImgDetMain&cb=idpwebpc2', desc: '光與預言' },
+        { name: '阿爾忒彌斯', url: 'artemis.html', img: 'https://as2.ftcdn.net/v2/jpg/07/11/84/53/1000_F_711845312_FrFR9WTehywtZl3bO20csc48OSmqKRcU.jpg', desc: '月狩獵女神' },
+        { name: '阿瑞斯', url: 'ares.html', img: 'https://i.pinimg.com/originals/e6/bc/f7/e6bcf7f460a50f2c2700122554c4386e.png', desc: '戰場狂熱' },
+        { name: '阿芙蘿黛蒂', url: 'aphrodite.html', img: 'https://img.freepik.com/premium-photo/timeless-beauty-capturing-ancient-greek-goddess-athena-ultrarealistic-splendor_960911-22038.jpg?w=2000', desc: '愛與美' },
+        { name: '赫菲斯托斯', url: 'hephaestus.html', img: 'https://th.bing.com/th/id/OIP.c9pf5fdxkTIC4f58Wwk7SQHaHa?r=0&w=1024&h=1024&rs=1&pid=ImgDetMain&cb=idpwebpc2', desc: '鍛造工匠' },
+        { name: '赫耳墨斯', url: 'hermes.html', img: 'https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https://substack-post-media.s3.amazonaws.com/public/images/49e898d3-33e8-4355-8049-5b32b6fa2695_1024x1024.png', desc: '狡黠信使' },
+        { name: '赫斯提亞', url: 'hestia.html', img: 'https://i.etsystatic.com/10441898/c/2143/2143/0/0/il/b01774/5669551924/il_600x600.5669551924_g09a.jpg', desc: '家園聖火' },
+        { name: '狄俄尼索斯', url: 'dionysus.html', img: 'https://i.pinimg.com/1200x/d3/27/97/d327972a87a915c1cbd9fefe868307d1.jpg', desc: '狂歡酒神' },
+        { name: '哈迪斯', url: 'hades.html', img: 'https://th.bing.com/th/id/OIP.jh5PoCyBjLDW-PQlC9_1dAHaHa?r=0&w=1024&h=1024&rs=1&pid=ImgDetMain&cb=idpwebpc2', desc: '冥界君主' },
+        { name: '珀爾塞福涅', url: 'persephone.html', img: 'https://cdn.openart.ai/stable_diffusion/af3394f52d952263c6c773045bcc5391f6702033_2000x2000.webp', desc: '春天冥后' },
+        { name: '厄洛斯', url: 'eros.html', img: 'https://i.pinimg.com/736x/ad/63/63/ad6363477e4266b39aaf86e058facfb6.jpg', desc: '愛之箭' },
+        { name: '尼刻', url: 'nike.html', img: 'https://i.pinimg.com/736x/d8/b4/51/d8b4515f750e0f8106ba69a91ff05679.jpg', desc: '勝利女神' },
+        { name: '蓋婭', url: 'gaia.html', img: 'https://i.pinimg.com/1200x/4e/ac/31/4eac313f814d9044877241e163a43585.jpg', desc: '萬物之母' },
+        { name: '阿特拉斯', url: 'atlas_god.html', img: 'https://i.pinimg.com/736x/02/e2/14/02e214b507e55f3dddb673c7acdc25f7.jpg', desc: '天空支柱' },
+        { name: '克洛諾斯', url: 'cronus.html', img: 'https://i.pinimg.com/1200x/89/24/bc/8924bcdf6c9734a961ef956a8e8fbf79.jpg', desc: '時間之王' },
+        { name: '瑞亞', url: 'rhea.html', img: 'https://i.pinimg.com/1200x/44/0e/e8/440ee8571b581d7ae728d2c9c765cb74.jpg', desc: '母性守護' },
+        { name: '普羅米修斯', url: 'prometheus.html', img: 'https://i.pinimg.com/736x/2d/b4/24/2db4245bd440fa993e2e1ac1904800c6.jpg', desc: '火種使者' }
+      ];
+
+      let unlockedGreek = JSON.parse(localStorage.getItem('unlockedGreek') || '[]');
+      let greekCosts = JSON.parse(localStorage.getItem('unlockGreekCosts') || '{}');
+      
+      // 如果沒有設定成本，則為每個神祇設定隨機成本
+      if (!Object.keys(greekCosts).length) {
+        deities.forEach(d => greekCosts[d.name] = Math.floor(Math.random() * 31) + 30);
+        localStorage.setItem('unlockGreekCosts', JSON.stringify(greekCosts));
+      }
+
+      let passedFlipcard = JSON.parse(localStorage.getItem('passed_flipcard')||'[]');
+      deities.forEach((d, index) => {
+        // 確保每個神祇都有成本設定
+        if (!greekCosts[d.name]) {
+          greekCosts[d.name] = Math.floor(Math.random() * 31) + 30;
+          // 保存更新後的成本到 localStorage
+          localStorage.setItem('unlockGreekCosts', JSON.stringify(greekCosts));
+        }
+        const stageNumber = index + 1;
+        const stageStart = index * 40 + 1;
+        const stageEnd = (index + 1) * 40;
+        const stageLabel = `第${stageNumber}關 ${stageStart}-${stageEnd}`;
+        const cost = greekCosts[d.name];
+        const unlocked = unlockedGreek.includes(d.name);
+        const card = document.createElement('div');
+        card.className = 'card' + (unlocked ? '' : ' locked');
+        if (!unlocked) card.dataset.locktext = `${cost}⭐解鎖`;
+        card.innerHTML = `
+          <img src="${d.img}" alt="${d.name}"/>
+          <div class="card-title">${d.name}</div>
+          <div class="card-desc">${d.desc}</div>
+          <div class="card-info">${unlocked ? '已解鎖' : cost + '⭐解鎖'}</div>
+          <div class="stage-info">${stageLabel}</div>
+          ${passedFlipcard.includes(d.name) ? '<div style=\'position:absolute;top:8px;right:10px;font-size:1.3em;color:#ffd700;\'>✔ 已通關</div>' : ''}
+        `;
+        card.addEventListener('click', () => {
+          let cs = parseInt(localStorage.getItem('totalStars'), 10) || 0;
+          let ug = JSON.parse(localStorage.getItem('unlockedGreek') || '[]');
+          if (!ug.includes(d.name)) {
+            if (cs >= cost) {
+              cs -= cost;
+              Storage.setTotalStars(cs);
+              totalStars = cs;
+              updateDisplayStars();
+              ug.push(d.name);
+              Storage.set('unlockedGreek', ug);
+              // 更新卡片顯示狀態
+              card.classList.remove('locked');
+              card.removeAttribute('data-locktext');
+              card.querySelector('.card-info').textContent = '已解鎖';
+              // 更新希臘關卡進度條
+              updateProgress3();
+            } else {
+              alert('星星不足，無法解鎖');
+              return;
+            }
+          }
+          window.location.href = d.url;
+        });
+        document.getElementById('greekGrid').appendChild(card);
+      });
+    })();
+
+    // 練習關卡按鈕發音功能
+    function speakPracticeMode() {
+      if (window.speechSynthesis) {
+        // 使用新的發音系統
+        SoundSystem.speech.speakWord('Practice Mode');
+      }
+    }
+    document.getElementById('practiceBtn').addEventListener('mouseenter', speakPracticeMode);
+    document.getElementById('practiceBtn').addEventListener('click', function() {
+      window.location.href = 'flipcard_practice.html';
+    });
+
+    // Tab1進度條
+    function updateProgress1() {
+      const total = atlasCategories.length;
+      const unlocked = JSON.parse(localStorage.getItem('unlocked')||'[]').length;
+      const percent = Math.round(unlocked/total*100);
+      document.getElementById('progressBar1').style.width = percent+'%';
+      document.getElementById('progressText1').textContent = `已解鎖 ${unlocked} / ${total}（${percent}%）`;
+      let passed = JSON.parse(localStorage.getItem('passed_atlas')||'[]').length;
+      let passDiv = document.getElementById('passText1');
+      if (!passDiv) {
+        passDiv = document.createElement('div');
+        passDiv.id = 'passText1';
+        document.getElementById('progressBar1Container').after(passDiv);
+      }
+      passDiv.style.textAlign = 'center';
+      passDiv.style.color = '#ffd700';
+      passDiv.style.fontWeight = 'bold';
+      passDiv.textContent = `✔ 已通關 ${passed} / ${total}`;
+    }
+    updateProgress1();
+
+    // Tab3進度條 (希臘神祇)
+    function updateProgress3() {
+      const deities = ['宙斯', '赫拉', '波塞頓', '得墨忒耳', '雅典娜', '阿波羅', '阿爾忒彌斯', 
+        '阿瑞斯', '阿芙蘿黛蒂', '赫菲斯托斯', '赫耳墨斯', '赫斯提亞', '狄俄尼索斯', '哈迪斯', 
+        '珀爾塞福涅', '厄洛斯', '尼刻', '蓋婭', '阿特拉斯', '克洛諾斯', '瑞亞', '普羅米修斯'];
+      const total = deities.length;
+      const unlocked = JSON.parse(localStorage.getItem('unlockedGreek')||'[]').length;
+      const percent = Math.round(unlocked/total*100);
+      document.getElementById('progressBar3').style.width = percent+'%';
+      document.getElementById('progressText3').textContent = `已解鎖 ${unlocked} / ${total}（${percent}%）`;
+      let passed = JSON.parse(localStorage.getItem('passed_flipcard')||'[]').length;
+      let passDiv = document.getElementById('passText3');
+      if (!passDiv) {
+        passDiv = document.createElement('div');
+        passDiv.id = 'passText3';
+        document.getElementById('progressBar3Container').after(passDiv);
+      }
+      passDiv.style.textAlign = 'center';
+      passDiv.style.color = '#ffd700';
+      passDiv.style.fontWeight = 'bold';
+      passDiv.textContent = `✔ 已通關 ${passed} / ${total}`;
+    }
+    updateProgress3();
+
+    // ----- 星座排行榜（Tab4） -----
+    let currentRankingCategory = 'all';
+
+    async function loadRanking() {
+      const box = document.getElementById('rankingContainer');
+      if (!box) return;
+      
+      box.innerHTML = `<p style="text-align:center;color:#aaa;">正在載入排行榜…</p>`;
+      
+      try {
+        const data = await API.getQuizLeaderboard(currentRankingCategory === 'all' ? null : currentRankingCategory);
+        if (data.success && Array.isArray(data.leaderboard)) {
+          const raw = currentRankingCategory === 'all'
+            ? data.leaderboard
+            : data.leaderboard.filter(item => LeaderboardUtils.normalizeCategory(item.category) === currentRankingCategory);
+          const processed = LeaderboardUtils.processLeaderboardData(raw, true);
+          renderRanking(processed);
+        } else {
+          renderLocalRanking();
+        }
+      } catch (err) {
+        console.warn('線上排行榜載入失敗，使用本地數據:', err);
+        renderLocalRanking();
+      }
+    }
+
+    function renderLocalRanking() {
+      const box = document.getElementById('rankingContainer');
+      if (!box) return;
+      
+      try {
+        const local = Storage.get('quizLeaderboard', []);
+        if (!local.length) {
+          box.innerHTML = LeaderboardUtils.renderEmptyState('目前沒有排行榜資料');
+          return;
+        }
+        const filtered = currentRankingCategory === 'all'
+          ? local
+          : local.filter(item => LeaderboardUtils.normalizeCategory(item.category) === currentRankingCategory);
+        const processed = LeaderboardUtils.processLeaderboardData(filtered, true);
+        renderRanking(processed);
+      } catch (e) {
+        console.error('載入本地排行榜失敗:', e);
+        box.innerHTML = LeaderboardUtils.renderEmptyState('目前沒有排行榜資料');
+      }
+    }
+
+    function renderRanking(data) {
+      const box = document.getElementById('rankingContainer');
+      if (!box) return;
+      
+      if (!data || !data.length) {
+        box.innerHTML = LeaderboardUtils.renderEmptyState('目前沒有排行榜資料');
+        return;
+      }
+      
+      const categoryName = LeaderboardUtils.categoryNames[currentRankingCategory] || '全部關卡';
+      const title = `<div style="margin-bottom:12px;text-align:center;color:#00ffff;font-weight:bold;">🌟 ${categoryName} 排行榜</div>`;
+      
+      LeaderboardUtils.renderTable(data, 'rankingContainer', {
+        showCategory: currentRankingCategory === 'all',
+        showOriginalRank: true,
+        deduplicate: true,
+        emptyMessage: '目前沒有排行榜資料'
+      });
+      
+      // 在表格前添加標題
+      const tableDiv = box.querySelector('div[style*="overflow-x:auto"]');
+      if (tableDiv) {
+        box.insertAdjacentHTML('afterbegin', title);
+      }
+    }
+
+    // 初始化：先檢查成就並即時載入排行榜（每次進入都會重載）
+    achievementSystem.triggerAchievementCheck();  // ←←← 維持原樣
+    loadRanking();
+
+    // 星座排行榜下拉選單
+    const rankingCategorySelect = document.getElementById('rankingCategorySelect');
+    if (rankingCategorySelect) {
+      rankingCategorySelect.value = currentRankingCategory;
+      rankingCategorySelect.addEventListener('change', () => {
+        currentRankingCategory = rankingCategorySelect.value;
+        loadRanking();
+      });
+    }
+
+    // ----- 希臘神祉排行榜（Tab4）-----
+    let currentGreekRankingCategory = 'all';
+    const GREEK_SCORE_API = "https://script.google.com/macros/s/AKfycbzJWy7h__cMAyijHgeUGCEiCKSyysLfNRvzYYYnMH5sjSqfrMNyNZnmSi8hOXvVSo6c/exec";
+
+    async function loadGreekRanking() {
+      const box = document.getElementById('greekRankingContainer');
+      if (!box) return;
+
+      box.innerHTML = `<p style="text-align:center;color:#aaa;">正在載入排行榜…</p>`;
+
+      try {
+        const formData = new URLSearchParams();
+        formData.append('action', 'getGreekLeaderboard');
+        formData.append('category', currentGreekRankingCategory);
+
+        const response = await fetch(GREEK_SCORE_API, {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: formData.toString()
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        const list = Array.isArray(data?.leaderboard)
+          ? data.leaderboard
+          : (Array.isArray(data?.data) ? data.data : []);
+
+        const filtered = currentGreekRankingCategory === 'all'
+          ? list
+          : list.filter(item => String(item.category || '').trim() === currentGreekRankingCategory);
+        const processed = LeaderboardUtils.processLeaderboardData(filtered, true);
+        renderGreekRanking(processed);
+      } catch (err) {
+        console.warn('希臘神祉排行榜載入失敗:', err);
+        const box = document.getElementById('greekRankingContainer');
+        if (box) box.innerHTML = LeaderboardUtils.renderEmptyState('目前沒有希臘神祉排行榜資料');
+      }
+    }
+
+    function renderGreekRanking(data) {
+      const box = document.getElementById('greekRankingContainer');
+      if (!box) return;
+
+      if (!data || !data.length) {
+        box.innerHTML = LeaderboardUtils.renderEmptyState('目前沒有希臘神祉排行榜資料');
+        return;
+      }
+
+      const titleText = currentGreekRankingCategory === 'all' ? '希臘神祉' : currentGreekRankingCategory;
+      const title = `<div style="margin-bottom:12px;text-align:center;color:#ffd700;font-weight:bold;">🏛️ ${titleText} 排行榜</div>`;
+
+      LeaderboardUtils.renderTable(data, 'greekRankingContainer', {
+        showCategory: currentGreekRankingCategory === 'all',
+        showOriginalRank: true,
+        deduplicate: true,
+        emptyMessage: '目前沒有希臘神祉排行榜資料'
+      });
+
+      const tableDiv = box.querySelector('div[style*="overflow-x:auto"]');
+      if (tableDiv) {
+        box.insertAdjacentHTML('afterbegin', title);
+      }
+    }
+
+    // 希臘排行榜下拉選單
+    const greekRankingCategorySelect = document.getElementById('greekRankingCategorySelect');
+    if (greekRankingCategorySelect) {
+      greekRankingCategorySelect.value = currentGreekRankingCategory;
+      greekRankingCategorySelect.addEventListener('change', () => {
+        currentGreekRankingCategory = greekRankingCategorySelect.value;
+        loadGreekRanking();
+      });
+    }
+
+    loadGreekRanking();
+  });
+  </script>
+</body>
+</html>

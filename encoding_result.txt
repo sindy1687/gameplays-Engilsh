@@ -1,0 +1,27 @@
+﻿=== aphrodite.html | ValidUTF8:False ===
+  <meta charset="UTF-8" />
+  <title>????穿? - ???????/title>
+=== hades.html | ValidUTF8:False ===
+  <meta charset="UTF-8" />
+  <title>????穿? - ???????/title>
+=== login.html | ValidUTF8:False ===
+  <meta charset="UTF-8">
+  <title>?賹??????玥 - Typing Hero</title>
+=== atlas.html | ValidUTF8:True ===
+  <meta charset="UTF-8" />
+  <title>?賹慫?謖? - ???????/title>
+=== index.html | ValidUTF8:True ===
+  <meta charset="UTF-8" />
+  <title>???????- ???</title>
+=== cards.html | ValidUTF8:True ===
+  <meta charset="UTF-8">
+  <title>??????? - Typing Hero</title>
+=== shop.html | ValidUTF8:False ===
+  <meta charset="UTF-8">
+  <title>?? ??? - Typing Hero</title>
+=== quiz.html | ValidUTF8:False ===
+  <meta charset="UTF-8" />
+  <title>???????- ?賹慫??穿?</title>
+=== gm.html | ValidUTF8:False ===
+  <meta charset="UTF-8">
+  <title>GM ??????</title>
