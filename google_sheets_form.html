@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>信箱系統已移除</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Microsoft JhengHei', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      opacity: 0.9;
+      font-size: 1.1em;
+    }
+
+    .content {
+      padding: 30px;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    input {
+      flex: 1;
+      min-width: 200px;
+      padding: 15px 20px;
+      border: 2px solid #e1e5e9;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    button {
+      padding: 15px 30px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 120px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .mail {
+      border: 2px solid #e1e5e9;
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 15px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .mail:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .mail:active {
+      transform: translateY(0);
+    }
+
+    .mail.clicked {
+      animation: clickEffect 0.3s ease;
+    }
+
+    @keyframes clickEffect {
+      0% { transform: scale(1); }
+      50% { transform: scale(0.98); }
+      100% { transform: scale(1); }
+    }
+
+    .mail::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .unread {
+      background: linear-gradient(135deg, #fff9e6 0%, #fff5d6 100%);
+      border-color: #ffd700;
+      box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
+    }
+
+    .unread::before {
+      background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+    }
+
+    .read {
+      background: #f8f9fa;
+      border-color: #e1e5e9;
+      opacity: 0.8;
+    }
+
+    .mail.read::before {
+      background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    }
+
+    .mail h3 {
+      color: #2c3e50;
+      margin-bottom: 10px;
+      font-size: 1.3em;
+    }
+
+    .mail p {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .mail small {
+      color: #888;
+      font-size: 0.9em;
+    }
+
+    .claim-btn {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      padding: 10px 20px;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .claim-btn:hover {
+      box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+    }
+
+    .empty-message {
+      text-align: center;
+      padding: 60px 20px;
+      color: #888;
+      font-size: 1.2em;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #667eea;
+    }
+
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+      border: 1px solid #f5c6cb;
+    }
+
+    .success {
+      background: #d4edda;
+      color: #155724;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+      border: 1px solid #c3e6cb;
+    }
+
+    .demo-mode {
+      background: #fff3cd;
+      color: #856404;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+      border: 1px solid #ffeaa7;
+    }
+
+
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 10px;
+        border-radius: 15px;
+      }
+      
+      .header {
+        padding: 20px;
+      }
+      
+      .header h1 {
+        font-size: 2em;
+      }
+      
+      .content {
+        padding: 20px;
+      }
+      
+      .input-group {
+        flex-direction: column;
+      }
+      
+      input, button {
+        width: 100%;
+      }
+
+      /* 手機版音樂按鈕調整 */
+      #audioControls {
+        top: 20px;
+        right: 20px;
+      }
+
+      #toggleMusic {
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+      }
+
+      /* 手機版返回首頁按鈕調整 */
+      a[href="index.html"] {
+        top: 20px;
+        left: 20px;
+        padding: 12px 20px;
+        font-size: 1rem;
+      }
+    }
+
+    /* 音樂按鈕動畫 */
+    @keyframes musicPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    #toggleMusic.playing {
+      animation: musicPulse 2s infinite;
+    }
+
+    /* 返回首頁按鈕懸停效果 */
+    a[href="index.html"]:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    a[href="index.html"]:active {
+      transform: translateY(-1px);
+    }
+
+    /* New card-style mailbox CSS */
+    .mail-page {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 20px;
+      font-family: "Microsoft JhengHei", system-ui, sans-serif;
+    }
+
+    .mail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 22px 26px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      box-shadow: 0 12px 30px rgba(68, 72, 180, 0.25);
+      margin-bottom: 20px;
+    }
+
+    .mail-header h1 {
+      margin: 0;
+      font-size: 30px;
+      letter-spacing: 1px;
+    }
+
+    .mail-header p {
+      margin: 8px 0 0;
+      opacity: 0.95;
+      font-size: 15px;
+    }
+
+    #mailCurrentUser {
+      font-weight: 800;
+      background: rgba(255,255,255,0.22);
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .mail-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 18px;
+    }
+
+    .mail-sidebar {
+      background: rgba(255,255,255,0.78);
+      backdrop-filter: blur(10px);
+      border-radius: 22px;
+      padding: 16px;
+      box-shadow: 0 10px 24px rgba(31, 41, 55, 0.12);
+      height: fit-content;
+    }
+
+    .mail-tab {
+      width: 100%;
+      border: 0;
+      margin-bottom: 10px;
+      padding: 13px 14px;
+      border-radius: 16px;
+      background: #f3f4ff;
+      color: #4b4f7a;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .mail-tab:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(102, 126, 234, 0.22);
+    }
+
+    .mail-tab.active {
+      background: linear-gradient(135deg, #ff8ec7, #8ea7ff);
+      color: #fff;
+    }
+
+    .mail-main {
+      background: rgba(255,255,255,0.66);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 10px 24px rgba(31, 41, 55, 0.1);
+      min-height: 420px;
+    }
+
+    #mailStatus {
+      margin-bottom: 14px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: #fff7d6;
+      color: #7a5a00;
+      font-weight: 700;
+      display: none;
+    }
+
+    #mailStatus:not(:empty) {
+      display: block;
+    }
+
+    .mail-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .mail-card {
+      position: relative;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.94);
+      padding: 18px 18px 16px;
+      box-shadow: 0 8px 22px rgba(31, 41, 55, 0.12);
+      border: 2px solid transparent;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+
+    .mail-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(31, 41, 55, 0.16);
+    }
+
+    .mail-card.unread {
+      border-color: #ff8ec7;
+      background: linear-gradient(135deg, #fff, #fff0f8);
+    }
+
+    .mail-card.read {
+      opacity: 0.78;
+    }
+
+    .mail-card-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .mail-title {
+      margin: 0;
+      font-size: 18px;
+      color: #26305f;
+      font-weight: 900;
+    }
+
+    .mail-time {
+      font-size: 12px;
+      color: #777;
+      white-space: nowrap;
+    }
+
+    .mail-sender {
+      font-size: 14px;
+      color: #6b5fa7;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .mail-preview {
+      color: #4b5563;
+      line-height: 1.6;
+      margin: 0 0 12px;
+    }
+
+    .mail-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .mail-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #4f46e5;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .mail-badge.unread {
+      background: #ffe4f1;
+      color: #be185d;
+    }
+
+    .mail-badge.reward {
+      background: #fff1b8;
+      color: #925a00;
+    }
+
+    .mail-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .mail-actions button,
+    #refreshMailBtn {
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 16px;
+      background: linear-gradient(135deg, #667eea, #ff8ec7);
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(102, 126, 234, 0.22);
+      transition: all 0.2s ease;
+    }
+
+    .mail-actions button:hover,
+    #refreshMailBtn:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .mail-empty {
+      text-align: center;
+      padding: 54px 20px;
+      color: #6b7280;
+      font-weight: 700;
+    }
+
+    /* mail-compose styles removed - write mail functionality disabled */
+
+    .mail-meta {
+      margin: 10px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: #6b5fa7;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .mail-content {
+      line-height: 1.7;
+      color: #374151;
+      white-space: pre-wrap;
+    }
+
+    @media (max-width: 768px) {
+      .mail-page {
+        margin: 10px auto;
+        padding: 12px;
+      }
+
+      .mail-header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 18px;
+      }
+
+      .mail-header h1 {
+        font-size: 24px;
+      }
+
+      .mail-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .mail-sidebar {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      .mail-tab {
+        margin-bottom: 0;
+        padding: 11px 10px;
+        font-size: 14px;
+      }
+
+      .mail-card-header {
+        flex-direction: column;
+      }
+
+      .mail-time {
+        white-space: normal;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 返回首頁按鈕 -->
+  <a href="index.html" style="
+    position: fixed;
+    top: 30px;
+    left: 30px;
+    padding: 15px 30px;
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    z-index: 1000;
+  ">← 返回首頁</a>
+
+  <!-- 背景音樂控制按鈕 -->
+  <div id="audioControls" style="position: fixed; top: 30px; right: 30px; z-index: 1000;">
+    <button id="toggleMusic" title="背景音樂" style="
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+      width: 50px;
+      height: 50px;
+    ">🔊</button>
+  </div>
+
+  <!-- 背景音樂元素 -->
+  <audio id="backgroundMusic" loop>
+    <source src="sound/午後放鬆時光（純音樂）.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="container">
+    <div class="header">
+      <h1>信箱系統已移除</h1>
+      <p>線上信箱功能已停用。</p>
+    </div>
+    <div class="content">
+      <div class="empty-message">
+        <h3>此功能已關閉</h3>
+        <p>請返回首頁或商城繼續使用其他功能。</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 背景音樂控制
+    let backgroundMusic = null;
+    let isMusicPlaying = false;
+
+    function initBackgroundMusic() {
+      console.log('🎵 初始化背景音樂...');
+      backgroundMusic = document.getElementById('backgroundMusic');
+      if (!backgroundMusic) {
+        console.error('❌ 找不到背景音樂元素');
+        return;
+      }
+      backgroundMusic.volume = 0.3;
+      backgroundMusic.loop = true;
+      backgroundMusic.load();
+      const musicState = localStorage.getItem('bgMusicState');
+      if (musicState === 'playing') {
+        playBackgroundMusic();
+      }
+      console.log('✅ 背景音樂初始化完成');
+    }
+
+    function playBackgroundMusic() {
+      if (!backgroundMusic) return;
+      if (backgroundMusic.paused) {
+        backgroundMusic.play().then(() => {
+          isMusicPlaying = true;
+          localStorage.setItem('bgMusicState', 'playing');
+          updateMusicButton();
+          console.log('🎵 背景音樂開始播放');
+        }).catch(err => {
+          console.error('❌ 背景音樂播放失敗:', err);
+        });
+      }
+    }
+
+    function pauseBackgroundMusic() {
+      if (!backgroundMusic) return;
+      backgroundMusic.pause();
+      isMusicPlaying = false;
+      localStorage.setItem('bgMusicState', 'paused');
+      updateMusicButton();
+      console.log('⏸️ 背景音樂已暫停');
+    }
+
+    function toggleBackgroundMusic() {
+      if (isMusicPlaying) {
+        pauseBackgroundMusic();
+      } else {
+        playBackgroundMusic();
+      }
+    }
+
+    function updateMusicButton() {
+      const musicBtn = document.getElementById('toggleMusic');
+      if (musicBtn) {
+        if (isMusicPlaying) {
+          musicBtn.textContent = '🔊';
+          musicBtn.style.background = 'rgba(0,0,0,0.8)';
+          musicBtn.classList.add('playing');
+        } else {
+          musicBtn.textContent = '🔇';
+          musicBtn.style.background = 'rgba(0,0,0,0.6)';
+          musicBtn.classList.remove('playing');
+        }
+      }
+    }
+
+    function setMusicVolume(volume) {
+      if (backgroundMusic) {
+        backgroundMusic.volume = volume;
+        localStorage.setItem('musicVolume', volume.toString());
+      }
+    }
+
+    window.addEventListener('load', function() {
+      initBackgroundMusic();
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const musicBtn = document.getElementById('toggleMusic');
+      if (musicBtn) {
+        musicBtn.addEventListener('click', toggleBackgroundMusic);
+        musicBtn.addEventListener('mouseenter', () => {
+          musicBtn.style.transform = 'scale(1.1)';
+          musicBtn.style.background = 'rgba(0,0,0,0.8)';
+        });
+        musicBtn.addEventListener('mouseleave', () => {
+          musicBtn.style.transform = 'scale(1)';
+          musicBtn.style.background = isMusicPlaying ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.6)';
+        });
+      }
+    });
+
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        if (isMusicPlaying && backgroundMusic && !backgroundMusic.paused) {
+          backgroundMusic.pause();
+        }
+      } else {
+        if (isMusicPlaying && backgroundMusic && backgroundMusic.paused) {
+          backgroundMusic.play().catch(err => {
+            console.log('恢復音樂播放失敗:', err);
+          });
+        }
+      }
+    });
+  </script>
+  <script src="js/starRewardSystem.js"></script>
+</body>
+</html>

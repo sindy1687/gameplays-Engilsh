@@ -1,0 +1,3542 @@
+[
+  {
+    "english": "abandon",
+    "chinese": "拋棄",
+    "enExample": "He decided to abandon the car on the roadside.",
+    "zhExample": "他決定把車子拋棄在路邊。"
+  },
+  {
+    "english": "ability",
+    "chinese": "能力",
+    "enExample": "She has the ability to solve complex problems.",
+    "zhExample": "她有能力解決複雜的問題。"
+  },
+  {
+    "english": "above",
+    "chinese": "在...之上",
+    "enExample": "The picture hangs above the sofa.",
+    "zhExample": "那幅畫掛在沙發上方。"
+  },
+  {
+    "english": "accept",
+    "chinese": "接受",
+    "enExample": "He accepted the job offer.",
+    "zhExample": "他接受了那份工作機會。"
+  },
+  {
+    "english": "accident",
+    "chinese": "意外",
+    "enExample": "There was a car accident on the highway.",
+    "zhExample": "高速公路上發生了一場車禍。"
+  },
+  {
+    "english": "act",
+    "chinese": "行動",
+    "enExample": "They must act quickly to help.",
+    "zhExample": "他們必須迅速採取行動。"
+  },
+  {
+    "english": "active",
+    "chinese": "活躍的",
+    "enExample": "He is very active in school activities.",
+    "zhExample": "他在學校活動中非常活躍。"
+  },
+  {
+    "english": "add",
+    "chinese": "添加",
+    "enExample": "Please add more sugar to the tea.",
+    "zhExample": "請在茶裡多加一些糖。"
+  },
+  {
+    "english": "address",
+    "chinese": "地址",
+    "enExample": "What is your mailing address?",
+    "zhExample": "你的郵寄地址是什麼？"
+  },
+  {
+    "english": "adult",
+    "chinese": "成年人",
+    "enExample": "Only adults are allowed to watch this movie.",
+    "zhExample": "只有成年人可以看這部電影。"
+  },
+  {
+    "english": "advice",
+    "chinese": "建議",
+    "enExample": "She gave me good advice.",
+    "zhExample": "她給了我好的建議。"
+  },
+  {
+    "english": "age",
+    "chinese": "年齡",
+    "enExample": "What is your age?",
+    "zhExample": "你幾歲？"
+  },
+  {
+    "english": "ago",
+    "chinese": "以前",
+    "enExample": "I met him two years ago.",
+    "zhExample": "我兩年前遇見他。"
+  },
+  {
+    "english": "alarm",
+    "chinese": "鬧鐘",
+    "enExample": "The alarm went off at 6 a.m.",
+    "zhExample": "鬧鐘在早上六點響了。"
+  },
+  {
+    "english": "allow",
+    "chinese": "允許",
+    "enExample": "We don’t allow smoking here.",
+    "zhExample": "這裡不允許抽菸。"
+  },
+  {
+    "english": "alone",
+    "chinese": "單獨的",
+    "enExample": "She lives alone.",
+    "zhExample": "她獨自生活。"
+  },
+  {
+    "english": "always",
+    "chinese": "總是",
+    "enExample": "He always arrives on time.",
+    "zhExample": "他總是準時到達。"
+  },
+  {
+    "english": "amazing",
+    "chinese": "驚人的",
+    "enExample": "The performance was amazing.",
+    "zhExample": "這場表演非常精彩。"
+  },
+  {
+    "english": "America",
+    "chinese": "美國",
+    "enExample": "She lives in America.",
+    "zhExample": "她住在美國。"
+  },
+  {
+    "english": "among",
+    "chinese": "在…之中",
+    "enExample": "He is popular among his classmates.",
+    "zhExample": "他在同學中很受歡迎。"
+  },
+  {
+    "english": "any",
+    "chinese": "任何的",
+    "enExample": "You can take any book.",
+    "zhExample": "你可以拿任何一本書。"
+  },
+  {
+    "english": "anyone",
+    "chinese": "任何人",
+    "enExample": "Anyone can join the game.",
+    "zhExample": "任何人都可以參加這個遊戲。"
+  },
+  {
+    "english": "area",
+    "chinese": "區域",
+    "enExample": "This is a safe area.",
+    "zhExample": "這是一個安全的區域。"
+  },
+  {
+    "english": "art",
+    "chinese": "藝術",
+    "enExample": "I love modern art.",
+    "zhExample": "我喜歡現代藝術。"
+  },
+  {
+    "english": "article",
+    "chinese": "文章",
+    "enExample": "I read an article online.",
+    "zhExample": "我在網路上讀了一篇文章。"
+  },
+  {
+    "english": "artist",
+    "chinese": "藝術家",
+    "enExample": "She is a talented artist.",
+    "zhExample": "她是一位有才華的藝術家。"
+  },
+  {
+    "english": "beer",
+    "chinese": "啤酒",
+    "enExample": "He drank a glass of beer.",
+    "zhExample": "他喝了一杯啤酒。"
+  },
+  {
+    "english": "behind",
+    "chinese": "在?後面",
+    "enExample": "The cat is behind the sofa.",
+    "zhExample": "貓在沙發後面。"
+  },
+  {
+    "english": "bell",
+    "chinese": "鈴",
+    "enExample": "The bell rang loudly.",
+    "zhExample": "鈴聲大響。"
+  },
+  {
+    "english": "below",
+    "chinese": "在?下面",
+    "enExample": "The temperature is below zero.",
+    "zhExample": "氣溫在零度以下。"
+  },
+  {
+    "english": "best",
+    "chinese": "最好的",
+    "enExample": "She is my best friend.",
+    "zhExample": "她是我最好的朋友。"
+  },
+  {
+    "english": "better",
+    "chinese": "更好的",
+    "enExample": "This one is better.",
+    "zhExample": "這個更好。"
+  },
+  {
+    "english": "between",
+    "chinese": "在...之間",
+    "enExample": "The ball is between the boxes.",
+    "zhExample": "球在箱子之間。"
+  },
+  {
+    "english": "beyond",
+    "chinese": "超過",
+    "enExample": "The road continues beyond the village.",
+    "zhExample": "這條路延伸到村莊之外。"
+  },
+  {
+    "english": "brain",
+    "chinese": "大腦",
+    "enExample": "Use your brain to solve the puzzle.",
+    "zhExample": "用你的腦子解這個謎題。"
+  },
+  {
+    "english": "branch",
+    "chinese": "樹枝；分行",
+    "enExample": "The bird sat on a tree branch.",
+    "zhExample": "鳥兒坐在樹枝上。"
+  },
+  {
+    "english": "brave",
+    "chinese": "勇敢的",
+    "enExample": "The firefighter was very brave.",
+    "zhExample": "消防員非常勇敢。"
+  },
+  {
+    "english": "break",
+    "chinese": "打破；休息",
+    "enExample": "Don’t break the glass.",
+    "zhExample": "不要打破玻璃。"
+  },
+  {
+    "english": "breathe",
+    "chinese": "呼吸",
+    "enExample": "Take a deep breath and relax.",
+    "zhExample": "深呼吸並放鬆。"
+  },
+  {
+    "english": "building",
+    "chinese": "建築物",
+    "enExample": "This is the tallest building in town.",
+    "zhExample": "這是鎮上最高的建築物。"
+  },
+  {
+    "english": "butter",
+    "chinese": "奶油",
+    "enExample": "She spread butter on the bread.",
+    "zhExample": "她把奶油抹在麵包上。"
+  },
+  {
+    "english": "button",
+    "chinese": "鈕扣；按鈕",
+    "enExample": "Press the button to start.",
+    "zhExample": "按下按鈕開始。"
+  },
+  {
+    "english": "cab",
+    "chinese": "計程車",
+    "enExample": "He took a cab to the airport.",
+    "zhExample": "他搭計程車去機場。"
+  },
+  {
+    "english": "cafe",
+    "chinese": "咖啡館",
+    "enExample": "Let’s meet at the cafe.",
+    "zhExample": "我們在咖啡館見吧。"
+  },
+  {
+    "english": "camp",
+    "chinese": "露營",
+    "enExample": "We went to summer camp.",
+    "zhExample": "我們去參加夏令營。"
+  },
+  {
+    "english": "carry",
+    "chinese": "搬運；攜帶",
+    "enExample": "He carried the heavy bag.",
+    "zhExample": "他搬著沉重的包包。"
+  },
+  {
+    "english": "catch",
+    "chinese": "抓住",
+    "enExample": "Try to catch the ball!",
+    "zhExample": "試著接住那顆球！"
+  },
+  {
+    "english": "cause",
+    "chinese": "原因；導致",
+    "enExample": "The heavy rain caused flooding.",
+    "zhExample": "大雨導致了淹水。"
+  },
+  {
+    "english": "center",
+    "chinese": "中心",
+    "enExample": "The mall is in the center of the city.",
+    "zhExample": "百貨公司位於市中心。"
+  },
+  {
+    "english": "century",
+    "chinese": "世紀",
+    "enExample": "We are living in the 21st century.",
+    "zhExample": "我們活在21世紀。"
+  },
+  {
+    "english": "certain",
+    "chinese": "確定的",
+    "enExample": "I’m not certain about the answer.",
+    "zhExample": "我不確定答案。"
+  },
+  {
+    "english": "chart",
+    "chinese": "圖表",
+    "enExample": "The teacher showed us a weather chart.",
+    "zhExample": "老師給我們看一張天氣圖。"
+  },
+  {
+    "english": "check",
+    "chinese": "檢查",
+    "enExample": "Please check your answers.",
+    "zhExample": "請檢查你的答案。"
+  },
+  {
+    "english": "cheese",
+    "chinese": "起司",
+    "enExample": "I love pizza with extra cheese.",
+    "zhExample": "我喜歡加很多起司的披薩。"
+  },
+  {
+    "english": "child",
+    "chinese": "小孩",
+    "enExample": "The child is drawing a picture.",
+    "zhExample": "小孩正在畫圖。"
+  },
+  {
+    "english": "chocolate",
+    "chinese": "巧克力",
+    "enExample": "She gave me a box of chocolates.",
+    "zhExample": "她給我一盒巧克力。"
+  },
+  {
+    "english": "city",
+    "chinese": "城市",
+    "enExample": "New York is a big city.",
+    "zhExample": "紐約是一座大城市。"
+  },
+  {
+    "english": "climb",
+    "chinese": "爬",
+    "enExample": "We climbed to the top of the hill.",
+    "zhExample": "我們爬上了山頂。"
+  },
+  {
+    "english": "clock",
+    "chinese": "時鐘",
+    "enExample": "The clock on the wall is slow.",
+    "zhExample": "牆上的時鐘慢了。"
+  },
+  {
+    "english": "cloud",
+    "chinese": "雲",
+    "enExample": "A dark cloud covered the sun.",
+    "zhExample": "烏雲遮住了太陽。"
+  },
+  {
+    "english": "college",
+    "chinese": "大學",
+    "enExample": "She goes to college in Taipei.",
+    "zhExample": "她在台北上大學。"
+  },
+  {
+    "english": "common",
+    "chinese": "常見的",
+    "enExample": "That’s a common mistake.",
+    "zhExample": "那是一個常見的錯誤。"
+  },
+  {
+    "english": "company",
+    "chinese": "公司",
+    "enExample": "He works for a big company.",
+    "zhExample": "他在一家大公司上班。"
+  },
+  {
+    "english": "compare",
+    "chinese": "比較",
+    "enExample": "Let’s compare our answers.",
+    "zhExample": "我們來比較一下答案吧。"
+  },
+  {
+    "english": "complete",
+    "chinese": "完成的；完整的",
+    "enExample": "The puzzle is complete.",
+    "zhExample": "拼圖完成了。"
+  },
+  {
+    "english": "concert",
+    "chinese": "音樂會",
+    "enExample": "We’re going to a concert tonight.",
+    "zhExample": "我們今晚要去聽音樂會。"
+  },
+  {
+    "english": "cook",
+    "chinese": "煮；廚師",
+    "enExample": "My mom is a great cook.",
+    "zhExample": "我媽媽是很棒的廚師。"
+  },
+  {
+    "english": "corner",
+    "chinese": "角落",
+    "enExample": "The cat is hiding in the corner.",
+    "zhExample": "貓躲在角落裡。"
+  },
+  {
+    "english": "correct",
+    "chinese": "正確的",
+    "enExample": "That is the correct answer.",
+    "zhExample": "那是正確的答案。"
+  },
+  {
+    "english": "cost",
+    "chinese": "花費",
+    "enExample": "How much does it cost?",
+    "zhExample": "這要多少錢？"
+  },
+  {
+    "english": "could",
+    "chinese": "可以（過去式）",
+    "enExample": "Could you help me?",
+    "zhExample": "你能幫我嗎？"
+  },
+  {
+    "english": "country",
+    "chinese": "國家",
+    "enExample": "Taiwan is my country.",
+    "zhExample": "台灣是我的國家。"
+  },
+  {
+    "english": "course",
+    "chinese": "課程",
+    "enExample": "This is a beginner’s course.",
+    "zhExample": "這是一門初級課程。"
+  },
+  {
+    "english": "cover",
+    "chinese": "覆蓋；封面",
+    "enExample": "Cover the pot with a lid.",
+    "zhExample": "用蓋子把鍋蓋起來。"
+  },
+  {
+    "english": "cow",
+    "chinese": "牛",
+    "enExample": "The cow is eating grass.",
+    "zhExample": "牛正在吃草。"
+  },
+  {
+    "english": "crab",
+    "chinese": "螃蟹",
+    "enExample": "We caught a crab at the beach.",
+    "zhExample": "我們在海灘抓到一隻螃蟹。"
+  },
+  {
+    "english": "crazy",
+    "chinese": "瘋狂的",
+    "enExample": "That idea is totally crazy!",
+    "zhExample": "那主意真是瘋狂！"
+  },
+  {
+    "english": "cream",
+    "chinese": "奶油",
+    "enExample": "I put cream in my coffee.",
+    "zhExample": "我在咖啡裡加了奶油。"
+  },
+  {
+    "english": "create",
+    "chinese": "創造",
+    "enExample": "Artists create beautiful things.",
+    "zhExample": "藝術家創造美麗的作品。"
+  },
+  {
+    "english": "dad",
+    "chinese": "爸爸",
+    "enExample": "My dad is cooking dinner.",
+    "zhExample": "我爸爸正在煮晚餐。"
+  },
+  {
+    "english": "danger",
+    "chinese": "危險",
+    "enExample": "There is danger ahead.",
+    "zhExample": "前方有危險。"
+  },
+  {
+    "english": "dark",
+    "chinese": "黑暗的",
+    "enExample": "It gets dark at 6 p.m. in winter.",
+    "zhExample": "冬天六點天就黑了。"
+  },
+  {
+    "english": "date",
+    "chinese": "日期；約會",
+    "enExample": "What’s today’s date?",
+    "zhExample": "今天是幾號？"
+  },
+  {
+    "english": "dear",
+    "chinese": "親愛的",
+    "enExample": "\"Dear Mom",
+    "zhExample": "I miss you.\""
+  },
+  {
+    "english": "death",
+    "chinese": "死亡",
+    "enExample": "He was sad after his grandfather’s death.",
+    "zhExample": "爺爺過世後他很傷心。"
+  },
+  {
+    "english": "deep",
+    "chinese": "深的",
+    "enExample": "The lake is very deep.",
+    "zhExample": "這個湖很深。"
+  },
+  {
+    "english": "deer",
+    "chinese": "鹿",
+    "enExample": "We saw a deer in the forest.",
+    "zhExample": "我們在森林裡看到一隻鹿。"
+  },
+  {
+    "english": "delicious",
+    "chinese": "美味的",
+    "enExample": "This cake is delicious.",
+    "zhExample": "這個蛋糕很好吃。"
+  },
+  {
+    "english": "dictionary",
+    "chinese": "字典",
+    "enExample": "Look it up in the dictionary.",
+    "zhExample": "在字典裡查一下。"
+  },
+  {
+    "english": "did",
+    "chinese": "做了（do的過去式）",
+    "enExample": "What did you say?",
+    "zhExample": "你剛才說了什麼？"
+  },
+  {
+    "english": "different",
+    "chinese": "不同的",
+    "enExample": "This shirt is different from that one.",
+    "zhExample": "這件襯衫和那件不一樣。"
+  },
+  {
+    "english": "difficult",
+    "chinese": "困難的",
+    "enExample": "This problem is very difficult.",
+    "zhExample": "這題問題很難。"
+  },
+  {
+    "english": "dirty",
+    "chinese": "髒的",
+    "enExample": "Your hands are dirty.",
+    "zhExample": "你的手很髒。"
+  },
+  {
+    "english": "dish",
+    "chinese": "碗盤；菜餚",
+    "enExample": "This is my favorite dish.",
+    "zhExample": "這是我最喜歡的菜。"
+  },
+  {
+    "english": "double",
+    "chinese": "雙倍的",
+    "enExample": "I ordered a double hamburger.",
+    "zhExample": "我點了一個雙層漢堡。"
+  },
+  {
+    "english": "down",
+    "chinese": "向下",
+    "enExample": "\"Sit down",
+    "zhExample": "please.\""
+  },
+  {
+    "english": "dry",
+    "chinese": "乾的",
+    "enExample": "The clothes are dry now.",
+    "zhExample": "衣服現在乾了。"
+  },
+  {
+    "english": "during",
+    "chinese": "在…期間",
+    "enExample": "I slept during the movie.",
+    "zhExample": "我在看電影時睡著了。"
+  },
+  {
+    "english": "dust",
+    "chinese": "灰塵",
+    "enExample": "There’s a lot of dust on the shelf.",
+    "zhExample": "架子上有很多灰塵。"
+  },
+  {
+    "english": "duty",
+    "chinese": "職責",
+    "enExample": "It’s my duty to help at home.",
+    "zhExample": "幫忙做家事是我的責任。"
+  },
+  {
+    "english": "early",
+    "chinese": "早的",
+    "enExample": "I got up early today.",
+    "zhExample": "我今天很早起床。"
+  },
+  {
+    "english": "east",
+    "chinese": "東方",
+    "enExample": "The sun rises in the east.",
+    "zhExample": "太陽從東方升起。"
+  },
+  {
+    "english": "easy",
+    "chinese": "容易的",
+    "enExample": "This question is very easy.",
+    "zhExample": "這題非常簡單。"
+  },
+  {
+    "english": "edge",
+    "chinese": "邊緣",
+    "enExample": "She stood at the edge of the cliff.",
+    "zhExample": "她站在懸崖邊緣。"
+  },
+  {
+    "english": "education",
+    "chinese": "教育",
+    "enExample": "Education is important for everyone.",
+    "zhExample": "教育對每個人都很重要。"
+  },
+  {
+    "english": "eighteen",
+    "chinese": "十八",
+    "enExample": "She is eighteen years old.",
+    "zhExample": "她十八歲了。"
+  },
+  {
+    "english": "eighty",
+    "chinese": "八十",
+    "enExample": "My grandmother is eighty years old.",
+    "zhExample": "我奶奶八十歲。"
+  },
+  {
+    "english": "either",
+    "chinese": "任一；也不",
+    "enExample": "You can choose either answer.",
+    "zhExample": "你可以選擇任一個答案。"
+  },
+  {
+    "english": "else",
+    "chinese": "其他的",
+    "enExample": "What else do you need?",
+    "zhExample": "你還需要什麼？"
+  },
+  {
+    "english": "email",
+    "chinese": "電子郵件",
+    "enExample": "I sent you an email.",
+    "zhExample": "我寄了一封電子郵件給你。"
+  },
+  {
+    "english": "empty",
+    "chinese": "空的",
+    "enExample": "The box is empty.",
+    "zhExample": "這個盒子是空的。"
+  },
+  {
+    "english": "end",
+    "chinese": "結束",
+    "enExample": "We’ll go home at the end of the movie.",
+    "zhExample": "電影結束後我們就回家。"
+  },
+  {
+    "english": "enemy",
+    "chinese": "敵人",
+    "enExample": "They became friends after being enemies.",
+    "zhExample": "他們從敵人變成了朋友。"
+  },
+  {
+    "english": "energy",
+    "chinese": "能量",
+    "enExample": "I have no energy today.",
+    "zhExample": "我今天完全沒力氣。"
+  },
+  {
+    "english": "enjoy",
+    "chinese": "享受",
+    "enExample": "I enjoy reading books.",
+    "zhExample": "我喜歡讀書。"
+  },
+  {
+    "english": "enough",
+    "chinese": "足夠的",
+    "enExample": "That’s enough for today.",
+    "zhExample": "今天這樣就夠了。"
+  },
+  {
+    "english": "environment",
+    "chinese": "環境",
+    "enExample": "We must protect the environment.",
+    "zhExample": "我們必須保護環境。"
+  },
+  {
+    "english": "equal",
+    "chinese": "相等的",
+    "enExample": "All people are equal.",
+    "zhExample": "人人生而平等。"
+  },
+  {
+    "english": "erase",
+    "chinese": "擦掉",
+    "enExample": "Please erase the board.",
+    "zhExample": "請擦掉白板。"
+  },
+  {
+    "english": "event",
+    "chinese": "事件",
+    "enExample": "That was an important event in history.",
+    "zhExample": "那是歷史上重要的事件。"
+  },
+  {
+    "english": "everybody",
+    "chinese": "每個人",
+    "enExample": "Everybody is here.",
+    "zhExample": "每個人都到了。"
+  },
+  {
+    "english": "everyone",
+    "chinese": "每一位",
+    "enExample": "Everyone is welcome.",
+    "zhExample": "歡迎所有人。"
+  },
+  {
+    "english": "everything",
+    "chinese": "每件事",
+    "enExample": "Everything is ready.",
+    "zhExample": "一切都準備好了。"
+  },
+  {
+    "english": "exam",
+    "chinese": "考試",
+    "enExample": "I have a math exam tomorrow.",
+    "zhExample": "我明天有數學考試。"
+  },
+  {
+    "english": "except",
+    "chinese": "除了?之外",
+    "enExample": "Everyone went except Tom.",
+    "zhExample": "除了湯姆，其他人都去了。"
+  },
+  {
+    "english": "exercise",
+    "chinese": "運動",
+    "enExample": "I do exercise every morning.",
+    "zhExample": "我每天早上運動。"
+  },
+  {
+    "english": "expensive",
+    "chinese": "昂貴的",
+    "enExample": "This bag is too expensive.",
+    "zhExample": "這個包太貴了。"
+  },
+  {
+    "english": "far",
+    "chinese": "遙遠的",
+    "enExample": "The station is far from here.",
+    "zhExample": "車站離這裡很遠。"
+  },
+  {
+    "english": "favorite",
+    "chinese": "最喜愛的",
+    "enExample": "Blue is my favorite color.",
+    "zhExample": "藍色是我最喜歡的顏色。"
+  },
+  {
+    "english": "fear",
+    "chinese": "恐懼",
+    "enExample": "She has a fear of heights.",
+    "zhExample": "她害怕高處。"
+  },
+  {
+    "english": "feed",
+    "chinese": "餵食",
+    "enExample": "I need to feed the dog.",
+    "zhExample": "我要餵狗。"
+  },
+  {
+    "english": "feel",
+    "chinese": "感覺",
+    "enExample": "I feel happy today.",
+    "zhExample": "我今天心情很好。"
+  },
+  {
+    "english": "feeling",
+    "chinese": "感覺",
+    "enExample": "I have a strange feeling about this.",
+    "zhExample": "我對這件事有種奇怪的感覺。"
+  },
+  {
+    "english": "field",
+    "chinese": "田野；場地",
+    "enExample": "The children played in the field.",
+    "zhExample": "孩子們在田野裡玩。"
+  },
+  {
+    "english": "fight",
+    "chinese": "打架；爭鬥",
+    "enExample": "They had a big fight.",
+    "zhExample": "他們大吵了一架。"
+  },
+  {
+    "english": "figure",
+    "chinese": "數字；人物",
+    "enExample": "That’s a famous historical figure.",
+    "zhExample": "那是一位著名歷史人物。"
+  },
+  {
+    "english": "film",
+    "chinese": "電影；膠卷",
+    "enExample": "We watched a great film last night.",
+    "zhExample": "我們昨晚看了一部好電影。"
+  },
+  {
+    "english": "final",
+    "chinese": "最後的",
+    "enExample": "This is the final round.",
+    "zhExample": "這是最後一輪。"
+  },
+  {
+    "english": "find",
+    "chinese": "找到",
+    "enExample": "I can't find my phone.",
+    "zhExample": "我找不到我的手機。"
+  },
+  {
+    "english": "fine",
+    "chinese": "很好；罰款",
+    "enExample": "I feel fine today.",
+    "zhExample": "我今天感覺不錯。"
+  },
+  {
+    "english": "finish",
+    "chinese": "完成",
+    "enExample": "I just finished my homework.",
+    "zhExample": "我剛完成作業。"
+  },
+  {
+    "english": "first",
+    "chinese": "第一",
+    "enExample": "He won first place.",
+    "zhExample": "他贏得第一名。"
+  },
+  {
+    "english": "floor",
+    "chinese": "地板；樓層",
+    "enExample": "The floor is clean.",
+    "zhExample": "地板很乾淨。"
+  },
+  {
+    "english": "follow",
+    "chinese": "跟隨",
+    "enExample": "\"Follow me",
+    "zhExample": "please.\""
+  },
+  {
+    "english": "football",
+    "chinese": "足球",
+    "enExample": "He plays football every weekend.",
+    "zhExample": "他每週末都踢足球。"
+  },
+  {
+    "english": "forest",
+    "chinese": "森林",
+    "enExample": "They camped in the forest.",
+    "zhExample": "他們在森林裡露營。"
+  },
+  {
+    "english": "forget",
+    "chinese": "忘記",
+    "enExample": "Don’t forget to lock the door.",
+    "zhExample": "別忘了鎖門。"
+  },
+  {
+    "english": "form",
+    "chinese": "表格；形成",
+    "enExample": "\"Fill out this form",
+    "zhExample": "please.\""
+  },
+  {
+    "english": "free",
+    "chinese": "免費的；自由的",
+    "enExample": "Children under 3 are free.",
+    "zhExample": "三歲以下免費。"
+  },
+  {
+    "english": "front",
+    "chinese": "前面",
+    "enExample": "There’s a car in front of our house.",
+    "zhExample": "我們家前面有一輛車。"
+  },
+  {
+    "english": "full",
+    "chinese": "滿的",
+    "enExample": "The box is full of books.",
+    "zhExample": "箱子裝滿了書。"
+  },
+  {
+    "english": "funny",
+    "chinese": "好笑的",
+    "enExample": "That movie was really funny.",
+    "zhExample": "那部電影很好笑。"
+  },
+  {
+    "english": "future",
+    "chinese": "未來",
+    "enExample": "We are planning for the future.",
+    "zhExample": "我們正在規劃未來。"
+  },
+  {
+    "english": "garden",
+    "chinese": "花園",
+    "enExample": "There are many flowers in the garden.",
+    "zhExample": "花園裡有很多花。"
+  },
+  {
+    "english": "gave",
+    "chinese": "給（give過去式）",
+    "enExample": "She gave me a book.",
+    "zhExample": "她給了我一本書。"
+  },
+  {
+    "english": "general",
+    "chinese": "一般的；普遍的",
+    "enExample": "This is a general rule.",
+    "zhExample": "這是一條普遍規則。"
+  },
+  {
+    "english": "get",
+    "chinese": "得到；變得",
+    "enExample": "I get tired after work.",
+    "zhExample": "我下班後會覺得累。"
+  },
+  {
+    "english": "gift",
+    "chinese": "禮物",
+    "enExample": "He bought her a birthday gift.",
+    "zhExample": "他買了生日禮物送她。"
+  },
+  {
+    "english": "give",
+    "chinese": "給予",
+    "enExample": "Please give me a pen.",
+    "zhExample": "請給我一支筆。"
+  },
+  {
+    "english": "glove",
+    "chinese": "手套",
+    "enExample": "He wore warm gloves in winter.",
+    "zhExample": "冬天他戴著暖手套。"
+  },
+  {
+    "english": "goal",
+    "chinese": "目標；得分",
+    "enExample": "He scored a goal.",
+    "zhExample": "他進了一球。"
+  },
+  {
+    "english": "god",
+    "chinese": "神",
+    "enExample": "People prayed to their god.",
+    "zhExample": "人們向他們的神祈禱。"
+  },
+  {
+    "english": "gold",
+    "chinese": "黃金",
+    "enExample": "This ring is made of gold.",
+    "zhExample": "這個戒指是金做的。"
+  },
+  {
+    "english": "grade",
+    "chinese": "年級；分數",
+    "enExample": "He is in the 6th grade.",
+    "zhExample": "他念六年級。"
+  },
+  {
+    "english": "grammar",
+    "chinese": "文法",
+    "enExample": "English grammar can be tricky.",
+    "zhExample": "英文文法有點難。"
+  },
+  {
+    "english": "grand",
+    "chinese": "盛大的；宏偉的",
+    "enExample": "They live in a grand house.",
+    "zhExample": "他們住在一棟氣派的房子裡。"
+  },
+  {
+    "english": "grandma",
+    "chinese": "祖母",
+    "enExample": "I baked cookies with grandma.",
+    "zhExample": "我和奶奶一起烤餅乾。"
+  },
+  {
+    "english": "grandson",
+    "chinese": "孫子",
+    "enExample": "Her grandson is very polite.",
+    "zhExample": "她的孫子很有禮貌。"
+  },
+  {
+    "english": "grass",
+    "chinese": "草",
+    "enExample": "The grass is green.",
+    "zhExample": "草是綠的。"
+  },
+  {
+    "english": "gray",
+    "chinese": "灰色的",
+    "enExample": "She painted the wall gray.",
+    "zhExample": "她把牆壁漆成灰色。"
+  },
+  {
+    "english": "group",
+    "chinese": "群體",
+    "enExample": "Our group finished early.",
+    "zhExample": "我們這組提早完成了。"
+  },
+  {
+    "english": "guess",
+    "chinese": "猜測",
+    "enExample": "Can you guess the answer?",
+    "zhExample": "你能猜出答案嗎？"
+  },
+  {
+    "english": "guest",
+    "chinese": "客人",
+    "enExample": "We have a guest staying tonight.",
+    "zhExample": "今晚有客人來住。"
+  },
+  {
+    "english": "guide",
+    "chinese": "導遊；指引",
+    "enExample": "The guide showed us around the city.",
+    "zhExample": "導遊帶我們遊覽城市。"
+  },
+  {
+    "english": "gym",
+    "chinese": "健身房",
+    "enExample": "I go to the gym twice a week.",
+    "zhExample": "我每週去兩次健身房。"
+  },
+  {
+    "english": "half",
+    "chinese": "一半",
+    "enExample": "I ate half of the pizza.",
+    "zhExample": "我吃了一半的披薩。"
+  },
+  {
+    "english": "hall",
+    "chinese": "大廳",
+    "enExample": "We waited in the main hall.",
+    "zhExample": "我們在大廳裡等。"
+  },
+  {
+    "english": "happen",
+    "chinese": "發生",
+    "enExample": "What happened last night?",
+    "zhExample": "昨晚發生了什麼事？"
+  },
+  {
+    "english": "hard",
+    "chinese": "困難的；用力的",
+    "enExample": "This test is really hard.",
+    "zhExample": "這次測驗真的很難。"
+  },
+  {
+    "english": "hate",
+    "chinese": "討厭",
+    "enExample": "I hate getting up early.",
+    "zhExample": "我討厭早起。"
+  },
+  {
+    "english": "health",
+    "chinese": "健康",
+    "enExample": "Health is more important than money.",
+    "zhExample": "健康比金錢重要。"
+  },
+  {
+    "english": "hear",
+    "chinese": "聽到",
+    "enExample": "Can you hear that sound?",
+    "zhExample": "你聽得到那個聲音嗎？"
+  },
+  {
+    "english": "heart",
+    "chinese": "心臟；心",
+    "enExample": "She has a kind heart.",
+    "zhExample": "她有一顆善良的心。"
+  },
+  {
+    "english": "heat",
+    "chinese": "熱；加熱",
+    "enExample": "The heat is unbearable today.",
+    "zhExample": "今天熱得受不了。"
+  },
+  {
+    "english": "height",
+    "chinese": "高度",
+    "enExample": "What’s the height of that building?",
+    "zhExample": "那棟建築有多高？"
+  },
+  {
+    "english": "high",
+    "chinese": "高的",
+    "enExample": "That mountain is very high.",
+    "zhExample": "那座山很高。"
+  },
+  {
+    "english": "hill",
+    "chinese": "小山丘",
+    "enExample": "They climbed up the hill.",
+    "zhExample": "他們爬上了小山丘。"
+  },
+  {
+    "english": "him",
+    "chinese": "他（受格）",
+    "enExample": "I saw him at school.",
+    "zhExample": "我在學校看到他了。"
+  },
+  {
+    "english": "history",
+    "chinese": "歷史",
+    "enExample": "I like reading about history.",
+    "zhExample": "我喜歡讀歷史。"
+  },
+  {
+    "english": "hit",
+    "chinese": "打擊",
+    "enExample": "He hit the ball hard.",
+    "zhExample": "他用力打球。"
+  },
+  {
+    "english": "hobby",
+    "chinese": "興趣",
+    "enExample": "Playing guitar is my hobby.",
+    "zhExample": "彈吉他是我的興趣。"
+  },
+  {
+    "english": "hold",
+    "chinese": "拿；舉辦",
+    "enExample": "Please hold this for a second.",
+    "zhExample": "請幫我拿一下。"
+  },
+  {
+    "english": "holiday",
+    "chinese": "假日",
+    "enExample": "We are going to Japan for the holiday.",
+    "zhExample": "我們假期要去日本。"
+  },
+  {
+    "english": "homework",
+    "chinese": "作業",
+    "enExample": "I haven’t finished my homework yet.",
+    "zhExample": "我還沒寫完作業。"
+  },
+  {
+    "english": "honey",
+    "chinese": "蜂蜜；親愛的",
+    "enExample": "She puts honey in her tea.",
+    "zhExample": "她在茶裡加蜂蜜。"
+  },
+  {
+    "english": "hotel",
+    "chinese": "飯店",
+    "enExample": "We stayed at a nice hotel.",
+    "zhExample": "我們住在一家不錯的飯店。"
+  },
+  {
+    "english": "hour",
+    "chinese": "小時",
+    "enExample": "The movie is two hours long.",
+    "zhExample": "那部電影長達兩小時。"
+  },
+  {
+    "english": "hurt",
+    "chinese": "受傷；痛",
+    "enExample": "My leg hurts.",
+    "zhExample": "我的腳痛。"
+  },
+  {
+    "english": "husband",
+    "chinese": "丈夫",
+    "enExample": "Her husband is a doctor.",
+    "zhExample": "她的丈夫是醫生。"
+  },
+  {
+    "english": "idea",
+    "chinese": "主意；想法",
+    "enExample": "That’s a great idea!",
+    "zhExample": "那是個好主意！"
+  },
+  {
+    "english": "ill",
+    "chinese": "生病的",
+    "enExample": "He is ill and can’t come today.",
+    "zhExample": "他生病了今天不能來。"
+  },
+  {
+    "english": "important",
+    "chinese": "重要的",
+    "enExample": "This is an important message.",
+    "zhExample": "這是一則重要訊息。"
+  },
+  {
+    "english": "in",
+    "chinese": "在?裡面",
+    "enExample": "The keys are in the drawer.",
+    "zhExample": "鑰匙在抽屜裡。"
+  },
+  {
+    "english": "instead",
+    "chinese": "取而代之",
+    "enExample": "Let’s watch a movie instead.",
+    "zhExample": "我們改看電影吧。"
+  },
+  {
+    "english": "interesting",
+    "chinese": "有趣的",
+    "enExample": "That’s an interesting story.",
+    "zhExample": "那是個有趣的故事。"
+  },
+  {
+    "english": "invite",
+    "chinese": "邀請",
+    "enExample": "I want to invite you to my party.",
+    "zhExample": "我想邀請你參加我的派對。"
+  },
+  {
+    "english": "island",
+    "chinese": "島嶼",
+    "enExample": "They went to a tropical island.",
+    "zhExample": "他們去了熱帶島嶼。"
+  },
+  {
+    "english": "job",
+    "chinese": "工作",
+    "enExample": "She has a new job.",
+    "zhExample": "她有一份新工作。"
+  },
+  {
+    "english": "join",
+    "chinese": "加入",
+    "enExample": "Would you like to join us?",
+    "zhExample": "你想加入我們嗎？"
+  },
+  {
+    "english": "joke",
+    "chinese": "笑話",
+    "enExample": "That was a funny joke!",
+    "zhExample": "那個笑話真好笑！"
+  },
+  {
+    "english": "journey",
+    "chinese": "旅程",
+    "enExample": "Life is a long journey.",
+    "zhExample": "人生是一段長旅。"
+  },
+  {
+    "english": "July",
+    "chinese": "七月",
+    "enExample": "Her birthday is in July.",
+    "zhExample": "她生日在七月。"
+  },
+  {
+    "english": "June",
+    "chinese": "六月",
+    "enExample": "School ends in June.",
+    "zhExample": "六月學校放假。"
+  },
+  {
+    "english": "just",
+    "chinese": "剛剛；只是",
+    "enExample": "I just finished lunch.",
+    "zhExample": "我剛吃完午餐。"
+  },
+  {
+    "english": "keep",
+    "chinese": "保持；持續",
+    "enExample": "\"Keep quiet",
+    "zhExample": "please.\""
+  },
+  {
+    "english": "kick",
+    "chinese": "踢",
+    "enExample": "He kicked the ball.",
+    "zhExample": "他踢了那顆球。"
+  },
+  {
+    "english": "kid",
+    "chinese": "小孩",
+    "enExample": "That kid is very smart.",
+    "zhExample": "那小孩很聰明。"
+  },
+  {
+    "english": "kind",
+    "chinese": "種類；親切的",
+    "enExample": "What kind of music do you like?",
+    "zhExample": "你喜歡什麼類型的音樂？"
+  },
+  {
+    "english": "king",
+    "chinese": "國王",
+    "enExample": "The king ruled the country.",
+    "zhExample": "國王統治這個國家。"
+  },
+  {
+    "english": "kiss",
+    "chinese": "吻",
+    "enExample": "She gave her baby a kiss.",
+    "zhExample": "她親了她的寶寶一下。"
+  },
+  {
+    "english": "knee",
+    "chinese": "膝蓋",
+    "enExample": "He hurt his knee while running.",
+    "zhExample": "他跑步時弄傷膝蓋了。"
+  },
+  {
+    "english": "knife",
+    "chinese": "刀子",
+    "enExample": "Be careful with that knife.",
+    "zhExample": "小心那把刀。"
+  },
+  {
+    "english": "know",
+    "chinese": "知道",
+    "enExample": "Do you know the answer?",
+    "zhExample": "你知道答案嗎？"
+  },
+  {
+    "english": "lady",
+    "chinese": "女士",
+    "enExample": "That old lady lives next door.",
+    "zhExample": "那位老太太住在隔壁。"
+  },
+  {
+    "english": "land",
+    "chinese": "陸地；降落",
+    "enExample": "The plane will land soon.",
+    "zhExample": "飛機快要降落了。"
+  },
+  {
+    "english": "language",
+    "chinese": "語言",
+    "enExample": "English is an international language.",
+    "zhExample": "英語是國際語言。"
+  },
+  {
+    "english": "learn",
+    "chinese": "學習",
+    "enExample": "I like to learn new things.",
+    "zhExample": "我喜歡學新東西。"
+  },
+  {
+    "english": "left",
+    "chinese": "左邊；離開（過去式）",
+    "enExample": "Turn left at the corner.",
+    "zhExample": "在轉角處向左轉。"
+  },
+  {
+    "english": "lesson",
+    "chinese": "課；教訓",
+    "enExample": "I learned a lesson today.",
+    "zhExample": "我今天學到了一課。"
+  },
+  {
+    "english": "letter",
+    "chinese": "信件；字母",
+    "enExample": "I wrote a letter to my friend.",
+    "zhExample": "我寫了一封信給我的朋友。"
+  },
+  {
+    "english": "life",
+    "chinese": "生命；生活",
+    "enExample": "Life is full of surprises.",
+    "zhExample": "生活充滿驚喜。"
+  },
+  {
+    "english": "line",
+    "chinese": "線；行列",
+    "enExample": "Please stand in line.",
+    "zhExample": "請排隊。"
+  },
+  {
+    "english": "list",
+    "chinese": "清單",
+    "enExample": "I made a shopping list.",
+    "zhExample": "我列了一張購物清單。"
+  },
+  {
+    "english": "little",
+    "chinese": "小的",
+    "enExample": "He has a little dog.",
+    "zhExample": "他有一隻小狗。"
+  },
+  {
+    "english": "lose",
+    "chinese": "失去",
+    "enExample": "Be careful not to lose your keys.",
+    "zhExample": "小心不要弄丟鑰匙。"
+  },
+  {
+    "english": "lot",
+    "chinese": "許多",
+    "enExample": "She has a lot of friends.",
+    "zhExample": "她有很多朋友。"
+  },
+  {
+    "english": "love",
+    "chinese": "愛",
+    "enExample": "I love my family.",
+    "zhExample": "我愛我的家人。"
+  },
+  {
+    "english": "luck",
+    "chinese": "運氣",
+    "enExample": "Good luck on your test!",
+    "zhExample": "考試加油！"
+  },
+  {
+    "english": "machine",
+    "chinese": "機器",
+    "enExample": "The washing machine is broken.",
+    "zhExample": "洗衣機壞了。"
+  },
+  {
+    "english": "man",
+    "chinese": "男人",
+    "enExample": "The man is wearing a hat.",
+    "zhExample": "那個男人戴著帽子。"
+  },
+  {
+    "english": "many",
+    "chinese": "許多",
+    "enExample": "There are many people in the room.",
+    "zhExample": "房間裡有很多人。"
+  },
+  {
+    "english": "March",
+    "chinese": "三月",
+    "enExample": "School starts again in March.",
+    "zhExample": "學校三月重新開學。"
+  },
+  {
+    "english": "market",
+    "chinese": "市場",
+    "enExample": "She buys fruit at the market.",
+    "zhExample": "她在市場買水果。"
+  },
+  {
+    "english": "May",
+    "chinese": "五月",
+    "enExample": "We have a holiday in May.",
+    "zhExample": "我們五月有假期。"
+  },
+  {
+    "english": "maybe",
+    "chinese": "也許",
+    "enExample": "Maybe we can go tomorrow.",
+    "zhExample": "也許我們可以明天去。"
+  },
+  {
+    "english": "me",
+    "chinese": "我（受格）",
+    "enExample": "She gave me a gift.",
+    "zhExample": "她給了我一份禮物。"
+  },
+  {
+    "english": "meal",
+    "chinese": "餐",
+    "enExample": "Breakfast is my favorite meal.",
+    "zhExample": "早餐是我最喜歡的一餐。"
+  },
+  {
+    "english": "mean",
+    "chinese": "意思是；刻薄的",
+    "enExample": "What does this word mean?",
+    "zhExample": "這個字是什麼意思？"
+  },
+  {
+    "english": "meat",
+    "chinese": "肉",
+    "enExample": "He doesn’t eat meat.",
+    "zhExample": "他不吃肉。"
+  },
+  {
+    "english": "medicine",
+    "chinese": "藥",
+    "enExample": "Take this medicine after dinner.",
+    "zhExample": "晚餐後吃這個藥。"
+  },
+  {
+    "english": "memory",
+    "chinese": "記憶",
+    "enExample": "That was a happy memory.",
+    "zhExample": "那是一段快樂的回憶。"
+  },
+  {
+    "english": "menu",
+    "chinese": "菜單",
+    "enExample": "Can I see the menu?",
+    "zhExample": "我可以看菜單嗎？"
+  },
+  {
+    "english": "message",
+    "chinese": "訊息",
+    "enExample": "He left me a message.",
+    "zhExample": "他留了訊息給我。"
+  },
+  {
+    "english": "middle",
+    "chinese": "中間",
+    "enExample": "He stood in the middle of the road.",
+    "zhExample": "他站在路中央。"
+  },
+  {
+    "english": "mind",
+    "chinese": "介意；心思",
+    "enExample": "Do you mind if I open the window?",
+    "zhExample": "你介意我開窗嗎？"
+  },
+  {
+    "english": "minute",
+    "chinese": "分鐘",
+    "enExample": "\"Wait a minute",
+    "zhExample": "please.\""
+  },
+  {
+    "english": "miss",
+    "chinese": "想念；錯過",
+    "enExample": "I miss my hometown.",
+    "zhExample": "我想念我的家鄉。"
+  },
+  {
+    "english": "mistake",
+    "chinese": "錯誤",
+    "enExample": "It was just a small mistake.",
+    "zhExample": "那只是一個小錯誤。"
+  },
+  {
+    "english": "mix",
+    "chinese": "混合",
+    "enExample": "Mix the flour with water.",
+    "zhExample": "把麵粉和水混合。"
+  },
+  {
+    "english": "mobile",
+    "chinese": "移動的；手機",
+    "enExample": "He forgot his mobile at home.",
+    "zhExample": "他把手機忘在家裡了。"
+  },
+  {
+    "english": "mom",
+    "chinese": "媽媽",
+    "enExample": "I love my mom.",
+    "zhExample": "我愛我媽媽。"
+  },
+  {
+    "english": "money",
+    "chinese": "金錢",
+    "enExample": "He saved a lot of money.",
+    "zhExample": "他存了很多錢。"
+  },
+  {
+    "english": "mountain",
+    "chinese": "山",
+    "enExample": "They climbed the mountain together.",
+    "zhExample": "他們一起爬山。"
+  },
+  {
+    "english": "much",
+    "chinese": "很多",
+    "enExample": "Thank you very much!",
+    "zhExample": "非常感謝你！"
+  },
+  {
+    "english": "museum",
+    "chinese": "博物館",
+    "enExample": "We visited a science museum.",
+    "zhExample": "我們參觀了一間科學博物館。"
+  },
+  {
+    "english": "must",
+    "chinese": "必須",
+    "enExample": "You must do your homework first.",
+    "zhExample": "你必須先做功課。"
+  },
+  {
+    "english": "narrow",
+    "chinese": "狹窄的",
+    "enExample": "The path is very narrow.",
+    "zhExample": "這條小路很窄。"
+  },
+  {
+    "english": "near",
+    "chinese": "靠近的",
+    "enExample": "The school is near the park.",
+    "zhExample": "學校在公園附近。"
+  },
+  {
+    "english": "need",
+    "chinese": "需要",
+    "enExample": "I need some help with my homework.",
+    "zhExample": "我需要幫忙做作業。"
+  },
+  {
+    "english": "never",
+    "chinese": "從不",
+    "enExample": "He never eats vegetables.",
+    "zhExample": "他從不吃蔬菜。"
+  },
+  {
+    "english": "news",
+    "chinese": "新聞",
+    "enExample": "Did you hear the news today?",
+    "zhExample": "你今天有聽新聞嗎？"
+  },
+  {
+    "english": "nineteen",
+    "chinese": "十九",
+    "enExample": "She is nineteen years old.",
+    "zhExample": "她十九歲。"
+  },
+  {
+    "english": "ninety",
+    "chinese": "九十",
+    "enExample": "He scored ninety points on the test.",
+    "zhExample": "他考試考了九十分。"
+  },
+  {
+    "english": "noise",
+    "chinese": "噪音",
+    "enExample": "What’s that noise?",
+    "zhExample": "那是什麼聲音？"
+  },
+  {
+    "english": "none",
+    "chinese": "一個也沒有",
+    "enExample": "None of the cookies are left.",
+    "zhExample": "餅乾一個都沒剩。"
+  },
+  {
+    "english": "noodle",
+    "chinese": "麵條",
+    "enExample": "I had beef noodles for lunch.",
+    "zhExample": "我午餐吃牛肉麵。"
+  },
+  {
+    "english": "normal",
+    "chinese": "正常的",
+    "enExample": "That’s a normal reaction.",
+    "zhExample": "那是正常反應。"
+  },
+  {
+    "english": "north",
+    "chinese": "北方",
+    "enExample": "They live in the north of the city.",
+    "zhExample": "他們住在城市北邊。"
+  },
+  {
+    "english": "note",
+    "chinese": "筆記；便條",
+    "enExample": "He left a note on the fridge.",
+    "zhExample": "他在冰箱上留了張便條。"
+  },
+  {
+    "english": "nothing",
+    "chinese": "什麼也沒有",
+    "enExample": "There’s nothing in the box.",
+    "zhExample": "盒子裡什麼也沒有。"
+  },
+  {
+    "english": "number",
+    "chinese": "數字",
+    "enExample": "Write down your phone number.",
+    "zhExample": "寫下你的電話號碼。"
+  },
+  {
+    "english": "object",
+    "chinese": "物體；反對",
+    "enExample": "That object is very heavy.",
+    "zhExample": "那個物體很重。"
+  },
+  {
+    "english": "ocean",
+    "chinese": "海洋",
+    "enExample": "She loves swimming in the ocean.",
+    "zhExample": "她喜歡在海裡游泳。"
+  },
+  {
+    "english": "October",
+    "chinese": "十月",
+    "enExample": "Halloween is in October.",
+    "zhExample": "萬聖節在十月。"
+  },
+  {
+    "english": "of",
+    "chinese": "……的",
+    "enExample": "The cover of the book is blue.",
+    "zhExample": "這本書的封面是藍色的。"
+  },
+  {
+    "english": "off",
+    "chinese": "關；從……離開",
+    "enExample": "Please turn off the TV.",
+    "zhExample": "請把電視關掉。"
+  },
+  {
+    "english": "offer",
+    "chinese": "提供",
+    "enExample": "He offered me a drink.",
+    "zhExample": "他請我喝飲料。"
+  },
+  {
+    "english": "office",
+    "chinese": "辦公室",
+    "enExample": "She works in an office downtown.",
+    "zhExample": "她在市中心的辦公室工作。"
+  },
+  {
+    "english": "often",
+    "chinese": "經常",
+    "enExample": "He often visits his grandparents.",
+    "zhExample": "他經常去看祖父母。"
+  },
+  {
+    "english": "oh",
+    "chinese": "哦（感嘆詞）",
+    "enExample": "Oh no! I forgot my keys!",
+    "zhExample": "喔不！我忘了帶鑰匙！"
+  },
+  {
+    "english": "once",
+    "chinese": "曾經；一次",
+    "enExample": "I went there once.",
+    "zhExample": "我曾去過那裡一次。"
+  },
+  {
+    "english": "only",
+    "chinese": "只有；唯一的",
+    "enExample": "She’s the only child in the family.",
+    "zhExample": "她是家裡唯一的孩子。"
+  },
+  {
+    "english": "order",
+    "chinese": "點餐；命令；順序",
+    "enExample": "I’d like to order a burger.",
+    "zhExample": "我想點一個漢堡。"
+  },
+  {
+    "english": "other",
+    "chinese": "其他的",
+    "enExample": "I have no other ideas.",
+    "zhExample": "我沒有其他想法了。"
+  },
+  {
+    "english": "ourselves",
+    "chinese": "我們自己",
+    "enExample": "We made the cake ourselves.",
+    "zhExample": "我們自己做了這個蛋糕。"
+  },
+  {
+    "english": "out",
+    "chinese": "外面",
+    "enExample": "He went out for a walk.",
+    "zhExample": "他出去散步了。"
+  },
+  {
+    "english": "own",
+    "chinese": "自己的",
+    "enExample": "She has her own room.",
+    "zhExample": "她有自己的房間。"
+  },
+  {
+    "english": "pain",
+    "chinese": "疼痛",
+    "enExample": "He felt a sharp pain in his leg.",
+    "zhExample": "他腿上感到一陣劇痛。"
+  },
+  {
+    "english": "pair",
+    "chinese": "一對",
+    "enExample": "I bought a new pair of shoes.",
+    "zhExample": "我買了一雙新鞋。"
+  },
+  {
+    "english": "part",
+    "chinese": "部分",
+    "enExample": "This is the best part of the movie.",
+    "zhExample": "這是電影中最好的一部分。"
+  },
+  {
+    "english": "party",
+    "chinese": "派對",
+    "enExample": "Are you coming to the party?",
+    "zhExample": "你會來參加派對嗎？"
+  },
+  {
+    "english": "past",
+    "chinese": "過去",
+    "enExample": "That happened in the past.",
+    "zhExample": "那是在過去發生的事。"
+  },
+  {
+    "english": "pay",
+    "chinese": "付錢",
+    "enExample": "I’ll pay for the meal.",
+    "zhExample": "我來付這頓飯的錢。"
+  },
+  {
+    "english": "people",
+    "chinese": "人們",
+    "enExample": "There are many people in the market.",
+    "zhExample": "市場裡有很多人。"
+  },
+  {
+    "english": "perfect",
+    "chinese": "完美的",
+    "enExample": "Your score is perfect!",
+    "zhExample": "你的成績是滿分！"
+  },
+  {
+    "english": "period",
+    "chinese": "時期；句點",
+    "enExample": "The class period is 45 minutes long.",
+    "zhExample": "這節課長達 45 分鐘。"
+  },
+  {
+    "english": "person",
+    "chinese": "人",
+    "enExample": "He is a nice person.",
+    "zhExample": "他是個好人。"
+  },
+  {
+    "english": "photo",
+    "chinese": "照片",
+    "enExample": "This is my favorite photo.",
+    "zhExample": "這是我最喜歡的照片。"
+  },
+  {
+    "english": "pick",
+    "chinese": "挑選；摘",
+    "enExample": "Pick a card from the deck.",
+    "zhExample": "從牌堆中挑一張卡片。"
+  },
+  {
+    "english": "place",
+    "chinese": "地方",
+    "enExample": "This is a nice place to relax.",
+    "zhExample": "這是個放鬆的好地方。"
+  },
+  {
+    "english": "plan",
+    "chinese": "計畫",
+    "enExample": "What’s your plan for the weekend?",
+    "zhExample": "你週末有什麼計畫？"
+  },
+  {
+    "english": "plane",
+    "chinese": "飛機",
+    "enExample": "The plane took off at noon.",
+    "zhExample": "飛機在中午起飛了。"
+  },
+  {
+    "english": "plant",
+    "chinese": "植物；種植",
+    "enExample": "We planted some flowers in the garden.",
+    "zhExample": "我們在花園裡種了一些花。"
+  },
+  {
+    "english": "plastic",
+    "chinese": "塑膠",
+    "enExample": "This bottle is made of plastic.",
+    "zhExample": "這瓶子是塑膠做的。"
+  },
+  {
+    "english": "player",
+    "chinese": "選手；玩家",
+    "enExample": "He is a famous basketball player.",
+    "zhExample": "他是一位有名的籃球員。"
+  },
+  {
+    "english": "plenty",
+    "chinese": "充足；大量",
+    "enExample": "We have plenty of food.",
+    "zhExample": "我們有很多食物。"
+  },
+  {
+    "english": "pocket",
+    "chinese": "口袋",
+    "enExample": "He put the key in his pocket.",
+    "zhExample": "他把鑰匙放進口袋。"
+  },
+  {
+    "english": "poem",
+    "chinese": "詩",
+    "enExample": "She wrote a beautiful poem.",
+    "zhExample": "她寫了一首美麗的詩。"
+  },
+  {
+    "english": "point",
+    "chinese": "指向；重點",
+    "enExample": "Can you point to the map?",
+    "zhExample": "你可以指一下地圖嗎？"
+  },
+  {
+    "english": "police",
+    "chinese": "警察",
+    "enExample": "The police arrived quickly.",
+    "zhExample": "警察很快就到了。"
+  },
+  {
+    "english": "pool",
+    "chinese": "泳池",
+    "enExample": "Let’s go swimming in the pool.",
+    "zhExample": "我們去泳池游泳吧。"
+  },
+  {
+    "english": "poor",
+    "chinese": "貧窮的；可憐的",
+    "enExample": "They helped the poor family.",
+    "zhExample": "他們幫助那個貧困的家庭。"
+  },
+  {
+    "english": "pop",
+    "chinese": "流行的；爆裂聲",
+    "enExample": "The balloon went pop!",
+    "zhExample": "氣球砰的一聲爆了！"
+  },
+  {
+    "english": "popular",
+    "chinese": "受歡迎的",
+    "enExample": "That singer is very popular.",
+    "zhExample": "那位歌手很受歡迎。"
+  },
+  {
+    "english": "post",
+    "chinese": "郵件；張貼",
+    "enExample": "I saw the news on a post online.",
+    "zhExample": "我在網上的貼文看到這則新聞。"
+  },
+  {
+    "english": "pot",
+    "chinese": "鍋子",
+    "enExample": "She cooked soup in a big pot.",
+    "zhExample": "她用大鍋煮湯。"
+  },
+  {
+    "english": "potato",
+    "chinese": "馬鈴薯",
+    "enExample": "I like mashed potatoes.",
+    "zhExample": "我喜歡馬鈴薯泥。"
+  },
+  {
+    "english": "pour",
+    "chinese": "倒出；傾瀉",
+    "enExample": "Please pour me a glass of water.",
+    "zhExample": "請幫我倒一杯水。"
+  },
+  {
+    "english": "power",
+    "chinese": "力量；電力",
+    "enExample": "Knowledge is power.",
+    "zhExample": "知識就是力量。"
+  },
+  {
+    "english": "practice",
+    "chinese": "練習",
+    "enExample": "You need more practice.",
+    "zhExample": "你需要多練習。"
+  },
+  {
+    "english": "prepare",
+    "chinese": "準備",
+    "enExample": "She is preparing for the test.",
+    "zhExample": "她正在準備考試。"
+  },
+  {
+    "english": "present",
+    "chinese": "禮物；現在；呈現",
+    "enExample": "I gave her a birthday present.",
+    "zhExample": "我送她生日禮物。"
+  },
+  {
+    "english": "price",
+    "chinese": "價格",
+    "enExample": "The price of oil is rising.",
+    "zhExample": "油價正在上漲。"
+  },
+  {
+    "english": "print",
+    "chinese": "列印；印刷",
+    "enExample": "I need to print this file.",
+    "zhExample": "我需要列印這個檔案。"
+  },
+  {
+    "english": "problem",
+    "chinese": "問題",
+    "enExample": "I have a problem with my computer.",
+    "zhExample": "我的電腦有問題。"
+  },
+  {
+    "english": "program",
+    "chinese": "節目；程式",
+    "enExample": "I watched a TV program last night.",
+    "zhExample": "我昨晚看了一個電視節目。"
+  },
+  {
+    "english": "pull",
+    "chinese": "拉",
+    "enExample": "Pull the door to open it.",
+    "zhExample": "拉一下門就能打開。"
+  },
+  {
+    "english": "pumpkin",
+    "chinese": "南瓜",
+    "enExample": "We carved a pumpkin for Halloween.",
+    "zhExample": "我們為萬聖節刻了南瓜。"
+  },
+  {
+    "english": "purple",
+    "chinese": "紫色",
+    "enExample": "She painted her nails purple.",
+    "zhExample": "她把指甲塗成紫色。"
+  },
+  {
+    "english": "push",
+    "chinese": "推",
+    "enExample": "Push the button to start.",
+    "zhExample": "按下按鈕開始。"
+  },
+  {
+    "english": "put",
+    "chinese": "放",
+    "enExample": "Put the book on the shelf.",
+    "zhExample": "把書放在書架上。"
+  },
+  {
+    "english": "puzzle",
+    "chinese": "拼圖；謎題",
+    "enExample": "I enjoy solving puzzles.",
+    "zhExample": "我喜歡解謎。"
+  },
+  {
+    "english": "quarter",
+    "chinese": "四分之一；一刻鐘",
+    "enExample": "It’s a quarter to ten.",
+    "zhExample": "現在是差一刻十點。"
+  },
+  {
+    "english": "queen",
+    "chinese": "女王",
+    "enExample": "The queen waved to the crowd.",
+    "zhExample": "女王向人群揮手。"
+  },
+  {
+    "english": "quick",
+    "chinese": "快速的",
+    "enExample": "He is a quick runner.",
+    "zhExample": "他是個跑得快的人。"
+  },
+  {
+    "english": "quiet",
+    "chinese": "安靜的",
+    "enExample": "Please be quiet in the library.",
+    "zhExample": "請在圖書館保持安靜。"
+  },
+  {
+    "english": "radio",
+    "chinese": "收音機",
+    "enExample": "She listens to music on the radio.",
+    "zhExample": "她用收音機聽音樂。"
+  },
+  {
+    "english": "raise",
+    "chinese": "舉起；提高",
+    "enExample": "Please raise your hand.",
+    "zhExample": "請舉起你的手。"
+  },
+  {
+    "english": "reach",
+    "chinese": "到達；伸手",
+    "enExample": "I can’t reach the top shelf.",
+    "zhExample": "我夠不到最上面的架子。"
+  },
+  {
+    "english": "really",
+    "chinese": "真的；非常",
+    "enExample": "I really like this movie.",
+    "zhExample": "我真的很喜歡這部電影。"
+  },
+  {
+    "english": "reason",
+    "chinese": "理由",
+    "enExample": "What’s the reason for your decision?",
+    "zhExample": "你做決定的理由是什麼？"
+  },
+  {
+    "english": "receive",
+    "chinese": "收到",
+    "enExample": "Did you receive my message?",
+    "zhExample": "你收到我的訊息了嗎？"
+  },
+  {
+    "english": "remember",
+    "chinese": "記得",
+    "enExample": "Do you remember his name?",
+    "zhExample": "你記得他的名字嗎？"
+  },
+  {
+    "english": "return",
+    "chinese": "返回",
+    "enExample": "He will return tomorrow.",
+    "zhExample": "他明天會回來。"
+  },
+  {
+    "english": "right",
+    "chinese": "右邊；正確的",
+    "enExample": "Turn right at the corner.",
+    "zhExample": "在轉角處右轉。"
+  },
+  {
+    "english": "ring",
+    "chinese": "戒指；鈴聲",
+    "enExample": "She wore a gold ring.",
+    "zhExample": "她戴著一枚金戒指。"
+  },
+  {
+    "english": "road",
+    "chinese": "道路",
+    "enExample": "Be careful when crossing the road.",
+    "zhExample": "過馬路時要小心。"
+  },
+  {
+    "english": "robot",
+    "chinese": "機器人",
+    "enExample": "The robot can clean the floor.",
+    "zhExample": "這台機器人會清潔地板。"
+  },
+  {
+    "english": "rose",
+    "chinese": "玫瑰",
+    "enExample": "She got a red rose.",
+    "zhExample": "她收到一朵紅玫瑰。"
+  },
+  {
+    "english": "round",
+    "chinese": "圓的",
+    "enExample": "The Earth is round.",
+    "zhExample": "地球是圓的。"
+  },
+  {
+    "english": "scissors",
+    "chinese": "剪刀",
+    "enExample": "Be careful with the scissors.",
+    "zhExample": "小心剪刀。"
+  },
+  {
+    "english": "sea",
+    "chinese": "海洋",
+    "enExample": "We swam in the sea.",
+    "zhExample": "我們在海裡游泳。"
+  },
+  {
+    "english": "season",
+    "chinese": "季節",
+    "enExample": "Spring is my favorite season.",
+    "zhExample": "春天是我最喜歡的季節。"
+  },
+  {
+    "english": "seat",
+    "chinese": "座位",
+    "enExample": "Please take your seat.",
+    "zhExample": "請坐下。"
+  },
+  {
+    "english": "second",
+    "chinese": "第二；秒",
+    "enExample": "He came in second place.",
+    "zhExample": "他得了第二名。"
+  },
+  {
+    "english": "secret",
+    "chinese": "秘密",
+    "enExample": "Can you keep a secret?",
+    "zhExample": "你能保守秘密嗎？"
+  },
+  {
+    "english": "seem",
+    "chinese": "似乎",
+    "enExample": "She seems happy today.",
+    "zhExample": "她今天看起來很開心。"
+  },
+  {
+    "english": "sell",
+    "chinese": "賣",
+    "enExample": "They sell fresh fruit at the market.",
+    "zhExample": "他們在市場賣新鮮水果。"
+  },
+  {
+    "english": "send",
+    "chinese": "寄送",
+    "enExample": "I will send you a postcard.",
+    "zhExample": "我會寄明信片給你。"
+  },
+  {
+    "english": "sentence",
+    "chinese": "句子",
+    "enExample": "Write a sentence using this word.",
+    "zhExample": "用這個字寫一句話。"
+  },
+  {
+    "english": "September",
+    "chinese": "九月",
+    "enExample": "School starts in September.",
+    "zhExample": "學校在九月開學。"
+  },
+  {
+    "english": "shake",
+    "chinese": "搖動；握手",
+    "enExample": "Shake the bottle before use.",
+    "zhExample": "使用前請搖一搖瓶子。"
+  },
+  {
+    "english": "share",
+    "chinese": "分享",
+    "enExample": "Let’s share this cake.",
+    "zhExample": "我們來分享這塊蛋糕吧。"
+  },
+  {
+    "english": "sheet",
+    "chinese": "床單；一張",
+    "enExample": "\"Change the bed sheet",
+    "zhExample": "please.\""
+  },
+  {
+    "english": "shelf",
+    "chinese": "架子",
+    "enExample": "Put the books on the shelf.",
+    "zhExample": "把書放在書架上。"
+  },
+  {
+    "english": "shoe",
+    "chinese": "鞋子",
+    "enExample": "I lost one of my shoes.",
+    "zhExample": "我掉了一隻鞋子。"
+  },
+  {
+    "english": "should",
+    "chinese": "應該",
+    "enExample": "You should eat more vegetables.",
+    "zhExample": "你應該多吃蔬菜。"
+  },
+  {
+    "english": "shout",
+    "chinese": "喊叫",
+    "enExample": "Don’t shout in the classroom.",
+    "zhExample": "不要在教室裡喊叫。"
+  },
+  {
+    "english": "show",
+    "chinese": "展示；表演",
+    "enExample": "She showed me her drawings.",
+    "zhExample": "她給我看她的畫作。"
+  },
+  {
+    "english": "side",
+    "chinese": "邊",
+    "enExample": "Sit on the other side.",
+    "zhExample": "坐在另一邊。"
+  },
+  {
+    "english": "sign",
+    "chinese": "標誌；簽名",
+    "enExample": "Look at the stop sign.",
+    "zhExample": "看看停止標誌。"
+  },
+  {
+    "english": "silver",
+    "chinese": "銀色",
+    "enExample": "She wore a silver necklace.",
+    "zhExample": "她戴著銀項鍊。"
+  },
+  {
+    "english": "sit",
+    "chinese": "坐",
+    "enExample": "Please sit down.",
+    "zhExample": "請坐下。"
+  },
+  {
+    "english": "sky",
+    "chinese": "天空",
+    "enExample": "The sky is blue today.",
+    "zhExample": "今天的天空很藍。"
+  },
+  {
+    "english": "snow",
+    "chinese": "雪",
+    "enExample": "It is snowing outside.",
+    "zhExample": "外面正在下雪。"
+  },
+  {
+    "english": "so",
+    "chinese": "所以；非常",
+    "enExample": "\"I was tired",
+    "zhExample": "so I went to bed early.\""
+  },
+  {
+    "english": "soap",
+    "chinese": "肥皂",
+    "enExample": "Wash your hands with soap.",
+    "zhExample": "用肥皂洗手。"
+  },
+  {
+    "english": "social",
+    "chinese": "社交的",
+    "enExample": "He has strong social skills.",
+    "zhExample": "他有很強的社交能力。"
+  },
+  {
+    "english": "sock",
+    "chinese": "襪子",
+    "enExample": "I can’t find my other sock.",
+    "zhExample": "我找不到另一隻襪子。"
+  },
+  {
+    "english": "soft",
+    "chinese": "柔軟的",
+    "enExample": "The pillow is very soft.",
+    "zhExample": "這枕頭很柔軟。"
+  },
+  {
+    "english": "somebody",
+    "chinese": "某人",
+    "enExample": "Somebody is at the door.",
+    "zhExample": "有人在門口。"
+  },
+  {
+    "english": "someone",
+    "chinese": "某人",
+    "enExample": "Someone called you earlier.",
+    "zhExample": "剛才有人打電話給你。"
+  },
+  {
+    "english": "something",
+    "chinese": "某事",
+    "enExample": "I have something to tell you.",
+    "zhExample": "我有事情要告訴你。"
+  },
+  {
+    "english": "sometimes",
+    "chinese": "有時候",
+    "enExample": "Sometimes I walk to school.",
+    "zhExample": "我有時候走路上學。"
+  },
+  {
+    "english": "soon",
+    "chinese": "很快",
+    "enExample": "Dinner will be ready soon.",
+    "zhExample": "晚餐很快就準備好了。"
+  },
+  {
+    "english": "sorry",
+    "chinese": "對不起",
+    "enExample": "I’m sorry for being late.",
+    "zhExample": "很抱歉我遲到了。"
+  },
+  {
+    "english": "south",
+    "chinese": "南方",
+    "enExample": "We are driving to the south.",
+    "zhExample": "我們正在開車往南方。"
+  },
+  {
+    "english": "special",
+    "chinese": "特別的",
+    "enExample": "This is a special gift.",
+    "zhExample": "這是一個特別的禮物。"
+  },
+  {
+    "english": "spell",
+    "chinese": "拼寫",
+    "enExample": "Can you spell your name?",
+    "zhExample": "你可以拼出你的名字嗎？"
+  },
+  {
+    "english": "spend",
+    "chinese": "花費",
+    "enExample": "I spent all my money.",
+    "zhExample": "我把錢都花光了。"
+  },
+  {
+    "english": "spoon",
+    "chinese": "湯匙",
+    "enExample": "Use a spoon to eat soup.",
+    "zhExample": "用湯匙喝湯。"
+  },
+  {
+    "english": "sport",
+    "chinese": "運動",
+    "enExample": "My favorite sport is basketball.",
+    "zhExample": "我最喜歡的運動是籃球。"
+  },
+  {
+    "english": "start",
+    "chinese": "開始",
+    "enExample": "Let’s start the meeting.",
+    "zhExample": "我們開始開會吧。"
+  },
+  {
+    "english": "station",
+    "chinese": "車站",
+    "enExample": "I waited at the train station.",
+    "zhExample": "我在火車站等。"
+  },
+  {
+    "english": "stay",
+    "chinese": "停留；待著",
+    "enExample": "Stay home and rest.",
+    "zhExample": "待在家裡休息吧。"
+  },
+  {
+    "english": "step",
+    "chinese": "步驟；踩",
+    "enExample": "Be careful where you step.",
+    "zhExample": "小心你踩的地方。"
+  },
+  {
+    "english": "stick",
+    "chinese": "棍子；黏住",
+    "enExample": "The child picked up a stick.",
+    "zhExample": "小孩撿起一根棍子。"
+  },
+  {
+    "english": "still",
+    "chinese": "仍然",
+    "enExample": "I still love that song.",
+    "zhExample": "我仍然喜歡那首歌。"
+  },
+  {
+    "english": "stomach",
+    "chinese": "胃；肚子",
+    "enExample": "My stomach hurts.",
+    "zhExample": "我的肚子痛。"
+  },
+  {
+    "english": "stone",
+    "chinese": "石頭",
+    "enExample": "He threw a stone into the lake.",
+    "zhExample": "他丟了一塊石頭進湖裡。"
+  },
+  {
+    "english": "stop",
+    "chinese": "停止",
+    "enExample": "\"Stop talking",
+    "zhExample": "please.\""
+  },
+  {
+    "english": "storm",
+    "chinese": "風暴",
+    "enExample": "The storm is getting stronger.",
+    "zhExample": "風暴越來越強了。"
+  },
+  {
+    "english": "story",
+    "chinese": "故事",
+    "enExample": "Tell me a bedtime story.",
+    "zhExample": "講一個睡前故事給我聽。"
+  },
+  {
+    "english": "straight",
+    "chinese": "直的",
+    "enExample": "Go straight and turn left.",
+    "zhExample": "直走然後左轉。"
+  },
+  {
+    "english": "street",
+    "chinese": "街道",
+    "enExample": "The street is busy today.",
+    "zhExample": "今天街道很熱鬧。"
+  },
+  {
+    "english": "subject",
+    "chinese": "科目；主題",
+    "enExample": "Math is my favorite subject.",
+    "zhExample": "數學是我最喜歡的科目。"
+  },
+  {
+    "english": "subway",
+    "chinese": "地鐵",
+    "enExample": "I take the subway to work.",
+    "zhExample": "我搭地鐵上班。"
+  },
+  {
+    "english": "success",
+    "chinese": "成功",
+    "enExample": "She worked hard and found success.",
+    "zhExample": "她努力工作並獲得成功。"
+  },
+  {
+    "english": "such",
+    "chinese": "這樣的",
+    "enExample": "Such a beautiful day!",
+    "zhExample": "多麼美好的一天啊！"
+  },
+  {
+    "english": "sudden",
+    "chinese": "突然的",
+    "enExample": "There was a sudden noise.",
+    "zhExample": "突然出現了一個聲音。"
+  },
+  {
+    "english": "sugar",
+    "chinese": "糖",
+    "enExample": "I put sugar in my coffee.",
+    "zhExample": "我在咖啡裡加了糖。"
+  },
+  {
+    "english": "suggest",
+    "chinese": "建議",
+    "enExample": "I suggest we leave now.",
+    "zhExample": "我建議我們現在離開。"
+  },
+  {
+    "english": "sunny",
+    "chinese": "晴朗的",
+    "enExample": "It’s a sunny day.",
+    "zhExample": "今天天氣晴朗。"
+  },
+  {
+    "english": "supper",
+    "chinese": "晚餐",
+    "enExample": "We had chicken for supper.",
+    "zhExample": "我們晚餐吃了雞肉。"
+  },
+  {
+    "english": "sure",
+    "chinese": "確定的",
+    "enExample": "Are you sure about that?",
+    "zhExample": "你確定嗎？"
+  },
+  {
+    "english": "tail",
+    "chinese": "尾巴",
+    "enExample": "The dog is wagging its tail.",
+    "zhExample": "狗正在搖尾巴。"
+  },
+  {
+    "english": "teach",
+    "chinese": "教導",
+    "enExample": "She teaches English.",
+    "zhExample": "她教英文。"
+  },
+  {
+    "english": "team",
+    "chinese": "隊伍",
+    "enExample": "Our team won the game.",
+    "zhExample": "我們隊贏了比賽。"
+  },
+  {
+    "english": "tear",
+    "chinese": "眼淚；撕裂",
+    "enExample": "She wiped away a tear.",
+    "zhExample": "她擦去一滴眼淚。"
+  },
+  {
+    "english": "teenager",
+    "chinese": "青少年",
+    "enExample": "He is a smart teenager.",
+    "zhExample": "他是一個聰明的青少年。"
+  },
+  {
+    "english": "television",
+    "chinese": "電視",
+    "enExample": "The kids are watching television.",
+    "zhExample": "孩子們在看電視。"
+  },
+  {
+    "english": "tell",
+    "chinese": "告訴",
+    "enExample": "Can you tell me a story?",
+    "zhExample": "你可以告訴我一個故事嗎？"
+  },
+  {
+    "english": "temperature",
+    "chinese": "溫度",
+    "enExample": "The temperature is dropping.",
+    "zhExample": "氣溫正在下降。"
+  },
+  {
+    "english": "tennis",
+    "chinese": "網球",
+    "enExample": "They play tennis every weekend.",
+    "zhExample": "他們每週末打網球。"
+  },
+  {
+    "english": "tent",
+    "chinese": "帳篷",
+    "enExample": "We slept in a tent.",
+    "zhExample": "我們睡在帳篷裡。"
+  },
+  {
+    "english": "test",
+    "chinese": "測驗",
+    "enExample": "I passed the English test.",
+    "zhExample": "我通過了英文測驗。"
+  },
+  {
+    "english": "thank",
+    "chinese": "感謝",
+    "enExample": "Thank you very much!",
+    "zhExample": "非常感謝你！"
+  },
+  {
+    "english": "theater",
+    "chinese": "劇院",
+    "enExample": "We watched a play at the theater.",
+    "zhExample": "我們在劇院看了一場戲。"
+  },
+  {
+    "english": "them",
+    "chinese": "他們",
+    "enExample": "I gave them a gift.",
+    "zhExample": "我給了他們一份禮物。"
+  },
+  {
+    "english": "then",
+    "chinese": "然後",
+    "enExample": "We ate and then watched a movie.",
+    "zhExample": "我們吃完飯後看了電影。"
+  },
+  {
+    "english": "thing",
+    "chinese": "東西；事情",
+    "enExample": "Where is my thing?",
+    "zhExample": "我的東西在哪裡？"
+  },
+  {
+    "english": "think",
+    "chinese": "想；認為",
+    "enExample": "I think it’s going to rain.",
+    "zhExample": "我覺得要下雨了。"
+  },
+  {
+    "english": "third",
+    "chinese": "第三",
+    "enExample": "He came in third place.",
+    "zhExample": "他得了第三名。"
+  },
+  {
+    "english": "though",
+    "chinese": "雖然",
+    "enExample": "\"Though it rained",
+    "zhExample": "we went out.\""
+  },
+  {
+    "english": "thought",
+    "chinese": "想法；思考",
+    "enExample": "That’s a nice thought.",
+    "zhExample": "那是個不錯的想法。"
+  },
+  {
+    "english": "thousand",
+    "chinese": "千",
+    "enExample": "There are a thousand stars in the sky.",
+    "zhExample": "天空中有一千顆星星。"
+  },
+  {
+    "english": "through",
+    "chinese": "穿過",
+    "enExample": "We walked through the forest.",
+    "zhExample": "我們穿過森林。"
+  },
+  {
+    "english": "throw",
+    "chinese": "投擲",
+    "enExample": "Throw me the ball.",
+    "zhExample": "把球丟給我。"
+  },
+  {
+    "english": "ticket",
+    "chinese": "票",
+    "enExample": "I bought a movie ticket.",
+    "zhExample": "我買了一張電影票。"
+  },
+  {
+    "english": "toe",
+    "chinese": "腳趾",
+    "enExample": "He hurt his toe.",
+    "zhExample": "他弄傷了腳趾。"
+  },
+  {
+    "english": "together",
+    "chinese": "一起",
+    "enExample": "Let’s do it together.",
+    "zhExample": "我們一起做吧。"
+  },
+  {
+    "english": "toilet",
+    "chinese": "廁所",
+    "enExample": "Where is the toilet?",
+    "zhExample": "廁所在哪裡？"
+  },
+  {
+    "english": "towel",
+    "chinese": "毛巾",
+    "enExample": "Dry your hands with a towel.",
+    "zhExample": "用毛巾擦乾你的手。"
+  },
+  {
+    "english": "tower",
+    "chinese": "塔",
+    "enExample": "The tower is very tall.",
+    "zhExample": "那座塔很高。"
+  },
+  {
+    "english": "town",
+    "chinese": "城鎮",
+    "enExample": "I live in a small town.",
+    "zhExample": "我住在一個小鎮裡。"
+  },
+  {
+    "english": "trip",
+    "chinese": "旅程",
+    "enExample": "We had a fun trip.",
+    "zhExample": "我們的旅程很有趣。"
+  },
+  {
+    "english": "trouble",
+    "chinese": "麻煩",
+    "enExample": "He is in trouble.",
+    "zhExample": "他有麻煩了。"
+  },
+  {
+    "english": "truck",
+    "chinese": "卡車",
+    "enExample": "A truck passed by.",
+    "zhExample": "一輛卡車經過了。"
+  },
+  {
+    "english": "TRUE",
+    "chinese": "真的",
+    "enExample": "That story is true.",
+    "zhExample": "那故事是真的。"
+  },
+  {
+    "english": "try",
+    "chinese": "嘗試",
+    "enExample": "Try your best.",
+    "zhExample": "盡你所能地嘗試。"
+  },
+  {
+    "english": "turn",
+    "chinese": "轉彎；輪到",
+    "enExample": "Turn left at the corner.",
+    "zhExample": "在轉角處左轉。"
+  },
+  {
+    "english": "turtle",
+    "chinese": "烏龜",
+    "enExample": "The turtle is slow.",
+    "zhExample": "烏龜很慢。"
+  },
+  {
+    "english": "twenty",
+    "chinese": "二十",
+    "enExample": "He is twenty years old.",
+    "zhExample": "他二十歲了。"
+  },
+  {
+    "english": "while",
+    "chinese": "當…時",
+    "enExample": "She reads while she eats.",
+    "zhExample": "她一邊吃飯一邊看書。"
+  },
+  {
+    "english": "why",
+    "chinese": "為什麼",
+    "enExample": "Why are you sad?",
+    "zhExample": "你為什麼難過？"
+  },
+  {
+    "english": "wide",
+    "chinese": "寬的",
+    "enExample": "The road is wide.",
+    "zhExample": "這條路很寬。"
+  },
+  {
+    "english": "wife",
+    "chinese": "妻子",
+    "enExample": "His wife is a doctor.",
+    "zhExample": "他的妻子是一名醫生。"
+  },
+  {
+    "english": "will",
+    "chinese": "將要",
+    "enExample": "I will call you later.",
+    "zhExample": "我稍後會打電話給你。"
+  },
+  {
+    "english": "win",
+    "chinese": "贏得",
+    "enExample": "She hopes to win the prize.",
+    "zhExample": "她希望能贏得獎品。"
+  },
+  {
+    "english": "wine",
+    "chinese": "葡萄酒",
+    "enExample": "They drank red wine.",
+    "zhExample": "他們喝了紅葡萄酒。"
+  },
+  {
+    "english": "wish",
+    "chinese": "希望；祝福",
+    "enExample": "I wish you the best.",
+    "zhExample": "祝你一切順利。"
+  },
+  {
+    "english": "within",
+    "chinese": "在…之內",
+    "enExample": "Finish it within an hour.",
+    "zhExample": "在一小時之內完成它。"
+  },
+  {
+    "english": "woman",
+    "chinese": "女人",
+    "enExample": "That woman is a teacher.",
+    "zhExample": "那位女士是一名老師。"
+  },
+  {
+    "english": "wonder",
+    "chinese": "想知道；奇蹟",
+    "enExample": "I wonder what will happen.",
+    "zhExample": "我想知道會發生什麼。"
+  },
+  {
+    "english": "work",
+    "chinese": "工作",
+    "enExample": "He goes to work by bus.",
+    "zhExample": "他搭公車去上班。"
+  },
+  {
+    "english": "world",
+    "chinese": "世界",
+    "enExample": "She traveled around the world.",
+    "zhExample": "她環遊世界。"
+  },
+  {
+    "english": "worry",
+    "chinese": "擔憂",
+    "enExample": "Don’t worry about it.",
+    "zhExample": "別為此擔心。"
+  },
+  {
+    "english": "would",
+    "chinese": "會（助動詞）",
+    "enExample": "Would you like some tea?",
+    "zhExample": "你想喝點茶嗎？"
+  },
+  {
+    "english": "wrong",
+    "chinese": "錯誤的",
+    "enExample": "That’s the wrong answer.",
+    "zhExample": "那是錯誤的答案。"
+  },
+  {
+    "english": "yard",
+    "chinese": "庭院；碼",
+    "enExample": "The children play in the yard.",
+    "zhExample": "孩子們在庭院裡玩。"
+  },
+  {
+    "english": "yes",
+    "chinese": "是的",
+    "enExample": "\"Yes",
+    "zhExample": "I agree.\""
+  },
+  {
+    "english": "yet",
+    "chinese": "還沒有",
+    "enExample": "I haven’t eaten yet.",
+    "zhExample": "我還沒吃。"
+  },
+  {
+    "english": "young",
+    "chinese": "年輕的",
+    "enExample": "She is still young.",
+    "zhExample": "她還很年輕。"
+  },
+  {
+    "english": "youth",
+    "chinese": "青年時期",
+    "enExample": "He missed his youth.",
+    "zhExample": "他懷念他的青春時光。"
+  },
+  {
+    "english": "zebra",
+    "chinese": "斑馬",
+    "enExample": "I saw a zebra at the zoo.",
+    "zhExample": "我在動物園看到了一隻斑馬。"
+  },
+  {
+    "english": "zone",
+    "chinese": "區域",
+    "enExample": "This is a no-parking zone.",
+    "zhExample": "這裡是不允許停車的區域。"
+  },
+  {
+    "english": "apply",
+    "chinese": "申請；應用",
+    "enExample": "She will apply for the job.",
+    "zhExample": "她將申請這份工作。"
+  },
+  {
+    "english": "avoid",
+    "chinese": "避免",
+    "enExample": "Please avoid making noise.",
+    "zhExample": "請避免製造噪音。"
+  },
+  {
+    "english": "chase",
+    "chinese": "追逐",
+    "enExample": "The dog chased the cat.",
+    "zhExample": "狗追著貓跑。"
+  },
+  {
+    "english": "depend",
+    "chinese": "依賴；取決於",
+    "enExample": "It depends on the weather.",
+    "zhExample": "這取決於天氣情況。"
+  },
+  {
+    "english": "deliver",
+    "chinese": "遞送",
+    "enExample": "He will deliver the package.",
+    "zhExample": "他將遞送包裹。"
+  },
+  {
+    "english": "discuss",
+    "chinese": "討論",
+    "enExample": "Let’s discuss this topic.",
+    "zhExample": "讓我們討論這個主題。"
+  },
+  {
+    "english": "discover",
+    "chinese": "發現",
+    "enExample": "Scientists discover a new species.",
+    "zhExample": "科學家發現了一個新物種。"
+  },
+  {
+    "english": "divide",
+    "chinese": "分開",
+    "enExample": "Divide the cake into eight pieces.",
+    "zhExample": "把蛋糕分成八份。"
+  },
+  {
+    "english": "earn",
+    "chinese": "賺取；贏得",
+    "enExample": "He earns a good salary.",
+    "zhExample": "他賺的不錯。"
+  },
+  {
+    "english": "educate",
+    "chinese": "教育",
+    "enExample": "Parents educate their children at home.",
+    "zhExample": "父母在家教育孩子。"
+  },
+  {
+    "english": "employ",
+    "chinese": "雇用；使用",
+    "enExample": "The company employs many workers.",
+    "zhExample": "這家公司雇用了許多員工。"
+  },
+  {
+    "english": "encourage",
+    "chinese": "鼓勵",
+    "enExample": "Teachers encourage students to read.",
+    "zhExample": "老師鼓勵學生閱讀。"
+  },
+  {
+    "english": "entrance",
+    "chinese": "入口；進入",
+    "enExample": "The entrance to the park is closed today.",
+    "zhExample": "公園的入口今天關閉了。"
+  },
+  {
+    "english": "escape",
+    "chinese": "逃離",
+    "enExample": "The cat escaped through the window.",
+    "zhExample": "貓從窗戶溜了出去。"
+  },
+  {
+    "english": "explain",
+    "chinese": "解釋",
+    "enExample": "Can you explain this problem to me?",
+    "zhExample": "你能向我解釋這道題嗎？"
+  },
+  {
+    "english": "express",
+    "chinese": "表達",
+    "enExample": "She expressed her opinion clearly.",
+    "zhExample": "她清楚地表達了她的意見。"
+  },
+  {
+    "english": "extend",
+    "chinese": "延伸；延長",
+    "enExample": "We extended our stay by two days.",
+    "zhExample": "我們將停留延長了兩天。"
+  },
+  {
+    "english": "familiar",
+    "chinese": "熟悉的",
+    "enExample": "The tune sounds familiar to me.",
+    "zhExample": "這旋律聽起來很熟悉。"
+  },
+  {
+    "english": "feature",
+    "chinese": "特徵；以…為特色",
+    "enExample": "The film features a famous actor.",
+    "zhExample": "那部電影以一位著名演員為特色。"
+  },
+  {
+    "english": "firm",
+    "chinese": "堅固的；公司",
+    "enExample": "The ground is firm after the rain.",
+    "zhExample": "雨後地面變得堅實。"
+  },
+  {
+    "english": "fit",
+    "chinese": "合適",
+    "enExample": "The dress fits you perfectly.",
+    "zhExample": "這件洋裝非常適合你。"
+  },
+  {
+    "english": "flood",
+    "chinese": "洪水；淹沒",
+    "enExample": "The river flooded the nearby fields.",
+    "zhExample": "河水淹沒了附近的農田。"
+  },
+  {
+    "english": "flow",
+    "chinese": "流動",
+    "enExample": "The river flows into the sea.",
+    "zhExample": "這條河流入海洋。"
+  },
+  {
+    "english": "focus",
+    "chinese": "集中；焦點",
+    "enExample": "Please focus on your homework.",
+    "zhExample": "請專心做作業。"
+  },
+  {
+    "english": "force",
+    "chinese": "力量；強迫",
+    "enExample": "Don’t force him to decide now.",
+    "zhExample": "不要強迫他現在就決定。"
+  },
+  {
+    "english": "forward",
+    "chinese": "向前；轉寄",
+    "enExample": "She moved forward to greet him.",
+    "zhExample": "她向前走去迎接他。"
+  },
+  {
+    "english": "found",
+    "chinese": "發現；創立",
+    "enExample": "They founded the company in 1990.",
+    "zhExample": "他們於 1990 年創立了這家公司。"
+  },
+  {
+    "english": "frame",
+    "chinese": "框架；設計",
+    "enExample": "He framed the picture on the wall.",
+    "zhExample": "他把畫框掛在牆上。"
+  },
+  {
+    "english": "fuel",
+    "chinese": "燃料；刺激",
+    "enExample": "This incident fueled the debate.",
+    "zhExample": "這事件激起了辯論。"
+  },
+  {
+    "english": "function",
+    "chinese": "功能；運作",
+    "enExample": "The new app functions well.",
+    "zhExample": "這款新應用運作良好。"
+  },
+  {
+    "english": "fund",
+    "chinese": "資金；資助",
+    "enExample": "The charity funds many projects.",
+    "zhExample": "該慈善機構資助了許多項目。"
+  },
+  {
+    "english": "further",
+    "chinese": "更遠的；促進",
+    "enExample": "We discussed the matter further.",
+    "zhExample": "我們進一步討論了此事。"
+  },
+  {
+    "english": "gain",
+    "chinese": "獲得；增加",
+    "enExample": "She gained valuable experience.",
+    "zhExample": "她獲得了寶貴的經驗。"
+  },
+  {
+    "english": "gather",
+    "chinese": "收集；聚集",
+    "enExample": "\"Gather all the documents",
+    "zhExample": "please.\""
+  },
+  {
+    "english": "generate",
+    "chinese": "產生",
+    "enExample": "This windmill generates electricity.",
+    "zhExample": "這座風車發電。"
+  },
+  {
+    "english": "gesture",
+    "chinese": "手勢",
+    "enExample": "He made a friendly gesture.",
+    "zhExample": "他做出了友好的手勢。"
+  },
+  {
+    "english": "global",
+    "chinese": "全球的",
+    "enExample": "Global warming is a serious issue.",
+    "zhExample": "全球暖化是一個嚴重的問題。"
+  },
+  {
+    "english": "grant",
+    "chinese": "授予；同意",
+    "enExample": "The council granted her request.",
+    "zhExample": "市議會同意了她的請求。"
+  },
+  {
+    "english": "graph",
+    "chinese": "圖表",
+    "enExample": "The graph shows sales data.",
+    "zhExample": "這張圖表顯示了銷售數據。"
+  },
+  {
+    "english": "guard",
+    "chinese": "保護；守衛",
+    "enExample": "A guard watches the entrance.",
+    "zhExample": "一名警衛在入口站崗。"
+  },
+  {
+    "english": "guarantee",
+    "chinese": "保證；擔保",
+    "enExample": "We guarantee your satisfaction.",
+    "zhExample": "我們保證您會滿意。"
+  },
+  {
+    "english": "habit",
+    "chinese": "習慣",
+    "enExample": "She has a habit of reading at night.",
+    "zhExample": "她有夜間閱讀的習慣。"
+  },
+  {
+    "english": "handle",
+    "chinese": "處理；把手",
+    "enExample": "He handles customer complaints.",
+    "zhExample": "他處理客戶投訴。"
+  },
+  {
+    "english": "harm",
+    "chinese": "傷害",
+    "enExample": "Smoking can harm your health.",
+    "zhExample": "吸煙會危害健康。"
+  },
+  {
+    "english": "harvest",
+    "chinese": "收穫；收割",
+    "enExample": "They harvest rice in autumn.",
+    "zhExample": "他們在秋天收割稻米。"
+  },
+  {
+    "english": "harmful",
+    "chinese": "有害的",
+    "enExample": "Excessive sun exposure is harmful.",
+    "zhExample": "過度日曬是有害的。"
+  },
+  {
+    "english": "headline",
+    "chinese": "標題",
+    "enExample": "The headline caught my attention.",
+    "zhExample": "標題吸引了我的注意。"
+  },
+  {
+    "english": "highlight",
+    "chinese": "強調；亮點",
+    "enExample": "She highlighted the key points.",
+    "zhExample": "她強調了重點。"
+  },
+  {
+    "english": "hike",
+    "chinese": "健行；大幅增長",
+    "enExample": "We went for a hike in the mountains.",
+    "zhExample": "我們在山裡健行。"
+  },
+  {
+    "english": "hire",
+    "chinese": "僱用",
+    "enExample": "The company hired three interns.",
+    "zhExample": "公司雇用了三名實習生。"
+  },
+  {
+    "english": "historical",
+    "chinese": "歷史的",
+    "enExample": "The museum displays historical artifacts.",
+    "zhExample": "博物館展示了歷史文物。"
+  },
+  {
+    "english": "host",
+    "chinese": "主辦；主持人",
+    "enExample": "She will host the event.",
+    "zhExample": "她將主持這場活動。"
+  },
+  {
+    "english": "household",
+    "chinese": "家庭的；家務",
+    "enExample": "Household chores take time.",
+    "zhExample": "家務需要時間處理。"
+  },
+  {
+    "english": "human",
+    "chinese": "人類的；人",
+    "enExample": "Human beings need water to live.",
+    "zhExample": "人類需要水才能生存。"
+  },
+  {
+    "english": "humor",
+    "chinese": "幽默；幽默感",
+    "enExample": "He has a great sense of humor.",
+    "zhExample": "他有很好的幽默感。"
+  },
+  {
+    "english": "illustrate",
+    "chinese": "說明；舉例",
+    "enExample": "The chart illustrates the trend clearly.",
+    "zhExample": "圖表清楚地說明了趨勢。"
+  },
+  {
+    "english": "image",
+    "chinese": "影像；形象",
+    "enExample": "The image on the screen is sharp.",
+    "zhExample": "螢幕上的影像很清晰。"
+  },
+  {
+    "english": "imagine",
+    "chinese": "想像",
+    "enExample": "Imagine a world without war.",
+    "zhExample": "想像一個沒有戰爭的世界。"
+  },
+  {
+    "english": "impact",
+    "chinese": "影響",
+    "enExample": "The decision had a big impact.",
+    "zhExample": "這個決定產生了重大影響。"
+  },
+  {
+    "english": "import",
+    "chinese": "進口；導入",
+    "enExample": "We import cars from Japan.",
+    "zhExample": "我們從日本進口汽車。"
+  },
+  {
+    "english": "improve",
+    "chinese": "改善；提高",
+    "enExample": "Practice improves your skills.",
+    "zhExample": "練習能提高你的技能。"
+  },
+  {
+    "english": "include",
+    "chinese": "包括",
+    "enExample": "The price includes taxes.",
+    "zhExample": "價格包含稅金。"
+  },
+  {
+    "english": "increase",
+    "chinese": "增加",
+    "enExample": "Sales increased by 10% last month.",
+    "zhExample": "上月銷售額增長了10%。"
+  },
+  {
+    "english": "indicate",
+    "chinese": "指示；顯示",
+    "enExample": "The sign indicates the exit.",
+    "zhExample": "標誌指示出口方向。"
+  },
+  {
+    "english": "inform",
+    "chinese": "通知；告知",
+    "enExample": "Please inform me of any changes.",
+    "zhExample": "請告知我任何變動。"
+  },
+  {
+    "english": "injure",
+    "chinese": "使受傷",
+    "enExample": "He injured his arm in the game.",
+    "zhExample": "他在比賽中手臂受傷。"
+  },
+  {
+    "english": "inquire",
+    "chinese": "詢問；打聽",
+    "enExample": "I would like to inquire about the price.",
+    "zhExample": "我想打聽一下價格。"
+  },
+  {
+    "english": "insist",
+    "chinese": "堅持",
+    "enExample": "She insisted on paying the bill.",
+    "zhExample": "她堅持要付帳。"
+  },
+  {
+    "english": "inspect",
+    "chinese": "檢查；視察",
+    "enExample": "The manager will inspect the site.",
+    "zhExample": "經理將視察該地點。"
+  },
+  {
+    "english": "install",
+    "chinese": "安裝",
+    "enExample": "They will install the new software today.",
+    "zhExample": "他們今天會安裝新軟體。"
+  },
+  {
+    "english": "instruct",
+    "chinese": "指示；教導",
+    "enExample": "The coach instructed the players.",
+    "zhExample": "教練指導球員們。"
+  },
+  {
+    "english": "insure",
+    "chinese": "保險；確保",
+    "enExample": "Make sure to insure your luggage.",
+    "zhExample": "請務必為行李投保。"
+  },
+  {
+    "english": "integrate",
+    "chinese": "整合；融入",
+    "enExample": "We need to integrate these systems.",
+    "zhExample": "我們需要整合這些系統。"
+  },
+  {
+    "english": "intend",
+    "chinese": "打算；意圖",
+    "enExample": "I intend to start early tomorrow.",
+    "zhExample": "我打算明天一早開始。"
+  },
+  {
+    "english": "interior",
+    "chinese": "內部的；室內的",
+    "enExample": "The interior of the house is modern.",
+    "zhExample": "這房子的內部裝潢很現代。"
+  },
+  {
+    "english": "interpret",
+    "chinese": "解釋；口譯",
+    "enExample": "How do you interpret this result?",
+    "zhExample": "你如何解釋這個結果？"
+  },
+  {
+    "english": "interrupt",
+    "chinese": "打斷；中斷",
+    "enExample": "Sorry to interrupt your meeting.",
+    "zhExample": "抱歉打斷你們的會議。"
+  },
+  {
+    "english": "introduce",
+    "chinese": "介紹；引進",
+    "enExample": "Let me introduce you to my friend.",
+    "zhExample": "讓我把你介紹給我的朋友。"
+  },
+  {
+    "english": "invent",
+    "chinese": "發明；創造",
+    "enExample": "He invented a new device.",
+    "zhExample": "他發明了一種新裝置。"
+  },
+  {
+    "english": "invest",
+    "chinese": "投資；投入",
+    "enExample": "They decided to invest in real estate.",
+    "zhExample": "他們決定投資房地產。"
+  },
+  {
+    "english": "involve",
+    "chinese": "涉及；包含",
+    "enExample": "This project involves many steps.",
+    "zhExample": "這個計畫包含許多步驟。"
+  },
+  {
+    "english": "iron",
+    "chinese": "熨燙；鐵",
+    "enExample": "Please iron your shirt before the meeting.",
+    "zhExample": "請在會議前熨好襯衫。"
+  },
+  {
+    "english": "isolate",
+    "chinese": "隔離；孤立",
+    "enExample": "They had to isolate the infected area.",
+    "zhExample": "他們必須隔離受感染區域。"
+  },
+  {
+    "english": "issue",
+    "chinese": "議題；發行",
+    "enExample": "Let's discuss the main issue first.",
+    "zhExample": "我們先討論主要議題。"
+  },
+  {
+    "english": "item",
+    "chinese": "項目；物品",
+    "enExample": "Please check each item on the list.",
+    "zhExample": "請檢查清單上的每一項目。"
+  },
+  {
+    "english": "journal",
+    "chinese": "期刊；日誌",
+    "enExample": "She published her research in a journal.",
+    "zhExample": "她在期刊上發表了研究。"
+  },
+  {
+    "english": "judge",
+    "chinese": "判斷；法官",
+    "enExample": "Don't judge people too quickly.",
+    "zhExample": "不要太快對人下評斷。"
+  },
+  {
+    "english": "justify",
+    "chinese": "證明…是正當；辯解",
+    "enExample": "Can you justify your decision?",
+    "zhExample": "你能為你的決定辯護嗎？"
+  },
+  {
+    "english": "label",
+    "chinese": "標籤；貼標籤於",
+    "enExample": "Please label each box clearly.",
+    "zhExample": "請清楚標示每個箱子。"
+  },
+  {
+    "english": "lack",
+    "chinese": "缺乏；不足",
+    "enExample": "We lack sufficient evidence.",
+    "zhExample": "我們缺乏足夠證據。"
+  },
+  {
+    "english": "launch",
+    "chinese": "發射；推出",
+    "enExample": "They will launch the product next month.",
+    "zhExample": "他們將於下月推出該產品。"
+  },
+  {
+    "english": "layer",
+    "chinese": "層；階層",
+    "enExample": "The cake has three layers.",
+    "zhExample": "這蛋糕有三層。"
+  },
+  {
+    "english": "lean",
+    "chinese": "傾斜；倚靠",
+    "enExample": "Could you lean the ladder against the wall?",
+    "zhExample": "你能把梯子靠在牆上嗎？"
+  },
+  {
+    "english": "lend",
+    "chinese": "借給",
+    "enExample": "Can you lend me some money?",
+    "zhExample": "你能借我一些錢嗎？"
+  },
+  {
+    "english": "length",
+    "chinese": "長度；一段時間",
+    "enExample": "What is the length of this movie?",
+    "zhExample": "這部電影的長度是多少？"
+  },
+  {
+    "english": "lessen",
+    "chinese": "減少；使變少",
+    "enExample": "The rain will lessen soon.",
+    "zhExample": "雨很快就會減小。"
+  },
+  {
+    "english": "level",
+    "chinese": "水準；水平面",
+    "enExample": "The water level is rising.",
+    "zhExample": "水位正在上升。"
+  },
+  {
+    "english": "license",
+    "chinese": "執照；許可",
+    "enExample": "You need a license to drive.",
+    "zhExample": "開車需要執照。"
+  },
+  {
+    "english": "link",
+    "chinese": "連結；聯繫",
+    "enExample": "I'll send you the link.",
+    "zhExample": "我會把連結傳給你。"
+  },
+  {
+    "english": "locate",
+    "chinese": "定位；找出",
+    "enExample": "We need to locate the source of the noise.",
+    "zhExample": "我們需要找出噪音來源。"
+  },
+  {
+    "english": "log",
+    "chinese": "記錄；原木",
+    "enExample": "Please log all your expenses.",
+    "zhExample": "請記錄你所有的支出。"
+  },
+  {
+    "english": "maintain",
+    "chinese": "維持；保養",
+    "enExample": "We must maintain a healthy lifestyle.",
+    "zhExample": "我們必須維持健康的生活方式。"
+  },
+  {
+    "english": "major",
+    "chinese": "主要的；主修",
+    "enExample": "He majored in computer science.",
+    "zhExample": "他主修電腦科學。"
+  },
+  {
+    "english": "manage",
+    "chinese": "管理；設法",
+    "enExample": "She manages the entire project.",
+    "zhExample": "她負責管理整個專案。"
+  }
+]

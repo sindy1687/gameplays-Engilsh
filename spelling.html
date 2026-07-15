@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>英打小英雄 - 打字音效版</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--c:#00ffff;--m:#a259ff;--g:#ffd700}
+body{margin:0;font-family:'Orbitron',sans-serif;color:#fff;background:linear-gradient(#020111,#000010)}
+#wrap{max-width:520px;margin:40px auto;padding:20px;background:rgba(10,20,40,.7);border:2px solid var(--c);border-radius:16px;box-shadow:0 0 30px #0ff4;text-align:center}
+h1{color:var(--c);text-shadow:0 0 12px #0ff,0 0 32px #a259ff}
+#word{font-size:2.2rem;color:#ffd700;text-shadow:0 0 10px #ffd700;margin:20px 0}
+#ipt{font-family:'Roboto Mono';font-size:1.2rem;width:85%;padding:14px;border-radius:14px;border:3px solid #00ffff;background:rgba(10,20,40,.9);color:#fff;text-align:center;outline:none}
+#ipt:focus{border-color:#ffd700;box-shadow:0 0 20px #ffd70080}
+#fb{height:28px;margin:10px 0;color:#ffd700;font-weight:700}
+.hud{display:flex;justify-content:center;gap:10px;margin-top:8px;font-size:1rem;color:#ffd700;text-shadow:0 0 10px #ffd700}
+.row{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:10px}
+button{font-family:'Orbitron';font-weight:700;border:none;border-radius:10px;padding:10px 18px;cursor:pointer;color:#000;box-shadow:0 0 14px #0ff;background:linear-gradient(90deg,#00ffff,#a259ff);transition:.15s}
+button:hover{transform:scale(1.07)}
+#skipBtn{background:linear-gradient(90deg,#ff8a00,#ff3c3c);color:#fff;text-shadow:0 0 5px #fff;box-shadow:0 0 16px rgba(255,60,60,.6)}
+#spk{background:linear-gradient(90deg,#ffd700,#ffaa00)}
+#hint{background:linear-gradient(90deg,#a259ff,#ff6b6b);color:#fff}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <h1>⭐ 自訂關卡：<span id="bookName">英檢單字</span></h1>
+  <div class="hud"><span id="totalStarsCount">⭐ 0</span></div>
+  <div id="word">準備中...</div>
+  <input id="ipt" placeholder="請輸入英文..." autocomplete="off">
+  <div id="fb"></div>
+  <div class="row">
+    <button onclick="checkAns()">✅ 送出</button>
+    <button id="skipBtn" onclick="skipWord()">⏭️ 跳過</button>
+    <button id="spk" onclick="speakCur()">🔈 發音</button>
+    <button id="hint" onclick="showHint()">💡 提示</button>
+    <button onclick="restart()">🔁 重玩</button>
+  </div>
+</div>
+
+<audio id="typeSound" src="sound/type.mp3" preload="auto"></audio>
+
+<script src="js/starRewardSystem.js"></script>
+<script src="js/sound.js"></script>
+<script>
+const ipt=document.getElementById('ipt');
+const fb=document.getElementById('fb');
+const word=document.getElementById('word');
+const typeSound=document.getElementById('typeSound');
+const bookTitleEl=document.getElementById('bookName');
+const params=new URLSearchParams(location.search);
+const selectedBook=params.get('book')||'英檢單字';
+bookTitleEl.textContent=selectedBook;
+const storageKey='book_'+selectedBook;
+const fallbackWords=[
+  {zh:'蜂蜜；親愛的',word:'honey'},
+  {zh:'昂貴的',word:'expensive'},
+  {zh:'烏龜',word:'turtle'}
+];
+let words=[...fallbackWords];
+let curIndex=0;
+let order=[];
+let orderPos=0;
+let lastWordKey='';
+let questionStartTime=Date.now();
+let correctStreak=0;
+
+function dedupeWordList(list){
+  const seen=new Set();
+  const result=[];
+  list.forEach(item=>{
+    const en=(item?.word||'').trim();
+    const zh=(item?.zh||item?.meaning||'').trim();
+    if(!en){return;}
+    const key=en.toLowerCase();
+    if(seen.has(key)){return;}
+    seen.add(key);
+    result.push({
+      word:en,
+      zh:zh||'暫無解釋'
+    });
+  });
+  return result;
+}
+
+function loadCustomWords(){
+  try{
+    const raw=localStorage.getItem(storageKey);
+    if(!raw){
+      words=[...fallbackWords];
+      return;
+    }
+    const parsed=JSON.parse(raw);
+    if(!Array.isArray(parsed)||parsed.length===0){
+      words=[...fallbackWords];
+      return;
+    }
+    const mapped=parsed.map(item=>({
+      word:(item?.word||'').trim(),
+      zh:(item?.meaning||item?.zh||'').trim()
+    }));
+    const cleaned=dedupeWordList(mapped);
+    words=cleaned.length>0?cleaned:[...fallbackWords];
+  }catch(e){
+    console.warn('載入單字本失敗，改用預設題庫',e);
+    words=[...fallbackWords];
+  }
+}
+
+function playType(){typeSound.currentTime=0;typeSound.play().catch(()=>{})}
+function speakCur(){
+  const w=words[curIndex]?.word;
+  if(!w){return;}
+  if(typeof SoundSystem!=='undefined' && SoundSystem.speech && typeof SoundSystem.speech.speakWord==='function'){
+    SoundSystem.speech.speakWord(w);
+    return;
+  }
+  if('speechSynthesis'in window){
+    const u=new SpeechSynthesisUtterance(w);
+    u.lang='en-US';
+    speechSynthesis.speak(u);
+  }
+}
+
+function shuffleInPlace(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function rebuildOrder(){
+  order=shuffleInPlace(Array.from({length:words.length},(_,i)=>i));
+  // 避免「新一輪第一題」馬上等於上一輪最後一題
+  if(words.length>1 && lastWordKey && words[order[0]] && words[order[0]].word===lastWordKey){
+    [order[0],order[1]]=[order[1],order[0]];
+  }
+  orderPos=0;
+}
+
+function next(){
+  if(!Array.isArray(words) || words.length===0){
+    word.textContent='題庫為空';
+    return;
+  }
+  if(order.length!==words.length || orderPos>=order.length){
+    rebuildOrder();
+  }
+  curIndex=order[orderPos++];
+  lastWordKey=words[curIndex]?.word||'';
+  word.textContent=words[curIndex].zh;
+  ipt.value='';
+  fb.textContent='';
+  questionStartTime=Date.now();
+  speakCur();
+}
+function calcStarReward(timeUsed,wordLength){
+  let stars=1;
+  const reasons=[];
+  if(timeUsed<=3){
+    stars+=1;
+    reasons.push('⚡神速');
+  }else if(timeUsed<=6){
+    reasons.push('🎯快速');
+  }
+  if(wordLength>=8){
+    stars+=1;
+    reasons.push('🧠長字');
+  }
+  if(correctStreak>0 && correctStreak%5===0){
+    stars+=2;
+    reasons.push('🔥連擊'+correctStreak);
+  }
+  return{stars,reasons};
+}
+
+function grantStars(amount){
+  if(amount<=0){return;}
+  if(typeof StarRewardSystem!=='undefined'){
+    StarRewardSystem.addStars(amount);
+    StarRewardSystem.updateStarsDisplay();
+  }else{
+    const total=parseInt(localStorage.getItem('totalStars')||'0',10)+amount;
+    localStorage.setItem('totalStars',total);
+    const hud=document.getElementById('totalStarsCount');
+    if(hud){hud.textContent='⭐ '+total;}
+  }
+}
+
+function updateStarHud(){
+  const total=parseInt(localStorage.getItem('totalStars')||'0',10);
+  const hud=document.getElementById('totalStarsCount');
+  if(hud){hud.textContent='⭐ '+total;}
+}
+
+function checkAns(){
+  playType();
+  const answer=ipt.value.trim().toLowerCase();
+  const target=words[curIndex].word.toLowerCase();
+  if(answer===target){
+    correctStreak++;
+    const timeUsed=(Date.now()-questionStartTime)/1000;
+    const reward=calcStarReward(timeUsed,words[curIndex].word.length);
+    grantStars(reward.stars);
+    const extra=reward.reasons.length?'（'+reward.reasons.join('、')+'）':'';
+    fb.textContent='✅ 正確！ ⭐+'+reward.stars+extra;
+    if(typeof VocabularyAchievementSystem!=='undefined'){
+      VocabularyAchievementSystem.recordCorrectWord(words[curIndex].word,selectedBook);
+    }
+    setTimeout(next,800);
+  }else{
+    correctStreak=0;
+    fb.textContent='❌ 正解：'+words[curIndex].word;
+    setTimeout(next,1000);
+  }
+}
+function skipWord(){playType();fb.textContent='⏭️ 已跳過：'+words[curIndex].zh+'（'+words[curIndex].word+'）';setTimeout(next,1000)}
+function showHint(){fb.textContent='💡 提示：'+words[curIndex].word[0].toUpperCase()+'...';playType()}
+function restart(){curIndex=-1;next();playType()}
+
+ipt.addEventListener('input',()=>playType());
+ipt.addEventListener('keydown',e=>{if(e.key==='Enter')checkAns()});
+loadCustomWords();
+rebuildOrder();
+updateStarHud();
+next();
+</script>
+</body>
+</html>

@@ -1,0 +1,5504 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>英打小英雄 - 首頁</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <!-- TODO: css/shared.css file does not exist - commented out -->
+  <!-- <link rel="stylesheet" href="css/shared.css"> -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    /* 全局樣式 */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans TC', 'Microsoft JhengHei', Arial, 'Orbitron', sans-serif;
+      background: url('https://th.bing.com/th/id/OIP.EXCeug5EiI00kMhj2ySQUwHaEo?r=0&w=1920&h=1200&rs=1&pid=ImgDetMain') center center fixed;
+      background-size: cover;
+      color: #f3f6fa;
+      min-height: 100vh;
+      display: block;
+      text-align: center;
+      overflow: visible !important;
+    }
+
+    /* 標題 */
+    h1 {
+      font-size: 2.8rem;
+      color: #e6f0ff;
+      text-shadow: 0 2px 12px #2e3a5e, 0 0 40px #a259ff, 0 0 60px #ff6b6b;
+      margin: 5px 0 8px;
+      text-align: center;
+      font-weight: 800;
+      letter-spacing: 3px;
+      background: none;
+      -webkit-background-clip: unset;
+      -webkit-text-fill-color: unset;
+      background-clip: unset;
+      animation: titleGlow 3s ease-in-out infinite alternate;
+      font-family: 'Orbitron', 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
+    }
+
+    @keyframes titleGlow {
+      0% { filter: brightness(1) saturate(1); }
+      100% { filter: brightness(1.2) saturate(1.3); }
+    }
+
+    .subtitle {
+      font-size: 1.4rem;
+      color: #a3b8ff;
+      margin-bottom: 12px;
+      text-shadow: 0 1px 8px #2e3a5e, 0 0 20px #a259ff;
+      font-weight: 600;
+      letter-spacing: 2px;
+      background: none;
+      -webkit-background-clip: unset;
+      -webkit-text-fill-color: unset;
+      background-clip: unset;
+      font-family: 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
+    }
+
+    .description {
+      font-size: 1.1rem;
+      color: #b8c7e0;
+      margin-bottom: 20px;
+      line-height: 1.8;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      text-shadow: 0 1px 6px #2e3a5e;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      background: none;
+      -webkit-background-clip: unset;
+      -webkit-text-fill-color: unset;
+      background-clip: unset;
+      font-family: 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
+    }
+
+    /* 主要容器 */
+    #container {
+      max-width: 800px;
+      width: 90%;
+      margin: 4px auto 20px auto;
+      padding: 12px;
+      background: rgba(10, 20, 40, 0.45);
+      border-radius: 20px;
+      box-shadow: 0 0 32px #00ffff44, 0 0 80px #a259ff22 inset;
+      border: 2px solid #00ffff;
+      backdrop-filter: blur(2px);
+      text-align: center;
+      color: #f3f6fa;
+      font-family: 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
+      overflow: visible !important;
+      position: relative;
+    }
+
+    /* 玩家名稱輸入 */
+    #playerName {
+      width: 60%;
+      padding: 8px 12px;
+      margin: 8px 0;
+      font-size: 0.95rem;
+      background: rgba(10, 20, 40, 0.6);
+      border: 2px solid #00ffff;
+      border-radius: 10px;
+      color: #fff;
+      box-shadow: 0 0 20px #00ffff80, 0 0 40px #a259ff40;
+      font-family: 'Roboto Mono', monospace;
+      text-align: center;
+      font-weight: 500;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(2px);
+    }
+
+    #playerName:focus {
+      outline: none;
+      border-color: #ff6b6b;
+      box-shadow: 0 0 30px #00ffff, 0 0 60px #ff6b6b80;
+      transform: scale(1.02);
+    }
+
+    #playerName::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+      font-style: italic;
+    }
+
+    /* 編輯名稱按鈕 */
+    .edit-name-btn {
+      padding: 6px 12px;
+      margin-left: 8px;
+      font-size: 0.8rem;
+      background: rgba(255, 107, 107, 0.8);
+      border: 1px solid #ff6b6b;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
+    }
+
+    .edit-name-btn:hover {
+      background: rgba(255, 107, 107, 1);
+      box-shadow: 0 0 15px #ff6b6b80;
+      transform: scale(1.05);
+    }
+
+    /* 輸入群組樣式 */
+    .input-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 8px 0;
+    }
+
+    /* 頭像選擇 */
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      gap: 15px;
+      margin: 16px 0;
+      padding: 15px;
+      background: rgba(10, 20, 40, 0.2);
+      border-radius: 20px;
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      backdrop-filter: blur(2px);
+    }
+
+    .avatar-option {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 3px solid #00ffff;
+      transition: all 0.2s ease-out;
+      box-shadow: 0 0 20px #00ffff44, 0 0 40px #a259ff22;
+      background-size: cover;
+      background-position: center top;
+      background-repeat: no-repeat;
+      position: relative;
+      overflow: hidden;
+      background-clip: content-box;
+    }
+
+    .avatar-option::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: 50%;
+    }
+
+    .avatar-option:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 30px #00ffff, 0 0 60px #a259ff66;
+      border-color: #ff6b6b;
+      /* 懸停時放大背景圖片以更好地顯示臉部 */
+      background-size: 115% auto;
+    }
+
+    .avatar-option:hover::before {
+      opacity: 1;
+    }
+
+    .avatar-option.selected {
+      border-color: #ffd700;
+      box-shadow: 0 0 30px #ffd700, 0 0 60px #ffd70066;
+      transform: scale(1.1);
+      animation: selectedPulse 2s ease-in-out infinite;
+      /* 選中時也放大背景圖片 */
+      background-size: 110% auto;
+    }
+
+    /* 自訂頭像選項樣式 */
+    .custom-avatar-option {
+      background: linear-gradient(135deg, #a259ff 0%, #ff6b6b 100%) !important;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 公告數字泡泡樣式 */
+    .notification-badge {
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      background: linear-gradient(135deg, #ff4757 0%, #ff3838 100%);
+      color: white;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: bold;
+      font-family: 'Orbitron', monospace;
+      box-shadow: 
+        0 0 15px rgba(255, 71, 87, 0.8),
+        0 0 30px rgba(255, 71, 87, 0.6),
+        inset 0 0 8px rgba(255, 255, 255, 0.3);
+      border: 3px solid rgba(255, 255, 255, 0.4);
+      animation: badgePulse 2s ease-in-out infinite;
+      z-index: 1000;
+      pointer-events: none;
+    }
+
+    @keyframes badgePulse {
+      0%, 100% { 
+        transform: scale(1);
+        box-shadow: 
+          0 0 15px rgba(255, 71, 87, 0.8),
+          0 0 30px rgba(255, 71, 87, 0.6),
+          inset 0 0 8px rgba(255, 255, 255, 0.3);
+      }
+      50% { 
+        transform: scale(1.15);
+        box-shadow: 
+          0 0 20px rgba(255, 71, 87, 0.9),
+          0 0 40px rgba(255, 71, 87, 0.7),
+          inset 0 0 10px rgba(255, 255, 255, 0.4);
+      }
+    }
+
+    .announcement-btn {
+      position: relative;
+      overflow: visible !important;
+      z-index: 1;
+    }
+
+    .announcement-btn:hover .notification-badge {
+      animation: badgeHover 0.3s ease-in-out;
+    }
+
+    @keyframes badgeHover {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.25); }
+      100% { transform: scale(1.15); }
+    }
+
+    .custom-avatar-option::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: 50%;
+    }
+
+    .custom-avatar-option:hover::before {
+      opacity: 1;
+    }
+
+    .custom-avatar-icon {
+      font-size: 2rem;
+      margin-bottom: 4px;
+      animation: customIconGlow 2s ease-in-out infinite alternate;
+    }
+
+    .custom-avatar-text {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    @keyframes customIconGlow {
+      0% { 
+        filter: brightness(1) saturate(1);
+        transform: scale(1);
+      }
+      100% { 
+        filter: brightness(1.3) saturate(1.5);
+        transform: scale(1.1);
+      }
+    }
+
+    /* 首頁公告區域樣式 - 美化版 */
+    .home-announcements {
+      margin: 25px 0;
+      background: linear-gradient(135deg, rgba(10, 20, 40, 0.95), rgba(20, 30, 50, 0.9));
+      border-radius: 20px;
+      border: 2px solid rgba(0, 255, 255, 0.6);
+      backdrop-filter: blur(15px);
+      overflow: hidden;
+      box-shadow: 
+        0 0 25px rgba(0, 255, 255, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      z-index: 10;
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    .home-announcements::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.8), transparent);
+    }
+
+    .home-announcements:hover {
+      box-shadow: 
+        0 0 35px rgba(0, 255, 255, 0.5),
+        0 8px 25px rgba(0, 0, 0, 0.3);
+      transform: translateY(-3px);
+      border-color: rgba(0, 255, 255, 0.8);
+    }
+
+    .announcements-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 25px;
+      background: linear-gradient(135deg, 
+        rgba(0, 255, 255, 0.15), 
+        rgba(255, 107, 107, 0.15),
+        rgba(255, 215, 0, 0.1));
+      border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+      position: relative;
+    }
+
+    .announcements-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.5), transparent);
+    }
+
+    .announcements-header h3 {
+      color: #00ffff;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin: 0;
+      text-shadow: 
+        0 0 15px rgba(0, 255, 255, 0.6),
+        0 2px 4px rgba(0, 0, 0, 0.3);
+      letter-spacing: 0.5px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .view-all-btn {
+      background: linear-gradient(135deg, #ff6b6b, #ffd700, #00ffff);
+      background-size: 200% 200%;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 25px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      box-shadow: 
+        0 0 20px rgba(255, 107, 107, 0.4),
+        0 4px 15px rgba(0, 0, 0, 0.2);
+      position: relative;
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .view-all-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .view-all-btn:hover::before {
+      left: 100%;
+    }
+
+    .view-all-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 
+        0 0 30px rgba(255, 107, 107, 0.6),
+        0 8px 25px rgba(0, 0, 0, 0.3);
+      background-position: 100% 100%;
+    }
+
+    .announcements-content {
+      padding: 20px 25px;
+      max-height: 250px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0, 255, 255, 0.5) transparent;
+    }
+
+    .announcements-content::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .announcements-content::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 3px;
+    }
+
+    .announcements-content::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, rgba(0, 255, 255, 0.6), rgba(255, 107, 107, 0.6));
+      border-radius: 3px;
+    }
+
+    .announcement-item {
+      background: linear-gradient(135deg, 
+        rgba(0, 0, 0, 0.4), 
+        rgba(20, 30, 50, 0.3));
+      border-left: 5px solid #00ffff;
+      padding: 18px 22px;
+      margin-bottom: 18px;
+      border-radius: 15px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(5px);
+      box-shadow: 
+        0 2px 10px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .announcement-item-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 5px;
+    }
+
+    .announcement-item-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .announcement-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.15), transparent);
+      transition: left 0.8s ease;
+    }
+
+    .announcement-item:hover::before {
+      left: 100%;
+    }
+
+    .announcement-item:hover {
+      transform: translateX(8px) scale(1.02);
+      box-shadow: 
+        0 0 25px rgba(0, 255, 255, 0.4),
+        0 8px 25px rgba(0, 0, 0, 0.3);
+      border-left-width: 6px;
+    }
+
+    .announcement-item.urgent {
+      border-left-color: #ff4757;
+      background: linear-gradient(135deg, 
+        rgba(255, 71, 87, 0.15), 
+        rgba(255, 20, 40, 0.1));
+      box-shadow: 
+        0 2px 10px rgba(255, 71, 87, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .announcement-item.urgent:hover {
+      box-shadow: 
+        0 0 25px rgba(255, 71, 87, 0.5),
+        0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .announcement-item.info {
+      border-left-color: #2ed573;
+      background: linear-gradient(135deg, 
+        rgba(46, 213, 115, 0.15), 
+        rgba(20, 200, 80, 0.1));
+      box-shadow: 
+        0 2px 10px rgba(46, 213, 115, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .announcement-item.info:hover {
+      box-shadow: 
+        0 0 25px rgba(46, 213, 115, 0.5),
+        0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .announcement-item.update {
+      border-left-color: #3742fa;
+      background: linear-gradient(135deg, 
+        rgba(55, 66, 250, 0.15), 
+        rgba(40, 50, 200, 0.1));
+      box-shadow: 
+        0 2px 10px rgba(55, 66, 250, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .announcement-item.update:hover {
+      box-shadow: 
+        0 0 25px rgba(55, 66, 250, 0.5),
+        0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .announcement-content {
+      color: #ffffff;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 10px;
+      font-weight: 500;
+      text-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.4),
+        0 2px 6px rgba(0, 0, 0, 0.2);
+      font-family: 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', Tahoma, Geneva, Verdana, sans-serif;
+      letter-spacing: 0.4px;
+      word-spacing: 1px;
+      text-align: justify;
+      hyphens: auto;
+      -webkit-hyphens: auto;
+      position: relative;
+      padding-left: 5px;
+    }
+
+    .announcement-content::before {
+      content: '';
+      position: absolute;
+      left: -2px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, rgba(0, 255, 255, 0.6), transparent);
+      border-radius: 1px;
+    }
+
+    .announcement-time {
+      color: #c0c0c0;
+      font-size: 0.9rem;
+      font-style: italic;
+      font-weight: 400;
+      opacity: 0.9;
+      font-family: 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', Tahoma, Geneva, Verdana, sans-serif;
+      letter-spacing: 0.2px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 8px;
+    }
+
+    .announcement-time::before {
+      content: '🕐';
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    .announcement-type {
+      display: inline-block;
+      margin-right: 12px;
+      font-size: 1.3rem;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+      vertical-align: middle;
+      position: relative;
+      top: -1px;
+    }
+
+    /* 公告內容特殊樣式 */
+    .announcement-item.urgent .announcement-content {
+      color: #ffebee;
+      text-shadow: 
+        0 1px 3px rgba(255, 71, 87, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .announcement-item.urgent .announcement-content::before {
+      background: linear-gradient(180deg, rgba(255, 71, 87, 0.8), transparent);
+    }
+
+    .announcement-item.info .announcement-content {
+      color: #e8f5e8;
+      text-shadow: 
+        0 1px 3px rgba(46, 213, 115, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .announcement-item.info .announcement-content::before {
+      background: linear-gradient(180deg, rgba(46, 213, 115, 0.8), transparent);
+    }
+
+    .announcement-item.update .announcement-content {
+      color: #e3f2fd;
+      text-shadow: 
+        0 1px 3px rgba(55, 66, 250, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .announcement-item.update .announcement-content::before {
+      background: linear-gradient(180deg, rgba(55, 66, 250, 0.8), transparent);
+    }
+
+    /* 文字選擇效果 */
+    .announcement-content::selection {
+      background: rgba(0, 255, 255, 0.3);
+      color: #ffffff;
+    }
+
+    .announcement-content::-moz-selection {
+      background: rgba(0, 255, 255, 0.3);
+      color: #ffffff;
+    }
+
+    /* 公告項目動畫效果 */
+    @keyframes announcementSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .announcement-item {
+      animation: announcementSlideIn 0.5s ease-out;
+    }
+
+    /* 公告內容強調效果 */
+    .announcement-content strong {
+      color: #00ffff;
+      font-weight: 600;
+      text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+    }
+
+    .announcement-content em {
+      color: #ffd700;
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    /* 公告時間懸停效果 */
+    .announcement-time:hover {
+      color: #ffffff;
+      opacity: 1;
+      transform: scale(1.05);
+      transition: all 0.3s ease;
+    }
+
+    .loading-announcement {
+      text-align: center;
+      color: #00ffff;
+      font-style: italic;
+      padding: 30px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .no-announcements {
+      text-align: center;
+      color: #b0b0b0;
+      font-style: italic;
+      padding: 30px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* 響應式設計 - 美化版 */
+    @media (max-width: 768px) {
+      .home-announcements {
+        margin: 15px 0;
+        border-radius: 15px;
+      }
+      
+      .announcements-header {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+        padding: 15px 20px;
+      }
+      
+      .announcements-header h3 {
+        font-size: 1.2rem;
+      }
+      
+      .view-all-btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+      }
+      
+      .announcements-content {
+        max-height: 180px;
+        padding: 15px 20px;
+      }
+      
+      .announcement-item {
+        padding: 14px 18px;
+        margin-bottom: 14px;
+        border-radius: 12px;
+        gap: 6px;
+      }
+      
+      .announcement-content {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        letter-spacing: 0.3px;
+      }
+      
+      .announcement-time {
+        font-size: 0.8rem;
+        margin-top: 6px;
+      }
+      
+      .announcement-type {
+        font-size: 1.1rem;
+        margin-right: 8px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .home-announcements {
+        margin: 10px 0;
+        border-radius: 12px;
+      }
+      
+      .announcements-header {
+        padding: 12px 15px;
+        gap: 10px;
+      }
+      
+      .announcements-header h3 {
+        font-size: 1.1rem;
+      }
+      
+      .view-all-btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+        border-radius: 20px;
+      }
+      
+      .announcements-content {
+        max-height: 150px;
+        padding: 12px 15px;
+      }
+      
+      .announcement-item {
+        padding: 12px 15px;
+        margin-bottom: 12px;
+        border-radius: 10px;
+        gap: 5px;
+      }
+      
+      .announcement-content {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        letter-spacing: 0.2px;
+      }
+      
+      .announcement-time {
+        font-size: 0.75rem;
+        margin-top: 5px;
+      }
+      
+      .announcement-type {
+        font-size: 1rem;
+        margin-right: 6px;
+      }
+    }
+
+    .custom-avatar-option.selected {
+      background: linear-gradient(135deg, #ffd700 0%, #ff6b6b 100%) !important;
+      animation: customSelectedPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes customSelectedPulse {
+      0%, 100% { 
+        box-shadow: 0 0 30px #ffd700, 0 0 60px #ffd70066;
+        transform: scale(1.1);
+      }
+      50% { 
+        box-shadow: 0 0 40px #ffd700, 0 0 80px #ffd70099;
+        transform: scale(1.15);
+      }
+    }
+
+    @keyframes selectedPulse {
+      0%, 100% { box-shadow: 0 0 30px #ffd700, 0 0 60px #ffd70066; }
+      50% { box-shadow: 0 0 40px #ffd700, 0 0 80px #ffd70099; }
+    }
+
+
+
+    /* 按鈕樣式 */
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      margin: 8px;
+      font-size: 1.1rem;
+      color: #222b3a;
+      background: linear-gradient(135deg, #00ffff 0%, #a259ff 50%, #ff6b6b 100%);
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Orbitron', 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      box-shadow: 0 0 20px #00ffff, 0 0 40px #a259ff99, 0 8px 16px rgba(0, 0, 0, 0.3);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 0 30px #00ffff, 0 0 60px #a259ffcc, 0 12px 24px rgba(0, 0, 0, 0.4);
+      background: linear-gradient(135deg, #00ffff 0%, #a259ff 30%, #ff6b6b 70%, #ffd700 100%);
+    }
+
+
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn:active {
+      transform: translateY(-1px) scale(1.02);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* 音效控制 */
+    #audioControls {
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+      display: flex;
+      gap: 8px;
+    }
+
+    #audioControls button {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      border: 2px solid #00ffff;
+      background: rgba(10, 20, 40, 0.6);
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 16px #00ffff;
+      backdrop-filter: blur(1px);
+    }
+
+    #audioControls button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 32px #00ffff;
+    }
+
+    /* 玩家名稱顯示 */
+    #playerNameDisplay {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: rgba(10, 20, 40, 0.6);
+      padding: 6px 12px;
+      border-radius: 10px;
+      color: #ffd700;
+      font-weight: bold;
+      box-shadow: 0 0 12px #ffd700, 0 0 32px #00ffff;
+      border: 2px solid #00ffff;
+      font-size: 1.1rem;
+      backdrop-filter: blur(1px);
+    }
+
+    /* 星星顯示 */
+    #starsDisplay {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      background: rgba(10, 20, 40, 0.8);
+      padding: 4px 8px;
+      border-radius: 8px;
+      color: #ffd700;
+      font-weight: bold;
+      box-shadow: 0 0 8px #ffd700, 0 0 16px #00ffff;
+      border: 1px solid #00ffff;
+      font-size: 1rem;
+      backdrop-filter: blur(5px);
+      z-index: 1000;
+      display: flex !important;
+      align-items: center !important;
+      gap: 3px !important;
+      width: fit-content !important;
+      text-align: center !important;
+      transition: all 0.3s ease !important;
+    }
+
+    #starsDisplay:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px #ffd700, 0 0 24px #00ffff;
+    }
+
+    #starsDisplay #totalStarsCount {
+      font-weight: bold;
+      color: #ffd700;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    /* 單字下載中心樣式 */
+    .vocabulary-download-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .vocabulary-header {
+      text-align: center;
+      margin-bottom: 40px;
+      color: white;
+      position: relative;
+    }
+
+    .vocabulary-header::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #00ffff, #ff00ff, transparent);
+    }
+
+    .vocabulary-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 0 0 20px rgba(0,255,255,0.5);
+      background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00, #00ff00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+    }
+
+    .vocabulary-header h1::after {
+      content: '🚀';
+      position: absolute;
+      right: -40px;
+      top: 0;
+      font-size: 1.5rem;
+    }
+
+    .vocabulary-header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      color: #b0b0b0;
+    }
+
+    .vocabulary-download-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .vocabulary-download-card {
+      background: rgba(20, 20, 40, 0.8);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 
+        0 10px 30px rgba(0,0,0,0.3),
+        0 0 0 1px rgba(0,255,255,0.1);
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(0,255,255,0.2);
+    }
+
+    .vocabulary-download-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 
+        0 15px 35px rgba(0,0,0,0.4),
+        0 0 0 1px rgba(0,255,255,0.3);
+    }
+
+    .vocabulary-download-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #00ffff, #ff00ff, #ffff00);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .vocabulary-download-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    /* 遊戲中心樣式 */
+    .game-center-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .welcome-message {
+      text-align: center;
+      margin-bottom: 40px;
+      color: white;
+      position: relative;
+    }
+
+    .welcome-title {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      text-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+      background: linear-gradient(45deg, #ff6b6b, #a259ff, #00ffff, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+    }
+
+    .welcome-text {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      color: #b0b0b0;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .stars-display {
+      background: rgba(20, 20, 40, 0.8);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 30px;
+      text-align: center;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .stars-display.stars-update {
+      animation: starsPulse 0.5s ease-in-out;
+    }
+
+    @keyframes starsPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .stars-title {
+      font-size: 1.2rem;
+      color: #ffd700;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .stars-count {
+      font-size: 3rem;
+      color: #ffd700;
+      font-weight: bold;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+      margin-bottom: 5px;
+    }
+
+    .stars-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .stars-subtitle {
+      color: #b0b0b0;
+      font-size: 1rem;
+      margin-bottom: 15px;
+    }
+
+    .stats-panel {
+      background: rgba(20, 20, 40, 0.8);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 30px;
+      border: 2px solid rgba(0, 255, 255, 0.3);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+    }
+
+    .stat-item {
+      background: rgba(0, 255, 255, 0.1);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #00ffff;
+      margin-bottom: 5px;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+
+    .stat-label {
+      color: #b0b0b0;
+      font-size: 0.9rem;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .game-card {
+      background: rgba(20, 20, 40, 0.8);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 
+        0 10px 30px rgba(0,0,0,0.3),
+        0 0 0 1px rgba(255, 107, 107, 0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      cursor: pointer;
+    }
+
+    .game-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 
+        0 15px 35px rgba(0,0,0,0.4),
+        0 0 0 1px rgba(255, 107, 107, 0.3);
+    }
+
+    .game-card.locked {
+      opacity: 0.6;
+      filter: grayscale(0.5);
+      cursor: not-allowed;
+    }
+
+    .game-card.locked:hover {
+      transform: none;
+    }
+
+    .game-icon {
+      font-size: 4rem;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .game-title {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #ff6b6b;
+      margin-bottom: 10px;
+      text-align: center;
+      text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+    }
+
+    .game-subtitle {
+      font-size: 1.1rem;
+      color: #a259ff;
+      margin-bottom: 15px;
+      text-align: center;
+      font-style: italic;
+    }
+
+    .game-description {
+      color: #b0b0b0;
+      margin-bottom: 20px;
+      line-height: 1.6;
+      text-align: justify;
+    }
+
+    .game-features {
+      margin-bottom: 25px;
+    }
+
+    .feature-item {
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      color: #b0b0b0;
+      font-size: 0.9rem;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .feature-item:hover {
+      background: rgba(255, 107, 107, 0.2);
+      border-color: rgba(255, 107, 107, 0.4);
+    }
+
+    .game-button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #ff6b6b 0%, #a259ff 100%);
+      color: white;
+      border: none;
+      border-radius: 15px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 5px rgba(0,0,0,0.5);
+    }
+
+    .game-button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+    }
+
+    .game-button.locked {
+      background: linear-gradient(135deg, #666 0%, #999 100%);
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    .game-button.locked:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .embedded-game-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .embedded-game-header {
+      background: rgba(20, 20, 40, 0.9);
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid rgba(255, 107, 107, 0.5);
+    }
+
+    .embedded-game-header h2 {
+      color: #ff6b6b;
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .close-game-btn {
+      background: rgba(255, 107, 107, 0.2);
+      border: 1px solid rgba(255, 107, 107, 0.5);
+      color: #ff6b6b;
+      border-radius: 8px;
+      padding: 10px 15px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .close-game-btn:hover {
+      background: rgba(255, 107, 107, 0.3);
+      border-color: rgba(255, 107, 107, 0.7);
+    }
+
+    .embedded-game-frame {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .embedded-game-frame iframe {
+      width: 100%;
+      height: 100%;
+      border-radius: 15px;
+      border: 2px solid rgba(255, 107, 107, 0.3);
+    }
+
+    .vocabulary-card-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .vocabulary-card-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 20px;
+      font-size: 24px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.2s ease;
+      background: linear-gradient(135deg, #00ffff, #ff00ff);
+      box-shadow: 0 0 20px rgba(0,255,255,0.3);
+    }
+
+    .vocabulary-card-icon:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 25px rgba(0,255,255,0.5);
+    }
+
+    .vocabulary-basic-icon {
+      background: linear-gradient(135deg, #00ffff, #0080ff);
+    }
+
+    .vocabulary-ielts-icon {
+      background: linear-gradient(135deg, #ff00ff, #ff0080);
+    }
+
+    .vocabulary-auto-icon {
+      background: linear-gradient(135deg, #ffff00, #ff8000);
+    }
+
+    .vocabulary-daily-icon {
+      background: linear-gradient(135deg, #00ff00, #00ff80);
+    }
+
+    .vocabulary-toeic-icon {
+      background: linear-gradient(135deg, #ff8000, #ff4000);
+    }
+
+    .vocabulary-toefl-icon {
+      background: linear-gradient(135deg, #8000ff, #4000ff);
+    }
+
+    .vocabulary-business-icon {
+      background: linear-gradient(135deg, #ff0080, #ff0040);
+    }
+
+    .vocabulary-sports-icon {
+      background: linear-gradient(135deg, #00ff80, #00ff40);
+    }
+
+    .vocabulary-card-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #ffffff;
+      text-shadow: 0 0 10px rgba(0,255,255,0.3);
+    }
+
+    .vocabulary-card-subtitle {
+      color: #b0b0b0;
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+
+    .vocabulary-card-stats {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px 0;
+      padding: 15px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 15px;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border: 1px solid rgba(0,255,255,0.2);
+    }
+
+    .vocabulary-stat-item {
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .vocabulary-stat-item:hover {
+      transform: scale(1.02);
+    }
+
+    .vocabulary-stat-number {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #00ffff;
+      text-shadow: 0 0 10px rgba(0,255,255,0.5);
+    }
+
+    .vocabulary-stat-label {
+      font-size: 0.8rem;
+      color: #b0b0b0;
+      margin-top: 5px;
+      font-weight: 500;
+    }
+
+    .vocabulary-card-description {
+      color: #d0d0d0;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+
+    .vocabulary-download-btn {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #00ffff, #ff00ff);
+      color: white;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0,255,255,0.3);
+    }
+
+    .vocabulary-download-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 25px rgba(0,255,255,0.5);
+      background: linear-gradient(135deg, #00e6e6, #e600e6);
+    }
+
+    .vocabulary-download-btn:active {
+      transform: translateY(0);
+    }
+
+    .vocabulary-download-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .vocabulary-preview-section {
+      background: rgba(20, 20, 40, 0.8);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 30px;
+      margin-top: 40px;
+      box-shadow: 
+        0 10px 30px rgba(0,0,0,0.3),
+        0 0 0 1px rgba(0,255,255,0.2);
+      border: 1px solid rgba(0,255,255,0.2);
+    }
+
+    .vocabulary-preview-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .vocabulary-preview-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00ffff, #ff00ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      color: white;
+      box-shadow: 0 0 15px rgba(0,255,255,0.4);
+    }
+
+    .vocabulary-preview-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #ffffff;
+      text-shadow: 0 0 10px rgba(0,255,255,0.3);
+    }
+
+    .vocabulary-preview-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(0,255,255,0.2);
+    }
+
+    .vocabulary-preview-table th {
+      background: linear-gradient(135deg, #00ffff, #ff00ff);
+      color: white;
+      padding: 18px 15px;
+      text-align: left;
+      font-weight: bold;
+      position: relative;
+      text-shadow: 0 0 10px rgba(0,255,255,0.5);
+    }
+
+    .vocabulary-preview-table th::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+    }
+
+    .vocabulary-preview-table td {
+      padding: 15px;
+      border-bottom: 1px solid rgba(0,255,255,0.1);
+      transition: all 0.2s ease;
+      color: #e0e0e0;
+    }
+
+    .vocabulary-preview-table tr:nth-child(even) {
+      background: rgba(0,255,255,0.05);
+    }
+
+    .vocabulary-preview-table tr:hover {
+      background: rgba(0,255,255,0.1);
+    }
+
+    .vocabulary-preview-table tr:hover td {
+      color: #00ffff;
+      font-weight: 500;
+    }
+
+    .vocabulary-loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(0,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #00ffff;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .vocabulary-success-message {
+      background: linear-gradient(135deg, rgba(0,255,0,0.2), rgba(0,200,0,0.1));
+      color: #00ff00;
+      padding: 20px;
+      border-radius: 15px;
+      margin-top: 20px;
+      border: 1px solid rgba(0,255,0,0.3);
+      box-shadow: 0 5px 15px rgba(0,255,0,0.2);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .vocabulary-error-message {
+      background: linear-gradient(135deg, rgba(255,0,0,0.2), rgba(200,0,0,0.1));
+      color: #ff0000;
+      padding: 20px;
+      border-radius: 15px;
+      margin-top: 20px;
+      border: 1px solid rgba(255,0,0,0.3);
+      box-shadow: 0 5px 15px rgba(255,0,0,0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .vocabulary-search-section {
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(15px);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(0,255,255,0.2);
+      box-shadow: 0 0 20px rgba(0,255,255,0.1);
+    }
+
+    .vocabulary-search-input {
+      flex: 1;
+      min-width: 200px;
+      padding: 12px 15px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.6);
+      color: #ffffff;
+      font-size: 1rem;
+      border: 1px solid rgba(0,255,255,0.3);
+      transition: all 0.3s ease;
+    }
+
+    .vocabulary-search-input:focus {
+      box-shadow: 0 0 15px rgba(0,255,255,0.4);
+    }
+
+    .vocabulary-level-select {
+      padding: 12px 15px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.6);
+      color: #ffffff;
+      font-size: 1rem;
+      min-width: 120px;
+      border: 1px solid rgba(0,255,255,0.3);
+      transition: all 0.3s ease;
+    }
+
+    .vocabulary-level-select:focus {
+      box-shadow: 0 0 15px rgba(0,255,255,0.4);
+    }
+
+    .vocabulary-reset-btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #00ffff, #ff00ff);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(0,255,255,0.3);
+    }
+
+    .vocabulary-reset-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px rgba(0,255,255,0.5);
+    }
+
+    .vocabulary-stars-display {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 170, 0, 0.1));
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      border-radius: 15px;
+      padding: 15px 25px;
+      margin-bottom: 30px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+      animation: starGlow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes starGlow {
+      0% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
+      100% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.4); }
+    }
+
+    @keyframes starRewardPop {
+      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+      20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+      80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+    }
+
+    /* 響應式設計 */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.6rem;
+        margin: 3px 0 6px;
+      }
+
+      .subtitle {
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+      }
+
+      #container {
+        width: 95%;
+        padding: 12px;
+        margin: 2px auto 0 auto;
+        min-height: auto;
+        display: block;
+      }
+
+      .btn {
+        width: 100%;
+        margin: 4px 0;
+        padding: 10px 20px;
+        font-size: 1rem;
+      }
+
+      .avatar-grid {
+        grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+        gap: 8px;
+        margin: 12px 0;
+        padding: 12px;
+      }
+
+      .avatar-option {
+        width: 60px;
+        height: 60px;
+      }
+
+      #characterPreview {
+        width: 200px;
+        height: 280px;
+        margin: 8px auto;
+        background: rgba(10, 20, 40, 0.2);
+        backdrop-filter: blur(4px);
+      }
+
+      .nav-buttons {
+        gap: 8px;
+        margin-top: 16px;
+        margin-bottom: 20px;
+      }
+
+      .nav-btn {
+        padding: 8px 14px;
+        font-size: 0.9rem;
+        overflow: visible !important; /* 確保成就按鈕在手機版也能正常顯示泡泡 */
+      }
+
+      #characterSlogan {
+        font-size: 1rem;
+        margin: 8px 0;
+        min-height: 1.2rem;
+      }
+
+      .main-buttons {
+        margin: 12px 0;
+      }
+
+      /* 增加底部間距 */
+      body {
+        padding-bottom: 20px;
+      }
+
+      /* 優化容器高度 */
+      #container {
+        margin-bottom: 20px;
+      }
+
+      /* 改善按鈕間距 */
+      .main-buttons .btn {
+        margin: 6px 0;
+      }
+
+      .nav-buttons .nav-btn {
+        margin: 4px 0;
+      }
+    }
+
+    /* 平板尺寸響應式 */
+    @media (min-width: 601px) and (max-width: 1024px) {
+      #container {
+        width: 85%;
+        padding: 20px;
+        margin: 10px auto 0 auto;
+        min-height: auto;
+      }
+
+      h1 {
+        font-size: 2.2rem;
+        margin: 8px 0 12px;
+      }
+
+      .subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+      }
+
+      .btn {
+        padding: 14px 28px;
+        font-size: 1.05rem;
+        margin: 6px;
+      }
+
+      .nav-btn {
+        padding: 12px 20px;
+        font-size: 1rem;
+      }
+
+      .avatar-grid {
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+        gap: 12px;
+        margin: 18px 0;
+        padding: 18px;
+      }
+
+      .avatar-option {
+        width: 70px;
+        height: 70px;
+      }
+
+      #characterPreview {
+        width: 250px;
+        height: 350px;
+        margin: 15px auto;
+      }
+
+      #characterSlogan {
+        font-size: 1.15rem;
+        margin: 12px 0;
+      }
+    }
+
+    /* 大螢幕優化 */
+    @media (min-width: 1025px) {
+      #container {
+        width: 80%;
+        max-width: 900px;
+        padding: 30px;
+        margin: 20px auto 0 auto;
+        min-height: auto;
+      }
+
+      h1 {
+        font-size: 3rem;
+        margin: 10px 0 15px;
+      }
+
+      .subtitle {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+      }
+
+      .btn {
+        padding: 16px 32px;
+        font-size: 1.1rem;
+        margin: 8px;
+      }
+
+      .nav-btn {
+        padding: 14px 24px;
+        font-size: 1.05rem;
+      }
+
+      .avatar-grid {
+        grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+        padding: 20px;
+      }
+
+      .avatar-option {
+        width: 85px;
+        height: 85px;
+      }
+
+      #characterPreview {
+        width: 300px;
+        height: 400px;
+        margin: 20px auto;
+      }
+
+      #characterSlogan {
+        font-size: 1.3rem;
+        margin: 15px 0;
+      }
+    }
+
+    /* 超小螢幕優化 */
+    @media (max-width: 480px) {
+      #container {
+        width: 98%;
+        padding: 10px;
+        margin: 1px auto 0 auto;
+        min-height: auto;
+      }
+
+      h1 {
+        font-size: 1.4rem;
+        margin: 2px 0 4px;
+      }
+
+      .subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 6px;
+      }
+
+      .btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        margin: 3px 0;
+      }
+
+      .nav-btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+        margin: 2px 0;
+      }
+
+      .avatar-grid {
+        grid-template-columns: repeat(auto-fit, minmax(55px, 1fr));
+        gap: 6px;
+        margin: 10px 0;
+        padding: 10px;
+      }
+
+      .avatar-option {
+        width: 55px;
+        height: 55px;
+      }
+
+      #characterPreview {
+        width: 180px;
+        height: 250px;
+        margin: 6px auto;
+      }
+
+      #characterSlogan {
+        font-size: 0.9rem;
+        margin: 6px 0;
+      }
+
+      /* 增加更多底部間距 */
+      body {
+        padding-bottom: 30px;
+      }
+
+      #container {
+        margin-bottom: 30px;
+      }
+    }
+
+    /* 新增樣式 */
+    .input-group {
+      margin: 12px 0;
+    }
+
+    #characterPreview {
+      width: 300px;
+      height: 400px;
+      margin: 12px auto;
+      border-radius: 15px;
+      overflow: hidden;
+      background: rgba(10, 20, 40, 0.2);
+      backdrop-filter: blur(1px);
+    }
+
+    #characterImage {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: transparent;
+      mix-blend-mode: screen;
+    }
+
+    .nav-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .nav-btn {
+      background: linear-gradient(135deg, #a259ff 0%, #ff6b6b 100%);
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 16px #a259ff, 0 0 32px #ff6b6b99, 0 6px 12px rgba(0, 0, 0, 0.3);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+      transform-origin: center;
+      will-change: transform;
+    }
+
+    .nav-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+      pointer-events: none; /* 確保不會干擾滑鼠事件 */
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 0 24px #a259ff, 0 0 48px #ff6b6bcc, 0 8px 16px rgba(0, 0, 0, 0.4);
+      background: linear-gradient(135deg, #a259ff 0%, #ff6b6b 50%, #ffd700 100%);
+    }
+
+    .nav-btn:hover::before {
+      left: 100%;
+    }
+
+    .gm-entry-link {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .gm-entry-link:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      transform: translateY(-2px);
+    }
+
+    .nav-btn.primary {
+      background: linear-gradient(135deg, #00ffff 0%, #a259ff 100%);
+      color: #000;
+      font-weight: 700;
+      box-shadow: 0 0 20px #00ffff, 0 0 40px #a259ff99, 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-btn.primary:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 0 30px #00ffff, 0 0 60px #a259ffcc, 0 12px 24px rgba(0, 0, 0, 0.4);
+      background: linear-gradient(135deg, #00ffff 0%, #a259ff 50%, #ff6b6b 100%);
+    }
+
+    /* 主按鈕區域 */
+    .main-buttons {
+      margin: 16px 0;
+      overflow: visible !important;
+      position: relative;
+    }
+
+    /* 角色標語 */
+    #characterSlogan {
+      font-size: 1.2rem;
+      color: #ffe9a3;
+      margin: 10px 0;
+      text-shadow: 0 1px 8px #2e3a5e, 0 0 12px #ffd700;
+      font-weight: 600;
+      letter-spacing: 1px;
+      min-height: 1.5rem;
+      font-style: italic;
+      transition: all 0.2s ease-out;
+      opacity: 1;
+      transform: translateY(0);
+      font-family: 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
+    }
+
+    /* 主要內容字體 */
+    #container, #container * {
+      font-family: 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
+      color: #f3f6fa;
+    }
+
+    /* 按鈕字體顏色微調 */
+    .btn, .nav-btn {
+      color: #222b3a;
+      font-family: 'Orbitron', 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
+    }
+
+    /* 新增：成就數量泡泡樣式 */
+    .achievement-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: linear-gradient(135deg, #ff6b6b, #ff4757);
+      color: white;
+      border-radius: 50%;
+      min-width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: bold;
+      box-shadow: 0 0 10px rgba(255, 107, 107, 0.6);
+      border: 2px solid white;
+      animation: badgePulse 2s ease-in-out infinite;
+      z-index: 1000;
+      pointer-events: none;
+      transform-origin: center;
+      will-change: transform;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    @keyframes badgePulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(255, 107, 107, 0.6);
+      }
+      50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(255, 107, 107, 0.9);
+      }
+    }
+
+    /* 新增：收藏冊獎勵徽章樣式 */
+    .reward-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: linear-gradient(135deg, #ffd700, #ff6b6b);
+      color: #fff;
+      font-size: 1.2rem;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+      animation: rewardPulse 2s ease-in-out infinite;
+      z-index: 10;
+    }
+
+    @keyframes rewardPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+      }
+      50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(255, 215, 0, 1);
+      }
+    }
+
+    /* 確保收藏冊按鈕可以顯示徽章 */
+    .nav-btn#cardCollectionBtn {
+      overflow: visible !important;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .nav-btn#cardCollectionBtn:hover .reward-badge {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.9);
+      animation: none;
+    }
+
+    .nav-btn#cardCollectionBtn:not(:hover) .reward-badge {
+      animation: rewardPulse 2s ease-in-out infinite;
+    }
+
+    .achievement-badge.hidden {
+      display: none;
+    }
+
+    /* 成就按鈕特殊處理：避免hover時泡泡位置錯亂 */
+    .nav-btn#achievementBtn {
+      overflow: visible !important;
+      position: relative;
+      isolation: isolate; /* 創建新的層疊上下文 */
+    }
+
+    /* 成就按鈕hover時，保持泡泡的相對位置 */
+    .nav-btn#achievementBtn:hover .achievement-badge {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(255, 107, 107, 0.8);
+      animation: none; /* 暫停原本的動畫 */
+    }
+
+    /* 成就按鈕hover結束後，恢復泡泡動畫 */
+    .nav-btn#achievementBtn:not(:hover) .achievement-badge {
+      animation: badgePulse 2s ease-in-out infinite;
+    }
+
+    /* 優化hover動畫，避免與泡泡衝突 */
+    .nav-btn:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 0 24px #a259ff, 0 0 48px #ff6b6bcc, 0 8px 16px rgba(0, 0, 0, 0.4);
+      background: linear-gradient(135deg, #a259ff 0%, #ff6b6b 50%, #ffd700 100%);
+      z-index: 10; /* 確保hover時在最上層 */
+    }
+
+    /* 確保所有按鈕動畫都使用GPU加速 */
+    .nav-btn, .btn {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      -moz-backface-visibility: hidden;
+    }
+
+    /* 優化動畫性能 */
+    .nav-btn:hover, .btn:hover {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      -moz-backface-visibility: hidden;
+    }
+
+
+
+    /* 自訂訊息樣式 */
+    .custom-message {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 20px;
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      z-index: 10000;
+      animation: messageSlideIn 0.3s ease-out;
+      backdrop-filter: blur(5px);
+      border: 2px solid;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .custom-message-success {
+      background: rgba(46, 204, 113, 0.9);
+      border-color: #2ecc71;
+    }
+
+    .custom-message-warning {
+      background: rgba(241, 196, 15, 0.9);
+      border-color: #f1c40f;
+      color: #2c3e50;
+    }
+
+    .custom-message-info {
+      background: rgba(52, 152, 219, 0.9);
+      border-color: #3498db;
+    }
+
+    .custom-message-error {
+      background: rgba(231, 76, 60, 0.9);
+      border-color: #e74c3c;
+    }
+
+    @keyframes messageSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .custom-message {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        transform: none;
+        text-align: center;
+      }
+    }
+
+    /* 彈窗樣式 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, rgba(10, 20, 40, 0.95) 0%, rgba(20, 40, 80, 0.95) 100%);
+      border: 2px solid #00ffff;
+      border-radius: 20px;
+      padding: 0;
+      max-width: 90%;
+      width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 0 50px #00ffff44, 0 0 100px #a259ff22;
+      backdrop-filter: blur(10px);
+      animation: modalSlideIn 0.3s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8) translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 25px;
+      border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+      background: rgba(0, 255, 255, 0.1);
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      color: #00ffff;
+      font-size: 1.4rem;
+      font-weight: 700;
+      text-shadow: 0 0 10px #00ffff;
+    }
+
+    .modal-close {
+      background: none;
+      border: 2px solid #ff6b6b;
+      color: #ff6b6b;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover {
+      background: #ff6b6b;
+      color: #fff;
+      box-shadow: 0 0 20px #ff6b6b;
+      transform: scale(1.1);
+    }
+
+    .modal-body {
+      padding: 25px;
+      display: flex;
+      gap: 25px;
+      flex-wrap: wrap;
+    }
+
+    .modal-avatar-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      min-width: 200px;
+    }
+
+    .modal-avatar-preview {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 3px solid #00ffff;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      background: rgba(10, 20, 40, 0.6);
+      box-shadow: 0 0 30px #00ffff44;
+      transition: all 0.3s ease;
+    }
+
+    .modal-avatar-preview:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 40px #00ffff66;
+    }
+
+    .modal-avatar-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .modal-upload-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-avatar-preview:hover .modal-upload-overlay {
+      opacity: 1;
+    }
+
+    .modal-upload-overlay span {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+    }
+
+    .modal-upload-overlay p {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    .modal-avatar-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .modal-upload-btn, .modal-reset-btn {
+      padding: 10px 18px;
+      border: 2px solid #00ffff;
+      background: rgba(10, 20, 40, 0.8);
+      color: #fff;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(2px);
+    }
+
+    .modal-upload-btn:hover, .modal-reset-btn:hover {
+      background: rgba(0, 255, 255, 0.2);
+      box-shadow: 0 0 20px #00ffff;
+      transform: translateY(-2px);
+    }
+
+    .modal-info-section {
+      flex: 1;
+      min-width: 250px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .modal-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .modal-input-group label {
+      font-size: 1rem;
+      color: #a3b8ff;
+      font-weight: 600;
+    }
+
+    .modal-input-group input,
+    .modal-input-group textarea,
+    .modal-input-group select {
+      padding: 12px 15px;
+      background: rgba(10, 20, 40, 0.6);
+      border: 2px solid #00ffff;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(2px);
+    }
+
+    .modal-input-group input:focus,
+    .modal-input-group textarea:focus,
+    .modal-input-group select:focus {
+      outline: none;
+      border-color: #ff6b6b;
+      box-shadow: 0 0 20px #00ffff;
+    }
+
+    .modal-input-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      padding: 20px 25px;
+      border-top: 2px solid rgba(0, 255, 255, 0.3);
+      background: rgba(0, 255, 255, 0.05);
+    }
+
+    .modal-cancel-btn, .modal-save-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .modal-cancel-btn {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%);
+      color: #fff;
+      box-shadow: 0 0 20px #ff6b6b44;
+    }
+
+    .modal-cancel-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px #ff6b6b66;
+    }
+
+    .modal-save-btn {
+      background: linear-gradient(135deg, #00ffff 0%, #a259ff 100%);
+      color: #000;
+      box-shadow: 0 0 20px #00ffff44;
+    }
+
+    .modal-save-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px #00ffff66;
+      background: linear-gradient(135deg, #00ffff 0%, #a259ff 50%, #ff6b6b 100%);
+    }
+
+    /* 響應式設計 */
+    @media (max-width: 768px) {
+      .modal-content {
+        width: 95%;
+        max-height: 95vh;
+      }
+
+      .modal-body {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .modal-avatar-section {
+        min-width: auto;
+      }
+
+      .modal-info-section {
+        min-width: 100%;
+      }
+
+      .modal-footer {
+        flex-direction: column;
+      }
+
+      .modal-cancel-btn, .modal-save-btn {
+        width: 100%;
+      }
+    }
+
+    /* 首頁資料存檔區塊樣式 */
+    .home-save-section {
+      width: min(680px, calc(100% - 28px));
+      margin: 22px auto 0;
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.20);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+    }
+
+    .home-save-toggle {
+      width: 100%;
+      border: 0;
+      padding: 13px 16px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4px 12px;
+      align-items: center;
+      text-align: left;
+      cursor: pointer;
+      color: #ffffff;
+      background: rgba(15, 23, 42, 0.72);
+    }
+
+    .home-save-title {
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
+
+    .home-save-desc {
+      grid-column: 1;
+      font-size: 13px;
+      line-height: 1.4;
+      opacity: 0.82;
+    }
+
+    .home-save-icon {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      font-size: 14px;
+      transition: transform 0.2s ease;
+    }
+
+    .home-save-toggle[aria-expanded="true"] .home-save-icon {
+      transform: rotate(180deg);
+    }
+
+    .home-save-panel {
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .home-save-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .home-save-actions button,
+    .home-save-upload {
+      border: 0 !important;
+      border-radius: 999px !important;
+      padding: 9px 15px !important;
+      min-width: 108px !important;
+      cursor: pointer !important;
+      font-size: 14px !important;
+      font-weight: 800 !important;
+      text-align: center !important;
+      color: #ffffff !important;
+      background: rgba(59, 130, 246, 0.92) !important;
+      box-shadow: none !important;
+      text-shadow: none !important;
+    }
+
+    #applyLocalBackupBtn {
+      background: rgba(34, 197, 94, 0.92) !important;
+    }
+
+    .home-save-actions button:hover,
+    .home-save-upload:hover {
+      filter: brightness(1.08) !important;
+    }
+
+    .home-save-links {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .home-save-links button {
+      border: 0 !important;
+      padding: 0 !important;
+      background: transparent !important;
+      color: rgba(255, 255, 255, 0.88) !important;
+      cursor: pointer !important;
+      font-size: 13px !important;
+      text-decoration: underline !important;
+      text-underline-offset: 3px !important;
+      box-shadow: none !important;
+      text-shadow: none !important;
+      border-radius: 0 !important;
+    }
+
+    .home-save-links button:hover {
+      color: #ffffff !important;
+    }
+
+    .home-save-status {
+      margin-top: 10px;
+      min-height: 20px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .home-save-status.success {
+      color: #86efac;
+    }
+
+    .home-save-status.error {
+      color: #fca5a5;
+    }
+
+    .home-save-status.info {
+      color: #bfdbfe;
+    }
+
+    .home-save-preview {
+      display: none;
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.94);
+      color: #1f2937;
+      font-size: 13px;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .home-save-preview.is-visible {
+      display: block;
+    }
+
+    @media (max-width: 600px) {
+      .home-save-section {
+        width: calc(100% - 24px);
+        margin-top: 18px;
+        border-radius: 16px;
+      }
+
+      .home-save-actions {
+        flex-direction: column;
+      }
+
+      .home-save-actions button,
+      .home-save-upload {
+        width: 100% !important;
+        min-height: 42px !important;
+      }
+
+      .home-save-links {
+        gap: 4px;
+      }
+    }
+
+    /* Google Drive 雲端備份區塊樣式 */
+    .home-save-group {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .home-save-group:first-child {
+      margin-top: 0;
+    }
+
+    .home-save-group-title {
+      margin: 0 0 10px;
+      font-size: 14px;
+      font-weight: 900;
+      color: #ffffff;
+      opacity: 0.95;
+    }
+
+    .cloud-save-group {
+      background: rgba(34, 197, 94, 0.10);
+      border: 1px solid rgba(34, 197, 94, 0.22);
+    }
+
+    .cloud-save-note {
+      margin: 8px 0 0;
+      font-size: 12px;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.78);
+      text-align: center;
+    }
+
+    .home-save-help {
+      margin: 8px 0 0;
+      font-size: 12px;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.72);
+      text-align: center;
+    }
+
+    #uploadDriveBackupBtn {
+      background: rgba(34, 197, 94, 0.92) !important;
+    }
+
+    #downloadDriveBackupBtn {
+      background: rgba(59, 130, 246, 0.92) !important;
+    }
+
+    /* Style for inline cloud buttons to match panel design */
+    .home-save-actions button[onclick="uploadCloudSave()"],
+    .home-save-actions button[onclick="downloadCloudSave()"] {
+      min-width: 120px !important;
+      padding: 9px 15px !important;
+      border-radius: 999px !important;
+      box-shadow: none !important;
+      text-shadow: none !important;
+    }
+
+    .home-save-actions button[onclick="uploadCloudSave()"] {
+      background: rgba(25, 118, 210, 0.92) !important;
+    }
+
+    .home-save-actions button[onclick="downloadCloudSave()"] {
+      background: rgba(46, 125, 50, 0.92) !important;
+    }
+
+    #openDriveFolderBtn {
+      background: rgba(100, 116, 139, 0.92) !important;
+    }
+
+    @media (max-width: 600px) {
+      .home-save-group {
+        padding: 10px;
+      }
+
+      .cloud-save-note {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 星星顯示 -->
+  <div id="starsDisplay">
+    ⭐<span id="totalStarsCount">0</span>
+  </div>
+
+  <!-- 主區域 -->
+  <div id="container">
+    <h1>🌌 星際英打冒險</h1>
+    <p class="subtitle">開始你的打字英雄之旅！</p>
+
+    <!-- 使用者名稱輸入 -->
+    <div class="input-group">
+      <input type="text" id="playerName" placeholder="請輸入您的名字" maxlength="10">
+      <button id="editNameBtn" class="edit-name-btn" onclick="toggleNameEdit()" style="display: none;">✏️ 編輯</button>
+    </div>
+
+    <!-- 角色預覽 -->
+    <div id="characterPreview">
+      <img id="characterImage" src="img/avatars/avatar_astro1.png" alt="角色預覽">
+    </div>
+
+    <!-- 角色標語 -->
+    <div id="characterSlogan" style="
+      font-size: 1.2rem;
+      color: #ffd700;
+      margin: 10px 0;
+      text-shadow: 0 0 12px #ffd700, 0 0 24px #ff6b6b;
+      font-weight: 600;
+      letter-spacing: 1px;
+      min-height: 1.5rem;
+      font-style: italic;
+      transition: all 0.2s ease-out;
+      opacity: 1;
+      transform: translateY(0);
+    ">🌟 勇敢的星際戰士，準備好迎接挑戰了嗎？</div>
+
+    <!-- 頭像選擇 -->
+    <div class="avatar-grid">
+      <div class="avatar-option selected" style="background-image: url('img/avatars/avatar_TL.png');" onclick="selectAvatar(this, 'img/avatars/avatar_TL.png', '🌟 勇敢的星際戰士，準備好迎接挑戰了嗎？', {rate: 0.9, pitch: 1.0, volume: 0.9, characterType: 'warrior'})"></div>
+      <div class="avatar-option" style="background-image: url('img/avatars/avatar_TR.png');" onclick="selectAvatar(this, 'img/avatars/avatar_TR.png', '⚡ 閃電般的速度，無人能敵！', {rate: 1.1, pitch: 1.2, volume: 0.9, characterType: 'speedster'})"></div>
+      <div class="avatar-option" style="background-image: url('img/avatars/avatar_BL.png');" onclick="selectAvatar(this, 'img/avatars/avatar_BL.png', '🛡️ 堅不可摧的防禦，守護你的夢想！', {rate: 0.8, pitch: 0.9, volume: 0.95, characterType: 'defender'})"></div>
+      <div class="avatar-option" style="background-image: url('img/avatars/avatar_BR.png');" onclick="selectAvatar(this, 'img/avatars/avatar_BR.png', '🎯 精準的瞄準，百發百中！', {rate: 0.95, pitch: 1.1, volume: 0.9, characterType: 'sharpshooter'})"></div>
+      <div class="avatar-option" style="background-image: url('img/avatars/avatar_spacekid.png');" onclick="selectAvatar(this, 'img/avatars/avatar_spacekid.png', '🌈 純真的心靈，創造奇蹟的力量！', {rate: 1.0, pitch: 1.3, volume: 0.85, characterType: 'magician'})"></div>
+      <div class="avatar-option" style="background-image: url('img/avatars/avatar_astro1.png');" onclick="selectAvatar(this, 'img/avatars/avatar_astro1.png', '🚀 探索未知的宇宙，發現無限可能！', {rate: 0.85, pitch: 1.05, volume: 0.9, characterType: 'explorer'})"></div>
+      <div class="avatar-option" style="background-image: url('img/avatars/vDS8zQP9HdvxX0g (1).png');" onclick="selectAvatar(this, 'img/avatars/vDS8zQP9HdvxX0g (1).png', '🌸 溫柔的櫻花精靈，散播美好與希望！', {rate: 0.85, pitch: 1.05, volume: 0.9, characterType: 'fairy'})"></div>
+      <div class="avatar-option custom-avatar-option" onclick="selectCustomAvatar(this)">
+        <div class="custom-avatar-icon">🎨</div>
+        <div class="custom-avatar-text">自訂</div>
+      </div>
+    </div>
+
+    <!-- 公告顯示區域 -->
+    <div id="homeAnnouncements" class="home-announcements">
+      <div class="announcements-header">
+        <h3>📣 最新公告</h3>
+                  <div style="display: flex; gap: 10px; align-items: center;">
+            <button class="view-all-btn" onclick="location.href='announcements.html'">查看全部</button>
+          </div>
+      </div>
+      <div id="announcementsContent" class="announcements-content">
+        <div class="loading-announcement">載入中...</div>
+      </div>
+    </div>
+
+
+
+    <!-- 自訂設定彈窗 -->
+    <div id="customModal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>🎨 自訂角色設定</h3>
+          <button class="modal-close" onclick="closeCustomModal()">✕</button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="modal-avatar-section">
+            <div class="modal-avatar-preview" id="modalAvatarPreview">
+              <img id="modalAvatarImage" src="img/avatars/avatar_TL.png" alt="彈窗頭像預覽">
+              <div class="modal-upload-overlay">
+                <span>📷</span>
+                <p>點擊上傳</p>
+              </div>
+            </div>
+            <input type="file" id="modalAvatarUpload" accept="image/*" style="display: none;">
+            <div class="modal-avatar-buttons">
+              <button class="modal-upload-btn" onclick="document.getElementById('modalAvatarUpload').click()">
+                📁 選擇圖片
+              </button>
+              <button class="modal-reset-btn" onclick="resetModalAvatar()">
+                🔄 重置
+              </button>
+            </div>
+          </div>
+          
+          <div class="modal-info-section">
+            <div class="modal-input-group">
+              <label for="modalSlogan">角色標語:</label>
+              <textarea id="modalSlogan" placeholder="寫下你的角色標語..." maxlength="50" rows="2"></textarea>
+            </div>
+            
+            <div class="modal-input-group">
+              <label for="modalCharacterType">角色類型:</label>
+              <select id="modalCharacterType">
+                <option value="warrior">戰士</option>
+                <option value="speedster">速度者</option>
+                <option value="defender">防禦者</option>
+                <option value="sharpshooter">射手</option>
+                <option value="magician">魔法師</option>
+                <option value="explorer">探險家</option>
+                <option value="fairy">精靈</option>
+                <option value="custom">自訂</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button class="modal-cancel-btn" onclick="closeCustomModal()">
+            ❌ 取消
+          </button>
+          <button class="modal-save-btn" onclick="saveModalCustomUser()">
+            💾 儲存設定
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 主按鈕區域 -->
+    <div class="main-buttons">
+      <button class="btn" onclick="location.href='atlas.html'">🚀 開始冒險</button>
+      <button class="btn" onclick="location.href='book.html'">📚 單字本</button>
+      <button class="btn" onclick="location.href='grammar_tower_select.html'">🏛️ 文法塔</button>
+      <button class="btn" onclick="location.href='article_practice.html'">📝 文章練習</button>
+      <button class="btn" onclick="location.href='firebase_chat_enhanced.html'">💬 聊天室</button>
+      <button class="btn" onclick="location.href='chat_room.html'" style="background: linear-gradient(135deg, #ff6b6b 0%, #a259ff 100%);">🎲 抽卡聊天室</button>
+      <button class="btn" onclick="location.href='shop.html'">🛒 商城</button>
+      <button class="btn" onclick="location.href='dailyCheckCenter.html'" style="background: linear-gradient(135deg, #ffd700 0%, #ff6b9d 100%);">📅 每日簽到</button>
+      <button class="btn" onclick="window.open('vocabulary_download.html', '_blank')" style="background: linear-gradient(135deg, #00ff88 0%, #00bfff 100%);">📥 單字下載</button>
+      <button class="btn" onclick="location.href='game_center_simple.html'" style="background: linear-gradient(135deg, #ff6b6b 0%, #a259ff 100%);">🎮 遊戲中心</button>
+
+
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" id="cardsBtn" onclick="location.href='cards.html'">🏷️ 卡片上架系統</button>
+      <button class="nav-btn" id="cardCollectionBtn" onclick="location.href='cardCollection.html'" style="background: linear-gradient(135deg, #18f5ff 0%, #a259ff 100%);">📖 卡片收藏冊</button>
+      <button class="nav-btn" id="achievementBtn" onclick="location.href='achievement.html'">🏆 成就勳章</button>
+      <button class="nav-btn" onclick="location.href='stars_leaderboard.html'" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);">⭐ 星星排行榜</button>
+      <a href="gm.html" class="gm-entry-link">GM 管理</a>
+    </div>
+
+    <!-- 資料存檔與還原 -->
+    <section class="home-save-section">
+      <button
+        type="button"
+        class="home-save-toggle"
+        id="localBackupToggleBtn"
+        aria-expanded="false"
+        aria-controls="localBackupPanel"
+      >
+        <span class="home-save-title">資料存檔與還原</span>
+        <span class="home-save-desc">下載備份、選擇備份檔、雲端備份</span>
+        <span class="home-save-icon">▼</span>
+      </button>
+
+      <div class="home-save-panel" id="localBackupPanel" hidden>
+
+        <div class="home-save-group">
+          <h3 class="home-save-group-title">本地備份</h3>
+
+          <div class="home-save-actions">
+            <button type="button" id="downloadLocalBackupBtn">
+              下載備份
+            </button>
+
+            <label for="uploadLocalBackupInput" class="home-save-upload">
+              選擇備份檔
+            </label>
+
+            <input
+              type="file"
+              id="uploadLocalBackupInput"
+              accept=".json,application/json"
+              hidden
+            >
+
+            <button type="button" id="applyLocalBackupBtn">
+              套用備份
+            </button>
+          </div>
+
+          <p class="home-save-help">
+            可以選擇從 Google Drive 下載下來的 JSON 備份檔，找回網站資料。
+          </p>
+        </div>
+
+        <div class="home-save-group cloud-save-group">
+          <h3 class="home-save-group-title">雲端備份</h3>
+
+          <div class="home-save-actions">
+            <button type="button" id="uploadDriveBackupBtn">
+              上傳雲端
+            </button>
+
+            <button type="button" id="downloadDriveBackupBtn">
+              下載雲端
+            </button>
+
+            <button type="button" id="openDriveFolderBtn">
+              開啟雲端資料夾
+            </button>
+
+            <button onclick="uploadCloudSave()" style="padding:8px 12px; border-radius:10px; border:none; font-weight:700; background:#1976d2; color:#fff; box-shadow:0 2px 8px rgba(0,0,0,.2);">☁️ 上傳雲端</button>
+            <button onclick="downloadCloudSave()" style="padding:8px 12px; border-radius:10px; border:none; font-weight:700; background:#2e7d32; color:#fff; box-shadow:0 2px 8px rgba(0,0,0,.2);">☁️ 從雲端下載</button>
+          </div>
+
+          <p class="cloud-save-note">
+            可將目前資料備份到 Google Drive，也可下載最新雲端備份。
+          </p>
+        </div>
+
+        <div class="home-save-links">
+          <button type="button" id="previewLocalBackupBtn">
+            預覽資料
+          </button>
+          <span>｜</span>
+          <button type="button" id="clearLocalBackupBtn">
+            清除暫存
+          </button>
+          <span>｜</span>
+          <button type="button" id="restoreBeforeImportBtn">
+            還原匯入前資料
+          </button>
+        </div>
+
+        <div id="localBackupStatus" class="home-save-status"></div>
+        <div id="localBackupPreview" class="home-save-preview"></div>
+
+      </div>
+    </section>
+  </div>
+
+  <!-- 音效控制 -->
+  <div id="audioControls">
+    <button id="toggleMusic" title="背景音樂">
+      <span class="material-icons">music_note</span>
+    </button>
+  </div>
+
+  <!-- 音效元素 -->
+  <audio id="typingSound" preload="auto">
+    <source src="sound/type.mp3" type="audio/mpeg">
+  </audio>
+
+  <audio id="backgroundMusic" loop>
+    <source src="sound/午後放鬆時光（純音樂）.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- 單字下載中心模態視窗 -->
+  <div id="vocabularyDownloadModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content" style="max-width: 1200px; max-height: 90vh; overflow-y: auto; background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);">
+      <div class="modal-header">
+        <h2>🚀 單字檔案下載中心 🌌</h2>
+        <button class="close-btn" onclick="closeVocabularyDownload()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="vocabularyDownloadApp">
+          <!-- Vue.js 應用將在這裡渲染 -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 遊戲中心模態視窗 -->
+  <div id="gameCenterModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content" style="max-width: 1400px; max-height: 95vh; overflow-y: auto; background: linear-gradient(135deg, #0a1428 0%, #1a2a4a 50%, #0a1428 100%);">
+      <div class="modal-header">
+        <h2>🎮 八大遊戲中心 🌟</h2>
+        <button class="close-btn" onclick="closeGameCenter()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="gameCenterApp">
+          <!-- Vue.js 遊戲中心應用將在這裡渲染 -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/userData.js"></script>
+  <script src="js/sound.js"></script>
+  <script src="js/achievementSystem.js"></script>
+  <script src="js/characterDialogue.js"></script>
+  <script src="js/cards.js"></script>
+  <script src="js/local-backup.js"></script>
+  <script src="js/google-drive-backup.js"></script>
+  <script>
+    console.log('=== JavaScript開始執行 ===');
+    
+    // 成就系統數據（與achievement.html保持一致）
+    const achievements = [
+      { id: 'bronze', name: '銅牌收集者', requirement: 10, reward: 5, icon: '🥉', type: 'collection', description: '收集10張卡片，開始你的收集之旅' },
+      { id: 'silver', name: '銀牌收集者', requirement: 25, reward: 15, icon: '🥈', type: 'collection', description: '收集25張卡片，展現你的收集實力' },
+      { id: 'gold', name: '金牌收集者', requirement: 50, reward: 30, icon: '🥇', type: 'collection', description: '收集50張卡片，成為真正的收集者' },
+      { id: 'platinum', name: '白金收集者', requirement: 100, reward: 60, icon: '💎', type: 'collection', description: '收集100張卡片，達到白金等級' },
+      { id: 'diamond', name: '鑽石收集者', requirement: 200, reward: 120, icon: '💠', type: 'collection', description: '收集200張卡片，獲得鑽石榮耀' },
+      { id: 'master', name: '收集大師', requirement: 500, reward: 300, icon: '👑', type: 'collection', description: '收集500張卡片，成為收集大師' },
+      { id: 'common_master', name: '普通卡大師', requirement: 50, reward: 20, icon: '📚', type: 'rarity', rarity: '普通', description: '收集50張普通卡片，掌握基礎詞彙' },
+      { id: 'rare_master', name: '稀有卡大師', requirement: 30, reward: 40, icon: '🔮', type: 'rarity', rarity: '稀有', description: '收集30張稀有卡片，擴展詞彙範圍' },
+      { id: 'epic_master', name: '超稀有大師', requirement: 20, reward: 80, icon: '🌟', type: 'rarity', rarity: '超稀有', description: '收集20張超稀有卡片，掌握高級詞彙' },
+      { id: 'first_card', name: '初學者', requirement: 1, reward: 1, icon: '🎯', type: 'special', description: '獲得第一張卡片，開始學習之旅' },
+      { id: 'lucky_starter', name: '幸運新手', requirement: 5, reward: 5, icon: '🍀', type: 'special', description: '獲得5張卡片，展現你的幸運' },
+      { id: 'dedicated', name: '專注學習者', requirement: 25, reward: 20, icon: '��', type: 'special', description: '獲得25張卡片，展現你的專注' },
+      { id: 'persistent', name: '堅持不懈', requirement: 75, reward: 60, icon: '💪', type: 'special', description: '獲得75張卡片，展現你的堅持' },
+      { id: 'vocabulary_king', name: '詞彙之王', requirement: 150, reward: 150, icon: '👑', type: 'special', description: '獲得150張卡片，成為詞彙之王' },
+      { id: 'language_legend', name: '語言傳奇', requirement: 300, reward: 300, icon: '🏆', type: 'special', description: '獲得300張卡片，成為語言傳奇' },
+      { id: 'daily_1', name: '每日簽到1天', requirement: 1, reward: 2, icon: '📅', type: 'daily', description: '連續簽到1天，養成好習慣' },
+      { id: 'daily_7', name: '每日簽到7天', requirement: 7, reward: 10, icon: '📆', type: 'daily', description: '連續簽到7天，堅持一週' },
+      { id: 'daily_30', name: '每日簽到30天', requirement: 30, reward: 50, icon: '🗓️', type: 'daily', description: '連續簽到30天，堅持一個月' },
+      { id: 'daily_100', name: '每日簽到100天', requirement: 100, reward: 200, icon: '📊', type: 'daily', description: '連續簽到100天，成為忠實用戶' },
+      { id: 'star_collector', name: '星星收集者', requirement: 100, reward: 10, icon: '⭐', type: 'stars', description: '收集100顆星星，開始星星收集' },
+      { id: 'star_hoarder', name: '星星囤積者', requirement: 500, reward: 50, icon: '✨', type: 'stars', description: '收集500顆星星，成為星星囤積者' },
+      { id: 'star_master', name: '星星大師', requirement: 1000, reward: 100, icon: '🌟', type: 'stars', description: '收集1000顆星星，成為星星大師' },
+      { id: 'star_legend', name: '星星傳奇', requirement: 5000, reward: 500, icon: '💫', type: 'stars', description: '收集5000顆星星，成為星星傳奇' },
+      { id: 'speed_learner', name: '快速學習者', requirement: 10, reward: 15, icon: '⚡', type: 'performance', description: '通過10個關卡，展現快速學習能力' },
+      { id: 'accuracy_master', name: '準確大師', requirement: 20, reward: 25, icon: '🎯', type: 'performance', description: '通過20個關卡，展現準確的學習能力' },
+      { id: 'combo_king', name: '連擊之王', requirement: 15, reward: 30, icon: '🔥', type: 'performance', description: '通過15個關卡，展現連擊能力' },
+      { id: 'fill_beginner', name: '填空新手', requirement: 1, reward: 5, icon: '📝', type: 'fill', description: '完成第一次填空挑戰' },
+      { id: 'fill_regular', name: '填空常客', requirement: 10, reward: 20, icon: '📋', type: 'fill', description: '完成10次填空挑戰' },
+      { id: 'fill_expert', name: '填空專家', requirement: 50, reward: 80, icon: '📊', type: 'fill', description: '完成50次填空挑戰' },
+      { id: 'fill_master', name: '填空大師', requirement: 100, reward: 150, icon: '🏆', type: 'fill', description: '完成100次填空挑戰' },
+      { id: 'fill_perfect', name: '完美填空', requirement: 1, reward: 30, icon: '💯', type: 'fill', description: '在填空挑戰中獲得滿分' },
+      { id: 'fill_speed', name: '快速填空', requirement: 5, reward: 25, icon: '⚡', type: 'fill', description: '在5次填空挑戰中平均時間少於15秒' },
+      { id: 'fill_streak', name: '連續填空', requirement: 7, reward: 40, icon: '🔥', type: 'fill', description: '連續7天完成填空挑戰' },
+      { id: 'fill_vocab', name: '詞彙填空', requirement: 100, reward: 60, icon: '📚', type: 'fill', description: '在填空挑戰中答對100個單字' },
+      { id: 'vocab_beginner', name: '單字新手', requirement: 10, reward: 15, icon: '📖', type: 'vocabulary', description: '答對10個單字本的單字，開始單字學習之旅' },
+      { id: 'vocab_regular', name: '單字常客', requirement: 50, reward: 40, icon: '📚', type: 'vocabulary', description: '答對50個單字本的單字，展現學習熱情' },
+      { id: 'vocab_expert', name: '單字專家', requirement: 100, reward: 80, icon: '🎓', type: 'vocabulary', description: '答對100個單字本的單字，成為單字專家' },
+      { id: 'vocab_master', name: '單字大師', requirement: 200, reward: 150, icon: '👑', type: 'vocabulary', description: '答對200個單字本的單字，成為單字大師' },
+      { id: 'vocab_legend', name: '單字傳奇', requirement: 500, reward: 300, icon: '🏆', type: 'vocabulary', description: '答對500個單字本的單字，成為單字傳奇' },
+      // 星座成就
+      { id: 'pass_aries', name: '通過白羊座', requirement: 1, reward: 5, icon: '♈', type: 'zodiac', description: '通過白羊座關卡', rewardRange: [5,5] },
+      { id: 'pass_taurus', name: '通過金牛座', requirement: 1, reward: 5, icon: '♉', type: 'zodiac', description: '通過金牛座關卡', rewardRange: [5,5] },
+      { id: 'pass_gemini', name: '通過雙子座', requirement: 1, reward: 5, icon: '♊', type: 'zodiac', description: '通過雙子座關卡', rewardRange: [5,5] },
+      { id: 'pass_cancer', name: '通過巨蟹座', requirement: 1, reward: 7, icon: '♋', type: 'zodiac', description: '通過巨蟹座關卡', rewardRange: [7,10] },
+      { id: 'pass_leo', name: '通過獅子座', requirement: 1, reward: 8, icon: '♌', type: 'zodiac', description: '通過獅子座關卡', rewardRange: [8,12] },
+      { id: 'pass_virgo', name: '通過處女座', requirement: 1, reward: 9, icon: '♍', type: 'zodiac', description: '通過處女座關卡', rewardRange: [9,13] },
+      { id: 'pass_libra', name: '通過天秤座', requirement: 1, reward: 10, icon: '♎', type: 'zodiac', description: '通過天秤座關卡', rewardRange: [10,14] },
+      { id: 'pass_scorpio', name: '通過天蠍座', requirement: 1, reward: 11, icon: '♏', type: 'zodiac', description: '通過天蠍座關卡', rewardRange: [11,15] },
+      { id: 'pass_sagittarius', name: '通過射手座', requirement: 1, reward: 12, icon: '♐', type: 'zodiac', description: '通過射手座關卡', rewardRange: [12,16] },
+      { id: 'pass_capricorn', name: '通過摩羯座', requirement: 1, reward: 13, icon: '♑', type: 'zodiac', description: '通過摩羯座關卡', rewardRange: [13,17] },
+      { id: 'pass_aquarius', name: '通過水瓶座', requirement: 1, reward: 14, icon: '♒', type: 'zodiac', description: '通過水瓶座關卡', rewardRange: [14,18] },
+      { id: 'pass_pisces', name: '通過雙魚座', requirement: 1, reward: 15, icon: '♓', type: 'zodiac', description: '通過雙魚座關卡', rewardRange: [15,20] },
+      { id: 'pass_andromeda', name: '通過仙女座', requirement: 1, reward: 16, icon: '👸', type: 'zodiac', description: '通過仙女座關卡', rewardRange: [16,20] },
+      { id: 'pass_cygnus', name: '通過天鵝座', requirement: 1, reward: 17, icon: '🦢', type: 'zodiac', description: '通過天鵝座關卡', rewardRange: [17,20] },
+      { id: 'pass_orion', name: '通過獵戶座', requirement: 1, reward: 17, icon: '🏹', type: 'zodiac', description: '通過獵戶座關卡', rewardRange: [17,20] },
+      { id: 'pass_pegasus', name: '通過飛馬座', requirement: 1, reward: 17, icon: '🦄', type: 'zodiac', description: '通過飛馬座關卡', rewardRange: [17,20] },
+      { id: 'pass_cassiopeia', name: '通過仙后座', requirement: 1, reward: 17, icon: '👑', type: 'zodiac', description: '通過仙后座關卡', rewardRange: [17,20] },
+      { id: 'pass_scorpius', name: '通過天蠍座', requirement: 1, reward: 17, icon: '🦂', type: 'zodiac', description: '通過天蠍座關卡', rewardRange: [17,20] },
+      { id: 'pass_phoenix', name: '通過鳳凰座', requirement: 1, reward: 17, icon: '🔥', type: 'zodiac', description: '通過鳳凰座關卡', rewardRange: [17,20] },
+      { id: 'pass_vela', name: '通過船帆座', requirement: 1, reward: 17, icon: '⛵', type: 'zodiac', description: '通過船帆座關卡', rewardRange: [17,20] },
+    ];
+
+    // 獲取並顯示星星總數
+    function updateStarsDisplay() {
+      if (typeof LinkageSystem !== 'undefined' && LinkageSystem.stars) {
+        LinkageSystem.stars.updateDisplay();
+      } else {
+        // 如果 LinkageSystem 還沒載入，直接更新星星顯示
+        const totalStarsCount = document.getElementById('totalStarsCount');
+        if (totalStarsCount) {
+          const raw = localStorage.getItem('totalStars');
+          const value = Number(raw);
+          const currentStars = (Number.isFinite(value) && !Number.isNaN(value) && value >= 0) ? Math.floor(value) : 0;
+          totalStarsCount.textContent = currentStars;
+        }
+      }
+    }
+
+    // 成就系統相關函數
+    function getClaimedAchievements() {
+      return JSON.parse(localStorage.getItem('claimedAchievements') || '[]');
+    }
+
+    function checkAchievementUnlocked(ach) {
+      const ownedCards = JSON.parse(localStorage.getItem('ownedCards') || '{}');
+      
+      switch (ach.type) {
+        case 'collection':
+        case 'special':
+          return Object.keys(ownedCards).length >= ach.requirement;
+        case 'rarity':
+          // 檢查稀有度卡片數量
+          if (window.allCards) {
+            const cardsByRarity = window.allCards.filter(card => 
+              card.rarity === ach.rarity && ownedCards[card.word]
+            );
+            return cardsByRarity.length >= ach.requirement;
+          }
+          return false; // 如果沒有allCards數據，返回false
+        case 'stars':
+          return parseInt(localStorage.getItem('totalStars') || '0') >= ach.requirement;
+        case 'performance':
+          const fillGames = parseInt(localStorage.getItem('fillGamesCompleted') || '0');
+          const cardGames = parseInt(localStorage.getItem('cardGamesCompleted') || '0');
+          const quizGames = parseInt(localStorage.getItem('quizGamesCompleted') || '0');
+          const spellingGames = parseInt(localStorage.getItem('spellingGamesCompleted') || '0');
+          const matchingGames = parseInt(localStorage.getItem('matchingGamesCompleted') || '0');
+          const timeChallengeGames = parseInt(localStorage.getItem('timeChallengeGamesCompleted') || '0');
+          return (fillGames + cardGames + quizGames + spellingGames + matchingGames + timeChallengeGames) >= ach.requirement;
+        case 'fill':
+          switch (ach.id) {
+            case 'fill_beginner':
+            case 'fill_regular':
+            case 'fill_expert':
+            case 'fill_master':
+              return parseInt(localStorage.getItem('fillGamesCompleted') || '0') >= ach.requirement;
+            case 'fill_perfect':
+              return parseInt(localStorage.getItem('fillPerfectScores') || '0') >= ach.requirement;
+            case 'fill_speed':
+              return parseInt(localStorage.getItem('fillSpeedGames') || '0') >= ach.requirement;
+            case 'fill_streak':
+              return parseInt(localStorage.getItem('fillStreakDays') || '0') >= ach.requirement;
+            case 'fill_vocab':
+              return parseInt(localStorage.getItem('fillCorrectWords') || '0') >= ach.requirement;
+            default:
+              return false;
+          }
+        case 'vocabulary':
+          return parseInt(localStorage.getItem('vocabularyCorrectWords') || '0') >= ach.requirement;
+        case 'zodiac':
+          // 星座關卡成就：檢查該星座是否已通過
+          const zodiacKey = ach.id.replace('pass_', '');
+          const passedAtlas = JSON.parse(localStorage.getItem('passed_atlas') || '[]');
+          return passedAtlas.includes(zodiacKey);
+        default:
+          return false;
+      }
+    }
+
+    // 計算可領取成就數量
+    function getUnclaimedAchievementsCount() {
+      const claimed = getClaimedAchievements();
+      return achievements.filter(ach => 
+        checkAchievementUnlocked(ach) && !claimed.includes(ach.id)
+      ).length;
+    }
+
+    // 更新成就按鈕的泡泡
+    function updateAchievementBadge() {
+      const achievementBtn = document.getElementById('achievementBtn');
+      if (!achievementBtn) {
+        console.log('找不到成就按鈕');
+        return;
+      }
+
+      const unclaimedCount = getUnclaimedAchievementsCount();
+      console.log('可領取成就數量:', unclaimedCount);
+      
+      // 移除現有的泡泡
+      const existingBadge = achievementBtn.querySelector('.achievement-badge');
+      if (existingBadge) {
+        existingBadge.remove();
+      }
+
+      // 如果有可領取的成就，添加泡泡
+      if (unclaimedCount > 0) {
+        console.log('添加成就泡泡，數量:', unclaimedCount);
+        const badge = document.createElement('div');
+        badge.className = 'achievement-badge';
+        badge.textContent = unclaimedCount;
+        achievementBtn.appendChild(badge);
+      } else {
+        console.log('沒有可領取的成就');
+      }
+    }
+
+    // 定期檢查成就狀態（每30秒檢查一次）
+    setInterval(updateAchievementBadge, 30000);
+
+    // 頁面獲得焦點時也檢查一次
+    window.addEventListener('focus', updateAchievementBadge);
+    
+
+
+    // 頭像選擇
+    function selectAvatar(element, imagePath, slogan, voiceSettings) {
+      // 移除其他頭像的選中狀態
+      document.querySelectorAll('.avatar-option').forEach(avatar => {
+        avatar.classList.remove('selected');
+      });
+      
+      // 添加選中狀態
+      element.classList.add('selected');
+      
+      // 更新頭像和角色預覽
+      LinkageSystem.player.setAvatar(imagePath);
+      
+      // 保存選擇到本地存儲
+      localStorage.setItem('selectedAvatar', imagePath);
+      localStorage.setItem('selectedSlogan', slogan);
+      localStorage.setItem('selectedVoiceSettings', JSON.stringify(voiceSettings));
+      
+      // 更新角色預覽圖片
+      document.getElementById('characterImage').src = imagePath;
+      
+      // 更新角色標語（帶動畫效果）
+      const sloganElement = document.getElementById('characterSlogan');
+      sloganElement.style.opacity = '0';
+      sloganElement.style.transform = 'translateY(20px)';
+      
+      setTimeout(() => {
+        sloganElement.textContent = slogan;
+        sloganElement.style.opacity = '1';
+        sloganElement.style.transform = 'translateY(0)';
+        
+        // 語音朗讀功能已移除
+        
+        // 觸發角色對話系統
+        if (window.CharacterDialogue) {
+          // 更新當前角色設定
+          window.CharacterDialogue.currentCharacter = voiceSettings.characterType || 'warrior';
+          // 顯示角色歡迎對話
+          setTimeout(() => {
+            window.CharacterDialogue.showWelcomeDialogue();
+          }, 1000);
+        }
+      }, 200);
+    }
+
+    // 自訂頭像選擇
+    function selectCustomAvatar(element) {
+      // 移除其他頭像的選中狀態
+      document.querySelectorAll('.avatar-option').forEach(avatar => {
+        avatar.classList.remove('selected');
+      });
+      
+      // 添加選中狀態
+      element.classList.add('selected');
+      
+      // 顯示彈窗
+      showCustomModal();
+      
+      // 播放音效
+      playTypingSound();
+    }
+
+    // 顯示自訂設定彈窗
+    function showCustomModal() {
+      const modal = document.getElementById('customModal');
+      
+      if (!modal) {
+        console.error('❌ 找不到自訂彈窗元素');
+        showCustomMessage('❌ 彈窗載入失敗', 'error');
+        return;
+      }
+      
+      console.log('🎨 顯示自訂角色彈窗');
+      
+      // 載入現有的自訂資料到彈窗
+      loadModalData();
+      
+      // 顯示彈窗
+      modal.classList.add('show');
+      
+      // 禁止背景滾動
+      document.body.style.overflow = 'hidden';
+      
+      console.log('✅ 自訂角色彈窗已顯示');
+    }
+
+    // 關閉自訂設定彈窗
+    function closeCustomModal() {
+      console.log('🔒 關閉自訂角色彈窗...');
+      
+      const modal = document.getElementById('customModal');
+      if (modal) {
+        modal.classList.remove('show');
+        console.log('✅ 彈窗已隱藏');
+      } else {
+        console.error('❌ 找不到彈窗元素');
+      }
+      
+      // 恢復背景滾動
+      document.body.style.overflow = 'auto';
+      console.log('✅ 背景滾動已恢復');
+      
+      // 強制重新啟用滾動
+      setTimeout(() => {
+        document.body.style.overflow = 'auto';
+        document.documentElement.style.overflow = 'auto';
+        console.log('🔄 強制恢復滾動完成');
+      }, 100);
+    }
+
+    // 載入資料到彈窗
+    function loadModalData() {
+      console.log('📂 載入彈窗資料...');
+      
+      const customUserData = localStorage.getItem('customUserData');
+      if (customUserData) {
+        try {
+          const customData = JSON.parse(customUserData);
+          console.log('📂 找到自訂資料:', customData);
+          
+          // 更新彈窗中的資料
+          const sloganInput = document.getElementById('modalSlogan');
+          const typeSelect = document.getElementById('modalCharacterType');
+          const avatarImg = document.getElementById('modalAvatarImage');
+          
+          if (sloganInput) sloganInput.value = customData.slogan || '';
+          if (typeSelect) typeSelect.value = customData.characterType || 'warrior';
+          
+          if (customData.avatarDataUrl && avatarImg) {
+            avatarImg.src = customData.avatarDataUrl;
+          }
+          
+          console.log('✅ 彈窗資料載入完成');
+        } catch (e) {
+          console.error('❌ 載入彈窗資料失敗:', e);
+        }
+      } else {
+        console.log('📂 沒有找到自訂資料，使用預設值');
+      }
+    }
+
+    // 重置彈窗頭像
+    function resetModalAvatar() {
+      document.getElementById('modalAvatarImage').src = 'img/avatars/avatar_TL.png';
+      document.getElementById('modalSlogan').value = '';
+      document.getElementById('modalCharacterType').value = 'warrior';
+      document.getElementById('modalAvatarUpload').value = '';
+      
+      showCustomMessage('🔄 已重置彈窗設定', 'info');
+    }
+
+    // 儲存彈窗自訂使用者
+    function saveModalCustomUser() {
+      console.log('💾 儲存自訂角色...');
+      
+      const modalName = (localStorage.getItem('playerName') || '').trim();
+      const modalSlogan = document.getElementById('modalSlogan')?.value?.trim() || '';
+      const modalType = document.getElementById('modalCharacterType')?.value || 'warrior';
+      const modalAvatarSrc = document.getElementById('modalAvatarImage')?.src || '';
+      
+      console.log('📝 角色資料:', { modalName, modalSlogan, modalType, modalAvatarSrc });
+      
+      if (!modalName) {
+        showCustomMessage('⚠️ 請先在首頁設定玩家名稱', 'warning');
+        return;
+      }
+      
+      if (!modalSlogan) {
+        showCustomMessage('⚠️ 請輸入角色標語', 'warning');
+        return;
+      }
+      
+      // 檢查是否為預設頭像（允許使用預設頭像，但要求至少輸入名稱和標語）
+      if (modalAvatarSrc.includes('avatar_TL.png') && !modalName && !modalSlogan) {
+        showCustomMessage('⚠️ 請至少輸入角色名稱和標語', 'warning');
+        return;
+      }
+      
+      // 儲存自訂使用者資料
+      const customUserData = {
+        name: modalName,
+        slogan: modalSlogan,
+        characterType: modalType,
+        avatarDataUrl: modalAvatarSrc,
+        createdAt: new Date().toISOString()
+      };
+      
+      localStorage.setItem('customUserData', JSON.stringify(customUserData));
+      console.log('💾 自訂角色資料已儲存:', customUserData);
+      
+      const characterImage = document.getElementById('characterImage');
+      const characterSlogan = document.getElementById('characterSlogan');
+      
+      if (characterImage) characterImage.src = modalAvatarSrc;
+      if (characterSlogan) characterSlogan.textContent = modalSlogan;
+      
+      // 更新角色對話系統
+      if (window.CharacterDialogue) {
+        window.CharacterDialogue.currentCharacter = modalType;
+      }
+      
+      // 關閉彈窗
+      closeCustomModal();
+      
+      // 顯示成功訊息
+      showCustomMessage('💾 自訂角色儲存成功！', 'success');
+      
+      // 播放成功音效
+      playTypingSound();
+      
+      console.log('✅ 自訂角色儲存完成');
+    }
+
+    // 語音朗讀標語功能已移除
+
+    // 音效控制
+    let isSoundEnabled = true;
+    const typingSound = document.getElementById('typingSound');
+
+    function toggleAudio() {
+      const button = document.querySelector('#audioControls button');
+      isSoundEnabled = !isSoundEnabled;
+      if (isSoundEnabled) {
+        button.textContent = '🔊';
+      } else {
+        button.textContent = '🔇';
+      }
+    }
+
+    // 播放打字音效
+    function playTypingSound() {
+      if (isSoundEnabled) {
+        typingSound.currentTime = 0;
+        typingSound.play().catch(error => {
+          console.log('音效播放失敗:', error);
+        });
+      }
+    }
+
+    // 自訂使用者功能 - 已整合到彈窗系統中
+    // 舊的獨立函數已移除，現在統一使用彈窗系統
+
+    // 顯示自訂訊息
+    function showCustomMessage(message, type = 'info') {
+      // 移除現有的訊息
+      const existingMessage = document.querySelector('.custom-message');
+      if (existingMessage) {
+        existingMessage.remove();
+      }
+      
+      // 創建新訊息
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `custom-message custom-message-${type}`;
+      messageDiv.textContent = message;
+      
+      // 添加到body
+      document.body.appendChild(messageDiv);
+      
+      // 3秒後自動移除
+      setTimeout(() => {
+        if (messageDiv.parentNode) {
+          messageDiv.remove();
+        }
+      }, 3000);
+    }
+
+    // 緊急修復滾動功能
+    function emergencyFixScroll() {
+      console.log('🚨 執行緊急滾動修復...');
+      
+      // 關閉所有彈窗
+      const modals = document.querySelectorAll('.modal-overlay');
+      modals.forEach(modal => {
+        modal.classList.remove('show');
+      });
+      
+      // 恢復所有滾動
+      document.body.style.overflow = 'auto';
+      document.documentElement.style.overflow = 'auto';
+      
+      // 移除所有可能阻止滾動的樣式
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.bottom = '';
+      
+      console.log('✅ 緊急修復完成');
+      showCustomMessage('🔄 滾動功能已修復', 'success');
+    }
+
+
+
+    // 緊急修復星星顯示
+    function emergencyFixStarsDisplay() {
+      console.log('🚨 執行緊急星星顯示修復...');
+
+      const starsDisplay = document.getElementById('starsDisplay');
+      const totalStarsCount = document.getElementById('totalStarsCount');
+
+      if (starsDisplay) {
+        // 強制顯示星星顯示
+        starsDisplay.style.cssText =
+          'position: fixed !important;' +
+          'top: 15px !important;' +
+          'left: 15px !important;' +
+          'background: rgba(10, 20, 40, 0.9) !important;' +
+          'padding: 4px 8px !important;' +
+          'border-radius: 8px !important;' +
+          'color: #ffd700 !important;' +
+          'font-weight: bold !important;' +
+          'box-shadow: 0 0 8px #ffd700, 0 0 16px #00ffff !important;' +
+          'border: 1px solid #00ffff !important;' +
+          'font-size: 1rem !important;' +
+          'backdrop-filter: blur(5px) !important;' +
+          'z-index: 1000 !important;' +
+          'display: flex !important;' +
+          'align-items: center !important;' +
+          'gap: 3px !important;' +
+          'width: fit-content !important;' +
+          'text-align: center !important;' +
+          'transition: all 0.3s ease !important;';
+        console.log('✅ 星星顯示已強制修復');
+      }
+
+      if (totalStarsCount) {
+        // 強制顯示星星數量
+        totalStarsCount.style.cssText =
+          'font-weight: bold !important;' +
+          'color: #ffd700 !important;' +
+          'text-shadow: 0 0 10px rgba(255, 215, 0, 0.5) !important;' +
+          'font-size: 1rem !important;';
+
+        // 修復星星數值
+        const raw = localStorage.getItem('totalStars');
+        const value = Number(raw);
+        const currentStars = (Number.isFinite(value) && !Number.isNaN(value) && value >= 0) ? Math.floor(value) : 0;
+        totalStarsCount.textContent = currentStars;
+
+        console.log('✅ 星星數量顯示已強制修復');
+      }
+
+      // 重新更新星星顯示
+      if (typeof updateStarsDisplay === 'function') {
+        updateStarsDisplay();
+      }
+
+      console.log('✅ 緊急星星顯示修復完成');
+      showCustomMessage('✅ 星星顯示已修復', 'success');
+    }
+
+
+
+    // 點擊彈窗頭像預覽觸發檔案選擇
+    document.addEventListener('DOMContentLoaded', function() {
+      const modalAvatarPreview = document.getElementById('modalAvatarPreview');
+      if (modalAvatarPreview) {
+        modalAvatarPreview.addEventListener('click', function() {
+          console.log('🖱️ 點擊頭像預覽區域');
+          const modalAvatarUpload = document.getElementById('modalAvatarUpload');
+          if (modalAvatarUpload) {
+            modalAvatarUpload.click();
+          } else {
+            console.error('❌ 找不到頭像上傳元素');
+            showCustomMessage('❌ 上傳功能載入失敗', 'error');
+          }
+        });
+        console.log('✅ 頭像預覽點擊事件已綁定');
+      } else {
+        console.error('❌ 找不到頭像預覽元素');
+      }
+    });
+
+    // 使用者名稱處理
+    document.getElementById('playerName').addEventListener('input', function(e) {
+      const name = e.target.value.trim();
+      if (name) {
+        LinkageSystem.player.setName(name);
+        playTypingSound();
+      }
+    });
+
+    // 頁面載入時載入已儲存的資料
+    window.addEventListener('load', function() {
+      // 載入使用者名稱和頭像
+      LinkageSystem.player.updateDisplay();
+      
+      // 檢查是否有自訂使用者資料
+      const customUserData = localStorage.getItem('customUserData');
+      if (customUserData) {
+        try {
+          const customData = JSON.parse(customUserData);
+          // 如果有自訂資料，優先使用自訂資料
+          LinkageSystem.player.setName(customData.name);
+          document.getElementById('characterImage').src = customData.avatarDataUrl;
+          document.getElementById('characterSlogan').textContent = customData.slogan;
+          
+          if (window.CharacterDialogue) {
+            window.CharacterDialogue.currentCharacter = customData.characterType;
+          }
+          
+          // 選中自訂頭像選項
+          const customAvatarOption = document.querySelector('.custom-avatar-option');
+          if (customAvatarOption) {
+            document.querySelectorAll('.avatar-option').forEach(avatar => {
+              avatar.classList.remove('selected');
+            });
+            customAvatarOption.classList.add('selected');
+          }
+          
+          console.log('使用自訂使用者資料');
+          return; // 如果有自訂資料，就不載入預設頭像
+        } catch (e) {
+          console.log('自訂使用者資料載入失敗，使用預設設定:', e);
+        }
+      }
+      
+      // 載入保存的頭像選擇狀態
+      const savedAvatar = localStorage.getItem('selectedAvatar');
+      const savedSlogan = localStorage.getItem('selectedSlogan');
+      const savedVoiceSettings = localStorage.getItem('selectedVoiceSettings');
+      
+      if (savedAvatar) {
+        // 找到對應的頭像選項並選中
+        const avatarOptions = document.querySelectorAll('.avatar-option');
+        let foundAvatar = false;
+        
+        avatarOptions.forEach(option => {
+          const backgroundImage = option.style.backgroundImage;
+          // 提取背景圖片中的檔案名
+          const urlMatch = backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/);
+          if (urlMatch) {
+            const imageUrl = urlMatch[1];
+            // 比較完整的URL路徑
+            if (imageUrl === savedAvatar || imageUrl.endsWith(savedAvatar.split('/').pop())) {
+              // 移除其他頭像的選中狀態
+              document.querySelectorAll('.avatar-option').forEach(avatar => {
+                avatar.classList.remove('selected');
+              });
+              
+              // 添加選中狀態
+              option.classList.add('selected');
+              foundAvatar = true;
+              
+              // 恢復保存的標語
+              if (savedSlogan) {
+                document.getElementById('characterSlogan').textContent = savedSlogan;
+              }
+              
+              // 更新角色預覽圖片
+              document.getElementById('characterImage').src = savedAvatar;
+              
+              // 恢復保存的語音設定
+              if (savedVoiceSettings) {
+                try {
+                  const voiceSettings = JSON.parse(savedVoiceSettings);
+                  // 可以選擇是否在載入時播放語音
+                  // speakSlogan(savedSlogan, voiceSettings);
+                  
+                  // 更新角色對話系統的當前角色
+                  if (window.CharacterDialogue) {
+                    window.CharacterDialogue.currentCharacter = voiceSettings.characterType || 'warrior';
+                  }
+                } catch (e) {
+                  console.log('語音設定恢復失敗:', e);
+                }
+              }
+            }
+          }
+        });
+        
+        // 如果沒有找到保存的頭像，使用預設頭像
+        if (!foundAvatar) {
+          console.log('未找到保存的頭像，使用預設頭像');
+          // 清除可能損壞的保存數據
+          localStorage.removeItem('selectedAvatar');
+          localStorage.removeItem('selectedSlogan');
+          localStorage.removeItem('selectedVoiceSettings');
+        }
+      }
+      
+      // 檢查是否為首次訪問，如果是則顯示角色對話
+      const hasShownWelcome = localStorage.getItem('hasShownWelcomeDialogue');
+      if (!hasShownWelcome && window.CharacterDialogue) {
+        setTimeout(() => {
+          window.CharacterDialogue.showWelcomeDialogue();
+          localStorage.setItem('hasShownWelcomeDialogue', 'true');
+        }, 2000);
+      }
+    });
+
+    // 背景音樂控制系統
+    let backgroundMusic = null;
+    let toggleMusicBtn = null;
+    let isMusicPlaying = false;
+
+    // 初始化背景音樂系統
+    function initBackgroundMusic() {
+      console.log('🎵 初始化背景音樂系統...');
+      
+      backgroundMusic = document.getElementById('backgroundMusic');
+      toggleMusicBtn = document.getElementById('toggleMusic');
+      
+      if (!backgroundMusic) {
+        console.error('❌ 找不到背景音樂元素');
+        return;
+      }
+      
+      if (!toggleMusicBtn) {
+        console.error('❌ 找不到音樂控制按鈕');
+        return;
+      }
+      
+      // 設定音樂屬性
+      backgroundMusic.volume = 0.3;
+      backgroundMusic.loop = true;
+      
+      // 預載入音樂檔案
+      backgroundMusic.load();
+      
+      // 優先使用 SoundSystem（如果可用）
+      if (typeof SoundSystem !== 'undefined' && SoundSystem.bgm) {
+        console.log('🎵 使用 SoundSystem 管理背景音樂');
+        // 初始化 SoundSystem 的背景音樂
+        SoundSystem.bgm.initGlobalAudio();
+        
+        // 從 SoundSystem 獲取狀態
+        isMusicPlaying = SoundSystem.bgm.getPlayingState();
+        console.log('🔗 SoundSystem 音樂狀態:', isMusicPlaying);
+      }
+      // 其次使用 LinkageSystem
+      else if (typeof LinkageSystem !== 'undefined' && LinkageSystem.music) {
+        isMusicPlaying = LinkageSystem.music.isPlaying();
+        console.log('🔗 LinkageSystem 音樂狀態:', isMusicPlaying);
+      } 
+      // 最後使用 localStorage
+      else {
+        const musicState = localStorage.getItem('bgMusicState');
+        isMusicPlaying = musicState === 'playing';
+        console.log('📦 localStorage 音樂狀態:', isMusicPlaying);
+      }
+      
+      // 更新按鈕狀態
+      updateMusicButtonState();
+      
+      // 如果音樂應該播放，嘗試播放
+      if (isMusicPlaying) {
+        playBackgroundMusic();
+      }
+      
+      console.log('✅ 背景音樂系統初始化完成');
+    }
+
+    // 播放背景音樂
+    function playBackgroundMusic() {
+      if (!backgroundMusic) return;
+      
+      // 優先使用 SoundSystem
+      if (typeof SoundSystem !== 'undefined' && SoundSystem.bgm) {
+        SoundSystem.bgm.play();
+        isMusicPlaying = true;
+        updateMusicButtonState();
+        console.log('🎵 透過 SoundSystem 播放背景音樂');
+        return;
+      }
+      
+      // 備用方案：直接播放本地音樂元素
+      backgroundMusic.play().then(() => {
+        isMusicPlaying = true;
+        updateMusicButtonState();
+        
+        // 同步到 LinkageSystem
+        if (typeof LinkageSystem !== 'undefined' && LinkageSystem.music) {
+          LinkageSystem.music.setPlaying(true);
+        } else {
+          localStorage.setItem('bgMusicState', 'playing');
+        }
+        
+        console.log('🎵 背景音樂開始播放');
+      }).catch(err => {
+        console.error('❌ 背景音樂播放失敗:', err);
+        isMusicPlaying = false;
+        updateMusicButtonState();
+      });
+    }
+
+    // 暫停背景音樂
+    function pauseBackgroundMusic() {
+      if (!backgroundMusic) return;
+      
+      // 優先使用 SoundSystem
+      if (typeof SoundSystem !== 'undefined' && SoundSystem.bgm) {
+        SoundSystem.bgm.pause();
+        isMusicPlaying = false;
+        updateMusicButtonState();
+        console.log('🔇 透過 SoundSystem 暫停背景音樂');
+        return;
+      }
+      
+      // 備用方案：直接暫停本地音樂元素
+      backgroundMusic.pause();
+      isMusicPlaying = false;
+      updateMusicButtonState();
+      
+      // 同步到 LinkageSystem
+      if (typeof LinkageSystem !== 'undefined' && LinkageSystem.music) {
+        LinkageSystem.music.setPlaying(false);
+      } else {
+        localStorage.setItem('bgMusicState', 'paused');
+      }
+      
+      console.log('🔇 背景音樂已暫停');
+    }
+
+    // 切換背景音樂
+    function toggleBackgroundMusic() {
+      if (isMusicPlaying) {
+        pauseBackgroundMusic();
+      } else {
+        playBackgroundMusic();
+      }
+    }
+
+    // 更新音樂按鈕狀態
+    function updateMusicButtonState() {
+      if (!toggleMusicBtn) return;
+      
+      if (isMusicPlaying) {
+        toggleMusicBtn.style.background = 'rgba(0, 255, 255, 0.2)';
+        toggleMusicBtn.innerHTML = '<span class="material-icons">🔊</span>';
+      } else {
+        toggleMusicBtn.style.background = 'rgba(10, 20, 40, 0.85)';
+        toggleMusicBtn.innerHTML = '<span class="material-icons">🔇</span>';
+      }
+    }
+
+    // 監聽音樂控制按鈕點擊
+    document.addEventListener('DOMContentLoaded', function() {
+      // 延遲初始化，確保所有元素都已載入
+      setTimeout(() => {
+        initBackgroundMusic();
+        
+        // 綁定按鈕事件
+        const musicBtn = document.getElementById('toggleMusic');
+        if (musicBtn) {
+          musicBtn.addEventListener('click', toggleBackgroundMusic);
+          console.log('🎵 音樂控制按鈕事件已綁定');
+        }
+        
+        // 添加用戶互動觸發音樂播放
+        let hasUserInteracted = false;
+        
+        function handleUserInteraction() {
+          if (!hasUserInteracted) {
+            hasUserInteracted = true;
+            console.log('👆 用戶首次互動，嘗試播放音樂');
+            
+            // 如果音樂應該播放但還沒開始，現在嘗試播放
+            if (isMusicPlaying && backgroundMusic && backgroundMusic.paused) {
+              playBackgroundMusic();
+            }
+            
+            // 移除事件監聽器
+            document.removeEventListener('click', handleUserInteraction);
+            document.removeEventListener('keydown', handleUserInteraction);
+            document.removeEventListener('touchstart', handleUserInteraction);
+          }
+        }
+        
+        // 監聽用戶互動事件
+        document.addEventListener('click', handleUserInteraction);
+        document.addEventListener('keydown', handleUserInteraction);
+        document.addEventListener('touchstart', handleUserInteraction);
+        
+      }, 500);
+    });
+
+    // 監聽頁面可見性變化，處理音樂暫停/恢復
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        // 頁面隱藏時暫停音樂
+        if (isMusicPlaying && backgroundMusic) {
+          backgroundMusic.pause();
+        }
+      } else {
+        // 頁面顯示時恢復音樂
+        if (isMusicPlaying && backgroundMusic && backgroundMusic.paused) {
+          backgroundMusic.play().catch(err => {
+            console.log('頁面恢復時音樂播放失敗:', err);
+          });
+        }
+      }
+    });
+
+
+
+    // 處理彈窗頭像上傳
+    document.addEventListener('DOMContentLoaded', function() {
+      const modalAvatarUpload = document.getElementById('modalAvatarUpload');
+      if (modalAvatarUpload) {
+        modalAvatarUpload.addEventListener('change', function(e) {
+          console.log('📁 處理頭像上傳...');
+          const file = e.target.files[0];
+          if (file) {
+            console.log('📁 選擇的檔案:', file.name, file.size, 'bytes');
+            const reader = new FileReader();
+            reader.onload = function(event) {
+              const modalAvatarImage = document.getElementById('modalAvatarImage');
+              if (modalAvatarImage) {
+                modalAvatarImage.src = event.target.result;
+                console.log('✅ 頭像上傳成功');
+                showCustomMessage('✅ 頭像上傳成功！', 'success');
+              } else {
+                console.error('❌ 找不到頭像預覽元素');
+                showCustomMessage('❌ 頭像預覽載入失敗', 'error');
+              }
+            };
+            reader.onerror = function() {
+              console.error('❌ 檔案讀取失敗');
+              showCustomMessage('❌ 檔案讀取失敗', 'error');
+            };
+            reader.readAsDataURL(file);
+          } else {
+            console.log('📁 沒有選擇檔案');
+          }
+        });
+        console.log('✅ 頭像上傳事件監聽器已綁定');
+      } else {
+        console.error('❌ 找不到頭像上傳元素');
+      }
+    });
+
+    // 公告檢查和數字泡泡功能
+    const GOOGLE_SHEETS_API = "https://script.google.com/macros/s/AKfycbyfM8pLiWIjRsvg7u3rJ5Zh4XdKLFuScaQ5t_0yQviBp11IwOZSyrgZ-KFHkrJT43UBPg/exec";
+    
+    // 檢查新公告並更新數字泡泡
+    function checkNewAnnouncements() {
+      const badge = document.getElementById('announcementBadge');
+      if (!badge) return;
+
+      // 從 localStorage 獲取上次檢查的時間
+      const lastCheckTime = localStorage.getItem('lastAnnouncementCheck') || '0';
+      const currentTime = Date.now();
+
+      // 先嘗試從 Google Sheets 獲取數據
+      fetch(GOOGLE_SHEETS_API)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data && data.length > 0) {
+            updateBadgeWithData(data, lastCheckTime, badge);
+          } else {
+            throw new Error('No data received');
+          }
+        })
+        .catch(error => {
+          console.log('Google Sheets 載入失敗，使用本地數據:', error);
+          // 使用本地公告數據進行測試
+          const localAnnouncements = [
+            {
+              type: "🔴",
+              content: "系統維護中，部分功能可能暫時無法使用",
+              time: "2024-01-15 10:00"
+            },
+            {
+              type: "🟢",
+              content: "歡迎使用英打小英雄！新功能陸續推出中",
+              time: "2024-01-10 09:30"
+            },
+            {
+              type: "🔵",
+              content: "如有問題請聯繫客服",
+              time: "2024-01-05 14:20"
+            },
+            {
+              type: "🟡",
+              content: "新增宇宙科技風格公告頁面！",
+              time: new Date().toISOString().slice(0, 19).replace('T', ' ')
+            }
+          ];
+          
+          updateBadgeWithData(localAnnouncements, lastCheckTime, badge);
+        });
+    }
+
+    // 更新數字泡泡的輔助函數
+    function updateBadgeWithData(announcements, lastCheckTime, badge) {
+      let newAnnouncementCount = 0;
+      
+      // 檢查每個公告的時間
+      announcements.forEach(announcement => {
+        if (announcement.time) {
+          const announcementTime = new Date(announcement.time).getTime();
+          if (announcementTime > parseInt(lastCheckTime)) {
+            newAnnouncementCount++;
+          }
+        }
+      });
+
+      // 更新數字泡泡
+      if (newAnnouncementCount > 0) {
+        badge.textContent = newAnnouncementCount > 99 ? '99+' : newAnnouncementCount.toString();
+        badge.style.display = 'flex';
+        
+        // 添加閃爍動畫
+        badge.style.animation = 'badgePulse 1s ease-in-out infinite';
+        
+        console.log(`📣 發現 ${newAnnouncementCount} 個新公告`);
+      } else {
+        badge.style.display = 'none';
+        console.log('📣 沒有新公告');
+      }
+    }
+
+    // 點擊公告按鈕時更新檢查時間
+    function updateAnnouncementCheckTime() {
+      localStorage.setItem('lastAnnouncementCheck', Date.now().toString());
+      const badge = document.getElementById('announcementBadge');
+      if (badge) {
+        badge.style.display = 'none';
+      }
+    }
+
+    // 單字下載中心功能
+    function showVocabularyDownload() {
+      console.log('🚀 開啟單字下載中心...');
+      const modal = document.getElementById('vocabularyDownloadModal');
+      if (modal) {
+        modal.style.display = 'flex';
+        // 初始化 Vue.js 應用
+        initVocabularyDownloadApp();
+      } else {
+        console.error('❌ 找不到單字下載模態視窗');
+      }
+    }
+
+    function closeVocabularyDownload() {
+      console.log('🔒 關閉單字下載中心...');
+      const modal = document.getElementById('vocabularyDownloadModal');
+      if (modal) {
+        modal.style.display = 'none';
+        // 銷毀 Vue.js 應用
+        if (window.vocabularyDownloadApp) {
+          window.vocabularyDownloadApp.unmount();
+          window.vocabularyDownloadApp = null;
+        }
+      }
+    }
+
+    function initVocabularyDownloadApp() {
+        console.log('🎯 初始化 Vue.js 應用...');
+        if (window.vocabularyDownloadApp) {
+          window.vocabularyDownloadApp.unmount();
+        }
+
+        const { createApp } = Vue;
+
+        window.vocabularyDownloadApp = createApp({
+          template: `
+            <div class="vocabulary-download-container">
+              <!-- 星星顯示區域 -->
+              <div class="vocabulary-stars-display">
+                <div style="
+                  font-size: 1.5rem;
+                  font-weight: bold;
+                  color: #ffd700;
+                  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 10px;
+                ">
+                  <span id="totalStarsCount">⭐ 0</span>
+                  <span style="font-size: 1rem; color: #b0b0b0;">| 使用星星解鎖檔案下載</span>
+                </div>
+              </div>
+
+              <div class="vocabulary-header">
+                <h1>🚀 單字檔案下載中心 🌌</h1>
+                <p>✨ 精選高品質單字檔案，助您提升英語能力 ✨</p>
+              </div>
+
+              <!-- 搜尋和篩選功能 -->
+              <div class="vocabulary-search-section">
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                  <input 
+                    v-model="searchQuery" 
+                    type="text" 
+                    placeholder="搜尋單字檔案..." 
+                    class="vocabulary-search-input"
+                  >
+                  <select 
+                    v-model="selectedLevel" 
+                    class="vocabulary-level-select"
+                  >
+                    <option value="">所有等級</option>
+                    <option value="初級">初級</option>
+                    <option value="中級">中級</option>
+                    <option value="中高級">中高級</option>
+                    <option value="高級">高級</option>
+                  </select>
+                  <button 
+                    @click="resetFilters" 
+                    class="vocabulary-reset-btn"
+                  >
+                    🔄 重置篩選
+                  </button>
+                </div>
+                <div style="margin-top: 15px; color: #00ffff; font-size: 0.9rem;">
+                  ✨ 找到 {{ filteredFiles.length }} 個檔案
+                </div>
+              </div>
+
+              <div class="vocabulary-download-grid">
+                <div class="vocabulary-download-card" v-for="file in filteredFiles" :key="file.id" @click="selectFile(file)">
+                  <div class="vocabulary-card-header">
+                    <div class="vocabulary-card-icon" :class="'vocabulary-' + file.iconClass">
+                      {{ file.icon }}
+                    </div>
+                    <div>
+                      <div class="vocabulary-card-title">{{ file.title }}</div>
+                      <div class="vocabulary-card-subtitle">{{ file.subtitle }}</div>
+                    </div>
+                  </div>
+
+                  <div class="vocabulary-card-stats">
+                    <div class="vocabulary-stat-item">
+                      <div class="vocabulary-stat-number">{{ file.wordCount }}</div>
+                      <div class="vocabulary-stat-label">單字數量</div>
+                    </div>
+                    <div class="vocabulary-stat-item">
+                      <div class="vocabulary-stat-number">{{ file.fileSize }}</div>
+                      <div class="vocabulary-stat-label">檔案大小</div>
+                    </div>
+                    <div class="vocabulary-stat-item">
+                      <div class="vocabulary-stat-number" style="color: #ffd700;">{{ file.unlockCost || 10 }}</div>
+                      <div class="vocabulary-stat-label">解鎖費用</div>
+                    </div>
+                  </div>
+
+                  <div class="vocabulary-card-description">
+                    {{ file.description }}
+                  </div>
+
+                  <button 
+                    class="vocabulary-download-btn" 
+                    @click.stop="isUnlocked(file.id) ? downloadFile(file) : unlockFile(file)"
+                    :disabled="downloading === file.id || (!isUnlocked(file.id) && !canUnlock(file))"
+                    :style="getUnlockButtonStyle(file)"
+                  >
+                    <span v-if="downloading === file.id" class="vocabulary-loading"></span>
+                    <span v-else-if="isUnlocked(file.id)">
+                      📥 下載檔案
+                    </span>
+                    <span v-else>
+                      🔓 解鎖檔案 ({{ file.unlockCost || 10 }} ⭐)
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="vocabulary-preview-section" v-if="selectedFile">
+                <div class="vocabulary-preview-header">
+                  <div class="vocabulary-preview-icon">👁️</div>
+                  <div class="vocabulary-preview-title">{{ selectedFile.title }} - 檔案預覽</div>
+                  <button 
+                    @click="selectedFile = null" 
+                    style="margin-left: auto; background: none; border: none; color: #667eea; font-size: 1.5rem; cursor: pointer;"
+                  >
+                    ✕
+                  </button>
+                </div>
+                
+                <table class="vocabulary-preview-table">
+                  <thead>
+                    <tr>
+                      <th>英文單字</th>
+                      <th>中文翻譯</th>
+                      <th>英文例句</th>
+                      <th>中文例句</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="word in selectedFile.preview" :key="word.english">
+                      <td><strong>{{ word.english }}</strong></td>
+                      <td>{{ word.chinese }}</td>
+                      <td>{{ word.example_en }}</td>
+                      <td>{{ word.example_ch }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div v-if="message" :class="messageClass">
+                {{ message }}
+              </div>
+            </div>
+          `,
+          data() {
+            return {
+              downloading: null,
+              message: '',
+              messageClass: '',
+              selectedFile: null,
+              searchQuery: '',
+              selectedLevel: '',
+              totalStars: 0,
+              vocabularyFiles: [
+                {
+                  id: 'basic400',
+                  title: '🌟 宇宙入門單字集',
+                  subtitle: '400個基礎英文單字 - 探索英語的起點',
+                  icon: '⭐',
+                  iconClass: 'basic-icon',
+                  wordCount: '400',
+                  fileSize: '26KB',
+                  level: '初級',
+                  unlockCost: 5,
+                  description: '精選最基礎的400個英文單字，適合英語初學者，包含日常生活最常用的詞彙和簡單例句。',
+                  filename: '400單.csv',
+                  preview: [
+                    { english: 'I', chinese: '我', example_en: 'I am a student.', example_ch: '我是一名學生。' },
+                    { english: 'you', chinese: '你；你們', example_en: 'You are my friend.', example_ch: '你是我的朋友。' },
+                    { english: 'he', chinese: '他', example_en: 'He has a dog.', example_ch: '他有一隻狗。' },
+                    { english: 'she', chinese: '她', example_en: 'She is my sister.', example_ch: '她是我姐姐。' },
+                    { english: 'it', chinese: '牠；它', example_en: 'It is a cat.', example_ch: '牠是一隻貓。' }
+                  ]
+                },
+                {
+                  id: 'ielts',
+                  title: '🌠 星際考試單字集',
+                  subtitle: '1000個IELTS必備單字 - 征服英語考試',
+                  icon: '🌠',
+                  iconClass: 'ielts-icon',
+                  wordCount: '1000+',
+                  fileSize: '75KB',
+                  level: '中級',
+                  unlockCost: 15,
+                  description: '精選 IELTS 考試中最常出現的 1000 個單字，包含詳細的中英文翻譯和實用例句，幫助您快速提升詞彙量。',
+                  filename: '1000英檢單字.csv',
+                  preview: [
+                    { english: 'abandon', chinese: '拋棄', example_en: 'He decided to abandon the car on the roadside.', example_ch: '他決定把車子拋棄在路邊。' },
+                    { english: 'ability', chinese: '能力', example_en: 'She has the ability to solve complex problems.', example_ch: '她有能力解決複雜的問題。' },
+                    { english: 'accept', chinese: '接受', example_en: 'He accepted the job offer.', example_ch: '他接受了那份工作機會。' },
+                    { english: 'active', chinese: '活躍的', example_en: 'He is very active in school activities.', example_ch: '他在學校活動中非常活躍。' },
+                    { english: 'advice', chinese: '建議', example_en: 'She gave me good advice.', example_ch: '她給了我好的建議。' }
+                  ]
+                },
+                {
+                  id: 'daily',
+                  title: '🏠 地球生活單字集',
+                  subtitle: '150個日常生活單字 - 地球人的日常',
+                  icon: '🏠',
+                  iconClass: 'daily-icon',
+                  wordCount: '150+',
+                  fileSize: '15KB',
+                  level: '初級',
+                  unlockCost: 8,
+                  description: '精選日常生活中最常用的英文單字，包含食物、家庭、工作、天氣等實用詞彙，適合日常交流使用。',
+                  filename: '基礎生活單字.csv',
+                  preview: [
+                    { english: 'breakfast', chinese: '早餐', example_en: 'I eat breakfast at 7 AM every morning.', example_ch: '我每天早上7點吃早餐。' },
+                    { english: 'lunch', chinese: '午餐', example_en: 'Let\'s have lunch together today.', example_ch: '今天我們一起吃午餐吧。' },
+                    { english: 'dinner', chinese: '晚餐', example_en: 'We usually have dinner at 6 PM.', example_ch: '我們通常晚上6點吃晚餐。' },
+                    { english: 'coffee', chinese: '咖啡', example_en: 'I drink coffee every morning.', example_ch: '我每天早上都喝咖啡。' },
+                    { english: 'water', chinese: '水', example_en: 'Please drink more water.', example_ch: '請多喝水。' }
+                  ]
+                }
+              ]
+            }
+          },
+          methods: {
+            getStars() {
+              return parseInt(localStorage.getItem('totalStars') || '0');
+            },
+            
+            updateStarsDisplay() {
+              const starsCount = document.getElementById('totalStarsCount');
+              if (starsCount) {
+                starsCount.textContent = `⭐ ${this.totalStars}`;
+              }
+            },
+
+            unlockFile(file) {
+              if (this.isUnlocked(file.id)) {
+                this.message = `✅ ${file.title} 已經解鎖，可以直接下載！`;
+                return;
+              }
+              
+              const unlockCost = file.unlockCost || 10;
+              const currentStars = this.getStars();
+              
+              if (currentStars < unlockCost) {
+                this.message = `❌ 星星不足！需要 ${unlockCost} 顆星星，當前只有 ${currentStars} 顆星星`;
+                this.messageClass = 'vocabulary-error-message';
+                setTimeout(() => {
+                  this.message = '';
+                }, 3000);
+                return;
+              }
+              
+              const newStars = currentStars - unlockCost;
+              localStorage.setItem('totalStars', newStars);
+              this.totalStars = newStars;
+              this.updateStarsDisplay();
+              
+              let unlockedFiles = JSON.parse(localStorage.getItem('unlockedFiles') || '[]');
+              if (!unlockedFiles.includes(file.id)) {
+                unlockedFiles.push(file.id);
+                localStorage.setItem('unlockedFiles', JSON.stringify(unlockedFiles));
+              }
+              
+              this.message = `🔓 ${file.title} 解鎖成功！扣除 ${unlockCost} 顆星星`;
+              this.messageClass = 'vocabulary-success-message';
+              
+              setTimeout(() => {
+                this.message = '';
+              }, 3000);
+            },
+            
+            downloadFile(file) {
+              if (!this.isUnlocked(file.id)) {
+                this.message = `❌ 請先解鎖檔案才能下載！`;
+                this.messageClass = 'vocabulary-error-message';
+                setTimeout(() => {
+                  this.message = '';
+                }, 3000);
+                return;
+              }
+              
+              this.downloading = file.id;
+              this.message = '';
+              
+              // 模擬下載成功
+              setTimeout(() => {
+                this.message = `✅ ${file.title} 下載成功！`;
+                this.messageClass = 'vocabulary-success-message';
+                this.selectedFile = file;
+                this.downloading = null;
+                
+                setTimeout(() => {
+                  this.message = '';
+                }, 3000);
+              }, 1000);
+            },
+            
+            canUnlock(file) {
+              const unlockCost = file.unlockCost || 10;
+              return this.getStars() >= unlockCost;
+            },
+            
+            isUnlocked(fileId) {
+              const unlockedFiles = JSON.parse(localStorage.getItem('unlockedFiles') || '[]');
+              return unlockedFiles.includes(fileId);
+            },
+            
+            selectFile(file) {
+              this.selectedFile = file;
+            },
+            
+            resetFilters() {
+              this.searchQuery = '';
+              this.selectedLevel = '';
+              this.selectedFile = null;
+            },
+
+            getUnlockButtonStyle(file) {
+              if (this.isUnlocked(file.id)) {
+                return {
+                  background: 'linear-gradient(135deg, #00ffff, #ff00ff)',
+                  color: '#ffffff',
+                  boxShadow: '0 0 20px rgba(0,255,255,0.3)'
+                };
+              } else if (this.canUnlock(file)) {
+                return {
+                  background: 'linear-gradient(135deg, #ffd700, #ffaa00)',
+                  color: '#000000',
+                  boxShadow: '0 0 20px rgba(255,215,0,0.3)'
+                };
+              } else {
+                return {
+                  background: 'linear-gradient(135deg, #666666, #444444)',
+                  color: '#cccccc',
+                  boxShadow: 'none',
+                  cursor: 'not-allowed'
+                };
+              }
+            }
+          },
+          computed: {
+            filteredFiles() {
+              let files = this.vocabularyFiles;
+
+              if (this.searchQuery) {
+                const query = this.searchQuery.toLowerCase();
+                files = files.filter(file => 
+                  file.title.toLowerCase().includes(query) ||
+                  file.subtitle.toLowerCase().includes(query) ||
+                  file.description.toLowerCase().includes(query)
+                );
+              }
+
+              if (this.selectedLevel) {
+                files = files.filter(file => file.level === this.selectedLevel);
+              }
+
+              return files;
+            }
+          },
+          mounted() {
+            this.totalStars = this.getStars();
+            this.updateStarsDisplay();
+            this.selectedFile = this.vocabularyFiles[0];
+            console.log('🌟 單字下載中心已初始化，當前星星:', this.totalStars);
+          }
+        }).mount('#vocabularyDownloadApp');
+      }
+
+      // 點擊單字下載模態視窗外部關閉
+      document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('vocabularyDownloadModal');
+        if (modal) {
+          modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+              closeVocabularyDownload();
+            }
+          });
+        }
+      });
+
+      // 遊戲中心功能
+      function openGameCenter() {
+        console.log('🎮 開啟遊戲中心...');
+        const modal = document.getElementById('gameCenterModal');
+        if (modal) {
+          modal.style.display = 'flex';
+          // 初始化遊戲中心 Vue.js 應用
+          initGameCenterApp();
+        } else {
+          console.error('❌ 找不到遊戲中心模態視窗');
+        }
+      }
+
+      function closeGameCenter() {
+        console.log('🔒 關閉遊戲中心...');
+        const modal = document.getElementById('gameCenterModal');
+        if (modal) {
+          modal.style.display = 'none';
+          // 銷毀遊戲中心 Vue.js 應用
+          if (window.gameCenterApp) {
+            window.gameCenterApp.unmount();
+            window.gameCenterApp = null;
+          }
+        }
+      }
+
+      function initGameCenterApp() {
+        console.log('🎯 初始化遊戲中心 Vue.js 應用...');
+        if (window.gameCenterApp) {
+          window.gameCenterApp.unmount();
+        }
+
+        const { createApp } = Vue;
+
+        window.gameCenterApp = createApp({
+          template: `
+            <div class="game-center-container">
+              <!-- 歡迎訊息 -->
+              <div class="welcome-message">
+                <div class="welcome-title">歡迎來到遊戲中心！</div>
+                <div class="welcome-text">
+                  這裡有我們精心設計的八個精彩遊戲，每個遊戲都有獨特的玩法和挑戰。
+                  選擇你喜歡的遊戲開始冒險吧！
+                </div>
+              </div>
+
+              <!-- 星星顯示區域 -->
+              <div class="stars-display" :class="{ 'stars-update': starsAnimation }">
+                <div class="stars-title">你的星星</div>
+                <div class="stars-count">{{ totalStars }}</div>
+                <div class="stars-icon">⭐</div>
+                <div class="stars-subtitle">收集星星，解鎖更多遊戲！</div>
+                
+                <!-- 星星詳細資訊 -->
+                <div style="margin-top: 15px; padding: 10px; background: rgba(255, 215, 0, 0.1); border-radius: 8px;">
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem;">
+                    <div>
+                      <div style="color: #00ff88;">獲得: {{ totalStarsEarned }}</div>
+                      <div style="color: #ff6b6b;">花費: {{ starsSpent }}</div>
+                    </div>
+                    <div>
+                      <div style="color: #00ffff;">等級: {{ playerLevel }}</div>
+                      <div style="color: #ffd700;">進度: {{ levelProgressPercentage }}%</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div style="color: #999; font-size: 0.8rem; margin-top: 5px;">💡 提示：遊玩其他遊戲可以獲得星星</div>
+                <div style="color: #00ffff; font-size: 0.8rem; margin-top: 3px;">🔄 星星系統已與首頁同步</div>
+              </div>
+
+              <!-- 統計面板 -->
+              <div class="stats-panel">
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <div class="stat-value">{{ availableGames }}/{{ totalGames }}</div>
+                    <div class="stat-label">可用遊戲</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-value">{{ completedGames }}</div>
+                    <div class="stat-label">已完成</div>
+                  </div>
+                  <div class="stat-item" style="background: rgba(255, 215, 0, 0.15); border-color: #ffd700;">
+                    <div class="stat-value" style="color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">⭐ {{ totalStars }}</div>
+                    <div class="stat-label" style="color: #ffd700;">總星星</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-value">{{ playerLevel }}</div>
+                    <div class="stat-label">玩家等級</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-value">{{ completionRate }}%</div>
+                    <div class="stat-label">完成率</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 遊戲卡片 -->
+              <div class="games-grid">
+                <!-- 拉霸機遊戲 -->
+                <div class="game-card" :class="{ locked: !canPlaySlotMachine }" @click="toggleSlotMachine">
+                  <div class="game-icon">🎰</div>
+                  <div class="game-title">拉霸機遊戲</div>
+                  <div class="game-subtitle">經典三連線遊戲</div>
+                  <div class="game-description">
+                    經典的拉霸機遊戲，轉動拉霸機獲得三個相同圖案即可獲勝。
+                    遊戲包含華麗的視覺效果和動畫，讓您體驗真正的拉霸機樂趣。
+                  </div>
+                  <div class="game-features">
+                    <div class="feature-item">經典拉霸機玩法</div>
+                    <div class="feature-item">三連線獲勝機制</div>
+                    <div class="feature-item">華麗視覺效果</div>
+                    <div class="feature-item">動態動畫效果</div>
+                    <div class="feature-item">分數統計系統</div>
+                    <div class="feature-item" style="color: #ffd700; font-weight: bold;">⭐ 需要 {{ slotMachineCost }} 顆星星</div>
+                  </div>
+                  <button class="game-button" :class="{ locked: !canPlaySlotMachine }" @click.stop="toggleSlotMachine" :disabled="!canPlaySlotMachine">
+                    {{ canPlaySlotMachine ? '開始拉霸機遊戲' : '需要 ' + slotMachineCost + ' 顆星星' }}
+                  </button>
+                </div>
+
+                <!-- 動物卡牌 -->
+                <div class="game-card" @click="openGame('advanced-animal-card-game.html')">
+                  <div class="game-icon">🦁</div>
+                  <div class="game-title">動物卡牌相克</div>
+                  <div class="game-subtitle">策略性動物對戰</div>
+                  <div class="game-description">
+                    基於動物相克原理的策略卡牌遊戲，每種動物都有獨特的能力和相克關係。
+                    運用策略組合你的卡牌，擊敗對手獲得勝利！
+                  </div>
+                  <div class="game-features">
+                    <div class="feature-item">多種動物卡牌</div>
+                    <div class="feature-item">相克系統設計</div>
+                    <div class="feature-item">策略性玩法</div>
+                    <div class="feature-item">精美動物插圖</div>
+                    <div class="feature-item">進階AI對手</div>
+                  </div>
+                  <button class="game-button">開始動物卡牌</button>
+                </div>
+
+                <!-- 卡牌對戰 -->
+                <div class="game-card" @click="openGame('stage_select.html')">
+                  <div class="game-icon">⚔️</div>
+                  <div class="game-title">卡牌對戰系統</div>
+                  <div class="game-subtitle">史詩級卡牌戰鬥</div>
+                  <div class="game-description">
+                    完整的卡牌對戰系統，包含攻擊、防禦、特殊技能等多種戰鬥機制。
+                    收集強大卡牌，組建你的牌組，在激烈的對戰中證明你的實力！
+                  </div>
+                  <div class="game-features">
+                    <div class="feature-item">完整戰鬥系統</div>
+                    <div class="feature-item">多種卡牌類型</div>
+                    <div class="feature-item">特殊技能效果</div>
+                    <div class="feature-item">動態戰鬥動畫</div>
+                    <div class="feature-item">牌組管理系統</div>
+                  </div>
+                  <button class="game-button">開始卡牌對戰</button>
+                </div>
+
+                <!-- Tetris 遊戲 -->
+                <div class="game-card" :class="{ locked: !canPlayTetris }" @click="toggleTetris">
+                  <div class="game-icon">🧩</div>
+                  <div class="game-title">Tetris</div>
+                  <div class="game-subtitle">經典俄羅斯方塊</div>
+                  <div class="game-description">
+                    經典的俄羅斯方塊遊戲，通過旋轉和移動不同形狀的方塊來消除完整的橫行。
+                    遊戲包含多種難度等級和流暢的操作體驗，考驗你的空間思維和反應速度！
+                  </div>
+                  <div class="game-features">
+                    <div class="feature-item">經典方塊玩法</div>
+                    <div class="feature-item">多種方塊形狀</div>
+                    <div class="feature-item">空間思維挑戰</div>
+                    <div class="feature-item">流暢操作體驗</div>
+                    <div class="feature-item">分數統計系統</div>
+                    <div class="feature-item">多種難度等級</div>
+                    <div class="feature-item" style="color: #ffd700; font-weight: bold;">⭐ 需要 {{ tetrisCost }} 顆星星</div>
+                  </div>
+                  <button class="game-button" :class="{ locked: !canPlayTetris }" @click.stop="toggleTetris" :disabled="!canPlayTetris">
+                    {{ canPlayTetris ? '開始 Tetris' : '需要 ' + tetrisCost + ' 顆星星' }}
+                  </button>
+                </div>
+
+                <!-- Classic Uno 遊戲 -->
+                <div class="game-card" :class="{ locked: !canPlayClassicUno }" @click="toggleClassicUno">
+                  <div class="game-icon">🃏</div>
+                  <div class="game-title">Classic Uno</div>
+                  <div class="game-subtitle">經典卡牌遊戲</div>
+                  <div class="game-description">
+                    經典的 Uno 卡牌遊戲，通過出牌和特殊卡牌效果來清空手牌。
+                    遊戲包含多種遊戲模式和策略玩法，考驗你的卡牌技巧和策略思維！
+                  </div>
+                  <div class="game-features">
+                    <div class="feature-item">經典 Uno 玩法</div>
+                    <div class="feature-item">多種特殊卡牌</div>
+                    <div class="feature-item">策略思維挑戰</div>
+                    <div class="feature-item">流暢遊戲體驗</div>
+                    <div class="feature-item">多人遊戲模式</div>
+                    <div class="feature-item">分數統計系統</div>
+                    <div class="feature-item" style="color: #ffd700; font-weight: bold;">⭐ 需要 {{ classicUnoCost }} 顆星星</div>
+                  </div>
+                  <button class="game-button" :class="{ locked: !canPlayClassicUno }" @click.stop="toggleClassicUno" :disabled="!canPlayClassicUno">
+                    {{ canPlayTetris ? '開始 Classic Uno' : '需要 ' + classicUnoCost + ' 顆星星' }}
+                  </button>
+                </div>
+
+                <!-- Little Wheel 遊戲 -->
+                <div class="game-card" :class="{ locked: !canPlayLittleWheel }" @click="toggleLittleWheel">
+                  <div class="game-icon">🎡</div>
+                  <div class="game-title">Little Wheel</div>
+                  <div class="game-subtitle">小輪子冒險遊戲</div>
+                  <div class="game-description">
+                    有趣的小輪子冒險遊戲，控制小輪子在各種地形上滾動和跳躍。
+                    遊戲包含豐富的關卡設計和物理效果，考驗你的反應能力和操作技巧！
+                  </div>
+                  <div class="game-features">
+                    <div class="feature-item">物理引擎遊戲</div>
+                    <div class="feature-item">豐富關卡設計</div>
+                    <div class="feature-item">反應能力挑戰</div>
+                    <div class="feature-item">流暢操作體驗</div>
+                    <div class="feature-item">多種地形變化</div>
+                    <div class="feature-item">收集要素系統</div>
+                    <div class="feature-item" style="color: #ffd700; font-weight: bold;">⭐ 需要 {{ littleWheelCost }} 顆星星</div>
+                  </div>
+                  <button class="game-button" :class="{ locked: !canPlayLittleWheel }" @click.stop="toggleLittleWheel" :disabled="!canPlayLittleWheel">
+                    {{ canPlayLittleWheel ? '開始 Little Wheel' : '需要 ' + littleWheelCost + ' 顆星星' }}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Cut the Rope 2 嵌入式遊戲容器 -->
+              <div v-if="showCutTheRope" class="embedded-game-container">
+                <div class="embedded-game-header">
+                  <h2>🍭 Cut the Rope 2</h2>
+                  <button class="close-game-btn" @click="closeCutTheRope">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="embedded-game-frame">
+                  <iframe 
+                    src="https://nutwg.com/cut-the-rope-2/"
+                    frameborder="0"
+                    allowfullscreen
+                    title="Cut the Rope 2">
+                  </iframe>
+                </div>
+              </div>
+            </div>
+          `,
+          data() {
+            return {
+              totalGames: 8,
+              availableGames: 8,
+              completedGames: 0,
+              totalStars: 0,
+              playerLevel: 1,
+              showCutTheRope: false,
+              cutTheRopeCost: 100,
+              slotMachineCost: 50,
+              tetrisCost: 100,
+              classicUnoCost: 100,
+              littleWheelCost: 100,
+              plantsVsZombiesCost: 200,
+              motherloadCost: 300,
+              keeperOfTheGroveCost: 500,
+              onevoneLOLCost: 800,
+              starsAnimation: false,
+              starsEarned: 0,
+              totalStarsEarned: 0,
+              starsSpent: 0,
+              achievements: [],
+              levelProgress: 0,
+              nextLevelStars: 100
+            }
+          },
+          computed: {
+            completionRate() {
+              return Math.round((this.completedGames / this.totalGames) * 100);
+            },
+            canPlayCutTheRope() {
+              return this.totalStars >= this.cutTheRopeCost;
+            },
+            canPlaySlotMachine() {
+              return this.totalStars >= this.slotMachineCost;
+            },
+            canPlayTetris() {
+              return this.totalStars >= this.tetrisCost;
+            },
+            canPlayClassicUno() {
+              return this.totalStars >= this.classicUnoCost;
+            },
+            canPlayLittleWheel() {
+              return this.totalStars >= this.littleWheelCost;
+            },
+            canPlayPlantsVsZombies() {
+              return this.totalStars >= this.plantsVsZombiesCost;
+            },
+            canPlayMotherload() {
+              return this.totalStars >= this.motherloadCost;
+            },
+            canPlayKeeperOfTheGrove() {
+              return this.totalStars >= this.keeperOfTheGroveCost;
+            },
+            canPlay1v1LOL() {
+              return this.totalStars >= this.onevoneLOLCost;
+            },
+            levelProgressPercentage() {
+              return Math.round((this.totalStars % this.nextLevelStars) / this.nextLevelStars * 100);
+            },
+            canLevelUp() {
+              return this.totalStars >= this.nextLevelStars;
+            },
+            starsEfficiency() {
+              return this.totalStarsEarned > 0 ? Math.round((this.totalStars / this.totalStarsEarned) * 100) : 0;
+            }
+          },
+          methods: {
+            openGame(gamePath) {
+              window.open(gamePath, '_blank');
+              setTimeout(() => {
+                const gameNames = {
+                  'advanced-animal-card-game.html': '動物卡牌相克',
+                  'battle_system.html': '卡牌對戰系統',
+                  'stage_select.html': '卡牌關卡頁'
+                };
+                const gameName = gameNames[gamePath] || '遊戲';
+                this.simulateGameCompletion(gameName);
+              }, 2000);
+            },
+            toggleTetris() {
+              if (!this.spendStars(this.tetrisCost)) {
+                alert(`❌ 星星不足！需要 ${this.tetrisCost} 顆星星才能遊玩 Tetris。\n\n目前星星：${this.totalStars} 顆\n需要星星：${this.tetrisCost} 顆`);
+                return;
+              }
+              alert(`🧩 開始遊玩 Tetris！\n\n扣除星星：${this.tetrisCost} 顆\n剩餘星星：${this.totalStars} 顆`);
+              window.open('https://tw.pigame.cc/game/tetris', '_blank');
+              setTimeout(() => {
+                this.simulateGameCompletion('Tetris');
+              }, 2000);
+            },
+            toggleClassicUno() {
+              if (!this.spendStars(this.classicUnoCost)) {
+                alert(`❌ 星星不足！需要 ${this.classicUnoCost} 顆星星才能遊玩 Classic Uno。\n\n目前星星：${this.totalStars} 顆\n需要星星：${this.classicUnoCost} 顆`);
+                return;
+              }
+              alert(`🃏 開始遊玩 Classic Uno！\n\n扣除星星：${this.classicUnoCost} 顆\n剩餘星星：${this.totalStars} 顆`);
+              window.open('https://tw.pigame.cc/game/classic-uno', '_blank');
+              setTimeout(() => {
+                this.simulateGameCompletion('Classic Uno');
+              }, 2000);
+            },
+            toggleLittleWheel() {
+              if (!this.spendStars(this.littleWheelCost)) {
+                alert(`❌ 星星不足！需要 ${this.littleWheelCost} 顆星星才能遊玩 Little Wheel。\n\n目前星星：${this.totalStars} 顆\n需要星星：${this.littleWheelCost} 顆`);
+                return;
+              }
+              alert(`🎡 開始遊玩 Little Wheel！\n\n扣除星星：${this.littleWheelCost} 顆\n剩餘星星：${this.totalStars} 顆`);
+              window.open('https://omiplay.com/zh/games/little-wheel/', '_blank');
+              setTimeout(() => {
+                this.simulateGameCompletion('Little Wheel');
+              }, 2000);
+            },
+            toggleSlotMachine() {
+              if (!this.spendStars(this.slotMachineCost)) {
+                alert(`❌ 星星不足！需要 ${this.slotMachineCost} 顆星星才能遊玩拉霸機遊戲。\n\n目前星星：${this.totalStars} 顆\n需要星星：${this.slotMachineCost} 顆`);
+                return;
+              }
+              alert(`🎰 開始遊玩拉霸機遊戲！\n\n扣除星星：${this.slotMachineCost} 顆\n剩餘星星：${this.totalStars} 顆`);
+              window.open('word_spin_game.html', '_blank');
+              setTimeout(() => {
+                this.simulateGameCompletion('拉霸機遊戲');
+              }, 2000);
+            },
+            closeCutTheRope() {
+              this.showCutTheRope = false;
+            },
+            loadPlayerData() {
+              const totalStars = parseInt(localStorage.getItem('totalStars') || '0');
+              this.totalStars = totalStars;
+              const playerData = localStorage.getItem('playerData');
+              if (playerData) {
+                const data = JSON.parse(playerData);
+                this.playerLevel = data.level || 1;
+                this.totalStarsEarned = data.totalStarsEarned || 0;
+                this.starsSpent = data.starsSpent || 0;
+                this.nextLevelStars = data.nextLevelStars || 100;
+              } else {
+                this.playerLevel = 1;
+                this.totalStarsEarned = totalStars;
+                this.starsSpent = 0;
+                this.nextLevelStars = 100;
+              }
+              const gameProgress = localStorage.getItem('gameProgress');
+              if (gameProgress) {
+                const progress = JSON.parse(gameProgress);
+                this.completedGames = progress.completedGames || 0;
+              }
+            },
+            saveGameProgress() {
+              const progress = {
+                completedGames: this.completedGames,
+                lastPlayed: new Date().toISOString()
+              };
+              localStorage.setItem('gameProgress', JSON.stringify(progress));
+            },
+            savePlayerData() {
+              localStorage.setItem('totalStars', this.totalStars.toString());
+              const playerData = {
+                level: this.playerLevel,
+                totalStarsEarned: this.totalStarsEarned,
+                starsSpent: this.starsSpent,
+                nextLevelStars: this.nextLevelStars,
+                lastUpdated: new Date().toISOString()
+              };
+              localStorage.setItem('playerData', JSON.stringify(playerData));
+            },
+            triggerStarsAnimation() {
+              this.starsAnimation = true;
+              setTimeout(() => {
+                this.starsAnimation = false;
+              }, 500);
+            },
+            earnStars(amount) {
+              const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
+              const newStars = currentStars + amount;
+              this.totalStars = newStars;
+              this.totalStarsEarned += amount;
+              this.starsEarned = amount;
+              this.checkLevelUp();
+              this.triggerStarsAnimation();
+              this.savePlayerData();
+              this.showStarsEarnedMessage(amount);
+            },
+            spendStars(amount) {
+              const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
+              if (currentStars >= amount) {
+                const newStars = currentStars - amount;
+                this.totalStars = newStars;
+                this.starsSpent += amount;
+                this.triggerStarsAnimation();
+                this.savePlayerData();
+                return true;
+              }
+              return false;
+            },
+            checkLevelUp() {
+              if (this.canLevelUp) {
+                this.playerLevel++;
+                this.nextLevelStars = this.playerLevel * 100;
+                this.showLevelUpMessage();
+              }
+            },
+            showStarsEarnedMessage(amount) {
+              const message = `🎉 恭喜獲得 ${amount} 顆星星！\n\n當前星星：${this.totalStars} 顆`;
+              setTimeout(() => {
+                alert(message);
+              }, 100);
+            },
+            showLevelUpMessage() {
+              const message = `🎊 恭喜升級！\n\n新等級：${this.playerLevel}\n\n繼續努力獲得更多星星！`;
+              setTimeout(() => {
+                alert(message);
+              }, 200);
+            },
+            simulateGameCompletion(gameName) {
+              const starsReward = Math.floor(Math.random() * 50) + 10;
+              this.earnStars(starsReward);
+              setTimeout(() => {
+                alert(`🎮 ${gameName} 遊戲完成！\n\n獲得星星：${starsReward} 顆\n總星星：${this.totalStars} 顆`);
+              }, 300);
+            },
+            syncStarsDisplay() {
+              const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
+              this.totalStars = currentStars;
+              this.triggerStarsAnimation();
+            },
+            checkStarsSystem() {
+              const localStorageStars = parseInt(localStorage.getItem('totalStars') || '0');
+              const localStars = this.totalStars;
+              console.log('🌟 星星系統檢查:');
+              console.log('  localStorage 星星:', localStorageStars);
+              console.log('  本地星星:', localStars);
+              console.log('  是否同步:', localStorageStars === localStars);
+              if (localStorageStars !== localStars) {
+                console.log('⚠️ 星星不同步，正在修正...');
+                this.totalStars = localStorageStars;
+                this.triggerStarsAnimation();
+              }
+            }
+          },
+          mounted() {
+            this.loadPlayerData();
+            this.checkStarsSystem();
+            setInterval(() => {
+              this.syncStarsDisplay();
+            }, 5000);
+            setInterval(() => {
+              this.checkStarsSystem();
+            }, 10000);
+          }
+        }).mount('#gameCenterApp');
+      }
+
+      // 點擊遊戲中心模態視窗外部關閉
+      document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('gameCenterModal');
+        if (modal) {
+          modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+              closeGameCenter();
+            }
+          });
+        }
+      });
+
+    // 載入首頁公告功能
+    function loadHomeAnnouncements() {
+      const GOOGLE_SHEETS_API = "https://script.google.com/macros/s/AKfycbyfM8pLiWIjRsvg7u3rJ5Zh4XdKLFuScaQ5t_0yQviBp11IwOZSyrgZ-KFHkrJT43UBPg/exec";
+      
+      // 本地備用公告數據
+      const fallbackAnnouncements = [
+        {
+          type: "🔴",
+          content: "系統維護中，部分功能可能暫時無法使用",
+          time: "2024-01-15 10:00"
+        },
+        {
+          type: "🟢",
+          content: "歡迎使用英打小英雄！新功能陸續推出中",
+          time: "2024-01-10 09:30"
+        },
+        {
+          type: "🔵",
+          content: "如有問題請聯繫客服",
+          time: "2024-01-05 14:20"
+        },
+        {
+          type: "🟡",
+          content: "新增宇宙科技風格公告頁面！",
+          time: new Date().toISOString().slice(0, 19).replace('T', ' ')
+        }
+      ];
+
+      const contentDiv = document.getElementById('announcementsContent');
+      const homeAnnouncements = document.getElementById('homeAnnouncements');
+      
+      if (!contentDiv) {
+        console.error('找不到公告內容元素');
+        return;
+      }
+      
+      if (!homeAnnouncements) {
+        console.error('找不到公告區域元素');
+        return;
+      }
+      
+      // 確保公告區域可見
+      homeAnnouncements.style.display = 'block';
+      homeAnnouncements.style.visibility = 'visible';
+      homeAnnouncements.style.opacity = '1';
+      
+      console.log('開始載入首頁公告...');
+      
+      // 從 Google Sheets 載入
+      fetch(GOOGLE_SHEETS_API)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('首頁公告載入成功:', data);
+          if (data && data.length > 0) {
+            displayHomeAnnouncements(data.slice(0, 3)); // 只顯示最新的3條公告
+          } else {
+            throw new Error('No data received');
+          }
+        })
+        .catch(error => {
+          console.log('首頁公告載入失敗，使用本地數據:', error);
+          displayHomeAnnouncements(fallbackAnnouncements.slice(0, 3));
+        });
+    }
+
+    function displayHomeAnnouncements(announcements) {
+      const contentDiv = document.getElementById('announcementsContent');
+      const homeAnnouncements = document.getElementById('homeAnnouncements');
+      
+      if (!contentDiv) {
+        console.error('找不到公告內容元素');
+        return;
+      }
+      
+      if (!homeAnnouncements) {
+        console.error('找不到公告區域元素');
+        return;
+      }
+      
+      // 確保公告區域可見
+      homeAnnouncements.style.display = 'block';
+      homeAnnouncements.style.visibility = 'visible';
+      homeAnnouncements.style.opacity = '1';
+      
+      if (!announcements || announcements.length === 0) {
+        contentDiv.innerHTML = '<div class="no-announcements">目前沒有公告</div>';
+        return;
+      }
+
+      console.log('顯示公告:', announcements);
+
+      const announcementsHTML = announcements.map(announcement => {
+        let className = 'announcement-item';
+        if (announcement.type === '🔴') className += ' urgent';
+        else if (announcement.type === '🟢') className += ' info';
+        else if (announcement.type === '🔵') className += ' update';
+        else if (announcement.type === '🟡') className += ' update';
+
+        return '<div class="' + className + '">' +
+          '<div class="announcement-content">' +
+            '<span class="announcement-type">' + announcement.type + '</span>' +
+            announcement.content +
+          '</div>' +
+          '<div class="announcement-time">🕒 ' + announcement.time + '</div>' +
+        '</div>';
+      }).join('');
+
+      contentDiv.innerHTML = announcementsHTML;
+      console.log('公告顯示完成');
+      
+      // 強制重新渲染
+      homeAnnouncements.offsetHeight;
+    }
+
+
+
+    // 切換名稱編輯模式
+    function toggleNameEdit() {
+      const nameInput = document.getElementById('playerName');
+      const editBtn = document.getElementById('editNameBtn');
+      
+      if (nameInput.readOnly) {
+        // 啟用編輯模式
+        nameInput.readOnly = false;
+        nameInput.style.opacity = '1';
+        nameInput.style.cursor = 'text';
+        editBtn.textContent = '💾 儲存';
+        editBtn.style.background = 'rgba(0, 255, 0, 0.8)';
+        editBtn.style.borderColor = '#00ff00';
+        
+        // 聚焦到輸入欄位
+        nameInput.focus();
+        nameInput.select();
+      } else {
+        // 儲存並永久禁用編輯模式
+        const newName = nameInput.value.trim();
+        if (newName && newName !== '未命名玩家') {
+          LinkageSystem.player.setName(newName);
+          
+          // 永久禁用編輯功能
+          editBtn.style.display = 'none';
+          nameInput.readOnly = true;
+          nameInput.style.opacity = '0.7';
+          nameInput.style.cursor = 'not-allowed';
+          
+          // 標記為永久鎖定
+          localStorage.setItem('nameLocked', 'true');
+        }
+      }
+    }
+
+    // 頁面載入時自動檢查每日簽到獎勵
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('📄 頁面載入完成，檢查滾動狀態...');
+      
+      // 確保滾動功能正常
+      document.body.style.overflow = 'auto';
+      document.documentElement.style.overflow = 'auto';
+      
+      // 初始化星星顯示
+      updateStarsDisplay();
+      
+      // 確保星星顯示可見
+      const starsDisplay = document.getElementById('starsDisplay');
+      if (starsDisplay) {
+                     starsDisplay.style.cssText = 
+               'position: fixed !important;' +
+               'top: 15px !important;' +
+               'left: 15px !important;' +
+               'background: rgba(10, 20, 40, 0.8) !important;' +
+               'padding: 4px 8px !important;' +
+               'border-radius: 8px !important;' +
+               'color: #ffd700 !important;' +
+               'font-weight: bold !important;' +
+               'box-shadow: 0 0 8px #ffd700, 0 0 16px #00ffff !important;' +
+               'border: 1px solid #00ffff !important;' +
+               'font-size: 1rem !important;' +
+               'backdrop-filter: blur(5px) !important;' +
+               'z-index: 1000 !important;' +
+               'display: flex !important;' +
+               'align-items: center !important;' +
+               'gap: 3px !important;' +
+               'width: fit-content !important;' +
+               'text-align: center !important;' +
+               'transition: all 0.3s ease !important;';
+        console.log('✅ 星星顯示已確保可見');
+      }
+      
+      // 確保公告區域可見
+      const homeAnnouncements = document.getElementById('homeAnnouncements');
+      if (homeAnnouncements) {
+        homeAnnouncements.style.display = 'block';
+        homeAnnouncements.style.visibility = 'visible';
+        homeAnnouncements.style.opacity = '1';
+        homeAnnouncements.style.position = 'relative';
+        homeAnnouncements.style.zIndex = '1000';
+        console.log('✅ 公告區域已確保可見');
+      }
+      
+      // 延遲一點時間確保所有系統都已載入
+      setTimeout(() => {
+        checkDailyReward();
+        // 確保cards.js載入完成後再檢查成就
+        if (window.allCards) {
+          updateAchievementBadge();
+        } else {
+          // 如果cards.js還沒載入，再等一下
+          setTimeout(updateAchievementBadge, 2000);
+        }
+        
+        // 載入首頁公告
+        console.log('🔄 準備載入首頁公告...');
+        loadHomeAnnouncements();
+        
+        // 再次確保公告區域可見
+        setTimeout(() => {
+          if (homeAnnouncements) {
+            homeAnnouncements.style.cssText = 
+              'display: block !important;' +
+              'visibility: visible !important;' +
+              'opacity: 1 !important;' +
+              'position: relative !important;' +
+              'z-index: 1000 !important;' +
+              'margin: 20px 0 !important;' +
+              'background: rgba(10, 20, 40, 0.8) !important;' +
+              'border-radius: 15px !important;' +
+              'border: 2px solid rgba(0, 255, 255, 0.5) !important;' +
+              'box-shadow: 0 0 20px rgba(0, 255, 255, 0.3) !important;';
+            console.log('✅ 公告區域已強制顯示');
+          }
+        }, 2000);
+      }, 1000);
+    });
+  </script>
+  <!-- Configure Cloud Sync endpoint (Google Apps Script Web App URL) -->
+  <script>
+    window.GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzbpDvWYR6SD1We5BQwm7Boo-wU1nLseHEYR19P7XX8PxZ9jl9C2yy3HMccpIEoH0lLAw/exec';
+  </script>
+  <script src="js/cloudSync.js"></script>
+  <script>
+    // 簡易雲端同步入口，不影響既有邏輯
+    async function uploadCloudSave() {
+      try {
+        const userId = prompt('請輸入您的雲端帳號 userId');
+        if (!userId) return;
+        const passkey = prompt('請輸入您的 passkey（可自訂，未設定可留空）') || '';
+        const res = await CloudSync.saveAll(userId, passkey);
+        alert(res.ok ? '✅ 上傳成功' : `❌ 上傳失敗：${res.error || 'unknown'}`);
+      } catch (e) {
+        alert('❌ 上傳失敗：' + e.message);
+      }
+    }
+    async function downloadCloudSave() {
+      try {
+        const userId = prompt('請輸入您的雲端帳號 userId');
+        if (!userId) return;
+        const passkey = prompt('請輸入您的 passkey（若有設定）') || '';
+        const res = await CloudSync.loadAll(userId, passkey, 'replace');
+        if (res.ok) {
+          alert('✅ 下載完成，將重新整理套用資料');
+          location.reload();
+        } else {
+          alert(`❌ 下載失敗：${res.error || 'unknown'}`);
+        }
+      } catch (e) {
+        alert('❌ 下載失敗：' + e.message);
+      }
+    }
+
+    // 卡片收藏冊進度顯示功能
+    function updateCardCollectionProgress() {
+      try {
+        if (!window.allCards || !Array.isArray(window.allCards)) {
+          console.log('cards.js 尚未載入');
+          return;
+        }
+
+        const ownedCards = LinkageSystem.cards.getOwnedCards();
+        const totalCards = window.allCards.length;
+        const collectedCards = Object.keys(ownedCards).length;
+
+        // 計算完成率
+        const completionRate = totalCards > 0 ? Math.round((collectedCards / totalCards) * 100) : 0;
+
+        // 計算系列完成數
+        const allSeries = new Set();
+        window.allCards.forEach(card => {
+          if (card.category) {
+            allSeries.add(card.category);
+          }
+        });
+
+        let completedSeriesCount = 0;
+        let nearCompleteSeries = null;
+        let nearCompleteProgress = 0;
+        let claimableRewards = 0;
+
+        // 讀取已領取的系列獎勵
+        const claimedRewards = JSON.parse(localStorage.getItem('claimedCardSetRewards') || '{}');
+
+        allSeries.forEach(series => {
+          const seriesCards = window.allCards.filter(card => card.category === series);
+          const collectedInSeries = seriesCards.filter(card => ownedCards[card.word]).length;
+          const seriesProgress = seriesCards.length > 0 ? (collectedInSeries / seriesCards.length) * 100 : 0;
+
+          if (collectedInSeries === seriesCards.length) {
+            completedSeriesCount++;
+            
+            // 檢查是否可領獎（已完成但未領取）
+            const rewardKey = `set_${series}`;
+            if (!claimedRewards[rewardKey]) {
+              claimableRewards++;
+            }
+          }
+
+          // 找出即將完成的系列（進度 > 70% 且未完成）
+          if (seriesProgress > 70 && seriesProgress < 100 && seriesProgress > nearCompleteProgress) {
+            nearCompleteSeries = series;
+            nearCompleteProgress = seriesProgress;
+          }
+        });
+
+        // 更新按鈕顯示（如果有對應的元素）
+        const cardCollectionBtn = document.getElementById('cardCollectionBtn');
+        if (cardCollectionBtn) {
+          const missingCards = totalCards - collectedCards;
+          const rewardBadge = claimableRewards > 0 ? `<span class="reward-badge">🎁</span>` : '';
+          cardCollectionBtn.innerHTML = `📖 卡片收藏冊${rewardBadge}<br><small>${completionRate}% 已完成</small><br><small>${collectedCards} / ${totalCards} 張</small>`;
+        }
+
+        console.log('📖 卡片收藏冊進度更新:', {
+          totalCards,
+          collectedCards,
+          completionRate,
+          completedSeriesCount,
+          totalSeries: allSeries.size,
+          nearCompleteSeries,
+          claimableRewards
+        });
+      } catch (error) {
+        console.error('更新卡片收藏冊進度時發生錯誤:', error);
+      }
+    }
+
+    // 頁面載入時更新收藏冊進度
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(updateCardCollectionProgress, 1000);
+    });
+
+    // 監聽 storage 變化，即時更新進度
+    window.addEventListener('storage', function(event) {
+      if (event.key === 'ownedCards' || event.key === 'typingGamePlayerData') {
+        updateCardCollectionProgress();
+      }
+    });
+  </script>
+  
+</body>
+</html>

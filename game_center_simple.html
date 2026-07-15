@@ -1,0 +1,2755 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>遊戲中心 - 三大遊戲</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    :root {
+      --glow-cyan: #00ffff;
+      --glow-magenta: #a259ff;
+      --glow-gold: #ffd700;
+      --glow-red: #ff6b6b;
+      --glow-green: #00ff88;
+      --bg-dark: rgba(10, 20, 40, 0.85);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Orbitron', 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
+      background: linear-gradient(135deg, #0a1428 0%, #1a2a4a 50%, #0a1428 100%);
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* 背景動畫效果 */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(162, 89, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(255, 215, 0, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .header {
+      background: rgba(10, 20, 40, 0.95);
+      padding: 20px;
+      text-align: center;
+      border-bottom: 3px solid var(--glow-cyan);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      background: linear-gradient(45deg, var(--glow-cyan), var(--glow-magenta), var(--glow-gold));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { filter: brightness(1); }
+      to { filter: brightness(1.2); }
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .stats-panel {
+      background: rgba(10, 20, 40, 0.9);
+      border: 2px solid var(--glow-gold);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .lobby-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .lobby-card {
+      background: rgba(10, 20, 40, 0.9);
+      border: 2px solid var(--glow-cyan);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 0 22px rgba(0, 255, 255, 0.18);
+    }
+
+    .lobby-card h3 {
+      margin: 0 0 12px;
+      color: var(--glow-cyan);
+      font-size: 1.3rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .input {
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 10px;
+      border: 2px solid rgba(0, 255, 255, 0.35);
+      background: rgba(0, 0, 0, 0.25);
+      color: #fff;
+      outline: none;
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 700;
+    }
+
+    .mini-btn {
+      border: none;
+      border-radius: 10px;
+      padding: 12px 14px;
+      cursor: pointer;
+      font-weight: 900;
+      background: linear-gradient(45deg, var(--glow-cyan), var(--glow-magenta));
+      color: #000;
+      transition: transform 0.2s, box-shadow 0.2s;
+      white-space: nowrap;
+    }
+
+    .mini-btn:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.35);
+    }
+
+    .mini-btn[disabled] {
+      opacity: 0.55;
+      cursor: not-allowed;
+      filter: grayscale(1);
+      box-shadow: none;
+      transform: none;
+    }
+
+    .hint {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+
+    .history {
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+      max-height: 220px;
+      overflow: auto;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.18);
+    }
+
+    .history li {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      color: #e5e7eb;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.9rem;
+    }
+
+    .history li:last-child { border-bottom: none; }
+
+    .exchange-rate-badge {
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      background: rgba(255, 215, 0, 0.1);
+      color: #cbd5e1;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    /* 機率顯示樣式 */
+    .probability-display {
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .probability-title {
+      font-weight: 700;
+      color: var(--glow-cyan);
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+
+    .probability-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .probability-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+    }
+
+    .rarity-badge {
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 900;
+      font-size: 0.75rem;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    .rarity-badge.UR {
+      background: linear-gradient(135deg, #ff6b6b, #ffd93d);
+      color: #fff;
+      box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+    }
+
+    .rarity-badge.SSR {
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+      color: #fff;
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+    }
+
+    .rarity-badge.SR {
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      color: #fff;
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    }
+
+    .rarity-badge.R {
+      background: linear-gradient(135deg, #22c55e, #84cc16);
+      color: #fff;
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+    }
+
+    .rarity-badge.N {
+      background: linear-gradient(135deg, #6b7280, #9ca3af);
+      color: #fff;
+      box-shadow: 0 0 10px rgba(107, 114, 128, 0.5);
+    }
+
+    .rarity-name {
+      flex: 1;
+    }
+
+    .rarity-rate {
+      font-weight: 700;
+      color: var(--glow-gold);
+    }
+
+    /* Toast 訊息樣式 */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+    }
+
+    .toast {
+      padding: 16px 24px;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background: rgba(10, 20, 40, 0.95);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      animation: toastSlideIn 0.3s ease-out;
+      margin-bottom: 10px;
+      min-width: 280px;
+    }
+
+    .toast.success {
+      border-color: var(--glow-green);
+      box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+    }
+
+    .toast.error {
+      border-color: var(--glow-red);
+      box-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+    }
+
+    .toast.warning {
+      border-color: var(--glow-gold);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+    }
+
+    .toast.info {
+      border-color: var(--glow-cyan);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+    }
+
+    @keyframes toastSlideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 9999;
+    }
+
+    .modal {
+      width: min(520px, 96vw);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(10, 20, 40, 0.92);
+      box-shadow: 0 0 28px rgba(0,255,255,.12);
+      overflow: hidden;
+      animation: modalIn .18s ease-out 1;
+    }
+
+    @keyframes modalIn {
+      from { transform: translateY(6px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-header {
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .modal-title {
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 0.3px;
+    }
+
+    .modal-close {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 14px;
+      color: #e5e7eb;
+      line-height: 1.6;
+    }
+
+    .modal-result {
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: var(--glow-cyan);
+      text-shadow: 0 0 12px rgba(0,255,255,.16);
+    }
+
+    .reward-hero {
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(0,255,255,.10), rgba(0,0,0,.08));
+      box-shadow: 0 0 20px rgba(0,255,255,.10);
+      margin-bottom: 12px;
+    }
+
+    .reward-hero-title {
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .reward-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      max-height: 280px;
+      overflow: auto;
+    }
+
+    .reward-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+    }
+
+    .reward-item.main {
+      background: rgba(0,255,255,.08);
+      border-color: rgba(0,255,255,.22);
+    }
+
+    .reward-text {
+      font-weight: 900;
+      color: #e5e7eb;
+      line-height: 1.35;
+    }
+
+    .reward-meta {
+      margin-top: 4px;
+      color: #cbd5e1;
+      font-size: 0.85rem;
+      font-family: 'Roboto Mono', monospace;
+      opacity: 0.9;
+    }
+
+    .reward-pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.16);
+      color: #e5e7eb;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    .modal-footer {
+      padding: 12px 14px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .modal-footer-left {
+      margin-right: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      font-family: 'Roboto Mono', monospace;
+    }
+
+    .guide {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 255, 255, 0.22);
+      background: rgba(0,0,0,.18);
+    }
+
+    .guide-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .guide-steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .guide-step {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(10, 20, 40, 0.55);
+    }
+
+    .step-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: #000;
+      background: linear-gradient(45deg, var(--glow-cyan), var(--glow-magenta));
+      box-shadow: 0 0 16px rgba(0,255,255,.18);
+      font-family: 'Roboto Mono', monospace;
+    }
+
+    .step-text {
+      color: #e5e7eb;
+      line-height: 1.55;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 15px;
+      background: rgba(0, 255, 255, 0.1);
+      border-radius: 8px;
+      border: 1px solid var(--glow-cyan);
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--glow-gold);
+    }
+
+    .stat-label {
+      color: #ccc;
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    .game-card {
+      background: rgba(10, 20, 40, 0.8);
+      border: 3px solid var(--glow-cyan);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .game-card:hover::before {
+      left: 100%;
+    }
+
+    .game-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 0 40px rgba(0, 255, 255, 0.4);
+      border-color: var(--glow-magenta);
+    }
+
+    .game-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .game-title {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--glow-cyan);
+      margin-bottom: 15px;
+    }
+
+    .game-subtitle {
+      font-size: 1.1rem;
+      color: var(--glow-gold);
+      margin-bottom: 20px;
+    }
+
+    .game-description {
+      color: #ccc;
+      line-height: 1.6;
+      margin-bottom: 25px;
+      font-size: 1rem;
+    }
+
+    .game-features {
+      text-align: left;
+      margin-bottom: 25px;
+      padding: 0 20px;
+    }
+
+    .feature-item {
+      color: #ccc;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .feature-item::before {
+      content: '✓';
+      color: var(--glow-green);
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .game-button {
+      background: linear-gradient(45deg, var(--glow-cyan), var(--glow-magenta));
+      color: #000;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .game-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
+    }
+
+    /* 鎖定狀態樣式 */
+    .game-card.locked {
+      opacity: 0.6;
+      cursor: not-allowed;
+      border-color: var(--glow-red);
+      box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+    }
+
+    .game-card.locked:hover {
+      transform: none;
+      box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+      border-color: var(--glow-red);
+    }
+
+    .game-card.locked::before {
+      display: none;
+    }
+
+    .game-button.locked {
+      background: linear-gradient(45deg, #666, #999);
+      color: #ccc;
+      cursor: not-allowed;
+      opacity: 0.8;
+    }
+
+    .game-button.locked:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .game-button[disabled] {
+      cursor: not-allowed;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    /* 嵌入式遊戲容器樣式 */
+    .embedded-game-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 20, 40, 0.95);
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .embedded-game-header {
+      background: rgba(10, 20, 40, 0.98);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--glow-cyan);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    }
+
+    .embedded-game-header h2 {
+      margin: 0;
+      color: var(--glow-cyan);
+      font-size: 1.5rem;
+    }
+
+    .close-game-btn {
+      background: linear-gradient(45deg, var(--glow-red), var(--glow-magenta));
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .close-game-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
+    }
+
+    .embedded-game-frame {
+      flex: 1;
+      width: 100%;
+      background: #000;
+    }
+
+    .embedded-game-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: linear-gradient(45deg, var(--glow-cyan), var(--glow-magenta));
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    .back-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+
+    .welcome-message {
+      background: rgba(10, 20, 40, 0.9);
+      border: 2px solid var(--glow-cyan);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    }
+
+    .welcome-title {
+      font-size: 1.5rem;
+      color: var(--glow-cyan);
+      margin-bottom: 10px;
+    }
+
+    .welcome-text {
+      color: #ccc;
+      line-height: 1.6;
+    }
+
+    /* 星星顯示區域 */
+    .stars-display {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+      border: 2px solid var(--glow-gold);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stars-display::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+      animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+      0% { left: -100%; }
+      50% { left: 100%; }
+      100% { left: 100%; }
+    }
+
+    .stars-title {
+      font-size: 1.8rem;
+      color: var(--glow-gold);
+      margin-bottom: 10px;
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    .stars-count {
+      font-size: 3rem;
+      font-weight: bold;
+      color: var(--glow-gold);
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+      margin-bottom: 10px;
+    }
+
+    .stars-icon {
+      font-size: 2rem;
+      margin: 0 10px;
+      animation: twinkle 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes twinkle {
+      from { transform: scale(1); opacity: 1; }
+      to { transform: scale(1.2); opacity: 0.8; }
+    }
+
+    .stars-subtitle {
+      color: #ccc;
+      font-size: 1rem;
+      margin-top: 10px;
+    }
+
+    /* 星星更新動畫 */
+    .stars-update {
+      animation: starsUpdate 0.5s ease-in-out;
+    }
+
+    .large-modal {
+      width: min(860px, 96vw);
+    }
+
+    @keyframes starsUpdate {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); box-shadow: 0 0 50px rgba(255, 215, 0, 0.6); }
+      100% { transform: scale(1); }
+    }
+
+    /* 音效控制 */
+    #audioControls {
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+      display: flex;
+      gap: 8px;
+    }
+
+    #audioControls button {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      border: 2px solid var(--glow-cyan);
+      background: rgba(10, 20, 40, 0.6);
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 16px var(--glow-cyan);
+      backdrop-filter: blur(1px);
+    }
+
+    #audioControls button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 32px var(--glow-cyan);
+    }
+
+    @media (max-width: 768px) {
+      .games-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .lobby-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .container {
+        padding: 10px;
+      }
+
+      .game-card {
+        padding: 20px;
+      }
+    }
+
+    /* Adventure Modal Styles */
+    .adventure-modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background: rgba(0, 0, 0, 0.68);
+      backdrop-filter: blur(8px);
+    }
+
+    .adventure-modal {
+      width: min(440px, 94vw);
+      padding: 26px;
+      border-radius: 24px;
+      text-align: center;
+      color: #ffffff;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(0, 255, 255, 0.18), transparent 34%),
+        linear-gradient(135deg, rgba(8, 18, 42, 0.96), rgba(30, 18, 64, 0.96));
+      border: 1px solid rgba(0, 255, 255, 0.35);
+      box-shadow:
+        0 0 38px rgba(0, 255, 255, 0.22),
+        inset 0 0 24px rgba(255, 255, 255, 0.05);
+    }
+
+    .adventure-icon {
+      font-size: 3.4rem;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 0 18px rgba(0, 255, 255, 0.45));
+    }
+
+    .adventure-modal h2 {
+      margin: 0;
+      font-size: 2rem;
+      color: #00ffff;
+      text-shadow: 0 0 14px rgba(0, 255, 255, 0.35);
+    }
+
+    .adventure-modal p {
+      margin: 14px 0 20px;
+      color: #e5e7eb;
+      line-height: 1.7;
+    }
+
+    .adventure-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .adventure-primary-btn,
+    .adventure-secondary-btn {
+      min-height: 46px;
+      border-radius: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      border: none;
+    }
+
+    .adventure-primary-btn {
+      color: #06101f;
+      background: linear-gradient(135deg, #00ffff, #ffd700);
+      box-shadow: 0 0 22px rgba(0, 255, 255, 0.22);
+    }
+
+    .adventure-secondary-btn {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    @media (max-width: 520px) {
+      .adventure-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* New Game Center Layout Styles */
+    .game-center-page {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 80px 18px 32px;
+    }
+
+    .hero-section {
+      display: grid;
+      grid-template-columns: 1.4fr 0.8fr;
+      gap: 20px;
+      align-items: center;
+      padding: 28px;
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(0,255,255,0.18), transparent 34%),
+        radial-gradient(circle at 85% 30%, rgba(162,89,255,0.22), transparent 35%),
+        linear-gradient(135deg, rgba(10,20,40,0.95), rgba(26,20,58,0.92));
+      border: 1px solid rgba(0,255,255,0.28);
+      box-shadow: 0 0 36px rgba(0,255,255,0.14);
+    }
+
+    .hero-kicker,
+    .section-kicker {
+      color: var(--glow-cyan);
+      font-weight: 900;
+      letter-spacing: 2px;
+      font-size: 0.82rem;
+      margin-bottom: 8px;
+    }
+
+    .hero-section h1 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      margin: 0;
+      background: linear-gradient(45deg, var(--glow-cyan), var(--glow-magenta), var(--glow-gold));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-section p {
+      color: #cbd5e1;
+      line-height: 1.7;
+      margin-top: 12px;
+      font-size: 1.05rem;
+    }
+
+    .hero-badges {
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero-badge {
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      text-align: center;
+    }
+
+    .hero-badge span {
+      font-size: 2rem;
+    }
+
+    .hero-badge strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 2rem;
+      color: var(--glow-gold);
+    }
+
+    .hero-badge small {
+      color: #cbd5e1;
+    }
+
+    .wallet-section {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .wallet-card {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(10,20,40,0.82);
+      border: 1px solid rgba(0,255,255,0.18);
+      box-shadow: 0 0 22px rgba(0,255,255,0.08);
+    }
+
+    .wallet-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.08);
+      font-size: 1.6rem;
+    }
+
+    .wallet-label {
+      color: #cbd5e1;
+      font-size: 0.9rem;
+    }
+
+    .wallet-value {
+      color: var(--glow-gold);
+      font-size: 1.5rem;
+      font-weight: 900;
+      margin-top: 4px;
+    }
+
+    .exchange-section,
+    .games-section,
+    .guide-section {
+      margin-top: 28px;
+      padding: 22px;
+      border-radius: 26px;
+      background: rgba(10,20,40,0.82);
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow: 0 0 28px rgba(0,255,255,0.08);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: end;
+      margin-bottom: 18px;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      color: #ffffff;
+      font-size: 1.8rem;
+    }
+
+    .section-header p {
+      margin: 8px 0 0;
+      color: #cbd5e1;
+    }
+
+    .section-pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      color: #06101f;
+      background: linear-gradient(135deg, var(--glow-cyan), var(--glow-gold));
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .exchange-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .exchange-card {
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .exchange-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .exchange-icon {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      font-size: 1.4rem;
+    }
+
+    .exchange-card h3 {
+      margin: 0;
+      color: #ffffff;
+    }
+
+    .exchange-rate {
+      margin: 14px 0;
+      padding: 10px 12px;
+      border-radius: 14px;
+      color: #ffd700;
+      background: rgba(255,215,0,0.10);
+      border: 1px solid rgba(255,215,0,0.25);
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .exchange-rate-icon {
+      flex-shrink: 0;
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    .exchange-rate-text {
+      flex: 1;
+      line-height: 1.2;
+    }
+
+    .exchange-input {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(0,255,255,0.30);
+      background: rgba(0,0,0,0.22);
+      color: #ffffff;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .exchange-preview {
+      margin: 12px 0;
+      color: #cbd5e1;
+    }
+
+    .exchange-btn,
+    .game-start-btn {
+      width: 100%;
+      min-height: 46px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--glow-cyan), var(--glow-magenta));
+      color: #06101f;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .exchange-btn:not(:disabled):hover,
+    .game-start-btn:not(:disabled):hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 24px rgba(0,255,255,0.24);
+    }
+
+    .exchange-btn:disabled,
+    .game-start-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      filter: grayscale(0.6);
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .game-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 240px;
+      padding: 20px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(0,255,255,0.16);
+      box-shadow: 0 0 22px rgba(0,255,255,0.08);
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+      text-align: center;
+    }
+
+    .game-card:not(.locked):hover {
+      transform: translateY(-6px);
+      border-color: rgba(0,255,255,0.42);
+      box-shadow: 0 0 30px rgba(0,255,255,0.16);
+    }
+
+    .game-card:not(.locked):hover .game-icon {
+      transform: scale(1.08);
+    }
+
+    .game-card.locked {
+      opacity: 0.68;
+      border-color: rgba(255,107,107,0.35);
+    }
+
+    .game-card.locked:hover {
+      transform: none;
+    }
+
+    .game-card.locked:hover .game-icon {
+      transform: none;
+    }
+
+    .game-icon {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 20px;
+      font-size: 2.5rem;
+      background: rgba(255,255,255,0.08);
+      margin: 0 auto 18px;
+      transition: transform 0.18s ease;
+    }
+
+    .game-icon img {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .game-status {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      color: #ffffff;
+      background: rgba(255,107,107,0.20);
+      border: 1px solid rgba(255,107,107,0.35);
+      font-size: 0.82rem;
+      font-weight: 900;
+    }
+
+    .game-status.available {
+      background: rgba(0,255,136,0.14);
+      border-color: rgba(0,255,136,0.30);
+    }
+
+    .game-card h3 {
+      margin: 0 0 8px;
+      color: var(--glow-cyan);
+      font-size: 1.4rem;
+      font-weight: 700;
+      line-height: 1.3;
+      text-align: center;
+    }
+
+    .game-subtitle {
+      color: var(--glow-gold);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      opacity: 0.9;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .game-description {
+      color: #cbd5e1;
+      line-height: 1.5;
+      margin: 0 0 12px;
+      font-size: 0.9rem;
+      text-align: center;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .game-features {
+      display: grid;
+      gap: 6px;
+      margin: 0 0 16px;
+    }
+
+    .game-features div {
+      color: #e5e7eb;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    .game-features div::before {
+      content: '✓';
+      color: var(--glow-green);
+      margin-right: 6px;
+      font-weight: 900;
+    }
+
+    .game-footer {
+      margin-top: auto;
+      display: grid;
+      gap: 10px;
+    }
+
+    .game-cost {
+      padding: 8px 12px;
+      border-radius: 12px;
+      text-align: center;
+      color: #ffd700;
+      background: rgba(255,215,0,0.10);
+      border: 1px solid rgba(255,215,0,0.24);
+      font-weight: 900;
+      font-size: 0.9rem;
+    }
+
+    .guide-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .guide-card {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .guide-number {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      color: #06101f;
+      background: linear-gradient(135deg, var(--glow-cyan), var(--glow-gold));
+      font-weight: 900;
+    }
+
+    .guide-card h3 {
+      color: #ffffff;
+      margin: 12px 0 8px;
+    }
+
+    .guide-card p {
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+      .hero-section {
+        grid-template-columns: 1fr;
+      }
+
+      .wallet-section {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .exchange-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .guide-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-header {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .section-pill {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .games-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .game-icon {
+        width: 64px;
+        height: 64px;
+        font-size: 2rem;
+        margin-bottom: 14px;
+      }
+
+      .game-card h3 {
+        font-size: 1.2rem;
+      }
+
+      .game-subtitle {
+        font-size: 0.9rem;
+      }
+
+      .game-description {
+        font-size: 0.85rem;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .game-center-page {
+        padding: 72px 12px 24px;
+      }
+
+      .hero-section,
+      .exchange-section,
+      .games-section,
+      .guide-section {
+        padding: 16px;
+        border-radius: 20px;
+      }
+
+      .wallet-section {
+        grid-template-columns: 1fr;
+      }
+
+      .games-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .game-card {
+        min-height: auto;
+      }
+
+      .back-button {
+        top: 12px;
+        left: 12px;
+        padding: 9px 12px;
+      }
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <button class="back-button" @click="goHome">
+      🏠 返回首頁
+    </button>
+
+    <!-- Toast 訊息 -->
+    <div class="toast-container">
+      <div class="toast" :class="toastType" v-if="showToast">
+        {{ toastMessage }}
+      </div>
+    </div>
+
+    <main class="game-center-page">
+      <section class="hero-section">
+        <div class="hero-content">
+          <div class="hero-kicker">GAME ARCADE</div>
+          <h1>🎮 星幣遊戲中心</h1>
+          <p>用星星兌換金幣，選擇喜歡的遊戲開始挑戰。</p>
+        </div>
+
+        <div class="hero-badges">
+          <div class="hero-badge star">
+            <span>⭐</span>
+            <strong>{{ totalStars }}</strong>
+            <small>星星</small>
+          </div>
+
+          <div class="hero-badge coin">
+            <span>🪙</span>
+            <strong>{{ goldCoins }}</strong>
+            <small>金幣</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="wallet-section">
+        <div class="wallet-card">
+          <div class="wallet-icon">⭐</div>
+          <div>
+            <div class="wallet-label">目前星星</div>
+            <div class="wallet-value">{{ totalStars }}</div>
+          </div>
+        </div>
+
+        <div class="wallet-card">
+          <div class="wallet-icon">🪙</div>
+          <div>
+            <div class="wallet-label">目前金幣</div>
+            <div class="wallet-value">{{ goldCoins }}</div>
+          </div>
+        </div>
+
+        <div class="wallet-card">
+          <div class="wallet-icon">🏆</div>
+          <div>
+            <div class="wallet-label">玩家等級</div>
+            <div class="wallet-value">{{ playerLevel }}</div>
+          </div>
+        </div>
+
+        <div class="wallet-card">
+          <div class="wallet-icon">📊</div>
+          <div>
+            <div class="wallet-label">完成率</div>
+            <div class="wallet-value">{{ completionRate }}%</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="exchange-section">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">EXCHANGE CENTER</div>
+            <h2>💱 兌換中心</h2>
+            <p>把星星換成金幣，或用大量金幣換回星星。</p>
+          </div>
+        </div>
+
+        <div class="exchange-grid">
+          <div class="exchange-card star-to-coin">
+            <div class="exchange-card-header">
+              <div class="exchange-icon">⭐ → 🪙</div>
+              <h3>星星換金幣</h3>
+            </div>
+
+            <div class="exchange-rate">
+              <span class="exchange-rate-icon">⭐</span>
+              <span class="exchange-rate-text">1 星星 = 100 金幣</span>
+            </div>
+
+            <input
+              class="exchange-input"
+              type="number"
+              min="1"
+              step="1"
+              v-model.number="exchangeStarsAmount"
+              placeholder="輸入星星數量"
+            >
+
+            <div class="exchange-preview">
+              預估可得：🪙 {{ previewCoins }}
+            </div>
+
+            <button
+              class="exchange-btn"
+              @click="exchangeStarsForCoins"
+              :disabled="exchangeStarsAmount <= 0 || totalStars < exchangeStarsAmount"
+            >
+              立即兌換
+            </button>
+          </div>
+
+          <div class="exchange-card coin-to-star">
+            <div class="exchange-card-header">
+              <div class="exchange-icon">🪙 → ⭐</div>
+              <h3>金幣換星星</h3>
+            </div>
+
+            <div class="exchange-rate">
+              <span class="exchange-rate-icon">⭐</span>
+              <span class="exchange-rate-text">10,000,000 金幣 = 1 星星</span>
+            </div>
+
+            <input
+              class="exchange-input"
+              type="number"
+              min="10000000"
+              step="10000000"
+              v-model.number="exchangeCoinsAmount"
+              placeholder="輸入金幣數量"
+            >
+
+            <div class="exchange-preview">
+              預估可得：⭐ {{ previewStars }}
+            </div>
+
+            <button
+              class="exchange-btn"
+              @click="exchangeCoinsForStars"
+              :disabled="exchangeCoinsAmount <= 0 || goldCoins < exchangeCoinsAmount || previewStars <= 0"
+            >
+              立即兌換
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="games-section">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">GAME LIST</div>
+            <h2>🕹️ 遊戲入口</h2>
+            <p>每次遊玩會隨機消耗 300 / 500 / 1000 金幣。</p>
+          </div>
+
+          <div class="section-pill">
+            可用遊戲：{{ availableGames }} / {{ totalGames }}
+          </div>
+        </div>
+
+        <div class="games-grid">
+          <!-- Word Melody -->
+          <div class="game-card" :class="{ locked: !canPlayWordMelody }">
+            <div class="game-card-top">
+              <div class="game-icon">🎵</div>
+              <div class="game-status" v-if="!canPlayWordMelody">金幣不足</div>
+              <div class="game-status available" v-else>可遊玩</div>
+            </div>
+
+            <h3>Word Melody</h3>
+            <div class="game-subtitle">Little Fox 英文遊戲</div>
+            <p class="game-description">連到 Little Fox 的 Word Melody 遊戲頁面。</p>
+
+            <div class="game-features">
+              <div>外部網站遊戲</div>
+              <div>練習英文單字與聽力</div>
+            </div>
+
+            <div class="game-footer">
+              <div class="game-cost">🪙 300 / 500 / 1000</div>
+              <button
+                class="game-start-btn"
+                @click="openWordMelody"
+                :disabled="!canPlayWordMelody"
+              >
+                {{ canPlayWordMelody ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Scratch 遊戲 -->
+          <div class="game-card" :class="{ locked: !canPlayScratchGame }">
+            <div class="game-card-top">
+              <div class="game-icon">🕹️</div>
+              <div class="game-status" v-if="!canPlayScratchGame">金幣不足</div>
+              <div class="game-status available" v-else>可遊玩</div>
+            </div>
+
+            <h3>Scratch 遊戲</h3>
+            <div class="game-subtitle">嵌入式小遊戲</div>
+            <p class="game-description">Scratch 平台的互動遊戲，點擊後開啟本地嵌入頁面開始遊玩。</p>
+
+            <div class="game-features">
+              <div>Scratch 嵌入</div>
+              <div>支援手機/電腦自適應</div>
+            </div>
+
+            <div class="game-footer">
+              <div class="game-cost">🪙 300 / 500 / 1000</div>
+              <button
+                class="game-start-btn"
+                @click="openScratchGame"
+                :disabled="!canPlayScratchGame"
+              >
+                {{ canPlayScratchGame ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
+              </button>
+            </div>
+          </div>
+
+          <!-- 刮刮樂 -->
+          <div class="game-card" :class="{ locked: !canPlayScratchCard }">
+            <div class="game-card-top">
+              <div class="game-icon">🪙</div>
+              <div class="game-status" v-if="!canPlayScratchCard">金幣不足</div>
+              <div class="game-status available" v-else>可遊玩</div>
+            </div>
+
+            <h3>刮刮樂</h3>
+            <div class="game-subtitle">刮開銀漆抽獎</div>
+            <p class="game-description">刮開銀漆揭曉獎項，支援滑鼠與觸控。</p>
+
+            <div class="game-features">
+              <div>Canvas 刮開效果</div>
+              <div>刮到一定比例自動揭曉</div>
+            </div>
+
+            <div class="game-footer">
+              <div class="game-cost">🪙 300 / 500 / 1000</div>
+              <button
+                class="game-start-btn"
+                @click="openScratchCard"
+                :disabled="!canPlayScratchCard"
+              >
+                {{ canPlayScratchCard ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Skywire -->
+          <div class="game-card" :class="{ locked: !canPlayLittleWheel }">
+            <div class="game-card-top">
+              <div class="game-icon">🛞</div>
+              <div class="game-status" v-if="!canPlayLittleWheel">金幣不足</div>
+              <div class="game-status available" v-else>可遊玩</div>
+            </div>
+
+            <h3>Skywire</h3>
+            <div class="game-subtitle">古怪又刺激的纜車闖關</div>
+            <p class="game-description">操控纜車穿越危險軌道，避開陷阱與敵人，把乘客安全送到終點。</p>
+
+            <div class="game-features">
+              <div>外部網站遊戲</div>
+              <div>反應與操作挑戰</div>
+              <div>躲避陷阱・闖關到終點</div>
+            </div>
+
+            <div class="game-footer">
+              <div class="game-cost">🪙 300 / 500 / 1000</div>
+              <button
+                class="game-start-btn"
+                @click="openLittleWheel"
+                :disabled="!canPlayLittleWheel"
+              >
+                {{ canPlayLittleWheel ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Papas Pastaria -->
+          <div class="game-card" :class="{ locked: !canPlayPapasPastaria }">
+            <div class="game-card-top">
+              <div class="game-icon">🍝</div>
+              <div class="game-status" v-if="!canPlayPapasPastaria">金幣不足</div>
+              <div class="game-status available" v-else>可遊玩</div>
+            </div>
+
+            <h3>Papas Pastaria</h3>
+            <div class="game-subtitle">義大利麵餐廳經營</div>
+            <p class="game-description">經營你的義大利麵餐廳：接單、煮麵、加醬配料並準時出餐，挑戰你的速度與手忙腳亂的管理能力。</p>
+
+            <div class="game-features">
+              <div>外部網站遊戲</div>
+              <div>餐廳經營＋時間管理</div>
+              <div>接單、烹飪、擺盤一手包辦</div>
+            </div>
+
+            <div class="game-footer">
+              <div class="game-cost">🪙 300 / 500 / 1000</div>
+              <button
+                class="game-start-btn"
+                @click="openPapasPastaria"
+                :disabled="!canPlayPapasPastaria"
+              >
+                {{ canPlayPapasPastaria ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Billiards -->
+          <div class="game-card" :class="{ locked: !canPlayBilliards }">
+            <div class="game-card-top">
+              <div class="game-icon">🎱</div>
+              <div class="game-status" v-if="!canPlayBilliards">金幣不足</div>
+              <div class="game-status available" v-else>可遊玩</div>
+            </div>
+
+            <h3>Billiards</h3>
+            <div class="game-subtitle">桌球／撞球挑戰</div>
+            <p class="game-description">來一局撞球：瞄準、控制力道與角度，把球打進洞，挑戰你的準度與策略。</p>
+
+            <div class="game-features">
+              <div>外部網站遊戲</div>
+              <div>瞄準與力道控制</div>
+              <div>休閒對戰／闖關風格</div>
+            </div>
+
+            <div class="game-footer">
+              <div class="game-cost">🪙 300 / 500 / 1000</div>
+              <button
+                class="game-start-btn"
+                @click="openBilliards"
+                :disabled="!canPlayBilliards"
+              >
+                {{ canPlayBilliards ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Papas Sushiria -->
+          <div class="game-card" :class="{ locked: !canPlayPapasSushiria }">
+            <div class="game-card-top">
+              <div class="game-icon">🍣</div>
+              <div class="game-status" v-if="!canPlayPapasSushiria">金幣不足</div>
+              <div class="game-status available" v-else>可遊玩</div>
+            </div>
+
+            <h3>Papas Sushiria</h3>
+            <div class="game-subtitle">壽司店經營</div>
+            <p class="game-description">經營你的壽司店：接單、捏飯配料、切卷擺盤，準時把壽司送到客人手上。</p>
+
+            <div class="game-features">
+              <div>外部網站遊戲</div>
+              <div>餐廳經營＋時間管理</div>
+              <div>製作壽司、切卷、擺盤出餐</div>
+            </div>
+
+            <div class="game-footer">
+              <div class="game-cost">🪙 300 / 500 / 1000</div>
+              <button
+                class="game-start-btn"
+                @click="openPapasSushiria"
+                :disabled="!canPlayPapasSushiria"
+              >
+                {{ canPlayPapasSushiria ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Bloom Defender -->
+          <div class="game-card" :class="{ locked: !canPlayBloomDefender }">
+            <div class="game-card-top">
+              <div class="game-icon">🌸</div>
+              <div class="game-status" v-if="!canPlayBloomDefender">金幣不足</div>
+              <div class="game-status available" v-else>可遊玩</div>
+            </div>
+
+            <h3>Bloom Defender</h3>
+            <div class="game-subtitle">花園塔防守護戰</div>
+            <p class="game-description">花園塔防遊戲：配置防禦、升級火力，守住一波波敵人。</p>
+
+            <div class="game-features">
+              <div>外部網站遊戲</div>
+              <div>塔防策略＋升級強化</div>
+            </div>
+
+            <div class="game-footer">
+              <div class="game-cost">🪙 300 / 500 / 1000</div>
+              <button
+                class="game-start-btn"
+                @click="openBloomDefender"
+                :disabled="!canPlayBloomDefender"
+              >
+                {{ canPlayBloomDefender ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Stealing the Diamond -->
+          <div class="game-card" :class="{ locked: !canPlayStealingTheDiamond }">
+            <div class="game-card-top">
+              <div class="game-icon">💎</div>
+              <div class="game-status" v-if="!canPlayStealingTheDiamond">金幣不足</div>
+              <div class="game-status available" v-else>可遊玩</div>
+            </div>
+
+            <h3>Stealing the Diamond</h3>
+            <div class="game-subtitle">爆笑互動式選擇劇情</div>
+            <p class="game-description">選擇你的行動路線，看看能不能成功偷走鑽石！（新分頁開啟）</p>
+
+            <div class="game-features">
+              <div>外部網站遊戲</div>
+              <div>選擇分支・多種結局</div>
+            </div>
+
+            <div class="game-footer">
+              <div class="game-cost">🪙 300 / 500 / 1000</div>
+              <button
+                class="game-start-btn"
+                @click="openStealingTheDiamond"
+                :disabled="!canPlayStealingTheDiamond"
+              >
+                {{ canPlayStealingTheDiamond ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
+              </button>
+            </div>
+          </div>
+
+          <!-- 拉霸機遊戲 -->
+          <div class="game-card" :class="{ locked: !canPlaySlotMachine }">
+            <div class="game-card-top">
+              <div class="game-icon">🎰</div>
+              <div class="game-status" v-if="!canPlaySlotMachine">金幣不足</div>
+              <div class="game-status available" v-else>可遊玩</div>
+            </div>
+
+            <h3>拉霸機遊戲</h3>
+            <div class="game-subtitle">經典三連線遊戲</div>
+            <p class="game-description">經典的拉霸機遊戲，轉動拉霸機獲得三個相同圖案即可獲勝。</p>
+
+            <div class="game-features">
+              <div>經典拉霸機玩法</div>
+              <div>三連線獲勝機制</div>
+              <div>華麗視覺效果</div>
+            </div>
+
+            <div class="game-footer">
+              <div class="game-cost">🪙 300 / 500 / 1000</div>
+              <button
+                class="game-start-btn"
+                @click="toggleSlotMachine"
+                :disabled="!canPlaySlotMachine"
+              >
+                {{ canPlaySlotMachine ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
+              </button>
+            </div>
+          </div>
+
+          <!-- 卡牌對戰系統 -->
+          <div class="game-card" :class="{ locked: !canPlayBattleSystem }">
+            <div class="game-card-top">
+              <div class="game-icon">⚔️</div>
+              <div class="game-status" v-if="!canPlayBattleSystem">金幣不足</div>
+              <div class="game-status available" v-else>可遊玩</div>
+            </div>
+
+            <h3>卡牌對戰系統</h3>
+            <div class="game-subtitle">史詩級卡牌戰鬥</div>
+            <p class="game-description">完整的卡牌對戰系統，包含攻擊、防禦、特殊技能等多種戰鬥機制。</p>
+
+            <div class="game-features">
+              <div>完整戰鬥系統</div>
+              <div>多種卡牌類型</div>
+              <div>特殊技能效果</div>
+            </div>
+
+            <div class="game-footer">
+              <div class="game-cost">🪙 300 / 500 / 1000</div>
+              <button
+                class="game-start-btn"
+                @click="openBattleSystem"
+                :disabled="!canPlayBattleSystem"
+              >
+                {{ canPlayBattleSystem ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="guide-section">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">HOW TO PLAY</div>
+            <h2>📘 使用說明</h2>
+          </div>
+        </div>
+
+        <div class="guide-grid">
+          <div class="guide-card">
+            <div class="guide-number">1</div>
+            <h3>累積星星</h3>
+            <p>完成主要學習遊戲或任務可以獲得星星。</p>
+          </div>
+
+          <div class="guide-card">
+            <div class="guide-number">2</div>
+            <h3>兌換金幣</h3>
+            <p>使用星星兌換金幣，再用金幣進入遊戲中心挑戰。</p>
+          </div>
+
+          <div class="guide-card">
+            <div class="guide-number">3</div>
+            <h3>開始遊戲</h3>
+            <p>選擇遊戲卡片，金幣足夠就可以開始遊玩。</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- 開始冒險 Modal -->
+    <div class="adventure-modal-overlay" v-if="showAdventureModal" @click.self="showAdventureModal=false">
+      <div class="adventure-modal">
+        <div class="adventure-icon">🚀</div>
+        <h2>開始冒險</h2>
+        <p>{{ adventureMessage }}</p>
+
+        <div class="adventure-actions">
+          <button class="adventure-primary-btn" @click="startAdventureAgain">
+            開始冒險
+          </button>
+
+          <button class="adventure-secondary-btn" @click="showAdventureModal=false">
+            留在遊戲中心
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 音效控制 -->
+  <div id="audioControls">
+    <button id="toggleMusic" title="背景音樂">
+      <span class="material-icons">music_note</span>
+    </button>
+  </div>
+
+  <!-- 音效元素 -->
+  <audio id="backgroundMusic" loop>
+    <source src="sound/午後放鬆時光（純音樂）.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const { createApp } = Vue;
+
+    const app = createApp({
+      data() {
+        return {
+          totalGames: 11,
+          availableGames: 11,
+          completedGames: 0,
+
+          totalStars: 0,
+          goldCoins: 0,
+          playerLevel: 1,
+          gameCoinCostOptions: [300, 500, 1000],
+          gameCoinCostMax: 1000,
+          exchangeRate: 100,
+          exchangeCoinsPerRate: 10000000,
+          exchangeStarsAmount: 1,
+          exchangeCoinsAmount: 10000000,
+          starsAnimation: false,
+          totalStarsEarned: 0,
+          starsSpent: 0,
+          nextLevelStars: 100,
+          exchangeBusy: false,
+          gameLaunchBusy: false,
+          exchangeHistory: [],
+          toastMessage: '',
+          toastType: 'info',
+          showToast: false,
+          activeGameWindow: null,
+          activeGameTitle: '',
+          activeGameTimer: null,
+          activeReminderTimers: [],
+          activeReminderCount: 0,
+          gameSessionStartedAt: null,
+          showAdventureModal: false,
+          adventureMessage: '',
+          gameSessionMinutes: 10,
+          gameReminderGapSeconds: 10,
+          activeGameClosedChecker: null
+        }
+      },
+      computed: {
+        completionRate() {
+          return Math.round((this.completedGames / this.totalGames) * 100);
+        },
+        canPlaySlotMachine() {
+           return this.goldCoins >= this.gameCoinCostMax;
+         },
+        canPlayBattleSystem() {
+          return this.goldCoins >= this.gameCoinCostMax;
+        },
+        canPlayScratchGame() {
+          return this.goldCoins >= this.gameCoinCostMax;
+        },
+        canPlayScratchCard() {
+          return this.goldCoins >= this.gameCoinCostMax;
+        },
+        canPlayWordMelody() {
+          return this.goldCoins >= this.gameCoinCostMax;
+        },
+        canPlayLittleWheel() {
+          return this.goldCoins >= this.gameCoinCostMax;
+        },
+        canPlayPapasPastaria() {
+          return this.goldCoins >= this.gameCoinCostMax;
+        },
+        canPlayBilliards() {
+          return this.goldCoins >= this.gameCoinCostMax;
+        },
+        canPlayPapasSushiria() {
+          return this.goldCoins >= this.gameCoinCostMax;
+        },
+        canPlayBloomDefender() {
+          return this.goldCoins >= this.gameCoinCostMax;
+        },
+        canPlayStealingTheDiamond() {
+          return this.goldCoins >= this.gameCoinCostMax;
+        },
+        previewCoins() {
+          const stars = Math.max(0, Math.floor(Number(this.exchangeStarsAmount) || 0));
+          return stars * this.exchangeRate;
+        },
+        previewStars() {
+          const coins = Math.max(0, Math.floor(Number(this.exchangeCoinsAmount) || 0));
+          return Math.floor(coins / this.exchangeCoinsPerRate);
+        },
+        levelProgressPercentage() {
+          return Math.round((this.totalStars % this.nextLevelStars) / this.nextLevelStars * 100);
+        },
+        canLevelUp() {
+          return this.totalStars >= this.nextLevelStars;
+        },
+        starsEfficiency() {
+          return this.totalStarsEarned > 0 ? Math.round((this.totalStars / this.totalStarsEarned) * 100) : 0;
+        }
+      },
+      methods: {
+        exchangeStarsForCoins() {
+          if (this.exchangeBusy) return;
+
+          const stars = Math.max(0, Math.floor(Number(this.exchangeStarsAmount) || 0));
+
+          if (!stars) return;
+
+          if (this.totalStars < stars) {
+            alert('星星不足，無法兌換');
+            return;
+          }
+
+          const coinsToGet = Math.floor(stars * this.exchangeRate);
+
+          if (coinsToGet <= 0) {
+            alert('兌換數量太小');
+            return;
+          }
+
+          this.exchangeBusy = true;
+
+          try {
+            this.totalStars -= stars;
+            this.goldCoins += coinsToGet;
+            this.starsSpent += stars;
+
+            this.savePlayerData();
+            this.saveEconomyData();
+            this.triggerStarsAnimation();
+
+            alert(`兌換成功！使用 ${stars} 顆星星，獲得 ${coinsToGet} 金幣。`);
+          } finally {
+            this.exchangeBusy = false;
+          }
+        },
+        exchangeCoinsForStars() {
+          if (this.exchangeBusy) return;
+
+          const coins = Math.max(0, Math.floor(Number(this.exchangeCoinsAmount) || 0));
+
+          if (!coins) return;
+
+          if (this.goldCoins < coins) {
+            alert('金幣不足，無法兌換');
+            return;
+          }
+
+          const starsToGet = Math.floor(coins / this.exchangeCoinsPerRate);
+
+          if (starsToGet <= 0) {
+            alert('金幣數量不足，至少需要 10,000,000 金幣才能兌換 1 顆星星。');
+            return;
+          }
+
+          this.exchangeBusy = true;
+
+          try {
+            this.goldCoins -= coins;
+            this.totalStars += starsToGet;
+            this.totalStarsEarned += starsToGet;
+
+            this.savePlayerData();
+            this.saveEconomyData();
+            this.triggerStarsAnimation();
+
+            alert(`兌換成功！使用 ${coins} 金幣，獲得 ${starsToGet} 顆星星。`);
+          } finally {
+            this.exchangeBusy = false;
+          }
+        },
+        goHome() {
+          window.location.href = 'index.html';
+        },
+        loadPlayerData() {
+          const totalStars = typeof StarSystem !== 'undefined' && typeof StarSystem.getTotalStars === 'function'
+            ? StarSystem.getTotalStars()
+            : parseInt(localStorage.getItem('totalStars') || '0');
+          this.totalStars = totalStars;
+
+          const playerData = localStorage.getItem('playerData');
+          if (playerData) {
+            const data = JSON.parse(playerData);
+            this.playerLevel = data.level || 1;
+            this.totalStarsEarned = data.totalStarsEarned || 0;
+            this.starsSpent = data.starsSpent || 0;
+            this.nextLevelStars = data.nextLevelStars || 100;
+          } else {
+            this.playerLevel = 1;
+            this.totalStarsEarned = totalStars;
+            this.starsSpent = 0;
+            this.nextLevelStars = 100;
+          }
+
+          const gameProgress = localStorage.getItem('gameProgress');
+          if (gameProgress) {
+            const progress = JSON.parse(gameProgress);
+            this.completedGames = progress.completedGames || 0;
+          }
+        },
+        savePlayerData() {
+          const data = {
+            level: this.playerLevel,
+            totalStarsEarned: this.totalStarsEarned,
+            starsSpent: this.starsSpent,
+            nextLevelStars: this.nextLevelStars
+          };
+          localStorage.setItem('playerData', JSON.stringify(data));
+        },
+        loadEconomyData() {
+          const coins = parseInt(localStorage.getItem('goldCoins') || '0', 10);
+          this.goldCoins = Number.isFinite(coins) ? coins : 0;
+          this.loadExchangeHistory();
+        },
+        saveEconomyData() {
+          localStorage.setItem('goldCoins', String(this.goldCoins));
+          this.saveExchangeHistory();
+        },
+        addExchangeHistory(type, spentType, spentAmount, receivedType, receivedAmount) {
+          const record = {
+            id: Date.now(),
+            type,
+            spentType,
+            spentAmount,
+            receivedType,
+            receivedAmount,
+            createdAt: new Date().toISOString()
+          };
+          this.exchangeHistory.unshift(record);
+          this.exchangeHistory = this.exchangeHistory.slice(0, 50);
+          this.saveExchangeHistory();
+        },
+        loadExchangeHistory() {
+          try {
+            const raw = localStorage.getItem('exchangeHistory_v1');
+            const parsed = raw ? JSON.parse(raw) : [];
+            this.exchangeHistory = Array.isArray(parsed) ? parsed : [];
+          } catch (e) {
+            this.exchangeHistory = [];
+          }
+        },
+        saveExchangeHistory() {
+          localStorage.setItem('exchangeHistory_v1', JSON.stringify(this.exchangeHistory));
+        },
+        clearExchangeHistory() {
+          if (!confirm('確定要清空兌換紀錄？')) { return; }
+          this.exchangeHistory = [];
+          this.saveExchangeHistory();
+        },
+        showToast(message, type = 'info') {
+          this.toastMessage = message;
+          this.toastType = type;
+          this.showToast = true;
+          setTimeout(() => {
+            this.showToast = false;
+          }, 3000);
+        },
+        formatExchangeDate(dateString) {
+          const date = new Date(dateString);
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          const hours = String(date.getHours()).padStart(2, '0');
+          const minutes = String(date.getMinutes()).padStart(2, '0');
+          return `${year}/${month}/${day} ${hours}:${minutes}`;
+        },
+        openGame(gamePath) {
+          const gameWindow = window.open(gamePath, '_blank');
+          return gameWindow;
+        },
+        openWordMelody() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
+            return;
+ }
+
+          const gameWindow = this.openGame('https://www.littlefox.com/p/word_melody_en');
+
+          if (!gameWindow) {
+            this.goldCoins += spent;
+            this.saveEconomyData();
+            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
+            return;
+          }
+
+          this.startGameSessionMonitor({ title: 'Word Melody', url: 'https://www.littlefox.com/p/word_melody_en' }, gameWindow, spent);
+
+          alert(`開始遊玩「Word Melody」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
+        },
+        openScratchGame() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
+            return;
+          }
+
+          const gameWindow = this.openGame('scratch_game.html');
+
+          if (!gameWindow) {
+            this.goldCoins += spent;
+            this.saveEconomyData();
+            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
+            return;
+          }
+
+          this.startGameSessionMonitor({ title: 'Scratch 遊戲', url: 'scratch_game.html' }, gameWindow, spent);
+
+          alert(`開始遊玩「Scratch 遊戲」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
+        },
+        openScratchCard() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
+            return;
+          }
+
+          const gameWindow = this.openGame('scratch_card.html');
+
+          if (!gameWindow) {
+            this.goldCoins += spent;
+            this.saveEconomyData();
+            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
+            return;
+          }
+
+          this.startGameSessionMonitor({ title: '刮刮樂', url: 'scratch_card.html' }, gameWindow, spent);
+
+          alert(`開始遊玩「刮刮樂」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
+        },
+        openLittleWheel() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
+            return;
+          }
+
+          const gameWindow = this.openGame('https://www.nitrome.com/games/skywire');
+
+          if (!gameWindow) {
+            this.goldCoins += spent;
+            this.saveEconomyData();
+            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
+            return;
+          }
+
+          this.startGameSessionMonitor({ title: 'Skywire', url: 'https://www.nitrome.com/games/skywire' }, gameWindow, spent);
+
+          alert(`開始遊玩「Skywire」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
+        },
+        openPapasPastaria() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
+            return;
+          }
+
+          const gameWindow = this.openGame('https://www.flipline.com/games/papas-pastaria');
+
+          if (!gameWindow) {
+            this.goldCoins += spent;
+            this.saveEconomyData();
+            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
+            return;
+          }
+
+          this.startGameSessionMonitor({ title: 'Papas Pastaria', url: 'https://www.flipline.com/games/papas-pastaria' }, gameWindow, spent);
+
+          alert(`開始遊玩「Papas Pastaria」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
+        },
+        openBilliards() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
+            return;
+          }
+
+          const gameWindow = this.openGame('https://www.coolmathgames.com/0-billiards');
+
+          if (!gameWindow) {
+            this.goldCoins += spent;
+            this.saveEconomyData();
+            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
+            return;
+          }
+
+          this.startGameSessionMonitor({ title: 'Billiards', url: 'https://www.coolmathgames.com/0-billiards' }, gameWindow, spent);
+
+          alert(`開始遊玩「Billiards」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
+        },
+        openPapasSushiria() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
+            return;
+          }
+
+          const gameWindow = this.openGame('https://www.flipline.com/games/papas-sushiria');
+
+          if (!gameWindow) {
+            this.goldCoins += spent;
+            this.saveEconomyData();
+            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
+            return;
+          }
+
+          this.startGameSessionMonitor({ title: 'Papas Sushiria', url: 'https://www.flipline.com/games/papas-sushiria' }, gameWindow, spent);
+
+          alert(`開始遊玩「Papas Sushiria」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
+        },
+        openBloomDefender() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
+            return;
+          }
+
+          const gameWindow = this.openGame('https://www.nitrome.com/games/bloom-defender');
+
+          if (!gameWindow) {
+            this.goldCoins += spent;
+            this.saveEconomyData();
+            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
+            return;
+          }
+
+          this.startGameSessionMonitor({ title: 'Bloom Defender', url: 'https://www.nitrome.com/games/bloom-defender' }, gameWindow, spent);
+
+          alert(`開始遊玩「Bloom Defender」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
+        },
+        openStealingTheDiamond() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
+            return;
+          }
+
+          const gameWindow = this.openGame('https://www.puffgames.com/stealing-the-diamond');
+
+          if (!gameWindow) {
+            this.goldCoins += spent;
+            this.saveEconomyData();
+            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
+            return;
+          }
+
+          this.startGameSessionMonitor({ title: 'Stealing the Diamond', url: 'https://www.puffgames.com/stealing-the-diamond' }, gameWindow, spent);
+
+          alert(`開始遊玩「Stealing the Diamond」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
+        },
+        toggleSlotMachine() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
+            return;
+          }
+
+          const gameWindow = this.openGame('word_spin_game.html');
+
+          if (!gameWindow) {
+            this.goldCoins += spent;
+            this.saveEconomyData();
+            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
+            return;
+          }
+
+          this.startGameSessionMonitor({ title: '拉霸機遊戲', url: 'word_spin_game.html' }, gameWindow, spent);
+
+          alert(`開始遊玩「拉霸機遊戲」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
+        },
+        openBattleSystem() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
+            return;
+          }
+
+          const gameWindow = this.openGame('battle_system.html');
+
+          if (!gameWindow) {
+            this.goldCoins += spent;
+            this.saveEconomyData();
+            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
+            return;
+          }
+
+          this.startGameSessionMonitor({ title: '卡牌對戰系統', url: 'battle_system.html' }, gameWindow, spent);
+
+          alert(`開始遊玩「卡牌對戰系統」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
+        },
+        spendRandomGameCoins() {
+          const maxCost = Math.max(0, Math.floor(Number(this.gameCoinCostMax) || 0));
+
+          if (this.goldCoins < maxCost) {
+            return null;
+          }
+
+          const options = Array.isArray(this.gameCoinCostOptions) ? this.gameCoinCostOptions : [];
+          const safeOptions = options.map(v => Math.floor(Number(v) || 0)).filter(v => v > 0);
+
+          if (safeOptions.length === 0) {
+            return null;
+          }
+
+          const cost = safeOptions[Math.floor(Math.random() * safeOptions.length)];
+
+          if (this.goldCoins < cost) {
+            return null;
+          }
+
+          this.goldCoins -= cost;
+          this.saveEconomyData();
+          this.triggerStarsAnimation();
+
+          return cost;
+        },
+        saveGameProgress() {
+          const progress = {
+            completedGames: this.completedGames,
+            lastPlayed: new Date().toISOString()
+          };
+          localStorage.setItem('gameProgress', JSON.stringify(progress));
+        },
+        triggerStarsAnimation() {
+          this.starsAnimation = true;
+          setTimeout(() => {
+            this.starsAnimation = false;
+          }, 500);
+        },
+        clearGameSessionTimers() {
+          if (this.activeGameTimer) {
+            clearTimeout(this.activeGameTimer);
+            this.activeGameTimer = null;
+          }
+
+          if (Array.isArray(this.activeReminderTimers)) {
+            this.activeReminderTimers.forEach(timer => clearTimeout(timer));
+          }
+
+          this.activeReminderTimers = [];
+
+          if (this.activeGameClosedChecker) {
+            clearInterval(this.activeGameClosedChecker);
+            this.activeGameClosedChecker = null;
+          }
+        },
+        startGameSessionMonitor(game, gameWindow, spent) {
+          this.clearGameSessionTimers();
+
+          this.activeGameWindow = gameWindow;
+          this.activeGameTitle = game.title || '遊戲';
+          this.activeReminderCount = 0;
+          this.gameSessionStartedAt = new Date().toISOString();
+
+          const minutes = Math.max(1, Number(this.gameSessionMinutes) || 10);
+          const delay = minutes * 60 * 1000;
+
+          this.activeGameTimer = window.setTimeout(() => {
+            this.showGameCloseReminder();
+          }, delay);
+
+          this.activeGameClosedChecker = window.setInterval(() => {
+            if (this.activeGameWindow && this.activeGameWindow.closed) {
+              this.clearGameSessionTimers();
+
+              if (this.activeGameClosedChecker) {
+                clearInterval(this.activeGameClosedChecker);
+                this.activeGameClosedChecker = null;
+              }
+
+              this.adventureMessage = `你已關閉「${this.activeGameTitle}」，可以回到遊戲中心開始下一次冒險。`;
+              this.showAdventureModal = true;
+            }
+          }, 3000);
+
+          console.log('遊戲提醒計時開始：', {
+            gameTitle: this.activeGameTitle,
+            minutes,
+            spent,
+            startedAt: this.gameSessionStartedAt
+          });
+        },
+        showGameCloseReminder() {
+          this.activeReminderCount += 1;
+
+          const count = this.activeReminderCount;
+          const title = this.activeGameTitle || '遊戲';
+
+          let message = '';
+
+          if (count === 1) {
+            message = `提醒 1/3：你已經遊玩「${title}」10 分鐘，請準備關閉遊戲視窗。`;
+          } else if (count === 2) {
+            message = `提醒 2/3：請盡快結束「${title}」，系統即將自動關閉遊戲視窗。`;
+          } else {
+            message = `提醒 3/3：「${title}」遊戲時間已結束，系統將自動關閉遊戲視窗。`;
+          }
+
+          alert(message);
+
+          if (count >= 3) {
+            this.closeActiveGameWindowAndAdventure();
+            return;
+          }
+
+          const gapSeconds = Math.max(3, Number(this.gameReminderGapSeconds) || 10);
+
+          const timer = window.setTimeout(() => {
+            this.showGameCloseReminder();
+          }, gapSeconds * 1000);
+
+          this.activeReminderTimers.push(timer);
+        },
+        closeActiveGameWindowAndAdventure() {
+          const title = this.activeGameTitle || '遊戲';
+
+          try {
+            if (this.activeGameWindow && !this.activeGameWindow.closed) {
+              this.activeGameWindow.close();
+            }
+          } catch (error) {
+            console.warn('自動關閉遊戲視窗失敗：', error);
+          }
+
+          this.clearGameSessionTimers();
+
+          this.adventureMessage = `「${title}」遊戲時間結束，請回到遊戲中心，點擊開始冒險繼續挑戰。`;
+          this.showAdventureModal = true;
+
+          window.focus();
+
+          console.log('遊戲視窗已結束，進入開始冒險流程：', title);
+        },
+        startAdventureAgain() {
+          this.showAdventureModal = false;
+          this.adventureMessage = '';
+
+          const gamesSection = document.querySelector('.games-section');
+          if (gamesSection) {
+            gamesSection.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        }
+      },
+      mounted() {
+        this.loadPlayerData();
+        this.loadEconomyData();
+
+        // 背景音樂控制
+        const toggleMusicBtn = document.getElementById('toggleMusic');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        let isPlaying = false;
+
+        if (toggleMusicBtn && backgroundMusic) {
+          toggleMusicBtn.addEventListener('click', () => {
+            if (isPlaying) {
+              backgroundMusic.pause();
+              toggleMusicBtn.innerHTML = '<span class="material-icons">music_off</span>';
+            } else {
+              backgroundMusic.play().catch(() => {});
+              toggleMusicBtn.innerHTML = '<span class="material-icons">music_note</span>';
+            }
+            isPlaying = !isPlaying;
+          });
+        }
+
+        // 離開頁面前清理計時器
+        window.addEventListener('beforeunload', () => {
+          this.clearGameSessionTimers();
+        });
+      }
+    });
+
+    app.mount('#app');
+  </script>
+</body>
+</html>

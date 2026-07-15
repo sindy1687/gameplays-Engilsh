@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<title>填空挑戰 - 英打小英雄</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root{--gold:#ffd700;--cyan:#00ffff;--panel:rgba(30,30,40,.97);--glass:rgba(30,30,40,.92)}
+  *{box-sizing:border-box} html,body{margin:0;padding:0;overflow-x:hidden}
+  body{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;
+       font-family:'Segoe UI',Arial,sans-serif,'Orbitron',sans-serif;color:#fff;
+       background:linear-gradient(135deg,#232526 0%,#414345 100%)}
+  h1{margin:60px 0 20px;color:var(--gold);text-shadow:0 0 8px var(--gold);letter-spacing:2px;font:700 2.2rem Orbitron,Arial,sans-serif}
+  .top-btns{position:fixed;top:20px;right:20px;display:flex;gap:8px;z-index:11}
+  .top-btns button,button{cursor:pointer;border:0;border-radius:12px;box-shadow:0 2px 8px #0003;transition:.2s;background:var(--gold);color:#000}
+  .top-btns button{padding:6px 12px;font:1rem Orbitron,Arial,sans-serif}
+  button{padding:10px 26px;font:1rem Orbitron,Arial,sans-serif}
+  #submit-btn{background:var(--gold);color:#111} #skip-btn{background:#bbb;color:#222} #next-btn{background:#4caf50;color:#fff}
+  #speak-btn{background:#0ff;color:#111;margin-top:10px}
+  #submit-btn:disabled,#speak-btn:disabled{background:#555;color:#888;cursor:not-allowed}
+  #skip-btn:hover{background:#ccc} #next-btn:hover{background:#6fdc7f} .top-btns button:hover{background:#ffe54f}
+  #bgMusicControl{position:fixed;right:20px;bottom:20px;width:50px;height:50px;border-radius:50%;font-size:1.5rem;
+                  display:flex;align-items:center;justify-content:center;background:rgba(255,215,0,.9);box-shadow:0 0 12px rgba(255,215,0,.4);z-index:12}
+  #bgMusicControl:hover{transform:scale(1.1);box-shadow:0 0 20px rgba(255,215,0,.6)} #bgMusicControl.paused{background:rgba(255,255,255,.3);color:#fff}
+  #starsDisplay{position:fixed;top:20px;left:20px;background:rgba(10,20,40,.85);border:2px solid var(--cyan);box-shadow:0 0 12px var(--gold),0 0 32px var(--cyan);
+                color:var(--gold);padding:8px 14px;border-radius:10px;font-weight:bold;z-index:10}
+  #lives{position:fixed;top:76px;right:20px;background:rgba(10,20,40,.85);border:2px solid #ff6b6b;box-shadow:0 0 12px #ff6b6b;
+         color:#ff6b6b;padding:8px 14px;border-radius:10px;font-weight:bold;z-index:10}
+  #star-counter{display:flex;gap:18px;align-items:center;justify-content:center;background:var(--glass);border:1.5px solid #ffd70044;border-radius:18px;
+                padding:14px 32px;margin:0 0 18px;color:var(--gold);min-width:260px;font:1.18rem Orbitron,Arial,sans-serif}
+  #timer{font-size:1.1rem;margin-bottom:16px} .hidden{display:none}
+  #question-container{background:var(--panel);border:1.5px solid #ffd70044;border-radius:22px;box-shadow:0 8px 32px rgba(31,38,135,.37);
+                      padding:38px 30px 30px;max-width:440px;width:100%;margin:auto;display:flex;flex-direction:column;align-items:center}
+  .question-title{font-size:1.1rem;margin-bottom:8px;letter-spacing:1px}
+  .question-sentence{font-size:1.6rem;font-weight:700;margin:10px 0 20px;line-height:1.5;word-break:break-word}
+  .blank{color:#0ff;background:#fff2;border-radius:8px;padding:2px 16px;box-shadow:0 1px 4px #0ff2}
+  .question-zh{color:var(--gold);margin-bottom:16px;font-size:1.05rem}
+  input{width:92%;padding:14px;font-size:1.1rem;border:2px solid var(--gold);border-radius:14px;background:#222;color:#fff;margin-bottom:18px;outline:0}
+  input:focus{border-color:var(--cyan)} .btn-row{display:flex;gap:20px;justify-content:center;margin-bottom:10px;width:100%}
+  #feedback{min-height:28px;margin-top:10px;font-size:1.05rem}
+  .feedback-box{display:inline-block;padding:10px 22px;border-radius:16px;font-weight:700;box-shadow:0 2px 16px #0004;margin-top:8px;animation:pf .7s cubic-bezier(.68,-.55,.27,1.55)}
+  .feedback-correct{background:linear-gradient(90deg,#2ecc40,#bfff00);color:#222} .feedback-wrong{background:linear-gradient(90deg,#ff4f4f,#ffbaba);color:#fff}
+  .feedback-bonus{color:var(--gold);animation:bflash 1s infinite alternate;font-size:1.15em}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(4px)}
+  .modal-content{background:rgba(30,30,40,.95);border:2px solid var(--gold);border-radius:20px;padding:32px;text-align:center;max-width:500px;width:90%;
+                 box-shadow:0 0 32px #ffd70044,0 0 80px #00ffff22 inset;animation:mp .5s cubic-bezier(.68,-.55,.27,1.55);
+                 max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .end-icon{font-size:3.2rem;margin-bottom:14px;animation:tada 1.2s infinite}
+  .end-buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  @keyframes pf{0%{transform:scale(.7);opacity:0}60%{transform:scale(1.12);opacity:1}100%{transform:scale(1)}}
+  @keyframes mp{0%{transform:scale(.7);opacity:0}60%{transform:scale(1.1);opacity:1}100%{transform:scale(1)}}
+  @keyframes bflash{0%{text-shadow:0 0 8px var(--gold)}100%{text-shadow:0 0 24px #fff700}}
+  @keyframes tada{0%{transform:scale(1)}10%,20%{transform:scale(.9) rotate(-3deg)}30%,50%,70%,90%{transform:scale(1.1) rotate(3deg)}40%,60%,80%{transform:scale(1.1) rotate(-3deg)}100%{transform:scale(1)}}
+  @media (max-width:768px){.top-btns{top:10px;right:10px;flex-wrap:wrap}.top-btns button{font-size:.9rem;padding:4px 8px}
+    #starsDisplay{top:10px;left:10px;font-size:1rem;padding:6px 10px} #lives{top:62px;right:10px;font-size:1rem;padding:6px 10px} h1{font-size:1.8rem;margin-top:60px}
+    #question-container{max-width:95vw;padding:20px 15px;margin:10px auto}.question-sentence{font-size:1.3rem}
+    .modal-content{max-width:95vw;padding:20px}}
+  @media (max-width:480px){h1{font-size:1.5rem;margin-top:10px}.btn-row{flex-direction:column}.btn-row button{width:100%}}
+</style>
+</head>
+<body>
+  <button id="bgMusicControl" title="背景音樂控制">🎵</button>
+
+  <div id="starsDisplay">⭐<span id="totalStarsCount">0</span></div>
+
+  <div id="lives">❤️❤️❤️❤️❤️</div>
+
+  <div class="top-btns">
+    <button onclick="location.href='atlas.html?tab=greek'">🏠 回首頁</button>
+    <button onclick="resetProgress()">🔄 重新開始</button>
+    <button onclick="showReviewModal()">📚 複習單字</button>
+  </div>
+
+  <h1>瑞亞 Rhea - 填空挑戰</h1>
+
+  <div id="sessionStarsDisplay" style="margin-bottom:10px;color:#ffd700;font-weight:bold;font-size:1.02rem;">本次已獲得 0 顆星星</div>
+
+  <div id="star-counter">第 <span id="current-index">0</span> / <span id="total-questions">0</span> 題</div>
+
+  <div id="timer" class="hidden">⏳ 倒數：<span id="time-left">0</span> 秒</div>
+
+  <div id="question-container"></div>
+
+  <!-- 遊戲結束 -->
+  <div id="gameEndModal" class="modal" style="display:none">
+    <div class="modal-content">
+      <div class="end-icon">🎉</div>
+      <h2 style="color:#ffd700;text-shadow:0 0 12px #ffd700">遊戲完成！</h2>
+      <div class="end-stats">
+        <p>⭐ 本次獲得星星：<b id="endSessionStars">0</b></p>
+        <p>✅ 答對題數：<b id="endCorrectCount">0</b></p>
+        <p>❌ 答錯題數：<b id="endWrongCount">0</b></p>
+        <p>⭐ 累積總星星：<b id="endTotalStars">0</b></p>
+      </div>
+      <div class="end-buttons">
+        <button onclick="restartGame()">🔄 重新開始</button>
+        <button onclick="location.href='atlas.html?tab=greek'">🏠 返回首頁</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 複習單字 -->
+  <div id="reviewModal" class="modal" style="display:none">
+    <div class="modal-content">
+      <div class="end-icon">📚</div>
+      <h2 style="color:#ffd700">單字複習</h2>
+      <div style="margin-bottom:12px">
+        <label for="categoryFilter" style="color:#ffd700;font-weight:700;margin-right:8px">選擇分類：</label>
+        <select id="categoryFilter" style="background:#222;color:#fff;border:2px solid #ffd700;border-radius:8px;padding:6px 10px">
+          <option value="all">全部單字</option>
+        </select>
+      </div>
+      <div id="vocabStats" style="background:rgba(255,215,0,.1);border:1px solid #ffd700;border-radius:8px;padding:8px;color:#ffd700;font-size:.9rem">
+        總共 <span id="totalVocabCount">0</span> 個單字
+        <button onclick="showVocabStats()" style="background:#0ff;color:#000;border:none;border-radius:6px;padding:4px 8px;font-size:.8rem;margin-left:8px">📊 詳細統計</button>
+        <button onclick="exportVocabData()" style="background:#4caf50;color:#fff;border:none;border-radius:6px;padding:4px 8px;font-size:.8rem;margin-left:4px">📥 匯出字庫</button>
+      </div>
+      <div id="reviewWordsContainer" style="max-height:400px;overflow-y:auto;margin:14px 0"></div>
+      <div class="end-buttons"><button onclick="closeReviewModal()">關閉</button></div>
+    </div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/stars.js"></script>
+  <script src="js/bgmController.js"></script>
+  <script src="js/userData.js"></script>
+  <script src="js/characterDialogue.js"></script>
+  <script src="js/gameDialogue.js"></script>
+  <script src="js/greekScoreUpload.js"></script>
+
+<script>
+/* ===================== 設定 & 小工具 ===================== */
+const $ = s => document.querySelector(s);
+const GAME = { QUESTIONS_COUNT: 20, TIME_LIMIT: 30, MAX_ATTEMPTS: 3 };
+const SOUNDS = { correct:new Audio('sound/correct.mp3'), wrong:new Audio('sound/wrong.mp3'), type:new Audio('sound/type.mp3') };
+const speakSys = { voice:null };
+const gameState = { data:[], i:0, tries:0, answered:false, timer:null, answerLog:[], sessionStars:0, totalTimeUsed:0, questionStartTs:null };
+window.gameState = gameState;
+let lives = 5;
+function updateLives(){ const el=$('#lives'); if(!el) return; el.innerHTML='❤️'.repeat(Math.max(0,lives))+'🤍'.repeat(Math.max(0,5-lives)); }
+const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+const safeBlank = (sent, ans) => { try{ return sent.replace(new RegExp(esc(ans),'i'),'___'); }catch{ const L=sent.toLowerCase(),t=ans.toLowerCase(),i=L.indexOf(t); return i>=0?sent.slice(0,i)+'___'+sent.slice(i+ans.length):sent; } };
+const say = (t,rate=1,cb)=>{ if(typeof speechSynthesis==='undefined') return; const u=new SpeechSynthesisUtterance(t); u.lang='en-US'; u.rate=rate; u.pitch=1.12; if(speakSys.voice) u.voice=speakSys.voice; if(cb) u.onend=cb; speechSynthesis.cancel(); speechSynthesis.speak(u); };
+
+/* ===================== 題庫（示例 60 筆，可自行再加） ===================== */
+const VOCAB_DATA = [
+
+  {"word":"learn","zh":"學習","en_sentence":"I learn English every day.","zh_sentence":"我每天學英文。","category":"動詞"},
+  {"word":"climb","zh":"爬；攀登","en_sentence":"They climb the hill.","zh_sentence":"他們爬小山。","category":"動詞"},
+  {"word":"hike","zh":"健行","en_sentence":"We hike together.","zh_sentence":"我們一起健行。","category":"動詞"},
+  {"word":"camp","zh":"露營","en_sentence":"We camp by the river.","zh_sentence":"我們在河邊露營。","category":"動詞"},
+  {"word":"everyone","zh":"每個人","en_sentence":"Everyone likes the game.","zh_sentence":"每個人都喜歡這個遊戲。","category":"代名詞"},
+  {"word":"together","zh":"一起","en_sentence":"We study together.","zh_sentence":"我們一起讀書。","category":"副詞"},
+  {"word":"ago","zh":"以前","en_sentence":"I came here a year ago.","zh_sentence":"我一年前來到這裡。","category":"副詞"},
+  {"word":"never","zh":"從不","en_sentence":"He never smokes.","zh_sentence":"他從不抽菸。","category":"副詞"},
+  {"word":"always","zh":"總是","en_sentence":"She always smiles.","zh_sentence":"她總是微笑。","category":"副詞"},
+  {"word":"usually","zh":"通常","en_sentence":"I usually walk to school.","zh_sentence":"我通常走路上學。","category":"副詞"},
+  {"word":"sometimes","zh":"有時候","en_sentence":"I sometimes read comics.","zh_sentence":"我有時候看漫畫。","category":"副詞"},
+  {"word":"seldom","zh":"很少","en_sentence":"He seldom eats candy.","zh_sentence":"他很少吃糖果。","category":"副詞"},
+  {"word":"was","zh":"是（過去式）","en_sentence":"She was tired.","zh_sentence":"她以前很累。","category":"動詞"},
+  {"word":"were","zh":"是（過去式）","en_sentence":"They were classmates.","zh_sentence":"他們以前是同學。","category":"動詞"},
+  {"word":"insect","zh":"昆蟲","en_sentence":"The insect is small.","zh_sentence":"那隻昆蟲很小。","category":"名詞"},
+  {"word":"bat","zh":"蝙蝠","en_sentence":"A bat flies at night.","zh_sentence":"蝙蝠晚上飛。","category":"名詞"},
+  {"word":"butterfly","zh":"蝴蝶","en_sentence":"The butterfly is colorful.","zh_sentence":"蝴蝶很漂亮。","category":"名詞"},
+  {"word":"spider","zh":"蜘蛛","en_sentence":"A spider is on the wall.","zh_sentence":"牆上有一隻蜘蛛。","category":"名詞"},
+  {"word":"whale","zh":"鯨魚","en_sentence":"The whale is huge.","zh_sentence":"鯨魚非常大。","category":"名詞"},
+  {"word":"hill","zh":"小山","en_sentence":"The house is on a hill.","zh_sentence":"房子在小山上。","category":"名詞"},
+
+  {"word":"island","zh":"島嶼","en_sentence":"They live on an island.","zh_sentence":"他們住在島上。","category":"名詞"},
+  {"word":"present","zh":"禮物","en_sentence":"I got a birthday present.","zh_sentence":"我收到生日禮物。","category":"名詞"},
+  {"word":"junior high school","zh":"國中","en_sentence":"She studies in junior high school.","zh_sentence":"她在國中讀書。","category":"名詞"},
+  {"word":"course","zh":"課程","en_sentence":"This course is fun.","zh_sentence":"這門課很有趣。","category":"名詞"},
+  {"word":"art","zh":"美術","en_sentence":"I like art class.","zh_sentence":"我喜歡美術課。","category":"名詞"},
+  {"word":"history","zh":"歷史","en_sentence":"History is interesting.","zh_sentence":"歷史很有趣。","category":"名詞"},
+  {"word":"science","zh":"科學","en_sentence":"Science explains nature.","zh_sentence":"科學解釋自然。","category":"名詞"},
+  {"word":"lesson","zh":"課","en_sentence":"The lesson is easy.","zh_sentence":"這堂課很簡單。","category":"名詞"},
+  {"word":"subject","zh":"科目","en_sentence":"Math is my favorite subject.","zh_sentence":"數學是我最喜歡的科目。","category":"名詞"},
+  {"word":"test","zh":"考試","en_sentence":"We have a test today.","zh_sentence":"我們今天考試。","category":"名詞"},
+  {"word":"vacation","zh":"假期","en_sentence":"Summer vacation is long.","zh_sentence":"暑假很長。","category":"名詞"},
+  {"word":"holiday","zh":"假日","en_sentence":"Tomorrow is a holiday.","zh_sentence":"明天是假日。","category":"名詞"},
+  {"word":"Teacher's Day","zh":"教師節","en_sentence":"We thank teachers on Teacher’s Day.","zh_sentence":"教師節我們感謝老師。","category":"節日"},
+  {"word":"festival","zh":"節日","en_sentence":"The festival is exciting.","zh_sentence":"這個節日很熱鬧。","category":"名詞"},
+  {"word":"Moon Festival","zh":"中秋節","en_sentence":"Families meet on Moon Festival.","zh_sentence":"中秋節家人團聚。","category":"節日"},
+  {"word":"half","zh":"一半","en_sentence":"I ate half the cake.","zh_sentence":"我吃了蛋糕的一半。","category":"名詞"},
+  {"word":"quarter","zh":"四分之一","en_sentence":"A quarter of the class is absent.","zh_sentence":"班上有四分之一缺席。","category":"名詞"},
+  {"word":"noise","zh":"噪音","en_sentence":"The noise is loud.","zh_sentence":"噪音很大。","category":"名詞"},
+  {"word":"show","zh":"表演","en_sentence":"The show was great.","zh_sentence":"表演很精彩。","category":"名詞"},
+  {"word":"start","zh":"開始","en_sentence":"The game starts now.","zh_sentence":"比賽現在開始。","category":"動詞"},
+
+  {"word":"stay","zh":"停留","en_sentence":"I stay at home.","zh_sentence":"我待在家。","category":"動詞"},
+  {"word":"Ms.","zh":"女士","en_sentence":"Ms. Wang is kind.","zh_sentence":"王女士很親切。","category":"稱謂"},
+  {"word":"kid","zh":"小孩","en_sentence":"The kid is laughing.","zh_sentence":"小孩在笑。","category":"名詞"},
+  {"word":"child","zh":"孩子","en_sentence":"The child is sleeping.","zh_sentence":"孩子在睡覺。","category":"名詞"},
+  {"word":"boat","zh":"船","en_sentence":"The boat moves slowly.","zh_sentence":"船慢慢前進。","category":"名詞"},
+  {"word":"floor","zh":"地板","en_sentence":"The floor is wet.","zh_sentence":"地板是濕的。","category":"名詞"},
+  {"word":"frisbee","zh":"飛盤","en_sentence":"They throw a frisbee.","zh_sentence":"他們丟飛盤。","category":"名詞"},
+  {"word":"hurt","zh":"受傷","en_sentence":"His arm hurts.","zh_sentence":"他的手臂受傷了。","category":"動詞"},
+  {"word":"begin","zh":"開始","en_sentence":"The movie begins.","zh_sentence":"電影開始了。","category":"動詞"},
+  {"word":"finish","zh":"完成","en_sentence":"I finish my work.","zh_sentence":"我完成工作。","category":"動詞"},
+  {"word":"happen","zh":"發生","en_sentence":"What happened?","zh_sentence":"發生什麼事？","category":"動詞"},
+  {"word":"jog","zh":"慢跑","en_sentence":"She jogs every morning.","zh_sentence":"她每天慢跑。","category":"動詞"},
+  {"word":"hop","zh":"跳","en_sentence":"The frog hops.","zh_sentence":"青蛙跳躍。","category":"動詞"},
+  {"word":"teach","zh":"教","en_sentence":"He teaches math.","zh_sentence":"他教數學。","category":"動詞"},
+  {"word":"important","zh":"重要的","en_sentence":"Time is important.","zh_sentence":"時間很重要。","category":"形容詞"},
+  {"word":"health","zh":"健康","en_sentence":"Health comes first.","zh_sentence":"健康最重要。","category":"名詞"},
+  {"word":"healthy","zh":"健康的","en_sentence":"She eats healthy food.","zh_sentence":"她吃健康的食物。","category":"形容詞"},
+  {"word":"weak","zh":"虛弱的","en_sentence":"The puppy is weak.","zh_sentence":"小狗很虛弱。","category":"形容詞"},
+  {"word":"terrible","zh":"糟糕的","en_sentence":"The weather is terrible.","zh_sentence":"天氣很糟。","category":"形容詞"},
+  {"word":"funny","zh":"好笑的","en_sentence":"The joke is funny.","zh_sentence":"這個笑話很好笑。","category":"形容詞"},
+
+  {"word":"lot","zh":"很多","en_sentence":"I have a lot of friends.","zh_sentence":"我有很多朋友。","category":"名詞"},
+  {"word":"already","zh":"已經","en_sentence":"She already left.","zh_sentence":"她已經離開了。","category":"副詞"},
+  {"word":"just","zh":"剛剛","en_sentence":"I just finished.","zh_sentence":"我剛完成。","category":"副詞"},
+  {"word":"why","zh":"為什麼","en_sentence":"Why are you sad?","zh_sentence":"你為什麼難過？","category":"疑問詞"},
+  {"word":"couch","zh":"沙發","en_sentence":"Sit on the couch.","zh_sentence":"坐在沙發上。","category":"名詞"},
+  {"word":"give","zh":"給","en_sentence":"Give me the pen.","zh_sentence":"把筆給我。","category":"動詞"},
+  {"word":"garden","zh":"花園","en_sentence":"Flowers grow in the garden.","zh_sentence":"花在花園裡生長。","category":"名詞"},
+  {"word":"grass","zh":"草","en_sentence":"The grass is green.","zh_sentence":"草是綠色的。","category":"名詞"},
+  {"word":"refrigerator","zh":"冰箱","en_sentence":"Food is in the refrigerator.","zh_sentence":"食物在冰箱裡。","category":"名詞"},
+  {"word":"police","zh":"警察","en_sentence":"The police help people.","zh_sentence":"警察幫助人們。","category":"名詞"},
+  {"word":"officer","zh":"警官","en_sentence":"The officer is helpful.","zh_sentence":"警官很熱心。","category":"名詞"},
+  {"word":"actress","zh":"女演員","en_sentence":"She is a famous actress.","zh_sentence":"她是有名的女演員。","category":"名詞"},
+  {"word":"writer","zh":"作家","en_sentence":"The writer writes books.","zh_sentence":"作家寫書。","category":"名詞"},
+  {"word":"reporter","zh":"記者","en_sentence":"The reporter asks questions.","zh_sentence":"記者提問。","category":"名詞"},
+  {"word":"fisherman","zh":"漁夫","en_sentence":"The fisherman catches fish.","zh_sentence":"漁夫捕魚。","category":"名詞"},
+  {"word":"factory","zh":"工廠","en_sentence":"He works in a factory.","zh_sentence":"他在工廠工作。","category":"名詞"},
+  {"word":"again","zh":"再一次","en_sentence":"Try again.","zh_sentence":"再試一次。","category":"副詞"},
+  {"word":"mail","zh":"郵件","en_sentence":"I got mail today.","zh_sentence":"我今天收到郵件。","category":"名詞"},
+  {"word":"mailman","zh":"郵差","en_sentence":"The mailman delivers letters.","zh_sentence":"郵差送信。","category":"名詞"},
+  {"word":"glove","zh":"手套","en_sentence":"Wear gloves in winter.","zh_sentence":"冬天戴手套。","category":"名詞"},
+  {"word":"ring","zh":"戒指；鈴聲","en_sentence":"She wears a ring.","zh_sentence":"她戴著戒指。","category":"名詞"},
+  {"word":"rope","zh":"繩子","en_sentence":"Hold the rope.","zh_sentence":"抓住繩子。","category":"名詞"},
+  {"word":"medicine","zh":"藥","en_sentence":"Take the medicine.","zh_sentence":"吃藥。","category":"名詞"},
+  {"word":"stomach","zh":"胃","en_sentence":"My stomach hurts.","zh_sentence":"我胃痛。","category":"名詞"},
+  {"word":"fever","zh":"發燒","en_sentence":"He has a fever.","zh_sentence":"他發燒了。","category":"名詞"},
+  {"word":"throat","zh":"喉嚨","en_sentence":"My throat is sore.","zh_sentence":"我喉嚨痛。","category":"名詞"},
+  {"word":"sore","zh":"疼痛的","en_sentence":"My leg is sore.","zh_sentence":"我的腿很痛。","category":"形容詞"},
+  {"word":"language","zh":"語言","en_sentence":"English is a language.","zh_sentence":"英文是一種語言。","category":"名詞"},
+  {"word":"band","zh":"樂團","en_sentence":"The band plays music.","zh_sentence":"樂團演奏音樂。","category":"名詞"},
+  {"word":"drum","zh":"鼓","en_sentence":"He plays the drum.","zh_sentence":"他打鼓。","category":"名詞"},
+  {"word":"picnic","zh":"野餐","en_sentence":"We have a picnic.","zh_sentence":"我們去野餐。","category":"名詞"},
+  {"word":"goat","zh":"山羊","en_sentence":"The goat eats grass.","zh_sentence":"山羊吃草。","category":"名詞"},
+  {"word":"rose","zh":"玫瑰","en_sentence":"The rose is red.","zh_sentence":"玫瑰是紅色的。","category":"名詞"},
+  {"word":"foreigner","zh":"外國人","en_sentence":"He is a foreigner.","zh_sentence":"他是外國人。","category":"名詞"},
+  {"word":"email","zh":"電子郵件","en_sentence":"Send an email.","zh_sentence":"寄一封電子郵件。","category":"名詞"},
+  {"word":"honey","zh":"蜂蜜；親愛的","en_sentence":"I like honey.","zh_sentence":"我喜歡蜂蜜。","category":"名詞"},
+  {"word":"dear","zh":"親愛的","en_sentence":"Dear Mom, I love you.","zh_sentence":"親愛的媽媽，我愛你。","category":"形容詞"},
+  {"word":"common","zh":"常見的","en_sentence":"This is common.","zh_sentence":"這很常見。","category":"形容詞"},
+  {"word":"little","zh":"小的；少量的","en_sentence":"A little water, please.","zh_sentence":"請給我一點水。","category":"形容詞"},
+  {"word":"straight","zh":"直的","en_sentence":"Go straight.","zh_sentence":"直走。","category":"副詞"},
+
+  {"word":"understand","zh":"理解","en_sentence":"I understand you.","zh_sentence":"我懂你。","category":"動詞"},
+  {"word":"invite","zh":"邀請","en_sentence":"She invites friends.","zh_sentence":"她邀請朋友。","category":"動詞"},
+  {"word":"visit","zh":"拜訪","en_sentence":"We visit grandma.","zh_sentence":"我們拜訪奶奶。","category":"動詞"},
+  {"word":"prepare","zh":"準備","en_sentence":"Prepare the food.","zh_sentence":"準備食物。","category":"動詞"},
+  {"word":"mop","zh":"拖地","en_sentence":"He mops the floor.","zh_sentence":"他拖地。","category":"動詞"},
+  {"word":"send","zh":"寄送","en_sentence":"Send the letter.","zh_sentence":"寄信。","category":"動詞"},
+  {"word":"could","zh":"可以（過去式）","en_sentence":"I could help.","zh_sentence":"我可以幫忙。","category":"助動詞"},
+  {"word":"still","zh":"仍然","en_sentence":"She is still here.","zh_sentence":"她仍在這裡。","category":"副詞"},
+  {"word":"soon","zh":"很快","en_sentence":"See you soon.","zh_sentence":"很快再見。","category":"副詞"},
+  {"word":"me","zh":"我（受格）","en_sentence":"Help me.","zh_sentence":"幫我。","category":"代名詞"},
+  {"word":"him","zh":"他（受格）","en_sentence":"Call him.","zh_sentence":"打給他。","category":"代名詞"},
+  {"word":"often","zh":"常常","en_sentence":"I often read.","zh_sentence":"我常常閱讀。","category":"副詞"},
+  {"word":"us","zh":"我們（受格）","en_sentence":"Join us.","zh_sentence":"加入我們。","category":"代名詞"},
+  {"word":"them","zh":"他們（受格）","en_sentence":"Help them.","zh_sentence":"幫助他們。","category":"代名詞"},
+  {"word":"mine","zh":"我的（名詞性）","en_sentence":"This book is mine.","zh_sentence":"這本書是我的。","category":"代名詞"},
+  {"word":"yours","zh":"你的（名詞性）","en_sentence":"Is this yours?","zh_sentence":"這是你的嗎？","category":"代名詞"},
+  {"word":"hers","zh":"她的（名詞性）","en_sentence":"The bag is hers.","zh_sentence":"包包是她的。","category":"代名詞"},
+  {"word":"birthday","zh":"生日","en_sentence":"Happy birthday!","zh_sentence":"生日快樂！","category":"名詞"},
+  {"word":"ours","zh":"我們的（名詞性）","en_sentence":"The house is ours.","zh_sentence":"房子是我們的。","category":"代名詞"},
+  {"word":"theirs","zh":"他們的（名詞性）","en_sentence":"The seats are theirs.","zh_sentence":"座位是他們的。","category":"代名詞"},
+
+  {"word":"cap","zh":"帽子","en_sentence":"Wear a cap.","zh_sentence":"戴帽子。","category":"名詞"},
+  {"word":"jeans","zh":"牛仔褲","en_sentence":"He wears jeans.","zh_sentence":"他穿牛仔褲。","category":"名詞"},
+  {"word":"sweater","zh":"毛衣","en_sentence":"It’s cold—wear a sweater.","zh_sentence":"天冷，穿毛衣。","category":"名詞"},
+  {"word":"American","zh":"美國人；美國的","en_sentence":"She is American.","zh_sentence":"她是美國人。","category":"名詞"},
+  {"word":"waiter","zh":"服務生","en_sentence":"The waiter helps us.","zh_sentence":"服務生幫助我們。","category":"名詞"},
+  {"word":"clerk","zh":"店員","en_sentence":"Ask the clerk.","zh_sentence":"問店員。","category":"名詞"},
+  {"word":"job","zh":"工作","en_sentence":"He has a job.","zh_sentence":"他有一份工作。","category":"名詞"},
+  {"word":"gray","zh":"灰色的","en_sentence":"A gray coat.","zh_sentence":"灰色外套。","category":"形容詞"},
+  {"word":"purple","zh":"紫色的","en_sentence":"Purple flowers.","zh_sentence":"紫色的花。","category":"形容詞"},
+  {"word":"airplane","zh":"飛機","en_sentence":"The airplane takes off.","zh_sentence":"飛機起飛。","category":"名詞"},
+  {"word":"motorcycle","zh":"機車","en_sentence":"He rides a motorcycle.","zh_sentence":"他騎機車。","category":"名詞"},
+  {"word":"street","zh":"街道","en_sentence":"Cross the street.","zh_sentence":"過馬路。","category":"名詞"},
+  {"word":"town","zh":"城鎮","en_sentence":"A small town.","zh_sentence":"小鎮。","category":"名詞"},
+  {"word":"block","zh":"街區","en_sentence":"One block away.","zh_sentence":"一個街區遠。","category":"名詞"},
+  {"word":"city","zh":"城市","en_sentence":"A big city.","zh_sentence":"大城市。","category":"名詞"},
+  {"word":"corner","zh":"轉角","en_sentence":"At the corner.","zh_sentence":"在轉角。","category":"名詞"},
+  {"word":"department store","zh":"百貨公司","en_sentence":"Shop at the department store.","zh_sentence":"逛百貨公司。","category":"名詞"},
+  {"word":"theater","zh":"劇院","en_sentence":"The theater is full.","zh_sentence":"劇院滿座。","category":"名詞"},
+  {"word":"movie theater","zh":"電影院","en_sentence":"Go to the movie theater.","zh_sentence":"去電影院。","category":"名詞"},
+  {"word":"crazy","zh":"瘋狂的","en_sentence":"That idea is crazy.","zh_sentence":"那個想法很瘋狂。","category":"形容詞"},
+
+  {"word":"shop","zh":"商店","en_sentence":"Visit the shop.","zh_sentence":"逛商店。","category":"名詞"},
+  {"word":"flower shop","zh":"花店","en_sentence":"Buy flowers at the flower shop.","zh_sentence":"在花店買花。","category":"名詞"},
+  {"word":"station","zh":"車站","en_sentence":"Meet at the station.","zh_sentence":"在車站見。","category":"名詞"},
+  {"word":"police station","zh":"警察局","en_sentence":"Go to the police station.","zh_sentence":"去警察局。","category":"名詞"},
+  {"word":"railway","zh":"鐵路","en_sentence":"The railway is busy.","zh_sentence":"鐵路很忙。","category":"名詞"},
+  {"word":"turn","zh":"轉彎","en_sentence":"Turn left.","zh_sentence":"左轉。","category":"動詞"},
+  {"word":"left","zh":"左邊","en_sentence":"On the left.","zh_sentence":"在左邊。","category":"名詞"},
+  {"word":"right","zh":"右邊","en_sentence":"On the right.","zh_sentence":"在右邊。","category":"名詞"},
+  {"word":"stamp","zh":"郵票","en_sentence":"Buy a stamp.","zh_sentence":"買郵票。","category":"名詞"},
+  {"word":"news","zh":"新聞","en_sentence":"Watch the news.","zh_sentence":"看新聞。","category":"名詞"},
+  {"word":"blanket","zh":"毯子","en_sentence":"A warm blanket.","zh_sentence":"溫暖的毯子。","category":"名詞"},
+  {"word":"change","zh":"零錢；改變","en_sentence":"Here is your change.","zh_sentence":"這是你的找零。","category":"名詞"},
+  {"word":"find","zh":"找到","en_sentence":"Find the key.","zh_sentence":"找到鑰匙。","category":"動詞"},
+  {"word":"lose","zh":"遺失","en_sentence":"Don’t lose it.","zh_sentence":"別弄丟。","category":"動詞"},
+  {"word":"stop","zh":"停止","en_sentence":"Stop here.","zh_sentence":"在這裡停。","category":"動詞"},
+  {"word":"arrive","zh":"到達","en_sentence":"Arrive on time.","zh_sentence":"準時到達。","category":"動詞"},
+  {"word":"bring","zh":"帶來","en_sentence":"Bring your bag.","zh_sentence":"帶你的包。","category":"動詞"},
+  {"word":"spend","zh":"花費","en_sentence":"Spend money wisely.","zh_sentence":"明智花錢。","category":"動詞"},
+  {"word":"pay","zh":"付錢","en_sentence":"Pay the bill.","zh_sentence":"付帳。","category":"動詞"},
+  {"word":"up","zh":"向上；起來","en_sentence":"Stand up.","zh_sentence":"站起來。","category":"副詞"},
+
+  {"word":"agree","zh":"同意","en_sentence":"I agree with you.","zh_sentence":"我同意你。","category":"動詞"},
+  {"word":"garbage","zh":"垃圾","en_sentence":"Throw away the garbage.","zh_sentence":"丟垃圾。","category":"名詞"},
+  {"word":"forget","zh":"忘記","en_sentence":"Don’t forget me.","zh_sentence":"別忘了我。","category":"動詞"},
+  {"word":"hear","zh":"聽見","en_sentence":"I hear music.","zh_sentence":"我聽到音樂。","category":"動詞"},
+  {"word":"another","zh":"另一個","en_sentence":"Another one, please.","zh_sentence":"再一個，謝謝。","category":"形容詞"},
+  {"word":"delicious","zh":"美味的","en_sentence":"The food is delicious.","zh_sentence":"食物很好吃。","category":"形容詞"},
+  {"word":"yummy","zh":"好吃的","en_sentence":"This cake is yummy.","zh_sentence":"這蛋糕好吃。","category":"形容詞"},
+  {"word":"difficult","zh":"困難的","en_sentence":"The task is difficult.","zh_sentence":"任務很難。","category":"形容詞"},
+  {"word":"as","zh":"像；當作","en_sentence":"As a friend.","zh_sentence":"作為朋友。","category":"介系詞"},
+  {"word":"own","zh":"自己的","en_sentence":"My own room.","zh_sentence":"我自己的房間。","category":"形容詞"},
+  {"word":"true","zh":"真實的","en_sentence":"That is true.","zh_sentence":"那是真的。","category":"形容詞"},
+  {"word":"sea","zh":"海","en_sentence":"Swim in the sea.","zh_sentence":"在海裡游泳。","category":"名詞"},
+  {"word":"welcome","zh":"歡迎","en_sentence":"Welcome home.","zh_sentence":"歡迎回家。","category":"動詞"},
+  {"word":"proud","zh":"驕傲的","en_sentence":"I am proud of you.","zh_sentence":"我以你為榮。","category":"形容詞"},
+  {"word":"away","zh":"離開","en_sentence":"Go away.","zh_sentence":"走開。","category":"副詞"},
+  {"word":"will","zh":"將會","en_sentence":"I will try.","zh_sentence":"我會試試。","category":"助動詞"},
+  {"word":"camera","zh":"相機","en_sentence":"Use the camera.","zh_sentence":"用相機。","category":"名詞"},
+  {"word":"radio","zh":"收音機","en_sentence":"Listen to the radio.","zh_sentence":"聽收音機。","category":"名詞"},
+  {"word":"machine","zh":"機器","en_sentence":"A useful machine.","zh_sentence":"有用的機器。","category":"名詞"},
+  {"word":"tape","zh":"錄音帶；膠帶","en_sentence":"Record on tape.","zh_sentence":"錄在錄音帶上。","category":"名詞"},
+  {"word":"myself","zh":"我自己","en_sentence":"I did it myself.","zh_sentence":"我自己做的。","category":"代名詞"},
+  {"word":"yourself","zh":"你自己","en_sentence":"Do it yourself.","zh_sentence":"你自己做。","category":"代名詞"},
+  {"word":"yourselves","zh":"你們自己","en_sentence":"Help yourselves.","zh_sentence":"請自便。","category":"代名詞"},
+  {"word":"himself","zh":"他自己","en_sentence":"He fixed it himself.","zh_sentence":"他自己修好。","category":"代名詞"},
+  {"word":"herself","zh":"她自己","en_sentence":"She taught herself.","zh_sentence":"她自學。","category":"代名詞"},
+  {"word":"itself","zh":"它自己","en_sentence":"The door closed itself.","zh_sentence":"門自己關上了。","category":"代名詞"},
+  {"word":"ourselves","zh":"我們自己","en_sentence":"We prepared ourselves.","zh_sentence":"我們準備好了。","category":"代名詞"},
+  {"word":"themselves","zh":"他們自己","en_sentence":"They enjoyed themselves.","zh_sentence":"他們玩得很開心。","category":"代名詞"},
+  {"word":"recorder","zh":"錄音機","en_sentence":"Use a recorder.","zh_sentence":"使用錄音機。","category":"名詞"},
+  {"word":"video","zh":"影片","en_sentence":"Watch a video.","zh_sentence":"看影片。","category":"名詞"},
+  {"word":"price","zh":"價格","en_sentence":"Check the price.","zh_sentence":"查看價格。","category":"名詞"},
+  {"word":"total","zh":"總共","en_sentence":"The total is ten.","zh_sentence":"總共十元。","category":"名詞"},
+  {"word":"watermelon","zh":"西瓜","en_sentence":"Eat watermelon.","zh_sentence":"吃西瓜。","category":"名詞"},
+  {"word":"papaya","zh":"木瓜","en_sentence":"Papaya is sweet.","zh_sentence":"木瓜很甜。","category":"名詞"},
+  {"word":"lemon","zh":"檸檬","en_sentence":"A sour lemon.","zh_sentence":"酸檸檬。","category":"名詞"},
+  {"word":"guava","zh":"芭樂","en_sentence":"Guava is crunchy.","zh_sentence":"芭樂很脆。","category":"名詞"},
+  {"word":"sir","zh":"先生","en_sentence":"Yes, sir.","zh_sentence":"是的，先生。","category":"稱謂"},
+  {"word":"Dr.","zh":"醫師；博士","en_sentence":"Dr. Chen helps me.","zh_sentence":"陳醫師幫助我。","category":"稱謂"},
+  {"word":"neighbor","zh":"鄰居","en_sentence":"My neighbor is kind.","zh_sentence":"我的鄰居很親切。","category":"名詞"},
+  {"word":"Easter","zh":"復活節","en_sentence":"We celebrate Easter.","zh_sentence":"我們慶祝復活節。","category":"節日"}
+
+];
+
+/* ===================== 初始化資料 ===================== */
+const pick = (arr,n)=>arr.slice().sort(()=>Math.random()-.5).slice(0,Math.min(n,arr.length));
+function initData(){
+  const list = pick(VOCAB_DATA,GAME.QUESTIONS_COUNT);
+  gameState.data = list.map(v=>({answer:v.word, zh:v.zh, sentence:safeBlank(v.en_sentence,v.word),
+                             original:v.en_sentence, zh_sentence:v.zh_sentence, category:v.category}));
+  $('#total-questions').textContent = gameState.data.length;
+}
+
+/* ===================== 本地儲存 & 星星 ===================== */
+function loadTotalStars(){
+  if(typeof LinkageSystem!=='undefined' && LinkageSystem?.stars?.get) return Number(LinkageSystem.stars.get())||0;
+  if(typeof StarRewardSystem!=='undefined' && typeof StarRewardSystem.getTotalStars==='function') return Number(StarRewardSystem.getTotalStars())||0;
+  return parseInt(localStorage.getItem('totalStars')||'0',10);
+}
+function addStarsToTotal(n){
+  if(typeof StarSystem!=='undefined' && typeof StarSystem.addTotalStars==='function'){ StarSystem.addTotalStars(n, '瑞亞遊戲獎勵'); updateStarsDisplay(); return; }
+  if(typeof StarRewardSystem!=='undefined' && typeof StarRewardSystem.addStars==='function'){ StarRewardSystem.addStars(n); updateStarsDisplay(); return; }
+  if(typeof LinkageSystem!=='undefined' && LinkageSystem?.stars?.add){ LinkageSystem.stars.add(n); updateStarsDisplay(); return; }
+  localStorage.setItem('totalStars', String(loadTotalStars()+n));
+  updateStarsDisplay();
+}
+function updateStarsDisplay(){ $('#totalStarsCount').textContent = loadTotalStars(); }
+function resetProgress(){ localStorage.removeItem('fillIndex'); location.reload(); }
+
+/* ===================== 背景音樂 ===================== */
+let music = null, playing=false;
+function initMusic(){
+  music = new Audio('sound/午後放鬆時光（純音樂）.mp3');
+  music.loop = true;
+  music.volume = .3;
+  if(localStorage.getItem('bgMusicState')==='playing') playMusic();
+  $('#bgMusicControl').onclick = toggleMusic; updateMusicBtn();
+}
+function playMusic(){ if(!music) return; music.play().then(()=>{playing=true;localStorage.setItem('bgMusicState','playing');updateMusicBtn();}).catch(()=>{}); }
+function pauseMusic(){ if(!music) return; music.pause(); playing=false; localStorage.setItem('bgMusicState','paused'); updateMusicBtn(); }
+function toggleMusic(){ playing?pauseMusic():playMusic(); }
+function updateMusicBtn(){ const b=$('#bgMusicControl'); b.textContent = playing?'🔊':'🔇'; b.classList.toggle('paused',!playing); }
+
+/* ===================== 語音 ===================== */
+function pickVoice(){
+  const vs = speechSynthesis.getVoices();
+  const prefer = ['Google US English','Microsoft Aria Online','Microsoft Jenny Online','Samantha','Jenny','Aria','en-US'];
+  speakSys.voice = vs.find(v=>prefer.some(p=>v.name.includes(p))) || vs.find(v=>v.lang==='en-US') || vs[0];
+}
+if(typeof speechSynthesis!=='undefined'){ speechSynthesis.onvoiceschanged=pickVoice; pickVoice(); }
+
+/* ===================== 題目流程 ===================== */
+function timerStart(){
+  clearInterval(gameState.timer); let t=GAME.TIME_LIMIT;
+  $('#time-left').textContent=t; $('#timer').classList.remove('hidden');
+  gameState.questionStartTs = Date.now();
+  gameState.timer=setInterval(()=>{ t--; $('#time-left').textContent=t; if(t<=0){ clearInterval(gameState.timer); revealAnswer(true); } },1000);
+}
+function timerStop(){
+  clearInterval(gameState.timer);
+  if(gameState.questionStartTs){
+    const deltaSec = Math.max(0, Math.round((Date.now()-gameState.questionStartTs)/1000));
+    gameState.totalTimeUsed = (Number(gameState.totalTimeUsed)||0) + deltaSec;
+    gameState.questionStartTs = null;
+  }
+}
+
+function showQ(){
+  if(!gameState.data.length){ $('#question-container').innerHTML='<div style="color:#f66;font-size:1.2rem">⚠️ 題庫沒有題目</div>'; return; }
+  if(gameState.i>=gameState.data.length){ endGame(); return; }
+
+  gameState.answered=false; gameState.tries=0;
+  const q = gameState.data[gameState.i];
+  $('#question-container').innerHTML =
+    `<div class="question-title">英文句子：</div>
+     <div class="question-sentence">${q.sentence.replace('___','<span class="blank">___</span>')}</div>
+     <div class="question-zh">中文提示：${q.zh_sentence||q.zh}</div>
+     <input id="user-input" placeholder="輸入答案…" autocomplete="off" />
+     <div class="btn-row">
+       <button id="submit-btn" onclick="checkAnswer()">送出</button>
+       <button id="skip-btn" onclick="skipQ()">跳過</button>
+       <button id="next-btn" onclick="nextQ()">下一題</button>
+     </div>
+     <div id="feedback"></div>
+     <button id="speak-btn">🔊 朗讀</button>`;
+
+  $('#speak-btn').onclick = ()=> { say(q.original,.97,()=> setTimeout(()=>{ say(safeBlank(q.original,q.answer).replace('___','...'),1.02,()=>setTimeout(()=>say(q.answer,1.08),350)); },350)); };
+  const input = $('#user-input'); input.focus();
+  input.onkeydown = e => { if(e.key==='Enter') checkAnswer(); else if(e.key.length===1){ try{ SOUNDS.type.currentTime=0; SOUNDS.type.play(); }catch(_){} } };
+  $('#current-index').textContent = gameState.i+1; timerStart(); setTimeout(()=>say(q.original,.97),400);
+  window.answerStartTime = Date.now();
+}
+
+function revealAnswer(autoNext=false){
+  gameState.tries = 999;
+  $('#feedback').innerHTML = `<span style="color:#f66">⏰ 時間到！正確答案：<b>${gameState.data[gameState.i].answer}</b></span>`;
+  $('#submit-btn').disabled = true; $('#user-input').disabled = true;
+  log(false);
+  setTimeout(()=>{
+    lives--; updateLives();
+    if(lives<=0){ endGame(); return; }
+    if(autoNext){ gameState.i++; showQ(); }
+  }, 500);
+}
+
+function log(correct,user=''){
+  const q = gameState.data[gameState.i];
+  gameState.answerLog[gameState.i] = { word:q.answer, zh:q.zh_sentence||q.zh, en:q.original, user, correct, stars:0, category:q.category };
+}
+
+function checkAnswer(){
+  if(gameState.answered) return;
+  gameState.tries++;
+  const ans = gameState.data[gameState.i].answer.toLowerCase();
+  const val = $('#user-input').value.trim().toLowerCase();
+
+  if(val===ans){
+    gameState.answered=true; timerStop();
+    const sec = (Date.now()-(window.answerStartTime||Date.now()))/1000;
+    let bonus = sec<10 ? 2 : 0;
+    $('#feedback').innerHTML = `<div class="feedback-box feedback-correct">✅ 答對了！太棒了！ ${bonus?'<span class="feedback-bonus">BONUS! ⏱️ +2</span>':''}</div>`;
+    $('#user-input').disabled=true; $('#submit-btn').disabled=true; say(ans,1.1);
+    log(true,$('#user-input').value.trim());
+    const add = 1+bonus; addStarsToTotal(add); gameState.sessionStars+=add; $('#sessionStarsDisplay').textContent=`本次已獲得 ${gameState.sessionStars} 顆星星`;
+    try{ SOUNDS.correct.currentTime=0; SOUNDS.correct.play(); }catch(_){ }
+    setTimeout(()=>{ gameState.i++; showQ(); },1300);
+  }else{
+    if(gameState.tries<GAME.MAX_ATTEMPTS){
+      $('#feedback').innerHTML = `<div class="feedback-box feedback-wrong">❌ 再試一次！你可以的！</div>`;
+      try{ SOUNDS.wrong.currentTime=0; SOUNDS.wrong.play(); }catch(_){ }
+    }else{
+      $('#feedback').innerHTML = `<div class="feedback-box feedback-wrong">❌ 正確答案：<b>${gameState.data[gameState.i].answer}</b><br>別氣餒，再接再厲！</div>`;
+      $('#user-input').disabled=true; $('#submit-btn').disabled=true;
+      log(false,$('#user-input').value.trim());
+      try{ SOUNDS.wrong.currentTime=0; SOUNDS.wrong.play(); }catch(_){ }
+      setTimeout(()=>{
+        lives--; updateLives();
+        if(lives<=0){ endGame(); return; }
+        gameState.i++; showQ();
+      },1300);
+    }
+  }
+}
+
+function skipQ(){
+  timerStop();
+  log(null,'');
+  $('#feedback').innerHTML='<span style="color:#bbb">已跳過本題</span>';
+  setTimeout(()=>{
+    lives--; updateLives();
+    if(lives<=0){ endGame(); return; }
+    gameState.i++; showQ();
+  },400);
+}
+function nextQ(){
+  timerStop();
+  if(!gameState.answerLog[gameState.i]){ log(false,$('#user-input')?.value||''); $('#feedback').innerHTML='<span style="color:#bbb">未作答</span>'; }
+  setTimeout(()=>{
+    lives--; updateLives();
+    if(lives<=0){ endGame(); return; }
+    gameState.i++; showQ();
+  },400);
+}
+
+/* ===================== 結束畫面 ===================== */
+function endGame(){
+  const correct = gameState.answerLog.filter(x=>x && x.correct===true).length;
+  const wrong   = gameState.answerLog.filter(x=>x && x.correct===false).length;
+  $('#endSessionStars').textContent = gameState.sessionStars;
+  $('#endCorrectCount').textContent = correct;
+  $('#endWrongCount').textContent = wrong;
+  $('#endTotalStars').textContent = loadTotalStars();
+  $('#gameEndModal').style.display='flex';
+  timerStop();
+  try{ SOUNDS.correct.currentTime=0; SOUNDS.correct.play(); }catch(_){ }
+
+  if(window.GameDialogue){
+    setTimeout(()=>{
+      if(correct>wrong) window.GameDialogue.showGameVictoryDialogue();
+      else window.GameDialogue.showGameDefeatDialogue();
+    },2000);
+  }
+}
+function restartGame(){
+  $('#gameEndModal').style.display='none';
+  gameState.i=0; gameState.sessionStars=0; gameState.answerLog=[];
+  gameState.totalTimeUsed=0; gameState.questionStartTs=null;
+  window.gameState = gameState;
+  lives=5; updateLives();
+  initData(); $('#current-index').textContent=1; $('#sessionStarsDisplay').textContent='本次已獲得 0 顆星星';
+  showQ();
+}
+
+/* ===================== 複習/統計/匯出 ===================== */
+function showReviewModal(){ timerStop(); fillCategories(); showList('all'); $('#totalVocabCount').textContent=VOCAB_DATA.length; $('#reviewModal').style.display='flex'; }
+function closeReviewModal(){ $('#reviewModal').style.display='none'; if(gameState.i<gameState.data.length && !gameState.answered) timerStart(); }
+function speakWord(w){ say(w,.9); }
+
+function fillCategories(){
+  const sel = $('#categoryFilter'); sel.innerHTML = '<option value="all">全部單字</option>';
+  [...new Set(VOCAB_DATA.map(v=>v.category))].forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o); });
+  sel.onchange = e=> showList(e.target.value);
+}
+
+function showList(cat){
+  const box=$('#reviewWordsContainer'); box.innerHTML='';
+  const list = cat==='all'? VOCAB_DATA : VOCAB_DATA.filter(v=>v.category===cat);
+  $('#totalVocabCount').textContent=list.length;
+  if(cat!=='all'){
+    const t=document.createElement('div'); t.style.cssText='color:#0ff;font-size:1.1rem;font-weight:700;margin:8px 0;padding:8px;background:rgba(0,255,255,.1);border-radius:8px;text-align:center';
+    t.textContent=`📂 ${cat} (${list.length}個單字)`; box.appendChild(t);
+  }
+  list.forEach((v,i)=>{
+    const d=document.createElement('div');
+    d.style.cssText='background:rgba(255,255,255,.1);border:1px solid #ffd700;border-radius:10px;padding:12px;margin:8px 0;text-align:left;cursor:pointer;transition:.2s';
+    d.innerHTML = `
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="flex:1;min-width:0">
+          <div style="color:#ffd700;font-weight:700;margin-bottom:6px;word-break:break-word">${i+1}. ${v.word}${cat==='all'?` <span style="color:#0ff;font-size:.8rem;background:rgba(0,255,255,.2);padding:2px 6px;border-radius:4px">${v.category}</span>`:''}</div>
+          <div style="color:#fff;margin-bottom:6px">${v.zh}</div>
+          <div style="color:#0ff;font-size:.95rem;font-style:italic">${v.en_sentence}</div>
+        </div>
+        <button onclick="event.stopPropagation();speakWord('${v.word.replace(/'/g,"\\'")}')" style="background:#0ff;color:#000;border:none;border-radius:50%;width:42px;height:42px;font-size:1.2rem;box-shadow:0 2px 8px rgba(0,255,255,.3)">🔊</button>
+      </div>`;
+    d.onmouseenter=()=>{ d.style.background='rgba(255,215,0,.2)'; d.style.transform='scale(1.02)'; };
+    d.onmouseleave=()=>{ d.style.background='rgba(255,255,255,.1)'; d.style.transform='scale(1)'; };
+    d.onclick=()=>speakWord(v.word);
+    box.appendChild(d);
+  });
+  if(!list.length){ const n=document.createElement('div'); n.style.cssText='text-align:center;color:#888;padding:30px;font-style:italic'; n.textContent='此分類暫無單字'; box.appendChild(n); }
+}
+
+function showVocabStats(){
+  const stats = {}; VOCAB_DATA.forEach(v=> stats[v.category]=(stats[v.category]||0)+1 );
+  const modal=document.createElement('div'); modal.className='modal'; modal.style.display='flex';
+  modal.innerHTML = `<div class="modal-content" style="max-width:600px">
+    <div class="end-icon">📊</div><h2 style="color:#ffd700">字庫統計</h2>
+    <div style="text-align:left;margin:12px 0">${Object.entries(stats).map(([c,n])=>`
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,215,0,.3)">
+        <span style="color:#fff">${c}</span><span style="color:#0ff;font-weight:700">${n} 個單字</span>
+      </div>`).join('')}
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-top:2px solid #ffd700;margin-top:8px;font-weight:700">
+        <span style="color:#ffd700">總計</span><span style="color:#ffd700">${VOCAB_DATA.length} 個單字</span>
+      </div>
+    </div>
+    <div class="end-buttons"><button onclick="this.closest('.modal').remove()">關閉</button></div></div>`;
+  modal.onclick=e=>{ if(e.target===modal) modal.remove(); };
+  document.body.appendChild(modal);
+}
+
+function exportVocabData(){
+  const csv = [
+    ['單字','中文','英文例句','中文例句','分類'],
+    ...VOCAB_DATA.map(v=>[v.word,v.zh,v.en_sentence,v.zh_sentence||'',v.category])
+  ].map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'}); const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=`zeus_vocabulary_${new Date().toISOString().slice(0,10)}.csv`; a.click();
+}
+
+/* ===================== 事件 & 啟動 ===================== */
+function updateIndex(){ $('#current-index').textContent = gameState.i+1; }
+function addNotice(msg,type='info'){
+  const n=document.createElement('div'); n.style.cssText=`position:fixed;top:20px;left:50%;transform:translateX(-50%);
+    background:${type==='success'?'#4caf50':'#2196f3'};color:#fff;padding:10px 18px;border-radius:8px;font-weight:700;z-index:2000`;
+  n.textContent=msg; document.body.appendChild(n); setTimeout(()=>n.remove(),2200);
+}
+function addStarsAndToast(n){ addStarsToTotal(n); addNotice('✅ 字庫已成功匯出！','success'); }
+
+document.addEventListener('DOMContentLoaded',()=>{
+  updateStarsDisplay(); $('#sessionStarsDisplay').textContent='本次已獲得 0 顆星星';
+  updateLives();
+  initData(); gameState.i=0; updateIndex(); showQ(); localStorage.removeItem('fillIndex');
+  initMusic();
+
+  if(window.GameDialogue){
+    window.GameDialogue.init();
+    setTimeout(()=>{ window.GameDialogue.showGameStartDialogue(); },2000);
+  }
+  // 點彈窗外關閉
+  ['reviewModal','gameEndModal'].forEach(id=>{
+    const m=$('#'+id); if(m) m.addEventListener('click',e=>{ if(e.target===m) m.style.display='none'; });
+  });
+});
+
+</script>
+</body>
+</html>

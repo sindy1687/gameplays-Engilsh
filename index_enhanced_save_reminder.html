@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🚀 太空英語冒險 - 增強版存檔提醒</title>
+  <link rel="stylesheet" href="responsive_enhanced.css">
+  <!-- TODO: css/saveReminderAnimations.css file does not exist - commented out -->
+  <!-- <link rel="stylesheet" href="css/saveReminderAnimations.css"> -->
+  <!-- 其他現有的 CSS 引入 -->
+</head>
+<body>
+  <div id="container">
+    <!-- 現有的頁面內容 -->
+    <div class="header">
+      <h1 class="title">🚀 太空英語冒險</h1>
+      <p class="subtitle">探索宇宙，學習英語！</p>
+    </div>
+
+    <!-- 增強版存檔提醒區域 -->
+    <div id="saveReminder" style="display: none;">
+      <!-- 內容將由增強版系統動態生成 -->
+    </div>
+
+    <!-- 玩家資訊區域 -->
+    <div class="player-info">
+      <input type="text" id="playerName" placeholder="輸入您的太空人名稱">
+      <div class="avatar-grid">
+        <!-- 頭像選項 -->
+        <div class="avatar-option" style="background-image: url('img/avatars/avatar_astro1.png');" onclick="selectAvatar(this, 'img/avatars/avatar_astro1.png')"></div>
+        <!-- 其他頭像選項... -->
+      </div>
+    </div>
+
+    <!-- 主要遊戲按鈕 -->
+    <div class="main-buttons">
+      <button class="btn" onclick="startAdventure()">🚀 開始冒險</button>
+      <button class="btn" onclick="openVocabularyBook()">📚 單字本</button>
+      <button class="btn" onclick="openGrammarTower()">🏛️ 文法塔</button>
+      <button class="btn" onclick="openShop()">🛒 商城</button>
+      <button class="btn" onclick="openGacha()">🎲 抽卡</button>
+    </div>
+
+    <!-- 導航按鈕 -->
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="openCards()">📁 卡片收藏</button>
+      <button class="nav-btn" onclick="openAchievements()">🏆 成就勳章</button>
+      <button class="nav-btn" onclick="openAutoSaveManager()">💾 自動儲存</button>
+    </div>
+  </div>
+
+  <!-- 現有的腳本引入 -->
+  <script src="js/userData.js"></script>
+  <script src="js/autoSaveSystem.js"></script>
+  <script src="js/achievementSystem.js"></script>
+  <script src="js/characterDialogue.js"></script>
+  <script src="js/cards.js"></script>
+  
+  <!-- 新增：增強版存檔提醒系統 -->
+  <script src="js/enhancedSaveReminder.js"></script>
+
+  <script>
+    // 現有的遊戲邏輯保持不變
+    console.log('=== JavaScript開始執行 ===');
+    
+    // 增強版存檔提醒系統整合
+    function integrateEnhancedSaveReminder() {
+      // 在重要操作中記錄活動
+      
+      // 開始冒險時記錄
+      window.startAdventure = function() {
+        window.recordImportantAction('adventure_start', '開始冒險');
+        location.href = 'atlas.html';
+      };
+      
+      // 開啟單字本時記錄
+      window.openVocabularyBook = function() {
+        window.recordImportantAction('vocabulary_access', '開啟單字本');
+        location.href = 'book.html';
+      };
+      
+      // 開啟文法塔時記錄
+      window.openGrammarTower = function() {
+        window.recordImportantAction('grammar_access', '開啟文法塔');
+        location.href = 'grammar_tower_select.html';
+      };
+      
+      // 開啟商城時記錄
+      window.openShop = function() {
+        window.recordImportantAction('shop_access', '開啟商城');
+        location.href = 'shop.html';
+      };
+      
+      // 開啟抽卡時記錄
+      window.openGacha = function() {
+        window.recordImportantAction('gacha_access', '開啟抽卡');
+        location.href = 'gacha.html';
+      };
+      
+      // 開啟卡片收藏時記錄
+      window.openCards = function() {
+        window.recordImportantAction('cards_access', '開啟卡片收藏');
+        location.href = 'cards.html';
+      };
+      
+      // 開啟成就系統時記錄
+      window.openAchievements = function() {
+        window.recordImportantAction('achievements_access', '開啟成就系統');
+        location.href = 'achievement.html';
+      };
+      
+      // 開啟自動儲存管理器
+      window.openAutoSaveManager = function() {
+        window.open('autoSaveManager.html', '_blank');
+      };
+    }
+    
+    // 頭像選擇時記錄重要操作
+    function selectAvatar(element, avatarPath) {
+      // 現有的頭像選擇邏輯...
+      document.querySelectorAll('.avatar-option').forEach(avatar => {
+        avatar.classList.remove('selected');
+      });
+      element.classList.add('selected');
+      
+      // 記錄重要操作
+      window.recordImportantAction('avatar_change', '更換頭像');
+      
+      // 其他現有邏輯...
+    }
+    
+    // 玩家名稱輸入時記錄
+    document.getElementById('playerName').addEventListener('input', function(e) {
+      const name = e.target.value.trim();
+      if (name) {
+        LinkageSystem.player.setName(name);
+        // 記錄重要操作
+        window.recordImportantAction('name_change', '更改玩家名稱');
+      }
+    });
+    
+    // 頁面載入時的初始化
+    window.addEventListener('load', function() {
+      console.log('🔔 增強版存檔提醒系統整合完成');
+      
+      // 整合增強版存檔提醒系統
+      integrateEnhancedSaveReminder();
+      
+      // 載入使用者名稱和頭像
+      LinkageSystem.player.updateDisplay();
+      
+      // 現有的初始化邏輯...
+      const savedAvatar = localStorage.getItem('selectedAvatar');
+      if (savedAvatar) {
+        // 恢復頭像選擇邏輯...
+      }
+      
+      // 檢查是否為首次訪問
+      const hasShownWelcome = localStorage.getItem('hasShownWelcomeDialogue');
+      if (!hasShownWelcome && window.CharacterDialogue) {
+        setTimeout(() => {
+          window.CharacterDialogue.showWelcomeDialogue();
+          localStorage.setItem('hasShownWelcomeDialogue', 'true');
+        }, 2000);
+      }
+      
+      // 注意：不再需要啟動舊的存檔提醒系統
+      // startSaveReminderCheck(); // 這行被增強版系統取代
+    });
+    
+    // 成就系統整合
+    function updateAchievementBadge() {
+      // 現有的成就更新邏輯...
+      // 當獲得成就時記錄重要操作
+      window.recordImportantAction('achievement_progress', '成就進度更新');
+    }
+    
+    // 每日簽到整合
+    function checkDailyReward() {
+      // 現有的每日簽到邏輯...
+      // 當獲得每日獎勵時記錄重要操作
+      window.recordImportantAction('daily_reward', '獲得每日獎勵');
+    }
+    
+    // 星星系統整合
+    function updateStarsDisplay() {
+      LinkageSystem.stars.updateDisplay();
+      // 當星星數量變化時記錄重要操作
+      window.recordImportantAction('stars_change', '星星數量變化');
+    }
+    
+    // 音樂控制（保持現有功能）
+    const backgroundMusic = document.getElementById('backgroundMusic');
+    const toggleMusicBtn = document.getElementById('toggleMusic');
+    let isMusicPlaying = LinkageSystem.music.isPlaying();
+    
+    // 其他現有的JavaScript邏輯保持不變...
+  </script>
+</body>
+</html> 

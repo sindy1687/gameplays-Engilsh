@@ -1,0 +1,338 @@
+[
+  {
+    "english": "cute",
+    "chinese": "可愛的",
+    "enExample": "That baby is so cute!",
+    "zhExample": "那個寶寶好可愛！"
+  },
+  {
+    "english": "uncle",
+    "chinese": "叔叔",
+    "enExample": "My uncle can play the guitar well.",
+    "zhExample": "我叔叔很會彈吉他。"
+  },
+  {
+    "english": "beef",
+    "chinese": "牛肉",
+    "enExample": "Beef is used in hamburgers.",
+    "zhExample": "漢堡裡有牛肉。"
+  },
+  {
+    "english": "pork",
+    "chinese": "豬肉",
+    "enExample": "She doesn't eat pork.",
+    "zhExample": "她不吃豬肉。"
+  },
+  {
+    "english": "hot dog",
+    "chinese": "熱狗",
+    "enExample": "I had a hot dog at the park.",
+    "zhExample": "我在公園吃了一根熱狗。"
+  },
+  {
+    "english": "sandwich",
+    "chinese": "三明治",
+    "enExample": "He made a tuna sandwich.",
+    "zhExample": "他做了一個鮪魚三明治。"
+  },
+  {
+    "english": "vegetable",
+    "chinese": "蔬菜",
+    "enExample": "We eat vegetables every day.",
+    "zhExample": "我們每天吃蔬菜。"
+  },
+  {
+    "english": "pie",
+    "chinese": "派",
+    "enExample": "Apple pie is my grandma’s favorite.",
+    "zhExample": "蘋果派是我奶奶最愛的。"
+  },
+  {
+    "english": "pizza",
+    "chinese": "披薩",
+    "enExample": "We ordered a large pizza.",
+    "zhExample": "我們點了一個大披薩。"
+  },
+  {
+    "english": "cookie",
+    "chinese": "餅乾",
+    "enExample": "I love eating cookies after dinner.",
+    "zhExample": "我喜歡晚餐後吃餅乾。"
+  },
+  {
+    "english": "hamburger",
+    "chinese": "漢堡",
+    "enExample": "He ate a big hamburger for lunch.",
+    "zhExample": "他午餐吃了一個大漢堡。"
+  },
+  {
+    "english": "walk",
+    "chinese": "走",
+    "enExample": "I walk to school every day.",
+    "zhExample": "我每天走路上學。"
+  },
+  {
+    "english": "computer game",
+    "chinese": "電腦遊戲",
+    "enExample": "I play computer games on weekends.",
+    "zhExample": "我週末玩電腦遊戲。"
+  },
+  {
+    "english": "piano",
+    "chinese": "鋼琴",
+    "enExample": "She plays the piano beautifully.",
+    "zhExample": "她鋼琴彈得很美。"
+  },
+  {
+    "english": "basketball",
+    "chinese": "籃球",
+    "enExample": "Do you want to play basketball?",
+    "zhExample": "你想打籃球嗎？"
+  },
+  {
+    "english": "kite",
+    "chinese": "風箏",
+    "enExample": "She is flying a kite in the park.",
+    "zhExample": "她正在公園放風箏。"
+  },
+  {
+    "english": "outside of",
+    "chinese": "在…外側",
+    "enExample": "The dog is outside of the house.",
+    "zhExample": "狗在房子的外面。"
+  },
+  {
+    "english": "toward",
+    "chinese": "向；往",
+    "enExample": "He ran toward the bus.",
+    "zhExample": "他朝著公車跑去。"
+  },
+  {
+    "english": "t-shirt",
+    "chinese": "T恤",
+    "enExample": "He is wearing a blue T-shirt.",
+    "zhExample": "他穿著藍色的T恤。"
+  },
+  {
+    "english": "shorts",
+    "chinese": "短褲",
+    "enExample": "They play soccer in shorts.",
+    "zhExample": "他們穿短褲踢足球。"
+  },
+  {
+    "english": "socks",
+    "chinese": "(短)襪子",
+    "enExample": "I wear socks with my shoes.",
+    "zhExample": "我穿鞋時會穿襪子。"
+  },
+  {
+    "english": "shoes",
+    "chinese": "鞋子",
+    "enExample": "These shoes are too small.",
+    "zhExample": "這雙鞋太小了。"
+  },
+  {
+    "english": "comb",
+    "chinese": "梳子 動梳",
+    "enExample": "I use a comb every morning.",
+    "zhExample": "我每天早上用梳子。"
+  },
+  {
+    "english": "umbrella",
+    "chinese": "雨傘",
+    "enExample": "I take an umbrella when it rains.",
+    "zhExample": "下雨時我會帶雨傘。"
+  },
+  {
+    "english": "lip",
+    "chinese": "唇",
+    "enExample": "Her lips are red.",
+    "zhExample": "她的嘴唇是紅色的。"
+  },
+  {
+    "english": "Wednesday",
+    "chinese": "星期三",
+    "enExample": "My birthday is on Wednesday.",
+    "zhExample": "我的生日在星期三。"
+  },
+  {
+    "english": "Friday",
+    "chinese": "星期五",
+    "enExample": "I watch movies on Friday.",
+    "zhExample": "我星期五看電影。"
+  },
+  {
+    "english": "Saturday",
+    "chinese": "星期六",
+    "enExample": "We go shopping on Saturday.",
+    "zhExample": "我們星期六去購物。"
+  },
+  {
+    "english": "week",
+    "chinese": "週；一星期",
+    "enExample": "There are seven days in a week.",
+    "zhExample": "一週有七天。"
+  },
+  {
+    "english": "weekend",
+    "chinese": "週末",
+    "enExample": "I rest at home on the weekend.",
+    "zhExample": "我週末在家休息。"
+  },
+  {
+    "english": "o’clock",
+    "chinese": "…點鐘",
+    "enExample": "It’s 3 o’clock now.",
+    "zhExample": "現在是三點鐘。"
+  },
+  {
+    "english": "a.m.",
+    "chinese": "上午",
+    "enExample": "I wake up at 7 a.m.",
+    "zhExample": "我早上七點起床。"
+  },
+  {
+    "english": "p.m.",
+    "chinese": "下午",
+    "enExample": "School ends at 4 p.m.",
+    "zhExample": "學校下午四點放學。"
+  },
+  {
+    "english": "classroom",
+    "chinese": "教室",
+    "enExample": "The classroom is very clean.",
+    "zhExample": "教室很乾淨。"
+  },
+  {
+    "english": "classmate",
+    "chinese": "同學",
+    "enExample": "My classmate is very helpful.",
+    "zhExample": "我的同學很樂於助人。"
+  },
+  {
+    "english": "blackboard",
+    "chinese": "黑板",
+    "enExample": "The teacher writes on the blackboard.",
+    "zhExample": "老師在黑板上寫字。"
+  },
+  {
+    "english": "notebook",
+    "chinese": "筆記本",
+    "enExample": "I write notes in my notebook.",
+    "zhExample": "我在筆記本裡寫筆記。"
+  },
+  {
+    "english": "English",
+    "chinese": "英文",
+    "enExample": "I study English every day.",
+    "zhExample": "我每天學英文。"
+  },
+  {
+    "english": "Chinese",
+    "chinese": "中文；中國人",
+    "enExample": "He speaks Chinese very well.",
+    "zhExample": "他中文講得很好。"
+  },
+  {
+    "english": "PE",
+    "chinese": "體育",
+    "enExample": "We play basketball in PE class.",
+    "zhExample": "我們在體育課打籃球。"
+  },
+  {
+    "english": "say",
+    "chinese": "說",
+    "enExample": "What did you say?",
+    "zhExample": "你剛剛說什麼？"
+  },
+  {
+    "english": "wear",
+    "chinese": "穿",
+    "enExample": "I wear a jacket in winter.",
+    "zhExample": "我冬天穿外套。"
+  },
+  {
+    "english": "wash",
+    "chinese": "洗",
+    "enExample": "I wash my hands before eating.",
+    "zhExample": "吃飯前我會洗手。"
+  },
+  {
+    "english": "want",
+    "chinese": "想要",
+    "enExample": "I want some juice.",
+    "zhExample": "我想喝果汁。"
+  },
+  {
+    "english": "use",
+    "chinese": "使用",
+    "enExample": "I use a pencil to draw.",
+    "zhExample": "我用鉛筆畫畫。"
+  },
+  {
+    "english": "boring",
+    "chinese": "乏味的",
+    "enExample": "This movie is boring.",
+    "zhExample": "這部電影很無聊。"
+  },
+  {
+    "english": "very",
+    "chinese": "非常；很",
+    "enExample": "He is very tall.",
+    "zhExample": "他非常高。"
+  },
+  {
+    "english": "living room",
+    "chinese": "客廳",
+    "enExample": "We watch TV in the living room.",
+    "zhExample": "我們在客廳看電視。"
+  },
+  {
+    "english": "wall",
+    "chinese": "牆壁",
+    "enExample": "I hang a picture on the wall.",
+    "zhExample": "我把畫掛在牆上。"
+  },
+  {
+    "english": "sofa",
+    "chinese": "沙發",
+    "enExample": "I sit on the sofa.",
+    "zhExample": "我坐在沙發上。"
+  },
+  {
+    "english": "plate",
+    "chinese": "盤子；碟子",
+    "enExample": "I put food on the plate.",
+    "zhExample": "我把食物放在盤子上。"
+  },
+  {
+    "english": "bowl",
+    "chinese": "碗",
+    "enExample": "I eat soup from a bowl.",
+    "zhExample": "我用碗喝湯。"
+  },
+  {
+    "english": "chopsticks",
+    "chinese": "筷子",
+    "enExample": "I eat rice with chopsticks.",
+    "zhExample": "我用筷子吃飯。"
+  },
+  {
+    "english": "bookstore",
+    "chinese": "書店",
+    "enExample": "I bought a book at the bookstore.",
+    "zhExample": "我在書店買了書。"
+  },
+  {
+    "english": "Taiwan",
+    "chinese": "台灣",
+    "enExample": "I live in Taiwan.",
+    "zhExample": "我住在台灣。"
+  },
+  {
+    "english": "MRT",
+    "chinese": "捷運",
+    "enExample": "I take the MRT to school.",
+    "zhExample": "我搭捷運上學。"
+  }
+]

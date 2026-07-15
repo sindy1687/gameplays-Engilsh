@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GM 管理後台</title>
+  <link rel="stylesheet" href="css/gm.css">
+</head>
+<body>
+
+  <main class="gm-page">
+
+    <section class="gm-login-panel" id="gmLoginPanel">
+      <h1>GM 管理後台</h1>
+      <p>請輸入管理員密碼以登入管理介面。</p>
+
+      <input
+        type="password"
+        id="gmPasswordInput"
+        placeholder="請輸入管理員密碼"
+      >
+
+      <button type="button" id="gmLoginBtn">
+        登入管理後台
+      </button>
+
+      <p id="gmLoginMessage" class="gm-message"></p>
+    </section>
+
+    <section class="gm-dashboard" id="gmDashboard" hidden>
+
+      <header class="gm-header">
+        <div>
+          <h1>GM 管理後台</h1>
+          <p>歡迎回來～這裡可以管理遊戲數據與設定。</p>
+        </div>
+
+        <a href="index.html" class="gm-home-link">
+          返回首頁
+        </a>
+      </header>
+
+      <section class="gm-summary">
+        <div class="gm-summary-card">
+          <span>總星星數</span>
+          <strong id="gmSummaryStars">0</strong>
+        </div>
+
+        <div class="gm-summary-card">
+          <span>已解鎖關卡數</span>
+          <strong id="gmSummaryUnlockedLevels">0</strong>
+        </div>
+
+        <div class="gm-summary-card">
+          <span>已完成關卡數</span>
+          <strong id="gmSummaryCompletedLevels">0</strong>
+        </div>
+
+        <div class="gm-summary-card">
+          <span>已解鎖卡片數</span>
+          <strong id="gmSummaryUnlockedCards">0</strong>
+        </div>
+
+        <div class="gm-summary-card">
+          <span>擁有卡片數</span>
+          <strong id="gmSummaryOwnedCards">0</strong>
+        </div>
+
+        <div class="gm-summary-card">
+          <span>已解鎖星座數</span>
+          <strong id="gmSummaryUnlockedZodiac">0</strong>
+        </div>
+
+        <div class="gm-summary-card">
+          <span>已解鎖神祇數</span>
+          <strong id="gmSummaryUnlockedGods">0</strong>
+        </div>
+      </section>
+
+      <nav class="gm-tabs">
+        <button type="button" class="active" data-gm-tab="summary">總覽</button>
+        <button type="button" data-gm-tab="user">玩家資料</button>
+        <button type="button" data-gm-tab="stars">星星</button>
+        <button type="button" data-gm-tab="levels">關卡</button>
+        <button type="button" data-gm-tab="zodiac">十二星座</button>
+        <button type="button" data-gm-tab="gods">希臘神祇</button>
+        <button type="button" data-gm-tab="cards">卡片</button>
+        <button type="button" data-gm-tab="market">商城交易</button>
+        <button type="button" data-gm-tab="gacha">抽卡</button>
+        <button type="button" data-gm-tab="tasks">每日任務</button>
+        <button type="button" data-gm-tab="settings">設定</button>
+        <button type="button" data-gm-tab="backup">備份</button>
+        <button type="button" data-gm-tab="inspector">資料檢查器</button>
+        <button type="button" data-gm-tab="logs">操作日誌</button>
+      </nav>
+
+      <section class="gm-tab-panel" id="gmTabSummary">
+        <h2>總覽</h2>
+        <p>查看遊戲總覽資訊。</p>
+        <div id="gmSummaryDetails" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabUser" hidden>
+        <h2>玩家資料管理</h2>
+        <p>管理玩家名稱與資料。</p>
+
+        <div class="gm-filter-row">
+          <input type="text" id="gmPlayerNameInput" placeholder="玩家名稱" maxlength="10">
+          <button type="button" id="gmSavePlayerNameBtn">儲存玩家名稱</button>
+        </div>
+
+        <div id="gmUserDetails" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabStars" hidden>
+        <h2>星星管理</h2>
+        <p>管理星星數量。</p>
+
+        <div class="gm-filter-row">
+          <input type="number" id="gmStarsInput" placeholder="星星數量" min="0">
+          <button type="button" id="gmSetStarsBtn">設定星星</button>
+        </div>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmAddStarsBtn">+100 星星</button>
+          <button type="button" id="gmRemoveStarsBtn">-100 星星</button>
+          <button type="button" id="gmResetStarsBtn" class="danger">星星數量重置</button>
+        </div>
+
+        <div id="gmStarsDetails" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabLevels" hidden>
+        <h2>關卡管理</h2>
+        <p>管理遊戲關卡解鎖狀態、完成進度與每日挑戰。</p>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmUnlockAllLevelsBtn">解鎖所有關卡</button>
+          <button type="button" id="gmLockAllLevelsBtn" class="danger">鎖定所有關卡</button>
+          <button type="button" id="gmCompleteAllLevelsBtn">所有關卡完成</button>
+          <button type="button" id="gmClearAllLevelsBtn" class="danger">清除所有關卡</button>
+        </div>
+
+        <div id="gmLevelList" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabZodiac" hidden>
+        <h2>十二星座管理</h2>
+        <p>管理星座解鎖狀態與進度。</p>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmUnlockAllZodiacBtn">
+            解鎖所有星座
+          </button>
+          <button type="button" id="gmLockAllZodiacBtn" class="danger">
+            鎖定所有星座
+          </button>
+        </div>
+
+        <div id="gmZodiacList" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabGods" hidden>
+        <h2>希臘神祇管理</h2>
+        <p>管理遊戲神祇解鎖狀態與希臘神祇資料。</p>
+
+        <div class="gm-filter-row">
+          <input type="text" id="gmGodSearchInput" placeholder="搜尋神祇名稱或關鍵字">
+          <select id="gmGodUnlockFilter">
+            <option value="">全部顯示</option>
+            <option value="unlocked">已解鎖</option>
+            <option value="locked">未解鎖</option>
+          </select>
+        </div>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmUnlockAllGodsBtn">
+            解鎖所有神祇
+          </button>
+          <button type="button" id="gmLockAllGodsBtn" class="danger">
+            鎖定所有神祇
+          </button>
+        </div>
+
+        <div id="gmGodList" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabCards" hidden>
+        <h2>卡片管理</h2>
+
+        <div class="gm-filter-row">
+          <input type="text" id="gmCardSearchInput" placeholder="搜尋卡片名稱或英文單字">
+          <select id="gmCardSeriesFilter">
+            <option value="">全部系列</option>
+          </select>
+          <select id="gmCardRarityFilter">
+            <option value="">全部稀有度</option>
+            <option value="SSR">超稀有</option>
+            <option value="R">稀有</option>
+            <option value="A">普通</option>
+          </select>
+        </div>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmUnlockAllCardsBtn">解鎖所有卡片</button>
+          <button type="button" id="gmLockAllCardsBtn" class="danger">鎖定所有卡片</button>
+        </div>
+
+        <div id="gmCardList" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabStars" hidden>
+        <h2>星星管理</h2>
+
+        <div class="gm-star-panel">
+          <p class="gm-current-stars">
+            總星星數：<strong id="gmCurrentStars">0</strong>
+          </p>
+
+          <input
+            type="number"
+            id="gmStarAmountInput"
+            min="1"
+            step="1"
+            placeholder="請輸入要調整的星星數量"
+          >
+
+          <div class="gm-star-actions">
+            <button type="button" id="gmAddStarsBtn">增加星星</button>
+            <button type="button" id="gmRemoveStarsBtn">減少星星</button>
+            <button type="button" id="gmSetStarsBtn">設定星星數量</button>
+            <button type="button" id="gmResetStarsBtn" class="danger">星星數量重置</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabMarket" hidden>
+        <h2>商城交易管理</h2>
+        <p>管理商城與交易資料。</p>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmClearMarketBtn" class="danger">清除商城資料</button>
+          <button type="button" id="gmClearTradeBtn" class="danger">清除交易日誌</button>
+          <button type="button" id="gmClearBargainBtn" class="danger">清除砍價日誌</button>
+        </div>
+
+        <div id="gmMarketList" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabGacha" hidden>
+        <h2>抽卡管理</h2>
+        <p>管理抽卡日誌與保底機制。</p>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmClearGachaBtn" class="danger">清除抽卡日誌</button>
+          <button type="button" id="gmResetPityBtn">重置保底計數</button>
+        </div>
+
+        <div id="gmGachaList" class="gm-list"></div>
+
+        <h3 style="margin-top: 30px;">系列抽卡池管理</h3>
+        <p>管理系列抽卡券與系列抽卡紀錄。</p>
+
+        <div class="gm-filter-row">
+          <select id="gmSeriesSelect">
+            <option value="">請選擇系列</option>
+          </select>
+          <input type="number" id="gmSeriesTicketInput" placeholder="抽卡券數量" min="0">
+          <button type="button" id="gmSetSeriesTicketBtn">設定抽卡券</button>
+          <button type="button" id="gmAddSeriesTicketBtn">+1 抽卡券</button>
+        </div>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmClearSeriesGachaBtn" class="danger">清除系列抽卡紀錄</button>
+          <button type="button" id="gmRefreshSeriesBtn">重新載入系列</button>
+        </div>
+
+        <div id="gmSeriesList" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabSettings" hidden>
+        <h2>設定管理</h2>
+        <p>管理遊戲設定。</p>
+
+        <div class="gm-filter-row">
+          <select id="gmThemeSelect">
+            <option value="">請選擇主題</option>
+            <option value="light">亮色主題</option>
+            <option value="dark">暗色主題</option>
+          </select>
+          <button type="button" id="gmSaveThemeBtn">儲存主題</button>
+        </div>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmClearSettingsBtn" class="danger">清除設定</button>
+        </div>
+
+        <div id="gmSettingsList" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabBackup" hidden>
+        <h2>備份與還原</h2>
+        <p>管理遊戲備份與 Google Drive 備份。</p>
+
+        <div class="gm-backup-reminder">
+          注意：備份功能會將遊戲資料匯出為 JSON 檔案，建議定期備份以保護遊戲資料。
+        </div>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmDownloadBackupBtn">下載本地備份</button>
+          <button type="button" id="gmUploadDriveBtn">上傳 Google Drive</button>
+          <button type="button" id="gmDownloadDriveBtn">從 Google Drive 下載</button>
+        </div>
+
+        <div id="gmBackupList" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabInspector" hidden>
+        <h2>資料檢查器</h2>
+        <p>檢查並瀏覽 localStorage 資料。</p>
+
+        <div class="gm-filter-row">
+          <input type="text" id="gmStorageSearchInput" placeholder="搜尋 key">
+          <button type="button" id="gmStorageSearchBtn">搜尋</button>
+        </div>
+
+        <div id="gmStorageList" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabLogs" hidden>
+        <h2>操作日誌</h2>
+        <button type="button" id="gmClearLogsBtn" class="danger">清除操作日誌</button>
+        <div id="gmLogList" class="gm-log-list"></div>
+      </section>
+
+      <p id="gmStatusMessage" class="gm-status-message"></p>
+
+    </section>
+
+  </main>
+
+  <script src="js/cards.js"></script>
+  <script src="js/stars.js"></script>
+  <script src="js/seriesGacha.js"></script>
+  <script src="js/gm.js"></script>
+</body>
+</html>
