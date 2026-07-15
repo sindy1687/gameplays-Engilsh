@@ -1,0 +1,152 @@
+[
+  {
+    "title": "🌟 宇宙入門單字集",
+    "file": "單字下載區/400單.csv",
+    "category": "初級",
+    "subtitle": "400個基礎英文單字 - 探索英語的起點",
+    "icon": "⭐",
+    "iconClass": "basic-icon",
+    "unlockCost": 50,
+    "description": "精選最基礎的400個英文單字，適合英語初學者，包含日常生活最常用的詞彙和簡單例句。"
+  },
+  {
+    "title": "🌠 星際考試單字集",
+    "file": "單字下載區/1000英檢單字.csv",
+    "category": "中級",
+    "subtitle": "1000個IELTS必備單字 - 征服英語考試",
+    "icon": "🌠",
+    "iconClass": "ielts-icon",
+    "unlockCost": 80,
+    "description": "精選 IELTS 考試中最常出現的 1000 個單字，包含詳細的中英文翻譯和實用例句，幫助您快速提升詞彙量。"
+  },
+  {
+    "title": "🚀 托福核心單字",
+    "file": "單字下載區/托福單字.csv",
+    "category": "高級",
+    "subtitle": "999個托福考試必備單字 - 學術詞彙精選",
+    "icon": "🚀",
+    "iconClass": "toefl-icon",
+    "unlockCost": 100,
+    "description": "專為托福考試設計的核心單字集，涵蓋999個學術詞彙和高頻考試詞彙，包含詳細的中英文翻譯和實用例句。"
+  },
+  {
+    "title": "💼 商務英語單字",
+    "file": "單字下載區/商務英語單字.csv",
+    "category": "商務",
+    "subtitle": "400個商務英語單字 - 職場必備",
+    "icon": "💼",
+    "iconClass": "business-icon",
+    "unlockCost": 70,
+    "description": "商務場合必備的英語詞彙，包含會議、談判、郵件、行銷、財務、人力資源、供應鏈、電子商務等場景用詞。"
+  },
+  {
+    "title": "🏃 運動生活單字",
+    "file": "單字下載區/運動生活單字.csv",
+    "category": "生活",
+    "subtitle": "300個運動與生活單字 - 健康生活指南",
+    "icon": "🏃",
+    "iconClass": "sports-icon",
+    "unlockCost": 65,
+    "description": "涵蓋300個運動項目和日常生活的英語詞彙，包含各種運動、健身、營養、心理素質等相關詞彙。"
+  },
+  {
+    "title": "📊 多益考試單字",
+    "file": "單字下載區/多益單字.csv",
+    "category": "考試",
+    "subtitle": "TOEIC考試高頻詞彙",
+    "icon": "📊",
+    "iconClass": "toeic-icon",
+    "unlockCost": 90,
+    "description": "TOEIC考試中最常出現的詞彙，幫助您快速提升商務英語能力。"
+  },
+  {
+    "title": "📖 基礎生活單字",
+    "file": "單字下載區/基礎生活單字.csv",
+    "category": "初級",
+    "subtitle": "日常生活基礎詞彙",
+    "icon": "📖",
+    "iconClass": "daily-icon",
+    "unlockCost": 50,
+    "description": "日常生活中最常用的基礎英語詞彙，適合初學者入門。"
+  },
+  {
+    "title": "📚 800單字集",
+    "file": "單字下載區/800單字.csv",
+    "category": "中級",
+    "subtitle": "800個中級英語單字",
+    "icon": "📚",
+    "iconClass": "auto-icon",
+    "unlockCost": 75,
+    "description": "適合中級學習者的800個英語單字，涵蓋多個主題領域。"
+  },
+  {
+    "title": "✈️ 旅遊單字集",
+    "file": "單字下載區/旅遊單字.csv",
+    "category": "旅遊",
+    "subtitle": "200個旅遊英語單字 - 探索世界",
+    "icon": "✈️",
+    "iconClass": "travel-icon",
+    "unlockCost": 55,
+    "description": "精選200個旅遊相關的英語單字，包含交通、住宿、觀光、餐飲、文化等場景詞彙，適合旅行者使用。"
+  },
+  {
+    "title": "📝 基礎進階單字",
+    "file": "單字下載區/基礎進階單字.csv",
+    "category": "初級",
+    "subtitle": "33個基礎進階單字 - 代詞與水果",
+    "icon": "📝",
+    "iconClass": "basic-advanced-icon",
+    "unlockCost": 50,
+    "description": "精選33個基礎進階單字，包含代詞、水果、稱呼、節日等場景詞彙，適合初學者進階學習。"
+  },
+  {
+    "title": "🎒 日常物品與感官單字",
+    "file": "單字下載區/日常物品與感官單字.csv",
+    "category": "生活",
+    "subtitle": "76個日常物品與感官單字",
+    "icon": "🎒",
+    "iconClass": "daily-items-icon",
+    "unlockCost": 55,
+    "description": "精選76個日常物品與感官單字，包含日常物品、感官詞、身體部位、形容詞、動作等場景詞彙。"
+  },
+  {
+    "title": "🌲 自然環境與情緒單字",
+    "file": "單字下載區/自然環境與情緒單字.csv",
+    "category": "自然",
+    "subtitle": "50個自然環境與情緒單字",
+    "icon": "🌲",
+    "iconClass": "nature-emotion-icon",
+    "unlockCost": 50,
+    "description": "精選50個自然環境與情緒單字，包含自然環境、動作、情緒等場景詞彙。"
+  },
+  {
+    "title": "🎓 形容詞與學校單字",
+    "file": "單字下載區/形容詞與學校單字.csv",
+    "category": "教育",
+    "subtitle": "75個形容詞與學校單字",
+    "icon": "🎓",
+    "iconClass": "adjective-school-icon",
+    "unlockCost": 55,
+    "description": "精選75個形容詞與學校單字，包含形容詞、動作、節日、方向、學校相關等場景詞彙。"
+  },
+  {
+    "title": "🏢 建築與商業單字",
+    "file": "單字下載區/建築與商業單字.csv",
+    "category": "商務",
+    "subtitle": "62個建築與商業單字",
+    "icon": "🏢",
+    "iconClass": "building-business-icon",
+    "unlockCost": 55,
+    "description": "精選62個建築與商業單字，包含建築、社團、商業、食物、形容詞等場景詞彙。"
+  },
+  {
+    "title": "💻 職業與科技單字",
+    "file": "單字下載區/職業與科技單字.csv",
+    "category": "科技",
+    "subtitle": "49個職業與科技單字",
+    "icon": "💻",
+    "iconClass": "career-tech-icon",
+    "unlockCost": 55,
+    "description": "精選49個職業與科技單字，包含職業、重量單位、科技、自然災害等場景詞彙。"
+  }
+]

@@ -1,0 +1,379 @@
+body {
+  margin: 0;
+  font-family: "Noto Sans TC", system-ui, sans-serif;
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.gm-page {
+  width: min(1100px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 24px 0 48px;
+}
+
+.gm-login-panel,
+.gm-dashboard {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.gm-login-panel {
+  max-width: 420px;
+  margin: 80px auto 0;
+}
+
+.gm-login-panel h1,
+.gm-dashboard h1 {
+  margin: 0 0 8px;
+  font-size: 24px;
+}
+
+.gm-login-panel p,
+.gm-dashboard p {
+  margin: 0 0 16px;
+  opacity: 0.85;
+}
+
+.gm-login-panel input,
+.gm-star-panel input,
+.gm-filter-row input,
+.gm-filter-row select {
+  width: 100%;
+  min-height: 42px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 12px;
+  font-size: 16px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.1);
+  color: #111827 !important;
+}
+
+.gm-filter-row select {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}
+
+.gm-filter-row select option {
+  color: #111827 !important;
+  background-color: #ffffff !important;
+}
+
+.gm-filter-row select option:checked,
+.gm-filter-row select option:hover {
+  color: #ffffff !important;
+  background-color: #2563eb !important;
+}
+
+.gm-login-panel input::placeholder,
+.gm-star-panel input::placeholder,
+.gm-filter-row input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.gm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.gm-home-link {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.14);
+  padding: 9px 14px;
+  border-radius: 999px;
+}
+
+.gm-summary {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.gm-summary-card {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.gm-summary-card span {
+  display: block;
+  font-size: 13px;
+  opacity: 0.8;
+  margin-bottom: 6px;
+}
+
+.gm-summary-card strong {
+  font-size: 24px;
+}
+
+.gm-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.gm-tabs button,
+.gm-star-actions button,
+.gm-card-bulk-actions button,
+.gm-list button,
+#gmLoginBtn {
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 14px;
+  cursor: pointer;
+  font-weight: 800;
+  color: #ffffff;
+  background: #3b82f6;
+}
+
+.gm-tabs button.active {
+  background: #f59e0b;
+  color: #111827;
+}
+
+button.danger,
+.gm-list button.danger {
+  background: #dc2626;
+}
+
+.gm-tab-panel {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.gm-tab-panel h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.gm-list {
+  display: grid;
+  gap: 10px;
+}
+
+.gm-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.10);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.gm-row-title {
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+
+.gm-row-meta {
+  font-size: 13px;
+  opacity: 0.85;
+  line-height: 1.5;
+}
+
+.gm-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gm-filter-row {
+  display: grid;
+  grid-template-columns: 1fr 180px 160px;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.gm-star-actions,
+.gm-card-bulk-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.gm-star-panel {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.gm-current-stars {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.gm-status-message,
+.gm-message {
+  min-height: 22px;
+  font-weight: 800;
+  margin-top: 16px;
+}
+
+.gm-message.error {
+  color: #fca5a5;
+}
+
+.gm-status-message.success {
+  color: #86efac;
+}
+
+.gm-status-message.error {
+  color: #fca5a5;
+}
+
+.gm-log-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.gm-log-item {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.10);
+  font-size: 14px;
+}
+
+.gm-log-item .timestamp {
+  opacity: 0.6;
+  font-size: 12px;
+}
+
+@media (max-width: 760px) {
+  .gm-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .gm-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .gm-filter-row {
+    grid-template-columns: 1fr;
+  }
+
+  .gm-row {
+    grid-template-columns: 1fr;
+  }
+
+  .gm-row-actions {
+    flex-direction: column;
+  }
+
+  .gm-row-actions button,
+  .gm-star-actions button,
+  .gm-card-bulk-actions button,
+  .gm-tabs button {
+    width: 100%;
+    min-height: 42px;
+  }
+}
+
+.gm-zodiac-main {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.gm-zodiac-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.gm-zodiac-img-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.gm-empty {
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.86);
+  line-height: 1.6;
+}
+
+.gm-backup-reminder {
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(255, 200, 0, 0.15);
+  border: 1px solid rgba(255, 200, 0, 0.3);
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.gm-god-main {
+  display: grid;
+  grid-template-columns: 68px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.gm-god-img {
+  width: 68px;
+  height: 68px;
+  border-radius: 16px;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.gm-god-img-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.gm-god-info {
+  min-width: 0;
+}
+
+.gm-row-desc {
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+@media (max-width: 600px) {
+  .gm-zodiac-main {
+    grid-template-columns: 52px 1fr;
+  }
+
+  .gm-zodiac-img {
+    width: 52px;
+    height: 52px;
+  }
+
+  .gm-god-main {
+    grid-template-columns: 52px 1fr;
+  }
+
+  .gm-god-img {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+  }
+}
