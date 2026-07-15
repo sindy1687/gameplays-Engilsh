@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>??敶梁?蝞∠???/title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="responsive_enhanced.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .category-section {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+        }
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .category-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #444;
+        }
+        .category-stats {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .card-item {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 12px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        .card-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+        .card-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .card-english {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+        .video-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+        .video-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .has-video {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .no-video {
+            color: #dc3545;
+        }
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: background-color 0.3s;
+        }
+        .btn-add {
+            background: #007bff;
+            color: white;
+        }
+        .btn-add:hover {
+            background: #0056b3;
+        }
+        .btn-remove {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-remove:hover {
+            background: #c82333;
+        }
+        .btn-batch {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1em;
+            margin: 10px 5px;
+        }
+        .btn-batch:hover {
+            background: #218838;
+        }
+        .summary {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .collapsed .card-grid {
+            display: none;
+        }
+        .toggle-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .toggle-btn:hover {
+            background: #545b62;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>? ??敶梁?蝞∠???/h1>
+        
+        <div class="summary">
+            <h3>?? 蝮質汗</h3>
+            <div id="summary-content">頛銝?..</div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 20px;">
+            <button class="btn btn-batch" onclick="expandAllCategories()">撅????憿?/button>
+            <button class="btn btn-batch" onclick="collapseAllCategories()">?嗅????憿?/button>
+            <button class="btn btn-batch" onclick="checkAllVideoStatus()">瑼Ｘ敶梁????/button>
+        </div>
+
+        <div id="categories-container">
+            頛??銝?..
+        </div>
+    </div>
+
+    <script src="js/cards.js"></script>
+    <script src="add_video_helper.js"></script>
+    <script>
+        let categoriesData = {};
+
+        function initializeCategories() {
+            if (!window.allCards) {
+                setTimeout(initializeCategories, 100);
+                return;
+            }
+
+            // ??憿???
+            categoriesData = {};
+            window.allCards.forEach(card => {
+                if (!categoriesData[card.category]) {
+                    categoriesData[card.category] = [];
+                }
+                categoriesData[card.category].push(card);
+            });
+
+            renderCategories();
+            updateSummary();
+        }
+
+        function renderCategories() {
+            const container = document.getElementById('categories-container');
+            container.innerHTML = '';
+
+            Object.keys(categoriesData).sort().forEach(category => {
+                const cards = categoriesData[category];
+                const videoCount = cards.filter(card => card.video).length;
+                
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category-section';
+                categoryDiv.innerHTML = `
+                    <div class="category-header">
+                        <div class="category-title">?儭?${category}</div>
+                        <div>
+                            <span class="category-stats">
+                                ${cards.length} 撘萄??| 
+                                <span style="color: #28a745;">${videoCount} ?蔣??/span> | 
+                                <span style="color: #dc3545;">${cards.length - videoCount} ?∪蔣??/span>
+                            </span>
+                            <button class="toggle-btn" onclick="toggleCategory('${category}')">?嗅?</button>
+                        </div>
+                    </div>
+                    <div class="card-grid" id="grid-${category.replace(/\s+/g, '-')}">
+                        ${cards.map(card => renderCard(card, category)).join('')}
+                    </div>
+                `;
+                
+                container.appendChild(categoryDiv);
+            });
+        }
+
+        function renderCard(card, category) {
+            const hasVideo = card.video ? true : false;
+            const videoUrl = card.video || '';
+            
+            return `
+                <div class="card-item">
+                    <div class="card-name">${card.zh}</div>
+                    <div class="card-english">${card.word}</div>
+                    <input type="url" 
+                           class="video-input" 
+                           placeholder="頛詨YouTube敶梁?蝬脣?..."
+                           value="${videoUrl}"
+                           id="video-${card.word.replace(/\s+/g, '-')}">
+                    <div class="video-status">
+                        <span class="${hasVideo ? 'has-video' : 'no-video'}">
+                            ${hasVideo ? '??撌脫?敶梁?' : '???∪蔣??}
+                        </span>
+                        <div>
+                            <button class="btn btn-add" onclick="addVideo('${card.word}')">
+                                ${hasVideo ? '?湔' : '瘛餃?'}
+                            </button>
+                            ${hasVideo ? `<button class="btn btn-remove" onclick="removeVideo('${card.word}')">蝘駁</button>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addVideo(cardWord) {
+            const inputId = `video-${cardWord.replace(/\s+/g, '-')}`;
+            const videoUrl = document.getElementById(inputId).value.trim();
+            
+            if (!videoUrl) {
+                alert('隢撓?亙蔣?雯?嚗?);
+                return;
+            }
+            
+            if (!videoUrl.includes('youtube.com') && !videoUrl.includes('youtu.be')) {
+                alert('隢撓?交???YouTube蝬脣?嚗?);
+                return;
+            }
+            
+            if (addVideoToCard(cardWord, videoUrl)) {
+                renderCategories();
+                updateSummary();
+            }
+        }
+
+        function removeVideo(cardWord) {
+            if (confirm(`蝣箏?閬宏??${cardWord} ?蔣???賢?嚗)) {
+                if (removeVideoFromCard(cardWord)) {
+                    renderCategories();
+                    updateSummary();
+                }
+            }
+        }
+
+        function toggleCategory(category) {
+            const gridId = `grid-${category.replace(/\s+/g, '-')}`;
+            const grid = document.getElementById(gridId);
+            const section = grid.closest('.category-section');
+            
+            if (section.classList.contains('collapsed')) {
+                section.classList.remove('collapsed');
+                section.querySelector('.toggle-btn').textContent = '?嗅?';
+            } else {
+                section.classList.add('collapsed');
+                section.querySelector('.toggle-btn').textContent = '撅?';
+            }
+        }
+
+        function expandAllCategories() {
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.classList.remove('collapsed');
+                section.querySelector('.toggle-btn').textContent = '?嗅?';
+            });
+        }
+
+        function collapseAllCategories() {
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.classList.add('collapsed');
+                section.querySelector('.toggle-btn').textContent = '撅?';
+            });
+        }
+
+        function updateSummary() {
+            const totalCards = window.allCards.length;
+            const videoCards = window.allCards.filter(card => card.video).length;
+            const categories = Object.keys(categoriesData).length;
+            
+            const summaryContent = document.getElementById('summary-content');
+            summaryContent.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div><strong>蝮賢?嚗?/strong>${totalCards} 撘?/div>
+                    <div><strong>?蔣??</strong><span style="color: #28a745;">${videoCards} 撘?/span></div>
+                    <div><strong>?∪蔣??</strong><span style="color: #dc3545;">${totalCards - videoCards} 撘?/span></div>
+                    <div><strong>???賂?</strong>${categories} ??/div>
+                </div>
+            `;
+        }
+
+        function checkAllVideoStatus() {
+            checkVideoCards();
+            updateSummary();
+        }
+
+        // ?頛摰?敺?憪?
+        window.addEventListener('load', initializeCategories);
+    </script>
+</body>
+</html> 

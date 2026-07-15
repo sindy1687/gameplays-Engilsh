@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?∠??Ｗ儔????皜祈岫</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .warning { background: #fff3cd; color: #856404; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: inline-block;
+            width: 200px;
+            text-align: center;
+        }
+        .card.unlocked {
+            border: 3px solid #28a745;
+        }
+        .card.locked {
+            border: 3px solid #dc3545;
+            opacity: 0.6;
+        }
+        .debug-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>?? ?∠??Ｗ儔????皜祈岫</h1>
+        
+        <div id="status" class="status info">甇?頛...</div>
+        
+        <div>
+            <button onclick="checkLinkageSystem()">?? 瑼Ｘ LinkageSystem</button>
+            <button onclick="checkLocalStorage()">? 瑼Ｘ localStorage</button>
+            <button onclick="checkAllCards()">? 瑼Ｘ allCards</button>
+            <button onclick="loadCardData()">? ?頛?∠?鞈?</button>
+            <button onclick="renderTestCards()">?? ?皜脫?皜祈岫?∠?</button>
+            <button onclick="addTestCards()">??瘛餃?皜祈岫?∠?</button>
+            <button onclick="clearTestCards()">??儭?皜皜祈岫?∠?</button>
+        </div>
+        
+        <div id="debugInfo" class="debug-info">蝑?皜祈岫...</div>
+        
+        <div id="testCards"></div>
+    </div>
+
+    <!-- 頛敹????-->
+    <script src="js/userData.js"></script>
+    <script src="js/cards.js"></script>
+    
+    <script>
+        let ownedCards = {};
+        let shards = {};
+        let recentlyObtainedCards = [];
+        
+        // 瑼Ｘ LinkageSystem
+        function checkLinkageSystem() {
+            const status = document.getElementById('status');
+            const debugInfo = document.getElementById('debugInfo');
+            
+            let info = '=== LinkageSystem 瑼Ｘ ===\n';
+            
+            if (typeof LinkageSystem === 'undefined') {
+                status.className = 'status error';
+                status.textContent = '??LinkageSystem ?芸?蝢?;
+                info += '??LinkageSystem ?芸?蝢坼n';
+            } else {
+                status.className = 'status success';
+                status.textContent = '??LinkageSystem 撌脰???;
+                info += '??LinkageSystem 撌脰??功n';
+                
+                if (LinkageSystem.cards) {
+                    info += '??LinkageSystem.cards ?舐\n';
+                    
+                    try {
+                        const owned = LinkageSystem.cards.getOwnedCards();
+                        const cardShards = LinkageSystem.cards.getShards();
+                        info += `??撌脰圾??: ${Object.keys(owned).length}\n`;
+                        info += `??蝣?蝔桅??? ${Object.keys(cardShards).length}\n`;
+                        info += `撌脰圾??? ${JSON.stringify(Object.keys(owned))}\n`;
+                    } catch (e) {
+                        info += `??霈????仃?? ${e.message}\n`;
+                    }
+                } else {
+                    info += '??LinkageSystem.cards 銝?沔n';
+                }
+            }
+            
+            debugInfo.textContent = info;
+        }
+        
+        // 瑼Ｘ localStorage
+        function checkLocalStorage() {
+            const status = document.getElementById('status');
+            const debugInfo = document.getElementById('debugInfo');
+            
+            let info = '=== localStorage 瑼Ｘ ===\n';
+            
+            const ownedCardsStr = localStorage.getItem('ownedCards');
+            const shardsStr = localStorage.getItem('cardShards');
+            const recentlyStr = localStorage.getItem('recentlyObtainedCards');
+            
+            if (ownedCardsStr) {
+                try {
+                    const owned = JSON.parse(ownedCardsStr);
+                    info += `??ownedCards: ${Object.keys(owned).length} 撘琵n`;
+                    info += `撌脰圾??? ${JSON.stringify(Object.keys(owned))}\n`;
+                } catch (e) {
+                    info += `??閫?? ownedCards 憭望?: ${e.message}\n`;
+                }
+            } else {
+                info += '??localStorage 銝剜???ownedCards\n';
+            }
+            
+            if (shardsStr) {
+                try {
+                    const cardShards = JSON.parse(shardsStr);
+                    info += `??cardShards: ${Object.keys(cardShards).length} 蝔娉n`;
+                    info += `蝣?鞈?: ${JSON.stringify(cardShards)}\n`;
+                } catch (e) {
+                    info += `??閫?? cardShards 憭望?: ${e.message}\n`;
+                }
+            } else {
+                info += '??localStorage 銝剜???cardShards\n';
+            }
+            
+            if (recentlyStr) {
+                try {
+                    const recent = JSON.parse(recentlyStr);
+                    info += `??recentlyObtainedCards: ${recent.length} 撘琵n`;
+                    info += `?餈敺? ${JSON.stringify(recent)}\n`;
+                } catch (e) {
+                    info += `??閫?? recentlyObtainedCards 憭望?: ${e.message}\n`;
+                }
+            } else {
+                info += '??localStorage 銝剜???recentlyObtainedCards\n';
+            }
+            
+            status.className = 'status info';
+            status.textContent = '?? localStorage 瑼Ｘ摰?';
+            debugInfo.textContent = info;
+        }
+        
+        // 瑼Ｘ allCards
+        function checkAllCards() {
+            const status = document.getElementById('status');
+            const debugInfo = document.getElementById('debugInfo');
+            
+            let info = '=== allCards 瑼Ｘ ===\n';
+            
+            if (typeof window.allCards === 'undefined') {
+                status.className = 'status error';
+                status.textContent = '??allCards ?芸?蝢?;
+                info += '??allCards ?芸?蝢坼n';
+            } else if (!Array.isArray(window.allCards)) {
+                status.className = 'status error';
+                status.textContent = '??allCards 銝???';
+                info += '??allCards 銝???\n';
+            } else if (window.allCards.length === 0) {
+                status.className = 'status warning';
+                status.textContent = '?? allCards ?舐征???';
+                info += '?? allCards ?舐征???\n';
+            } else {
+                status.className = 'status success';
+                status.textContent = `??allCards 頛?? (${window.allCards.length} 撘?`;
+                info += `??allCards 頛??: ${window.allCards.length} 撘琵n`;
+                
+                // 瑼Ｘ瘞湔??∠??臬摮
+                const fruitCards = ['apple', 'banana', 'orange', 'grape', 'strawberry'];
+                fruitCards.forEach(fruit => {
+                    const found = window.allCards.find(card => card.word === fruit);
+                    if (found) {
+                        info += `???曉瘞湔??∠?: ${fruit}\n`;
+                    } else {
+                        info += `???曆??唳偌??? ${fruit}\n`;
+                    }
+                });
+                
+                // 憿舐內??撘萄??
+                info += '\n??撘萄??\n';
+                window.allCards.slice(0, 5).forEach((card, index) => {
+                    info += `${index + 1}. ${card.word} (${card.zh}) - ${card.rarity}\n`;
+                });
+            }
+            
+            debugInfo.textContent = info;
+        }
+        
+        // 頛?∠?鞈?
+        function loadCardData() {
+            const status = document.getElementById('status');
+            const debugInfo = document.getElementById('debugInfo');
+            
+            let info = '=== 頛?∠?鞈? ===\n';
+            
+            try {
+                if (typeof LinkageSystem !== 'undefined' && LinkageSystem.cards) {
+                    info += '??雿輻 LinkageSystem 頛?∠?鞈?\n';
+                    ownedCards = LinkageSystem.cards.getOwnedCards();
+                    shards = LinkageSystem.cards.getShards();
+                } else {
+                    info += '?? LinkageSystem 銝?剁?雿輻 localStorage 頛\n';
+                    const ownedCardsStr = localStorage.getItem('ownedCards');
+                    const shardsStr = localStorage.getItem('cardShards');
+                    
+                    if (ownedCardsStr) {
+                        ownedCards = JSON.parse(ownedCardsStr);
+                        info += '??敺?localStorage 頛 ownedCards ??\n';
+                    } else {
+                        ownedCards = {};
+                        info += '?? localStorage 銝剜???ownedCards\n';
+                    }
+                    
+                    if (shardsStr) {
+                        shards = JSON.parse(shardsStr);
+                        info += '??敺?localStorage 頛 cardShards ??\n';
+                    } else {
+                        shards = {};
+                        info += '?? localStorage 銝剜???cardShards\n';
+                    }
+                }
+                
+                const recentlyObtainedStr = localStorage.getItem('recentlyObtainedCards');
+                if (recentlyObtainedStr) {
+                    recentlyObtainedCards = JSON.parse(recentlyObtainedStr);
+                    info += '??頛 recentlyObtainedCards ??\n';
+                } else {
+                    recentlyObtainedCards = [];
+                    info += '?? localStorage 銝剜???recentlyObtainedCards\n';
+                }
+                
+                info += `\n?? 頛蝯?:\n`;
+                info += `撌脰圾??? ${Object.keys(ownedCards).length} 撘琵n`;
+                info += `蝣?蝔桅?: ${Object.keys(shards).length} 蝔娉n`;
+                info += `?餈敺? ${recentlyObtainedCards.length} 撘琵n`;
+                
+                if (Object.keys(ownedCards).length > 0) {
+                    info += `撌脰圾???銵? ${JSON.stringify(Object.keys(ownedCards))}\n`;
+                }
+                
+                status.className = 'status success';
+                status.textContent = '???∠?鞈?頛??';
+                
+            } catch (error) {
+                info += `??頛?∠?鞈???隤? ${error.message}\n`;
+                status.className = 'status error';
+                status.textContent = '???∠?鞈?頛憭望?';
+            }
+            
+            debugInfo.textContent = info;
+        }
+        
+        // 皜脫?皜祈岫?∠?
+        function renderTestCards() {
+            const testCardsDiv = document.getElementById('testCards');
+            const status = document.getElementById('status');
+            
+            if (!window.allCards || window.allCards.length === 0) {
+                status.className = 'status error';
+                status.textContent = '??allCards 銝?剁??⊥?皜脫??∠?';
+                return;
+            }
+            
+            // ?頛?∠?鞈?
+            loadCardData();
+            
+            let html = '<h2>? 皜祈岫?∠?憿舐內</h2>';
+            
+            // 憿舐內瘞湔??∠?
+            const fruitCards = ['apple', 'banana', 'orange', 'grape', 'strawberry'];
+            
+            fruitCards.forEach(fruit => {
+                const card = window.allCards.find(c => c.word === fruit);
+                if (card) {
+                    const isUnlocked = ownedCards[fruit] || false;
+                    const haveShards = shards[fruit] || 0;
+                    const required = getRequiredShards(card.rarity);
+                    
+                    html += `
+                        <div class="card ${isUnlocked ? 'unlocked' : 'locked'}">
+                            <h3>${card.zh} (${card.word})</h3>
+                            <p>蝔?漲: ${card.rarity}</p>
+                            <p>閫????? ${isUnlocked ? '??撌脰圾?? : '?? ?芾圾??}</p>
+                            <p>蝣?: ${haveShards}/${required}</p>
+                            <p>憿: ${card.category}</p>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="card locked">
+                            <h3>??${fruit}</h3>
+                            <p style="color: red;">?曆??啣????/p>
+                        </div>
+                    `;
+                }
+            });
+            
+            testCardsDiv.innerHTML = html;
+            status.className = 'status success';
+            status.textContent = '??皜祈岫?∠?皜脫?摰?';
+        }
+        
+        // 瘛餃?皜祈岫?∠?
+        function addTestCards() {
+            const status = document.getElementById('status');
+            
+            // 瘛餃?瘞湔??∠??啣歇閫???”
+            const fruitCards = ['apple', 'banana', 'orange', 'grape', 'strawberry'];
+            
+            fruitCards.forEach(fruit => {
+                ownedCards[fruit] = true;
+                shards[fruit] = 5; // 蝯?????
+            });
+            
+            // ?郊??LinkageSystem
+            if (typeof LinkageSystem !== 'undefined' && LinkageSystem.cards) {
+                LinkageSystem.cards.setOwnedCards(ownedCards);
+                LinkageSystem.cards.setShards(shards);
+            } else {
+                // ?湔?湔 localStorage
+                localStorage.setItem('ownedCards', JSON.stringify(ownedCards));
+                localStorage.setItem('cardShards', JSON.stringify(shards));
+            }
+            
+            // 瘛餃??唳?餈敺?銵?
+            recentlyObtainedCards = fruitCards;
+            localStorage.setItem('recentlyObtainedCards', JSON.stringify(recentlyObtainedCards));
+            
+            status.className = 'status success';
+            status.textContent = '??皜祈岫?∠?撌脫溶??;
+            
+            // ?皜脫?
+            renderTestCards();
+        }
+        
+        // 皜皜祈岫?∠?
+        function clearTestCards() {
+            const status = document.getElementById('status');
+            
+            // 皜瘞湔??∠?
+            const fruitCards = ['apple', 'banana', 'orange', 'grape', 'strawberry'];
+            
+            fruitCards.forEach(fruit => {
+                delete ownedCards[fruit];
+                delete shards[fruit];
+            });
+            
+            // ?郊??LinkageSystem
+            if (typeof LinkageSystem !== 'undefined' && LinkageSystem.cards) {
+                LinkageSystem.cards.setOwnedCards(ownedCards);
+                LinkageSystem.cards.setShards(shards);
+            } else {
+                // ?湔?湔 localStorage
+                localStorage.setItem('ownedCards', JSON.stringify(ownedCards));
+                localStorage.setItem('cardShards', JSON.stringify(shards));
+            }
+            
+            // 皜?餈敺?銵?
+            recentlyObtainedCards = [];
+            localStorage.setItem('recentlyObtainedCards', JSON.stringify(recentlyObtainedCards));
+            
+            status.className = 'status warning';
+            status.textContent = '??儭?皜祈岫?∠?撌脫???;
+            
+            // ?皜脫?
+            renderTestCards();
+        }
+        
+        // ?寞?蝔?漲???蝣??賊?
+        function getRequiredShards(rarity) {
+            switch(rarity) {
+                case '?桅?: return 1;
+                case '蝔??: return 3;
+                case '頞???: return 5;
+                default: return 1;
+            }
+        }
+        
+        // ?頛??炎??
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                checkLinkageSystem();
+                setTimeout(() => {
+                    checkAllCards();
+                    setTimeout(() => {
+                        loadCardData();
+                        setTimeout(() => {
+                            renderTestCards();
+                        }, 500);
+                    }, 500);
+                }, 500);
+            }, 1000);
+        });
+    </script>
+</body>
+</html> 

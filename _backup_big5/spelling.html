@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>?望?撠??- ?芾??</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="responsive_enhanced.css">
+  <style>
+    /* ?嚗?蝛箄?瞍詨惜 */
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: auto;
+      font-family: 'Orbitron', sans-serif;
+      color: #fff;
+      background: linear-gradient(to bottom, #020111 0%, #000010 100%);
+    }
+    /* ?征蝎? */
+    #starfield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    /* 銝餉?摰孵 */
+    #container {
+      position: relative;
+      z-index: 1;
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 20px;
+      background: rgba(10, 20, 40, 0.7);
+      border: 2px solid #00ffff;
+      border-radius: 16px;
+      box-shadow: 0 0 32px #00ffff44, 0 0 80px #a259ff22 inset;
+      backdrop-filter: blur(8px);
+    }
+    /* 餈?擐??? */
+    .home-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: linear-gradient(90deg, #00ffff 0%, #a259ff 100%);
+      color: #000;
+      font-weight: bold;
+      padding: 8px 16px;
+      border-radius: 8px;
+      box-shadow: 0 0 16px #00ffff;
+      text-decoration: none;
+      z-index: 2;
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-family: 'Orbitron', sans-serif;
+    }
+    .home-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 32px #00ffff;
+    }
+    /* ?停??? */
+    .achievement-btn {
+      position: absolute;
+      top: 20px;
+      left: 140px;
+      background: linear-gradient(90deg, #ffd700 0%, #ffed4e 100%);
+      color: #000;
+      font-weight: bold;
+      padding: 8px 16px;
+      border-radius: 8px;
+      box-shadow: 0 0 16px #ffd700;
+      text-decoration: none;
+      z-index: 2;
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-family: 'Orbitron', sans-serif;
+    }
+    .achievement-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 32px #ffd700;
+    }
+    /* 蝮賣??＊蝷?*/
+    #totalStars {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(10, 20, 40, 0.85);
+      padding: 8px 14px;
+      border-radius: 10px;
+      box-shadow: 0 0 12px #ffd700, 0 0 32px #00ffff;
+      border: 2px solid #00ffff;
+      color: #ffd700;
+      font-size: 1.2rem;
+      font-weight: bold;
+      z-index: 2;
+      font-family: 'Orbitron', sans-serif;
+    }
+    /* 璅? */
+    h1 {
+      margin-top: 60px;
+      font-size: 2rem;
+      letter-spacing: 1px;
+      color: #00ffff;
+      text-shadow: 0 0 12px #00ffff, 0 0 32px #a259ff;
+      z-index: 2;
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+    }
+    /* 憿憿舐內 */
+    #questionCount {
+      margin: 10px auto;
+      font-size: 1.2rem;
+      color: #a0a0ff;
+      text-align: center;
+      z-index: 2;
+      font-family: 'Orbitron', sans-serif;
+      text-shadow: 0 0 6px #00ffff;
+    }
+    /* ?內?伐?銝剜?嚗?*/
+    #wordDisplay {
+      margin: 20px auto;
+      font-size: 2.4rem;
+      font-weight: bold;
+      color: #ffd700;
+      text-shadow: 0 0 8px #ffd700;
+      animation: glow 2s ease-in-out infinite alternate;
+      z-index: 2;
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 8px #ffd700; }
+      to { text-shadow: 0 0 16px #ffd700, 0 0 32px #00ffff; }
+    }
+    /* 閮???*/
+    #timerDisplay {
+      font-size: 1.1rem;
+      color: #00ffff;
+      margin-bottom: 15px;
+      z-index: 2;
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+      text-shadow: 0 0 6px #00ffff;
+    }
+    #timerDisplay.danger { animation: flash 1s infinite; }
+    @keyframes flash {
+      0%, 100% { color: #00ffff; }
+      50% { color: #ff4444; }
+    }
+    /* 頛詨獢?*/
+    #answerInput {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.3rem;
+      padding: 16px 20px;
+      border-radius: 16px;
+      border: 3px solid #00ffff;
+      width: 85%;
+      max-width: 450px;
+      background: rgba(10, 20, 40, 0.8);
+      color: #fff;
+      box-shadow: 
+        0 0 20px #00ffff80,
+        inset 0 2px 4px rgba(255, 255, 255, 0.1);
+      text-align: center;
+      outline: none;
+      margin-bottom: 20px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      transition: all 0.3s ease;
+      letter-spacing: 1px;
+      font-weight: 500;
+    }
+    #answerInput:focus {
+      border-color: #ffd700;
+      box-shadow: 
+        0 0 30px #ffd70080,
+        0 0 50px #00ffff40,
+        inset 0 2px 4px rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      background: rgba(10, 20, 40, 0.9);
+    }
+    #answerInput::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+      font-style: italic;
+    }
+    #answerInput.correct {
+      border-color: #00ff00;
+      box-shadow: 0 0 30px #00ff0080;
+      animation: correctPulse 0.6s ease;
+    }
+    #answerInput.wrong {
+      border-color: #ff4444;
+      box-shadow: 0 0 30px #ff444480;
+      animation: wrongShake 0.6s ease;
+    }
+    @keyframes correctPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+    @keyframes wrongShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    
+    /* ??閮 */
+    #feedback {
+      height: 40px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin: 15px 0;
+      z-index: 2;
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+      color: #ffd700;
+      text-shadow: 0 0 8px #00ffff;
+      transition: all 0.3s ease;
+    }
+    #feedback.correct {
+      color: #00ff00;
+      text-shadow: 0 0 12px #00ff00;
+      animation: feedbackBounce 0.6s ease;
+    }
+    #feedback.wrong {
+      color: #ff4444;
+      text-shadow: 0 0 12px #ff4444;
+      animation: feedbackBounce 0.6s ease;
+    }
+    @keyframes feedbackBounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    
+    /* ?脣漲璇?*/
+    #progressBar {
+      width: 100%;
+      height: 8px;
+      background: rgba(0, 255, 255, 0.2);
+      border-radius: 4px;
+      margin: 15px 0;
+      overflow: hidden;
+      position: relative;
+    }
+    #progressFill {
+      height: 100%;
+      background: linear-gradient(90deg, #00ffff, #a259ff);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+      width: 0%;
+      position: relative;
+    }
+    #progressFill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: progressShine 2s infinite;
+    }
+    @keyframes progressShine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    /* ?內???*/
+    #hintArea {
+      margin: 15px 0;
+      padding: 10px;
+      background: rgba(0, 255, 255, 0.1);
+      border-radius: 8px;
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      text-align: center;
+      font-size: 0.9rem;
+      color: #a0a0ff;
+      font-family: 'Orbitron', sans-serif;
+    }
+    #hintArea.show {
+      animation: hintFadeIn 0.5s ease;
+    }
+    @keyframes hintFadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* ????*/
+    .btn-row {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 25px;
+      z-index: 2;
+    }
+    .btn-row button {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      padding: 14px 24px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(90deg, #00ffff 0%, #a259ff 100%);
+      color: #000;
+      font-weight: bold;
+      box-shadow: 0 0 16px #00ffff, 0 0 24px #a259ff99;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-row button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
+    .btn-row button:hover::before {
+      left: 100%;
+    }
+    .btn-row button:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 0 25px #00ffff, 0 0 35px #a259ffcc;
+    }
+    .btn-row button:active {
+      transform: translateY(-1px) scale(1.02);
+    }
+    .btn-row button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    #speakBtn {
+      background: linear-gradient(90deg, #ffd700 0%, #ffaa00 100%);
+      color: #000;
+    }
+    #hintBtn {
+      background: linear-gradient(90deg, #a259ff 0%, #ff6b6b 100%);
+      color: #fff;
+    }
+    /* 璅⊥?閬? */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+    }
+    .modal-content {
+      background: rgba(10, 20, 40, 0.95);
+      padding: 30px;
+      border: 2px solid #00ffff;
+      border-radius: 16px;
+      color: #fff;
+      max-width: 500px;
+      width: 85%;
+      text-align: center;
+      box-shadow: 0 0 32px #00ffff99, 0 0 80px #a259ff44 inset;
+      font-family: 'Orbitron', sans-serif;
+      margin: 20px;
+    }
+    .modal-content h2 {
+      margin-bottom: 15px;
+      color: #00ffff;
+      text-shadow: 0 0 12px #00ffff, 0 0 32px #a259ff;
+      font-size: 1.5rem;
+      font-family: 'Orbitron', sans-serif;
+    }
+    .modal-content p {
+      margin: 8px 0;
+      font-size: 0.95rem;
+      font-family: 'Orbitron', sans-serif;
+      color: #a0a0ff;
+    }
+    .modal-content ul {
+      list-style: none;
+      padding: 0;
+      max-height: 140px;
+      overflow-y: auto;
+      margin: 15px 0;
+      text-align: left;
+      font-size: 0.9rem;
+      font-family: 'Roboto Mono', monospace;
+      color: #fff;
+    }
+    .modal-content ul li {
+      margin: 6px 0;
+      padding: 4px 8px;
+      background: rgba(0, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+    /*-------------------------
+      ?踵?撘身閮?
+    -------------------------*/
+    @media (max-width: 768px) {
+      #container {
+        margin: 20px 15px;
+        padding: 15px;
+        border-radius: 12px;
+      }
+      
+      h1 {
+        font-size: 1.6rem;
+        margin-top: 50px;
+      }
+      
+      #wordDisplay {
+        font-size: 2rem;
+      }
+      
+      #answerInput {
+        font-size: 1.2rem;
+        padding: 14px 16px;
+        width: 90%;
+      }
+      
+      .btn-row {
+        gap: 10px;
+      }
+      
+      .btn-row button {
+        padding: 12px 16px;
+        font-size: 0.9rem;
+      }
+      
+      .home-btn {
+        top: 15px;
+        left: 15px;
+        padding: 6px 12px;
+        font-size: 0.9rem;
+      }
+      
+      .achievement-btn {
+        top: 15px;
+        left: 110px;
+        padding: 6px 12px;
+        font-size: 0.9rem;
+      }
+      
+      #totalStars {
+        top: 15px;
+        right: 15px;
+        padding: 6px 10px;
+        font-size: 1rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      #container {
+        margin: 15px 10px;
+        padding: 12px;
+      }
+      
+      h1 {
+        font-size: 1.4rem;
+        margin-top: 45px;
+      }
+      
+      #wordDisplay {
+        font-size: 1.8rem;
+      }
+      
+      #answerInput {
+        font-size: 1.1rem;
+        padding: 12px 14px;
+        width: 95%;
+      }
+      
+      .btn-row {
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .btn-row button {
+        width: 100%;
+        padding: 14px;
+      }
+      
+      #questionCount {
+        font-size: 1rem;
+      }
+      
+      #timerDisplay {
+        font-size: 1rem;
+      }
+      
+      .home-btn {
+        top: 10px;
+        left: 10px;
+        padding: 5px 10px;
+        font-size: 0.8rem;
+      }
+      
+      .achievement-btn {
+        top: 10px;
+        left: 90px;
+        padding: 5px 10px;
+        font-size: 0.8rem;
+      }
+      
+      #totalStars {
+        top: 10px;
+        right: 10px;
+        padding: 5px 8px;
+        font-size: 0.9rem;
+      }
+    }
+    
+    /*-------------------------
+      頛?
+    -------------------------*/
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(0, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #00ffff;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /*-------------------------
+      頛詨獢???見撘?
+    -------------------------*/
+    #answerInput:-webkit-autofill,
+    #answerInput:-webkit-autofill:hover,
+    #answerInput:-webkit-autofill:focus {
+      -webkit-text-fill-color: #fff;
+      -webkit-box-shadow: 0 0 0px 1000px rgba(10, 20, 40, 0.9) inset;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+    
+    /*-------------------------
+      ??蝳???
+    -------------------------*/
+    .btn-row button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: 0 0 8px rgba(0, 255, 255, 0.3) !important;
+    }
+    
+    /*-------------------------
+      ?阡??內??
+    -------------------------*/
+    .btn-row button:focus,
+    #answerInput:focus {
+      outline: 2px solid #ffd700;
+      outline-offset: 2px;
+    }
+    
+    /*-------------------------
+      ??芸?
+    -------------------------*/
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="starfield"></canvas>
+  <div id="container">
+    <a href="index.html" class="home-btn">??餈?擐?</a>
+    <a href="achievement.html" class="achievement-btn">?停?</a>
+    <div id="totalStars">蝮賣???<span id="totalStarCount">0</span> 潃?/div>
+    <h1>潃??芾??嚗?span id="categoryName"></span></h1>
+    <div id="questionCount">
+      蝚?<span id="currentQuestion">0</span> 憿?/ <span id="maxQuestions">0</span> 憿?
+    </div>
+    <div id="wordDisplay">皞?銝?..</div>
+    <div id="timerDisplay">????嚗?span id="timeLeft">30</span> 蝘?/div>
+    
+    <!-- ?脣漲璇?-->
+    <div id="progressBar">
+      <div id="progressFill"></div>
+    </div>
+    
+    <input type="text" id="answerInput" placeholder="隢撓?亥??.." autocomplete="off" />
+    <div id="feedback"></div>
+    
+    <!-- ?內???-->
+    <div id="hintArea" style="display: none;">
+      <div id="hintText"></div>
+    </div>
+    
+    <div class="btn-row">
+      <button onclick="checkAnswer()">???</button>
+      <button onclick="skipWord()">?哨? 頝喲?</button>
+      <button id="speakBtn" onclick="speakCurrentWord()">?? ?潮</button>
+      <button id="hintBtn" onclick="showHint()">? ?內</button>
+      <button onclick="restartGame()">?? ?</button>
+    </div>
+
+    <!-- 蝯??Ｘ -->
+    <div id="resultModal" class="modal">
+      <div class="modal-content">
+        <h2>?蝯?</h2>
+        <p>???祆活?脣???嚗?span id="sessionStars">0</span></p>
+        <p>??蝑?憿嚗?span id="sessionCorrect">0</span></p>
+        <p>??蝑憿嚗?span id="sessionWrong">0</span></p>
+        <p>潃?蝝舐?蝮賣???<span id="sessionTotal">0</span></p>
+        <button id="wrongBtn" onclick="showWrongModal()">?舫?銴?</button>
+        <button onclick="restartGame()">???</button>
+        <button onclick="goHome()">餈?擐?</button>
+      </div>
+    </div>
+
+    <!-- ?舫?銴??Ｘ -->
+    <div id="wrongModal" class="modal">
+      <div class="modal-content">
+        <h2>?舫?銴?</h2>
+        <ul id="wrongItems"></ul>
+        <button onclick="closeWrongModal()">??</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sound.js"></script>
+  <script src="js/starRewardSystem.js"></script>
+  <script src="js/achievementSystem.js"></script>
+  <script>
+    // ????頂蝯?
+    if (typeof SoundSystem !== 'undefined') {
+      SoundSystem.speech.init();
+    }
+
+    // ?征?
+    const starCanvas = document.getElementById('starfield');
+    const ctx = starCanvas.getContext('2d');
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    starCanvas.width = width;
+    starCanvas.height = height;
+
+    const starsBg = [];
+    function initStars() {
+      starsBg.length = 0;
+      for (let i = 0; i < 100; i++) {
+        starsBg.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: Math.random() * 1.2 + 0.3,
+          alpha: Math.random(),
+          twinkle: Math.random() * 5
+        });
+      }
+    }
+
+    function drawStars() {
+      ctx.clearRect(0, 0, width, height);
+      starsBg.forEach(s => {
+        s.twinkle += 0.02;
+        s.alpha = Math.abs(Math.sin(s.twinkle));
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(drawStars);
+    }
+
+    window.addEventListener('resize', () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      starCanvas.width = width;
+      starCanvas.height = height;
+      initStars();
+    });
+
+    initStars();
+    drawStars();
+
+    // TTS voices 頛
+    // 雿輻?啁??潮蝟餌絞嚗宏?方????唾??仿?頛?
+
+    function speak(text) {
+      if (!text) return;
+      SoundSystem.speech.speakWord(text);
+    }
+
+    function speakCurrentWord() {
+      if (!current) return;
+      SoundSystem.speech.speakWord(current.word);
+    }
+
+    // ?芸遣憿澈嚗? localStorage 霈???
+    const params = new URLSearchParams(location.search);
+    const bookName = params.get('book');
+    if (!bookName) {
+      alert('??航炊嚗撩撠?book??);
+      history.back();
+    }
+    document.getElementById('categoryName').textContent = bookName;
+
+    let allVocab = JSON.parse(localStorage.getItem('book_' + bookName) || '[]');
+    if (!Array.isArray(allVocab) || allVocab.length < 1) {
+      alert('甇文摮瘝?隞颱??桀?嚗瘜??押?);
+      history.back();
+    }
+
+    // ??敺???20 蝑?
+    shuffleArray(allVocab);
+    const maxQuestions = Math.min(20, allVocab.length);
+    let words = allVocab.slice(0, maxQuestions).map(item => ({
+      zh: item.meaning,
+      word: item.word
+    }));
+
+    document.getElementById('maxQuestions').textContent = maxQuestions;
+
+    let current = null;
+    let used = [];
+    let wrongList = [];
+    let correctCount = 0;
+    let timer = null;
+    let timeLeft = 30;
+    let hintUsed = false;
+    
+    // ===== ?啣?嚗??脩??蕭頩?=====
+    let gameStats = {
+      correctCount: 0,
+      totalAnswered: 0,
+      consecutiveCorrect: 0, // ???蝑?甈⊥
+      fastestAnswer: Infinity, // ?敹怎?憿???
+      slowestAnswer: 0, // ??Ｙ?憿???
+      totalTimeUsed: 0, // 蝮賜??
+      perfectAnswers: 0, // 摰?蝑?甈⊥嚗?0蝘蝑?嚗?
+      hintUsedCount: 0, // 雿輻?內甈⊥
+      startTime: Date.now()
+    };
+
+    let totalStarCount = parseInt(localStorage.getItem('totalStars') || '0', 10);
+    function updateTotal() {
+      document.getElementById('totalStarCount').textContent = totalStarCount;
+    }
+
+    function updateQuestionCount() {
+      document.getElementById('currentQuestion').textContent = used.length;
+    }
+
+    function updateProgressBar() {
+      const progress = (used.length / maxQuestions) * 100;
+      document.getElementById('progressFill').style.width = progress + '%';
+    }
+    
+    // ===== ?啣?嚗????菔?蝞??=====
+    function calculateStarReward(isCorrect, answerTime, consecutiveCount, wordLength, hintUsed) {
+      if (!isCorrect) return 0;
+      
+      let baseReward = 1; // ?箇??
+      
+      // ???嚗?敹怎?撠??菔?憭?
+      if (answerTime <= 5) {
+        baseReward += 3; // 5蝘 +3??
+      } else if (answerTime <= 10) {
+        baseReward += 2; // 10蝘 +2??
+      } else if (answerTime <= 15) {
+        baseReward += 1; // 15蝘 +1??
+      }
+      
+      // ????嚗??蝑?頞??頞?
+      if (consecutiveCount >= 5) {
+        baseReward += 3; // 5??? +3??
+      } else if (consecutiveCount >= 3) {
+        baseReward += 2; // 3??? +2??
+      } else if (consecutiveCount >= 2) {
+        baseReward += 1; // 2??? +1??
+      }
+      
+      // ?桀???漲?嚗?摮摨衣策鈭?憭???
+      if (wordLength >= 8) {
+        baseReward += 2; // ?瑕摮?憭???
+      } else if (wordLength >= 6) {
+        baseReward += 1; // 銝剔??瑕漲?桀??
+      }
+      
+      // ?桀??祇?????
+      if (bookName.includes('??') || bookName.includes('TOEFL')) {
+        baseReward += 1; // ???桀?憿??
+      } else if (bookName.includes('?望炎') || bookName.includes('GEPT')) {
+        baseReward += 1; // ?望炎?桀?憿??
+      }
+      
+      // ?內雿輻?脩蔑
+      if (hintUsed) {
+        baseReward = Math.max(1, baseReward - 1); // 雿輻?內????雿?撠???
+      }
+      
+      return baseReward;
+    }
+    
+    // ===== ?啣?嚗＊蝷箇??萄???=====
+    function showRewardAnimation(starsEarned, reason = '') {
+      const rewardDiv = document.createElement('div');
+      rewardDiv.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.95), rgba(255, 170, 0, 0.95));
+        color: #000;
+        padding: 20px 30px;
+        border-radius: 15px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        z-index: 1000;
+        box-shadow: 0 0 30px #ffd700;
+        animation: rewardPop 1.2s ease-out forwards;
+        font-family: 'Orbitron', sans-serif;
+        text-align: center;
+        min-width: 300px;
+      `;
+      
+      let reasonText = '';
+      if (reason) {
+        reasonText = `<div style="font-size: 1rem; margin-top: 8px; color: #666;">${reason}</div>`;
+      }
+      
+      rewardDiv.innerHTML = `
+        <div style="font-size: 3rem; margin-bottom: 10px;">潃?/div>
+        <div style="font-size: 1.8rem; margin-bottom: 5px;">+${starsEarned} ??</div>
+        ${reasonText}
+      `;
+      
+      // 瘛餃??璅??
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes rewardPop {
+          0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+          50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+          100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(rewardDiv);
+      
+      // ?剜???單?
+      if (typeof StarRewardSystem !== 'undefined') {
+        StarRewardSystem.playStarSound();
+      }
+      
+      // 2.5蝘?蝘駁
+      setTimeout(() => {
+        if (document.body.contains(rewardDiv)) {
+          document.body.removeChild(rewardDiv);
+        }
+        if (document.head.contains(style)) {
+          document.head.removeChild(style);
+        }
+      }, 2500);
+    }
+    
+    // ===== ?啣?嚗＊蝷粹??? =====
+    function showComboNotification(comboCount) {
+      if (comboCount < 2) return;
+      
+      const comboDiv = document.createElement('div');
+      comboDiv.style.cssText = `
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, rgba(255, 69, 0, 0.9), rgba(255, 140, 0, 0.9));
+        color: #fff;
+        padding: 15px 25px;
+        border-radius: 25px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        z-index: 1000;
+        box-shadow: 0 0 20px #ff4500;
+        animation: comboSlide 0.8s ease-out forwards;
+        font-family: 'Orbitron', sans-serif;
+      `;
+      
+      let comboText = '';
+      let comboIcon = '';
+      
+      if (comboCount >= 5) {
+        comboText = `${comboCount} ???嚗???⊥???嚗;
+        comboIcon = '?';
+      } else if (comboCount >= 3) {
+        comboText = `${comboCount} ???嚗 頞撥???嚗;
+        comboIcon = '??;
+      } else {
+        comboText = `${comboCount} ???嚗 ?????嚗;
+        comboIcon = '??;
+      }
+      
+      comboDiv.innerHTML = `${comboIcon} ${comboText} ${comboIcon}`;
+      
+      // 瘛餃??璅??
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes comboSlide {
+          0% { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+          50% { transform: translateX(-50%) translateY(0); opacity: 1; }
+          100% { transform: translateX(-50%) translateY(0); opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(comboDiv);
+      
+      // 2蝘?蝘駁
+      setTimeout(() => {
+        if (document.body.contains(comboDiv)) {
+          document.body.removeChild(comboDiv);
+        }
+        if (document.head.contains(style)) {
+          document.head.removeChild(style);
+        }
+      }, 2000);
+    }
+
+    function startTimer() {
+      clearInterval(timer);
+      timeLeft = 30;
+      const timerDiv = document.getElementById('timerDisplay');
+      document.getElementById('timeLeft').textContent = timeLeft;
+      timerDiv.classList.remove('danger');
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timeLeft').textContent = timeLeft;
+        if (timeLeft <= 5) {
+          timerDiv.classList.add('danger');
+        }
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          wrongList.push(current);
+          setTimeout(nextWord, 500);
+        }
+      }, 1000);
+    }
+
+    function disablePlay() {
+      clearInterval(timer);
+      document.getElementById('answerInput').disabled = true;
+      document.querySelectorAll('.btn-row button').forEach(btn => btn.disabled = true);
+    }
+    function enablePlay() {
+      clearInterval(timer);
+      document.getElementById('answerInput').disabled = false;
+      document.querySelectorAll('.btn-row button').forEach(btn => btn.disabled = false);
+      
+      // 撘瑕??啗撓?交?
+      const input = document.getElementById('answerInput');
+      
+      // 憭車?蝑
+      input.focus();
+      input.click(); // 撠??蝘餃?閮剖?
+      
+      // 憒??憭望?嚗?閰血?甈∟???
+      setTimeout(() => {
+        if (document.activeElement !== input) {
+          input.focus();
+          input.click();
+        }
+      }, 100);
+      
+      setTimeout(() => {
+        if (document.activeElement !== input) {
+          input.focus();
+          input.click();
+        }
+      }, 300);
+      
+      setTimeout(() => {
+        if (document.activeElement !== input) {
+          input.focus();
+          input.click();
+        }
+      }, 500);
+    }
+
+    function showHint() {
+      if (!current || hintUsed) return;
+      
+      hintUsed = true;
+      gameStats.hintUsedCount++; // 閮?雿輻?內甈⊥
+      const hintArea = document.getElementById('hintArea');
+      const hintText = document.getElementById('hintText');
+      
+      // 憿舐內蝚砌???瘥?
+      const firstLetter = current.word.charAt(0).toUpperCase();
+      const wordLength = current.word.length;
+      const hint = `? ?內嚗?{firstLetter}${'_'.repeat(wordLength - 1)} (${wordLength} ??瘥?`;
+      
+      hintText.textContent = hint;
+      hintArea.style.display = 'block';
+      hintArea.classList.add('show');
+      
+      // 3蝘??芸??梯?
+      setTimeout(() => {
+        hintArea.classList.remove('show');
+        setTimeout(() => {
+          hintArea.style.display = 'none';
+        }, 500);
+      }, 3000);
+    }
+
+    function showResultPanel() {
+      // ===== 靽格嚗蝙?冽????蝞?頛?=====
+      const totalTime = (Date.now() - gameStats.startTime) / 1000;
+      const accuracy = (gameStats.correctCount / gameStats.totalAnswered * 100).toFixed(1);
+      
+      // 閮?蝮賣????蛛??ㄐ?芣憿舐內嚗祕???萄蝑??歇蝬策鈭?
+      const totalStarsEarned = parseInt(localStorage.getItem('totalStars') || '0') - totalStarCount;
+      
+      document.getElementById('sessionStars').textContent = totalStarsEarned;
+      document.getElementById('sessionCorrect').textContent = correctCount;
+      document.getElementById('sessionWrong').textContent = wrongList.length;
+      document.getElementById('sessionTotal').textContent = parseInt(localStorage.getItem('totalStars') || '0');
+      document.getElementById('wrongBtn').style.display = wrongList.length ? 'inline-block' : 'none';
+      document.getElementById('resultModal').style.display = 'flex';
+
+      updateTotal();
+      if (correctCount === maxQuestions || correctCount / maxQuestions >= 0.8) {
+        let passed = JSON.parse(localStorage.getItem('passed_challenge2')||'[]');
+        if (!passed.includes(bookName)) {
+          passed.push(bookName);
+          localStorage.setItem('passed_challenge2', JSON.stringify(passed));
+        }
+      }
+      
+      // ?湔?澆???停蝯梯?
+      updateSpellingAchievements();
+    }
+
+    // ?啣?嚗摮??脫?撠梯蕭頩?
+    function updateSpellingAchievements() {
+      // ?湔?澆??摰?甈⊥
+      const spellingGames = parseInt(localStorage.getItem('spellingGamesCompleted') || '0');
+      localStorage.setItem('spellingGamesCompleted', spellingGames + 1);
+      
+      // 瑼Ｘ銝行?啁??撠?
+      checkAndUpdateSpellingAchievements();
+    }
+    
+    function checkAndUpdateSpellingAchievements() {
+      // 瑼Ｘ?臬??停??
+      const achievements = [
+        { id: 'speed_learner', name: '敹恍飛蝧?, requirement: 10 },
+        { id: 'accuracy_master', name: '皞Ⅱ憭批葦', requirement: 20 },
+        { id: 'combo_king', name: '???銋?', requirement: 15 }
+      ];
+      
+      const claimed = JSON.parse(localStorage.getItem('claimedAchievements') || '[]');
+      
+      achievements.forEach(ach => {
+        if (claimed.includes(ach.id)) return; // 撌脩?????
+        
+        // 閮??????⊥??
+        const fillGames = parseInt(localStorage.getItem('fillGamesCompleted') || '0');
+        const cardGames = parseInt(localStorage.getItem('cardGamesCompleted') || '0');
+        const quizGames = parseInt(localStorage.getItem('quizGamesCompleted') || '0');
+        const spellingGames = parseInt(localStorage.getItem('spellingGamesCompleted') || '0');
+        const matchingGames = parseInt(localStorage.getItem('matchingGamesCompleted') || '0');
+        const totalGames = fillGames + cardGames + quizGames + spellingGames + matchingGames;
+        
+        if (totalGames >= ach.requirement) {
+          // 憿舐內?停???
+          showAchievementNotification(ach.name, ach.id);
+        }
+      });
+    }
+    
+    function showAchievementNotification(achievementName, achievementId) {
+      // ?萄遣?停?
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #ffd700, #ffed4e);
+        color: #000;
+        padding: 20px 30px;
+        border-radius: 15px;
+        font-weight: bold;
+        font-size: 1.2rem;
+        z-index: 10000;
+        box-shadow: 0 0 30px #ffd700;
+        animation: achievementPop 0.8s cubic-bezier(.68, -0.55, .27, 1.55);
+        text-align: center;
+        min-width: 300px;
+      `;
+      
+      notification.innerHTML = `
+        <div style="font-size: 3rem; margin-bottom: 10px;">??</div>
+        <div style="margin-bottom: 5px;">?? ?停??嚗?/div>
+        <div style="font-size: 1.1rem;">${achievementName}</div>
+        <div style="font-size: 0.9rem; margin-top: 10px; color: #666;">
+          ???停????
+        </div>
+      `;
+      
+      // 瘛餃??璅??
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes achievementPop {
+          0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+          50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+          100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(notification);
+      
+      // 3蝘??芸?蝘駁
+      setTimeout(() => {
+        notification.remove();
+        style.remove();
+      }, 3000);
+    }
+
+    function showWrongModal() {
+      const list = document.getElementById('wrongItems');
+      list.innerHTML = '';
+      wrongList.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item.zh} ??${item.word}`;
+        list.appendChild(li);
+      });
+      document.getElementById('wrongModal').style.display = 'flex';
+    }
+    function closeWrongModal() {
+      document.getElementById('wrongModal').style.display = 'none';
+    }
+    function goHome() {
+      location.href = 'index.html';
+    }
+
+    function nextWord() {
+      disablePlay();
+      if (used.length >= words.length) {
+        document.getElementById('wordDisplay').textContent = '???摰?';
+        document.getElementById('timerDisplay').textContent = '??撌脩???;
+        
+        // ===== ?啣?嚗＊蝷粹??脩蜇蝯?=====
+        setTimeout(() => {
+          showGameSummary();
+          setTimeout(showResultPanel, 2000);
+        }, 300);
+        return;
+      }
+      const available = words.filter(w => !used.includes(w.word));
+      current = available[Math.floor(Math.random() * available.length)];
+      used.push(current.word);
+
+      updateQuestionCount();
+      updateProgressBar();
+      document.getElementById('wordDisplay').textContent = current.zh;
+      document.getElementById('answerInput').value = '';
+      document.getElementById('feedback').textContent = '';
+      document.getElementById('hintArea').style.display = 'none';
+      hintUsed = false;
+      
+      // ?蔭頛詨獢見撘?
+      const input = document.getElementById('answerInput');
+      input.classList.remove('correct', 'wrong');
+      
+      speakCurrentWord();
+      enablePlay();
+      startTimer();
+      document.getElementById('answerInput').scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+
+    function checkAnswer() {
+      disablePlay();
+      const ans = document.getElementById('answerInput').value.trim().toLowerCase();
+      const input = document.getElementById('answerInput');
+      const feedback = document.getElementById('feedback');
+      
+      // ===== ?啣?嚗?蝞?憿???=====
+      const answerTime = (30 - timeLeft); // 30蝘????隞亦30皜?拚???
+      gameStats.totalAnswered++;
+      gameStats.totalTimeUsed += answerTime;
+      
+      if (ans === current.word.toLowerCase()) {
+        input.classList.add('correct');
+        feedback.textContent = '??甇?Ⅱ嚗?;
+        feedback.className = 'correct';
+        correctCount++;
+        
+        // ===== ?啣?嚗?撠?頛?=====
+        gameStats.correctCount++;
+        gameStats.consecutiveCorrect++;
+        
+        // ?湔?敹???Ｙ?憿???
+        if (answerTime < gameStats.fastestAnswer) {
+          gameStats.fastestAnswer = answerTime;
+        }
+        if (answerTime > gameStats.slowestAnswer) {
+          gameStats.slowestAnswer = answerTime;
+        }
+        
+        // 瑼Ｘ?臬?箏?蝢?憿?10蝘蝑?嚗?
+        if (answerTime <= 10) {
+          gameStats.perfectAnswers++;
+        }
+        
+        // 閮????
+        const starsEarned = calculateStarReward(true, answerTime, gameStats.consecutiveCorrect, current.word.length, hintUsed);
+        
+        // 雿輻蝯曹????頂蝯?
+        if (typeof StarRewardSystem !== 'undefined') {
+          StarRewardSystem.addStars(starsEarned);
+        } else {
+          totalStarCount += starsEarned;
+          localStorage.setItem('totalStars', totalStarCount);
+        }
+        
+        // ?湔憿舐內
+        updateTotal();
+        
+        // 憿舐內??
+        let reasonText = '';
+        if (answerTime <= 5) {
+          reasonText = '??頞翰?摮?';
+        } else if (answerTime <= 10) {
+          reasonText = '? 敹恍摮?';
+        }
+        if (gameStats.consecutiveCorrect >= 3) {
+          reasonText += reasonText ? ' + ????嚗? : '? ????嚗?;
+        }
+        if (hintUsed) {
+          reasonText += reasonText ? ' - ?內?脩蔑' : '? 雿輻?內';
+        }
+        
+        showRewardAnimation(starsEarned, reasonText);
+        
+        // 憿舐內????
+        showComboNotification(gameStats.consecutiveCorrect);
+        
+        // ===== ?啣?嚗???撠??桀? =====
+        if (typeof VocabularyAchievementSystem !== 'undefined') {
+          VocabularyAchievementSystem.recordCorrectWord(current.word, bookName);
+        }
+        
+        speak(current.word);
+      } else {
+        input.classList.add('wrong');
+        feedback.textContent = `??甇?圾?荔?${current.word}`;
+        feedback.className = 'wrong';
+        wrongList.push(current);
+        
+        // ===== ?啣?嚗??舫?頛?=====
+        gameStats.consecutiveCorrect = 0; // ?蔭???
+      }
+      setTimeout(nextWord, 1200);
+    }
+
+    function skipWord() {
+      disablePlay();
+      wrongList.push(current);
+      setTimeout(nextWord, 200);
+    }
+
+    function restartGame() {
+      clearInterval(timer);
+      used = [];
+      wrongList = [];
+      correctCount = 0;
+      hintUsed = false;
+      document.getElementById('currentQuestion').textContent = '0';
+      document.getElementById('progressFill').style.width = '0%';
+      document.getElementById('resultModal').style.display = 'none';
+      document.getElementById('wrongModal').style.display = 'none';
+      document.getElementById('hintArea').style.display = 'none';
+      nextWord();
+    }
+
+    // ?單????
+    document.getElementById('answerInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        checkAnswer();
+      } else if (e.key === 'Tab') {
+        e.preventDefault();
+        showHint();
+      }
+    });
+
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    // ????
+    updateTotal();
+    updateQuestionCount();
+    updateProgressBar();
+    nextWord();
+    
+    // 蝣箔??頛敺???血頛詨獢?
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('answerInput').focus();
+      }, 500);
+    });
+
+    // ===== ?啣?嚗＊蝷粹??脩蜇蝯?=====
+    function showGameSummary() {
+      const totalTime = (Date.now() - gameStats.startTime) / 1000;
+      const accuracy = (gameStats.correctCount / gameStats.totalAnswered * 100).toFixed(1);
+      const avgTime = gameStats.totalTimeUsed / gameStats.totalAnswered;
+      
+      const summaryDiv = document.createElement('div');
+      summaryDiv.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        backdrop-filter: blur(10px);
+      `;
+      
+      summaryDiv.innerHTML = `
+        <div style="
+          background: linear-gradient(135deg, rgba(10, 20, 40, 0.95), rgba(20, 40, 80, 0.95));
+          border: 3px solid #00ffff;
+          border-radius: 25px;
+          padding: 40px;
+          max-width: 600px;
+          text-align: center;
+          box-shadow: 0 0 50px #00ffff;
+          animation: summaryPop 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+          color: #fff;
+          font-family: 'Orbitron', sans-serif;
+        ">
+          <div style="font-size: 4rem; margin-bottom: 20px;">??</div>
+          <h2 style="color: #00ffff; margin-bottom: 30px; font-size: 2rem;">?澆??摰?嚗?/h2>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+            <div style="background: rgba(0,255,255,0.1); padding: 15px; border-radius: 15px; border: 1px solid #00ffff;">
+              <div style="font-size: 1.5rem; color: #00ffff;">${gameStats.correctCount}</div>
+              <div style="font-size: 0.9rem; color: #ccc;">蝑?憿</div>
+            </div>
+            <div style="background: rgba(0,255,255,0.1); padding: 15px; border-radius: 15px; border: 1px solid #00ffff;">
+              <div style="font-size: 1.5rem; color: #00ffff;">${accuracy}%</div>
+              <div style="font-size: 0.9rem; color: #ccc;">甇?Ⅱ??/div>
+            </div>
+            <div style="background: rgba(0,255,255,0.1); padding: 15px; border-radius: 15px; border: 1px solid #00ffff;">
+              <div style="font-size: 1.5rem; color: #00ffff;">${totalTime.toFixed(1)}s</div>
+              <div style="font-size: 0.9rem; color: #ccc;">蝮賜??/div>
+            </div>
+            <div style="background: rgba(0,255,255,0.1); padding: 15px; border-radius: 15px; border: 1px solid #00ffff;">
+              <div style="font-size: 1.5rem; color: #00ffff;">${gameStats.perfectAnswers}</div>
+              <div style="font-size: 0.9rem; color: #ccc;">摰?蝑?</div>
+            </div>
+          </div>
+          
+          <div style="
+            background: linear-gradient(90deg, #ffd700, #ffaa00);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #000;
+            font-weight: bold;
+            font-size: 1.3rem;
+          ">
+            潃??祆活?脣???嚗?{parseInt(localStorage.getItem('totalStars') || '0') - totalStarCount} 憿?潃?
+          </div>
+          
+          <div style="color: #ccc; font-size: 0.9rem; margin-top: 20px;">
+            暺?隞餅?????..
+          </div>
+        </div>
+      `;
+      
+      // 瘛餃??璅??
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes summaryPop {
+          0% { transform: scale(0.2) rotate(-15deg); opacity: 0; }
+          50% { transform: scale(1.15) rotate(3deg); }
+          100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(summaryDiv);
+      
+      // 暺????
+      summaryDiv.onclick = function(e) {
+        if (e.target === summaryDiv) {
+          summaryDiv.remove();
+          style.remove();
+        }
+      };
+    }
+  </script>
+</body>
+</html>

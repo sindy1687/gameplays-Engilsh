@@ -1,0 +1,1931 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?脤???∠??詨??</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(2px 2px at 20px 30px, #ffffff, transparent),
+                radial-gradient(2px 2px at 40px 70px, #ffffff, transparent),
+                radial-gradient(1px 1px at 90px 40px, #ffffff, transparent),
+                radial-gradient(1px 1px at 130px 80px, #ffffff, transparent),
+                radial-gradient(2px 2px at 160px 30px, #ffffff, transparent);
+            background-repeat: repeat;
+            background-size: 200px 100px;
+            animation: stars 20s linear infinite;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .stars-interactive {
+            animation: stars-fast 5s linear infinite !important;
+            opacity: 0.6 !important;
+        }
+
+        .stars-victory {
+            animation: stars-victory 2s ease-in-out !important;
+            opacity: 0.8 !important;
+        }
+
+        .stars-damage {
+            animation: stars-damage 0.5s ease-in-out !important;
+            opacity: 0.7 !important;
+        }
+
+        @keyframes stars-fast {
+            from { opacity: 0.3; }
+            to { opacity: 0.6; }
+        }
+
+        @keyframes stars-victory {
+            0% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.3; }
+        }
+
+        @keyframes stars-damage {
+            0% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+            100% { opacity: 0.3; }
+        }
+
+        @keyframes stars {
+            from { opacity: 0.3; }
+            to { opacity: 0.5; }
+        }
+
+        .game-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .game-header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+            background: linear-gradient(45deg, #00ffff, #0080ff, #8000ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: cosmic-glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes cosmic-glow {
+            from { filter: drop-shadow(0 0 10px rgba(0,255,255,0.5)); }
+            to { filter: drop-shadow(0 0 20px rgba(128,0,255,0.8)); }
+        }
+
+        .game-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: rgba(0,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(15px);
+            text-align: center;
+            color: white;
+            border: 1px solid rgba(0,255,255,0.3);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0,255,255,0.1);
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 15px 40px rgba(0,255,255,0.3);
+            border-color: rgba(0,255,255,0.6);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .health-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .health-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+
+        .player-health { background: linear-gradient(90deg, #00b894, #00cec9); }
+        .opponent-health { background: linear-gradient(90deg, #e17055, #d63031); }
+
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 2.5fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .player-area, .opponent-area {
+            background: rgba(0,255,255,0.1);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            min-height: 320px;
+            border: 1px solid rgba(0,255,255,0.3);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 32px rgba(0,255,255,0.1);
+        }
+
+        .player-title {
+            text-align: center;
+            color: white;
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            justify-items: center;
+            min-height: 200px;
+            padding: 10px;
+        }
+
+        .player-area .cards-container {
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            max-width: 100%;
+        }
+
+        .opponent-area .cards-container {
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            max-width: 100%;
+        }
+
+        .card {
+            width: 140px;
+            height: 190px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(240,240,240,0.8));
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2), 0 0 20px rgba(0,255,255,0.1);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #333;
+            border: 2px solid rgba(0,255,255,0.3);
+            overflow: hidden;
+            padding: 15px 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .card:hover {
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4), 0 0 30px rgba(0,255,255,0.4);
+            border: 3px solid rgba(0,255,255,0.6);
+        }
+
+        .player-area .card:hover {
+            border-color: #00ffff;
+            box-shadow: 0 15px 30px rgba(0,255,255,0.4);
+        }
+
+        .opponent-area .card:hover {
+            border-color: #ff0080;
+            box-shadow: 0 15px 30px rgba(255,0,128,0.4);
+        }
+
+        .card.selected {
+            box-shadow: 0 0 30px rgba(0,255,255,0.8);
+            border: 4px solid #00ffff;
+            animation: selected-pulse 1s ease-in-out infinite alternate;
+            z-index: 10;
+        }
+
+        .player-area .card.selected {
+            border-color: #00ffff;
+            box-shadow: 0 0 30px rgba(0,255,255,0.8);
+        }
+
+        @keyframes selected-pulse {
+            from { box-shadow: 0 0 25px rgba(0,255,255,0.6); }
+            to { box-shadow: 0 0 35px rgba(0,255,255,0.8); }
+        }
+
+        .card.played {
+            opacity: 0.7;
+        }
+
+        .card-image {
+            width: 80px;
+            height: 80px;
+            font-size: 3.5rem;
+            margin-bottom: 8px;
+            margin-top: 15px;
+        }
+
+        .card-name {
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 8px;
+            margin-top: 5px;
+            padding: 0 5px;
+            line-height: 1.2;
+            max-width: 100%;
+        }
+
+        .card-power {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e17055;
+            padding: 6px 10px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.95);
+            border: 2px solid #e17055;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            z-index: 3;
+        }
+
+        .card-power::before {
+            content: 'ATK';
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #e17055;
+            color: white;
+            font-size: 0.5rem;
+            padding: 1px 4px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .card-type {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        .card-weakness {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background: linear-gradient(45deg, #e17055, #d63031);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            z-index: 3;
+        }
+
+        .card-special {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: linear-gradient(45deg, #9c27b0, #7b1fa2);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            z-index: 3;
+        }
+
+        .battlefield {
+            background: rgba(0,255,255,0.1);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            min-height: 450px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid rgba(0,255,255,0.3);
+            box-shadow: 0 8px 32px rgba(0,255,255,0.1);
+        }
+
+        .battlefield-title {
+            text-align: center;
+            color: white;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .battlefield-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 25px;
+            justify-items: center;
+            min-height: 300px;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .battlefield-cards .card {
+            margin: 10px;
+        }
+
+        .battlefield-card {
+            position: relative;
+            animation: card-fade 0.6s ease-out;
+        }
+
+        .battlefield-card .card-power {
+            animation: power-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes power-glow {
+            0%, 100% { box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+            50% { box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+        }
+
+        @keyframes card-fade {
+            0% { opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #00ffff, #0080ff);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 16px rgba(0,255,255,0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(145deg, #8000ff, #4000ff);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 8px 16px rgba(128,0,255,0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(145deg, #ff0080, #ff0040);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 8px 16px rgba(255,0,128,0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(145deg, #ff8000, #ff4000);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            box-shadow: 0 8px 16px rgba(255,128,0,0.4);
+        }
+
+        .game-message {
+            text-align: center;
+            color: white;
+            font-size: 1.3rem;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: message-fade 0.5s ease-in;
+        }
+
+        @keyframes message-fade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .card-back {
+            background: linear-gradient(145deg, #2d3436, #636e72);
+            color: white;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .winner {
+            animation: winner-glow 2s ease-in-out infinite alternate;
+        }
+
+        .winner .card-power {
+            background: rgba(255,255,255,0.98);
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255,215,0,0.6);
+        }
+
+        @keyframes winner-glow {
+            from { 
+                box-shadow: 0 0 25px rgba(255,215,0,0.6);
+            }
+            to { 
+                box-shadow: 0 0 35px rgba(255,215,0,0.8);
+            }
+        }
+
+
+
+        .damage-animation {
+            animation: damage-shake 0.5s ease-in-out;
+        }
+
+        @keyframes damage-shake {
+            0%, 100% { opacity: 1; }
+            25% { opacity: 0.7; }
+            75% { opacity: 0.7; }
+        }
+
+        .game-over {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fade-in 0.5s ease-in;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .game-over-content {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            padding: 50px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            animation: fade-in 0.5s ease-out;
+            position: relative; /* ?粹?????雿?*/
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .game-over h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .game-over p {
+            margin-bottom: 30px;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .food-chain-info {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            color: white;
+            font-size: 0.9rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .food-chain-info h3 {
+            margin-bottom: 15px;
+            color: #ffd700;
+            font-size: 1.2rem;
+        }
+
+        .food-chain-rule {
+            margin: 8px 0;
+            padding: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            border-left: 3px solid #ffd700;
+        }
+
+        .special-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .effect-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: particle-fall 2s linear infinite;
+        }
+
+        @keyframes particle-fall {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .skill-button {
+            background: linear-gradient(145deg, #9c27b0, #7b1fa2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .skill-button:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .skill-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .sound-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            display: flex;
+            gap: 10px;
+        }
+
+        .sound-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .sound-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .sound-btn.active {
+            background: rgba(255,215,0,0.3);
+            color: #ffd700;
+        }
+
+        .sound-btn[title="??單?"] {
+            background: rgba(255,107,107,0.2);
+        }
+
+        .sound-btn[title="??單?"]:hover {
+            background: rgba(255,107,107,0.3);
+        }
+
+        .sound-btn[title="??單?"].active {
+            background: rgba(255,215,0,0.3);
+            color: #ffd700;
+        }
+
+        /* ??憿舐內 */
+        #starsDisplay {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: rgba(10, 20, 40, 0.6);
+            padding: 4px 8px;
+            border-radius: 10px;
+            color: #ffd700;
+            font-weight: bold;
+            box-shadow: 0 0 12px #ffd700, 0 0 32px #00ffff;
+            border: 2px solid #00ffff;
+            font-size: 1.1rem;
+            backdrop-filter: blur(1px);
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            .game-area {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .cards-container {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 12px;
+            }
+            
+            .battlefield-cards {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 15px;
+            }
+            
+            .card {
+                width: 120px;
+                height: 170px;
+                padding: 10px 8px;
+            }
+            
+            .battlefield-cards .card {
+                /* 蝘駁蝮格??嚗????見撘?*/
+                transform: none;
+            }
+            
+            .card-image {
+                width: 60px;
+                height: 60px;
+                font-size: 2.8rem;
+            }
+            
+            .card-name {
+                font-size: 0.9rem;
+            }
+            
+            .card-power {
+                font-size: 1.3rem;
+                padding: 4px 8px;
+            }
+            
+            .card-power::before {
+                font-size: 0.4rem;
+                padding: 1px 3px;
+            }
+            
+            .game-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .game-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+            <div id="app">
+            <!-- ??憿舐內 -->
+            <div id="starsDisplay">
+                潃?span id="totalStarsCount">0</span>
+            </div>
+
+            <!-- ?單??批 -->
+            <div class="sound-controls">
+                <button class="sound-btn" :class="{ active: soundEnabled }" @click="toggleSound">
+                    ??
+                </button>
+                <button class="sound-btn" :class="{ active: musicEnabled }" @click="toggleMusic">
+                    ?
+                </button>
+                <button class="sound-btn" :class="{ active: isMusicPlaying }" @click="toggleBackgroundMusic" title="??單?">
+                    ?
+                </button>
+            </div>
+
+            <div class="game-container">
+            <div class="game-header">
+                <h1>?? ?脤???∠??詨??</h1>
+                <p>銴?憌?頂蝯梯??寞????/p>
+                <p style="color: #ffd700; font-size: 1rem; margin-top: 10px;">? 瘥活??閬?0憿?????舐敺?0憿???憭望???2憿???</p>
+                <p style="color: #00ff00; font-size: 0.9rem; margin-top: 5px;">?? ?撌脣??AI?游????游捆???</p>
+                <button class="btn btn-secondary" onclick="location.href='index.html'" style="margin-top: 15px;">
+                    ?? 餈?擐?
+                </button>
+            </div>
+
+            <div class="game-stats">
+                <div class="stat-card">
+                    <span class="stat-value">{{ playerHealth }}</span>
+                    <span class="stat-label">?拙振?</span>
+                    <div class="health-bar">
+                        <div class="health-fill player-health" :style="{ width: (playerHealth / 25 * 100) + '%' }"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">{{ turn }}</span>
+                    <span class="stat-label">????/span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">{{ playerEnergy }}</span>
+                    <span class="stat-label">?拙振?賡?</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">{{ opponentHealth }}</span>
+                    <span class="stat-label">撠??</span>
+                    <div class="health-bar">
+                        <div class="health-fill opponent-health" :style="{ width: (opponentHealth / 25 * 100) + '%' }"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="food-chain-info">
+                <h3>? 銴?憌??頂蝯梧?</h3>
+                <div class="food-chain-rule">?? ?? > ?? ?琿暽?> ? ??/div>
+                <div class="food-chain-rule">?? ??> ? ?? > ? ??/div>
+                <div class="food-chain-rule">?? ?溯 > ?? ??> ? ??</div>
+                <div class="food-chain-rule">? ??> ?? 暽?> ? ??/div>
+                <div class="food-chain-rule">?? ? > ? ?? > ? ??/div>
+                <div class="food-chain-rule">? ?? > ? ??> ?? 暽?/div>
+                <div class="food-chain-rule">? ??> ?? 擳?> ?? ??/div>
+                <div class="food-chain-rule">?? 攳? > ?? 擳?> ?? ??/div>
+                <div class="food-chain-rule">?? 鞎曋?> ? ?? > ? ??/div>
+                <div class="food-chain-rule">?詨????蝧餃?鋡怠????皜?</div>
+            </div>
+
+            <div class="game-area">
+                <!-- 撠????-->
+                <div class="opponent-area">
+                    <div class="player-title">?? 撠?</div>
+                    <div class="cards-container">
+                        <div v-for="(card, index) in opponentHand" 
+                             :key="'opponent-' + index"
+                             class="card card-back">
+                            <div>?</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ?啣???-->
+                <div class="battlefield">
+                    <div class="battlefield-title">?? ?啣</div>
+                    <div class="battlefield-cards">
+                        <div v-for="(card, index) in battlefield" 
+                             :key="'battlefield-' + index"
+                             class="card battlefield-card"
+                             :class="{ 'winner': card.winner, 'damage-animation': card.damage }">
+                            <div class="card-type">{{ card.type }}</div>
+                            <div class="card-image">{{ card.emoji }}</div>
+                            <div class="card-name">{{ card.name }}</div>
+                            <div class="card-power">{{ card.power }}</div>
+                            <div v-if="card.weakness" class="card-weakness">撘梢?: {{ card.weakness }}</div>
+                            <div v-if="card.special" class="card-special">{{ card.special }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="game-message" v-if="gameMessage">
+                        <div v-if="!gameStarted && !gameOver" style="color: #ffd700; font-weight: bold;">
+                            {{ gameMessage }}
+                        </div>
+                        <div v-else-if="gameOver" style="color: #ff6b6b; font-weight: bold;">
+                            {{ gameMessage }}
+                        </div>
+                        <div v-else style="color: #4ecdc4; font-weight: bold;">
+                            {{ gameMessage }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ?拙振???-->
+                <div class="player-area">
+                    <div class="player-title">? ?拙振</div>
+                    <div class="cards-container">
+                        <div v-for="(card, index) in playerHand" 
+                             :key="'player-' + index"
+                             class="card"
+                             :class="{ 'selected': selectedCard === index }"
+                             @click="gameOver ? null : selectCard(index)"
+                             :style="{ cursor: gameOver ? 'not-allowed' : 'pointer' }">
+                            <div class="card-type">{{ card.type }}</div>
+                            <div class="card-image">{{ card.emoji }}</div>
+                            <div class="card-name">{{ card.name }}</div>
+                            <div class="card-power">{{ card.power }}</div>
+                            <div v-if="card.weakness" class="card-weakness">撘梢?: {{ card.weakness }}</div>
+                            <div v-if="card.special" class="card-special">{{ card.special }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-controls">
+                <button class="btn btn-primary" 
+                        @click="startGame" 
+                        :disabled="gameStarted || totalStars < 10">
+                    ???
+                </button>
+                <button class="btn btn-primary" 
+                        @click="playCard" 
+                        :disabled="selectedCard === null || gameOver || !gameStarted">
+                    ?箇?
+                </button>
+                <button class="btn btn-secondary" 
+                        @click="endTurn" 
+                        :disabled="gameOver || !gameStarted || playerHand.length > 0">
+                    蝯???
+                </button>
+                <button class="btn btn-warning" 
+                        @click="useSpecialSkill" 
+                        :disabled="playerEnergy < 3 || gameOver || !gameStarted">
+                    ?寞????(3?賡?)
+                </button>
+                <button class="btn btn-danger" 
+                        @click="newGame"
+                        :disabled="gameOver">
+                    ?圈???
+                </button>
+            </div>
+        </div>
+
+        <!-- ?蝯?敶? -->
+        <div class="game-over" v-if="gameOver">
+            <div class="game-over-content">
+                <button @click="gameOver = false" 
+                        style="
+                            position: absolute;
+                            top: 10px;
+                            right: 15px;
+                            background: #ff4444;
+                            color: white;
+                            border: none;
+                            border-radius: 50%;
+                            width: 30px;
+                            height: 30px;
+                            font-size: 18px;
+                            cursor: pointer;
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                            transition: all 0.3s ease;
+                        "
+                        onmouseover="this.style.background='#ff6666'"
+                        onmouseout="this.style.background='#ff4444'">
+                    ?
+                </button>
+                <h2>{{ gameOverMessage }}</h2>
+                <p>?蝯??? {{ playerHealth }} vs {{ opponentHealth }}</p>
+                <p>蝮賢??: {{ turn }}</p>
+                <button class="btn btn-primary" @click="newGame">?銝甈?/button>
+            </div>
+        </div>
+
+        <!-- ?寞????-->
+        <div class="special-effects" v-if="showEffects">
+            <div v-for="i in 25" :key="i" 
+                 class="effect-particle"
+                 :style="{ 
+                     left: Math.random() * 100 + '%',
+                     animationDelay: Math.random() * 2 + 's',
+                     animationDuration: (Math.random() * 2 + 1) + 's'
+                 }">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    playerHealth: 25,
+                    opponentHealth: 20, // ??撠???銵??
+                    playerEnergy: 5,
+                    turn: 1,
+                    playerHand: [],
+                    opponentHand: [],
+                    battlefield: [],
+                    selectedCard: null,
+                    gameMessage: '',
+                    gameOver: false,
+                    gameOverMessage: '',
+                    currentPlayer: 'player',
+                    deck: [],
+                    showEffects: false,
+                    soundEnabled: true,
+                    musicEnabled: true,
+                    audioContext: null,
+                    sounds: {},
+                    totalStars: 0,
+                    gameStarted: false, // ?啣?嚗??脫?血歇??
+                    gameRewarded: false, // ?啣?嚗甇ａ?銴??萇?璅?
+                    foodChain: {
+                        '??': ['?琿暽?, '暽?, '?收'],
+                        '?琿暽?: ['??],
+                        '??: ['??', '??'],
+                        '??': ['??, '蝔桀?'],
+                        '?溯': ['??, '??'],
+                        '??: ['暽?, '??'],
+                        '暽?: ['??],
+                        '?': ['??', '??],
+                        '??': ['??],
+                        '??': ['??, '暽?],
+                        '??: ['擳?, '??'],
+                        '擳?: ['??, '??],
+                        '攳?': ['擳?],
+                        '鞎曋?: ['??', '??'],
+                        '??: []
+                    }
+                }
+            },
+            mounted() {
+                this.initializeAudio();
+                this.loadTotalStars();
+                this.initBackgroundMusic();
+                // 銝??憪??嚗?敺摰園???憪?
+                this.gameMessage = '隢???憪??脯???憪??莎?';
+            },
+            methods: {
+                initializeAudio() {
+                    // ????頂蝯?
+                    try {
+                        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        this.createSounds();
+                    } catch (error) {
+                        console.log('?單?蝟餌絞???仃??', error);
+                    }
+                },
+
+                createSounds() {
+                    // ?萄遣?車?單?
+                    this.sounds = {
+                        cardPlay: this.createTone(440, 0.1, 'sine'), // ?箇??單?
+                        victory: this.createTone(523, 0.3, 'square'), // ??單?
+                        damage: this.createTone(220, 0.2, 'sawtooth'), // ?瑕拿?單?
+                        special: this.createTone(659, 0.4, 'triangle'), // ?寞???賡??
+                        button: this.createTone(330, 0.1, 'sine'), // ???單?
+                        heal: this.createTone(784, 0.3, 'sine'), // 瘝餌??單?
+                        shuffle: this.createTone(196, 0.5, 'sawtooth'), // 瘣??單?
+                        gameOver: this.createTone(110, 0.8, 'square'), // ?蝯??單?
+                        background: this.createBackgroundMusic() // ??單?
+                    };
+                },
+
+                createTone(frequency, duration, type) {
+                    return () => {
+                        if (!this.soundEnabled || !this.audioContext) return;
+                        
+                        const oscillator = this.audioContext.createOscillator();
+                        const gainNode = this.audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(this.audioContext.destination);
+                        
+                        oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
+                        oscillator.type = type;
+                        
+                        gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
+                        
+                        oscillator.start(this.audioContext.currentTime);
+                        oscillator.stop(this.audioContext.currentTime + duration);
+                    };
+                },
+
+                createBackgroundMusic() {
+                    return () => {
+                        if (!this.musicEnabled || !this.audioContext) return;
+                        
+                        // ?萄遣蝪∪???舫璅儐??
+                        const notes = [261, 293, 329, 349, 392, 440, 493, 523]; // C憭扯矽?喲?
+                        let currentNote = 0;
+                        
+                        const playNote = () => {
+                            if (!this.musicEnabled) return;
+                            
+                            const oscillator = this.audioContext.createOscillator();
+                            const gainNode = this.audioContext.createGain();
+                            
+                            oscillator.connect(gainNode);
+                            gainNode.connect(this.audioContext.destination);
+                            
+                            oscillator.frequency.setValueAtTime(notes[currentNote], this.audioContext.currentTime);
+                            oscillator.type = 'sine';
+                            
+                            gainNode.gain.setValueAtTime(0.1, this.audioContext.currentTime);
+                            gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.5);
+                            
+                            oscillator.start(this.audioContext.currentTime);
+                            oscillator.stop(this.audioContext.currentTime + 0.5);
+                            
+                            currentNote = (currentNote + 1) % notes.length;
+                            
+                            setTimeout(playNote, 2000); // 瘥?蝘?曆??蝚?
+                        };
+                        
+                        playNote();
+                    };
+                },
+
+                toggleSound() {
+                    this.soundEnabled = !this.soundEnabled;
+                    if (this.soundEnabled) {
+                        this.sounds.button();
+                    }
+                },
+
+                toggleMusic() {
+                    this.musicEnabled = !this.musicEnabled;
+                    if (this.musicEnabled) {
+                        this.sounds.background();
+                        this.playBackgroundMusic();
+                    } else {
+                        this.pauseBackgroundMusic();
+                    }
+                },
+
+                playSound(soundName) {
+                    if (this.sounds[soundName]) {
+                        this.sounds[soundName]();
+                    }
+                },
+
+                // ??單?蝟餌絞
+                bgMusic: null,
+                isMusicPlaying: false,
+
+                initBackgroundMusic() {
+                    try {
+                        this.bgMusic = new Audio('sound/adventures-loop-music-226836.mp3');
+                        this.bgMusic.loop = true;
+                        this.bgMusic.volume = 0.3;
+                        this.bgMusic.preload = 'auto';
+                        
+                        // ???單?頛摰?
+                        this.bgMusic.addEventListener('canplaythrough', () => {
+                            console.log('??單?頛摰?');
+                        });
+                        
+                        // ???單??航炊
+                        this.bgMusic.addEventListener('error', (e) => {
+                            console.error('??單?頛憭望?:', e);
+                        });
+                    } catch (error) {
+                        console.error('?????舫璅仃??', error);
+                    }
+                },
+
+                playBackgroundMusic() {
+                    if (this.bgMusic && !this.isMusicPlaying) {
+                        this.bgMusic.play().then(() => {
+                            this.isMusicPlaying = true;
+                            console.log('??單????剜');
+                        }).catch(error => {
+                            console.error('?剜??單?憭望?:', error);
+                        });
+                    }
+                },
+
+                pauseBackgroundMusic() {
+                    if (this.bgMusic && this.isMusicPlaying) {
+                        this.bgMusic.pause();
+                        this.isMusicPlaying = false;
+                        console.log('??單??怠?');
+                    }
+                },
+
+                toggleBackgroundMusic() {
+                    if (this.isMusicPlaying) {
+                        this.pauseBackgroundMusic();
+                    } else {
+                        this.playBackgroundMusic();
+                    }
+                },
+
+                triggerStarsEffect(effectType) {
+                    const starsElement = document.querySelector('body::before');
+                    const body = document.querySelector('body');
+                    
+                    // 蝘駁銋?????????
+                    body.classList.remove('stars-interactive', 'stars-victory', 'stars-damage');
+                    
+                    // 瘛餃??啁?????憿
+                    body.classList.add(`stars-${effectType}`);
+                    
+                    // ?寞???憿?閮剔蔭銝???蝥???
+                    let duration = 2000;
+                    if (effectType === 'damage') duration = 500;
+                    if (effectType === 'victory') duration = 2000;
+                    if (effectType === 'interactive') duration = 5000;
+                    
+                    // 撱園蝘駁??憿
+                    setTimeout(() => {
+                        body.classList.remove(`stars-${effectType}`);
+                    }, duration);
+                },
+
+                loadTotalStars() {
+                    // 敺?localStorage 頛蝮賣??
+                    const savedStars = localStorage.getItem('totalStars');
+                    this.totalStars = savedStars ? parseInt(savedStars) : 0;
+                    this.updateStarsDisplay();
+                },
+
+                updateStarsDisplay() {
+                    // ?湔??憿舐內
+                    const starsElement = document.getElementById('totalStarsCount');
+                    if (starsElement) {
+                        starsElement.textContent = this.totalStars;
+                    }
+                },
+
+                addStars(amount) {
+                    this.totalStars += amount;
+                    localStorage.setItem('totalStars', this.totalStars.toString());
+                    this.updateStarsDisplay();
+                    
+                    // 憒??舐敺???甇?嚗?憿舐內敶????
+                    if (amount > 0) {
+                        this.showStarRewardPopup(amount);
+                        this.playSound('victory');
+                    } else if (amount < 0) {
+                        // 憒??舀?斗???鞎嚗??剜???單?
+                        this.playSound('damage');
+                    }
+                },
+
+                showStarRewardPopup(amount) {
+                    // ?萄遣???敶?
+                    const popup = document.createElement('div');
+                    popup.style.cssText = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: linear-gradient(135deg, rgba(255, 215, 0, 0.95), rgba(255, 170, 0, 0.95));
+                        color: #000;
+                        padding: 30px 40px;
+                        border-radius: 20px;
+                        font-size: 1.8rem;
+                        font-weight: bold;
+                        z-index: 10000;
+                        box-shadow: 0 0 40px #ffd700, 0 0 80px rgba(255, 215, 0, 0.5);
+                        animation: starPopup 1.5s ease-out forwards;
+                        text-align: center;
+                        min-width: 300px;
+                        font-family: 'Arial', sans-serif;
+                    `;
+                    
+                    popup.innerHTML = `
+                        <div style="position: relative;">
+                            <button onclick="this.parentElement.parentElement.remove()" 
+                                    style="
+                                        position: absolute;
+                                        top: -15px;
+                                        right: -15px;
+                                        background: #ff4444;
+                                        color: white;
+                                        border: none;
+                                        border-radius: 50%;
+                                        width: 30px;
+                                        height: 30px;
+                                        font-size: 18px;
+                                        cursor: pointer;
+                                        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                                        transition: all 0.3s ease;
+                                    "
+                                    onmouseover="this.style.background='#ff6666'"
+                                    onmouseout="this.style.background='#ff4444'">
+                                ?
+                            </button>
+                            <div style="font-size: 4rem; margin-bottom: 15px; animation: starBounce 0.6s ease-in-out;">潃?/div>
+                            <div style="font-size: 2.2rem; margin-bottom: 10px; color: #000;">+${amount} ??</div>
+                            <div style="font-size: 1.2rem; color: #666;">?脣????嚗?/div>
+                        </div>
+                    `;
+                    
+                    // 瘛餃??璅??
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @keyframes starPopup {
+                            0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+                            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+                            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                        }
+                        @keyframes starBounce {
+                            0%, 100% { transform: scale(1); }
+                            50% { transform: scale(1.3); }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                    
+                    document.body.appendChild(popup);
+                    
+                    // 5蝘??芸?蝘駁嚗?????
+                    setTimeout(() => {
+                        if (document.body.contains(popup)) {
+                            popup.style.animation = 'starPopupOut 0.5s ease-in forwards';
+                            popup.style.setProperty('--animation', 'starPopupOut 0.5s ease-in forwards');
+                        }
+                        setTimeout(() => {
+                            if (document.body.contains(popup)) {
+                                document.body.removeChild(popup);
+                            }
+                            if (document.head.contains(style)) {
+                                document.head.removeChild(style);
+                            }
+                        }, 500);
+                    }, 5000);
+                    
+                    // 瘛餃?蝘駁?
+                    const removeStyle = document.createElement('style');
+                    removeStyle.textContent = `
+                        @keyframes starPopupOut {
+                            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                            100% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+                        }
+                    `;
+                    document.head.appendChild(removeStyle);
+                },
+
+                initializeGame() {
+                    // 瑼Ｘ???臬頞喳?
+                    if (this.totalStars < 10) {
+                        this.gameMessage = '??銝雲嚗?閬?0憿????賡?憪??莎?';
+                        return;
+                    }
+                    
+                    // ??10憿???
+                    this.addStars(-10);
+                    this.gameMessage = '???嚗歇??10憿???;
+                    
+                    this.createDeck();
+                    this.shuffleDeck();
+                    this.dealCards();
+                    this.gameOver = false;
+                    this.gameStarted = true; // 璅??撌脤?憪?
+                    this.gameRewarded = false; // ?蔭?璅?
+                    this.playerEnergy = 5;
+                    this.playSound('shuffle');
+                    // ????單?
+                    if (this.musicEnabled) {
+                        setTimeout(() => this.sounds.background(), 1000);
+                        this.playBackgroundMusic();
+                    }
+                },
+
+                startGame() {
+                    // 瑼Ｘ???臬頞喳?
+                    if (this.totalStars < 10) {
+                        this.gameMessage = '??銝雲嚗?閬?0憿????賡?憪??莎?';
+                        return;
+                    }
+                    
+                    this.initializeGame();
+                },
+
+                createDeck() {
+                    const animals = [
+                        { name: '??', emoji: '??', power: 8, type: '??', weakness: '?溯', special: '???? },
+                        { name: '?琿暽?, emoji: '??', power: 6, type: '??', weakness: '??', special: '?琿?芸' },
+                        { name: '??, emoji: '??', power: 5, type: '??', weakness: '?溯', special: '瘥雯?餅?' },
+                        { name: '??', emoji: '?', power: 3, type: '??', weakness: '??, special: '敹恍' },
+                        { name: '?溯', emoji: '??', power: 7, type: '??', weakness: '??, special: '蝛箔葉?芸' },
+                        { name: '??, emoji: '?', power: 6, type: '??', weakness: '??', special: '蝢日??啗?' },
+                        { name: '暽?, emoji: '??', power: 5, type: '??', weakness: '??, special: '?頝唾?' },
+                        { name: '?', emoji: '??', power: 4, type: '??', weakness: '??, special: '?∠閮?' },
+                        { name: '??', emoji: '?', power: 3, type: '??', weakness: '?', special: '敹恍?畾? },
+                        { name: '??', emoji: '?', power: 9, type: '??', weakness: '??, special: '??' },
+                        { name: '??, emoji: '?', power: 7, type: '??', weakness: '??, special: '撌典???' },
+                        { name: '擳?, emoji: '??', power: 3, type: '??', weakness: '攳?', special: '瘞港葉皜詨?' },
+                        { name: '攳?', emoji: '??', power: 8, type: '??', weakness: '??, special: '瘛望絲?菜?' },
+                        { name: '鞎曋?, emoji: '??', power: 6, type: '??', weakness: '??, special: '憭??賢?' },
+                        { name: '??, emoji: '?', power: 1, type: '璊', weakness: '???', special: '??雿' }
+                    ];
+                    
+                    this.deck = [];
+                    // 瘥車?4撘萇?嚗Ⅱ靽?頞喳???蝯??????
+                    for (let animal of animals) {
+                        for (let i = 0; i < 4; i++) {
+                            this.deck.push({...animal});
+                        }
+                    }
+                    
+                    console.log(`???萄遣摰?嚗蜇??${this.deck.length} 撘萇?`);
+                },
+
+                shuffleDeck() {
+                    for (let i = this.deck.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
+                    }
+                },
+
+                dealCards() {
+                    // 蝣箔??雲憭??蝯阡???
+                    if (this.deck.length < 10) {
+                        console.log('??銝雲嚗??唳???);
+                        this.reshuffleDeck();
+                    }
+                    
+                    this.playerHand = this.deck.slice(0, 5);
+                    this.opponentHand = this.deck.slice(5, 10);
+                    this.deck = this.deck.slice(10);
+                    
+                    console.log(`?潛?摰? - ?拙振: ${this.playerHand.length} 撘蛛?撠?: ${this.opponentHand.length} 撘蛛??拚???: ${this.deck.length} 撘琛);
+                },
+
+                selectCard(index) {
+                    if (!this.gameOver && this.gameStarted) {
+                        // ?冽??臭誑?箇?
+                        this.playCard(index);
+                    }
+                },
+
+                playCard(index) {
+                    if (index === null || this.gameOver || !this.gameStarted) {
+                        return;
+                    }
+
+                    const card = this.playerHand[index];
+                    this.battlefield.push({
+                        ...card,
+                        player: 'player',
+                        winner: false,
+                        damage: false
+                    });
+
+                    this.playerHand.splice(index, 1);
+                    this.selectedCard = null;
+
+                    // ?剜?箇??單?
+                    this.playSound('cardPlay');
+
+                    // ??鈭???
+                    this.triggerStarsEffect('interactive');
+
+                    // 撠?AI???箇?
+                    this.opponentPlayCard();
+
+                    // 瑼Ｘ?啣??
+                    this.checkBattlefield();
+                    
+                    // 蝘駁?芸?銝???瑼Ｘ嚗??拙振?芸楛?批
+                },
+
+                // ?拙振??????AI?芸??箇?
+                startPlayerTurn() {
+                    // 蝘駁AI?芸??箇?嚗??拙振???
+                },
+
+                opponentPlayCard() {
+                    if (this.opponentHand.length === 0) {
+                        console.log('撠?瘝???嚗歲???);
+                        return;
+                    }
+
+                    // 憭批???AI?箄嚗??璈?
+                    let selectedCardIndex;
+                    
+                    // 70%璈??冽??豢?嚗?0%璈??豢?頛末???
+                    if (Math.random() < 0.7) {
+                        selectedCardIndex = Math.floor(Math.random() * this.opponentHand.length);
+                        console.log('AI?冽??豢??∠?');
+                    } else {
+                        // 蝪∪???雿喳???
+                        let bestCardIndex = 0;
+                        let bestScore = this.evaluateCard(this.opponentHand[0]);
+
+                        for (let i = 1; i < this.opponentHand.length; i++) {
+                            const score = this.evaluateCard(this.opponentHand[i]);
+                            if (score > bestScore) {
+                                bestScore = score;
+                                bestCardIndex = i;
+                            }
+                        }
+                        selectedCardIndex = bestCardIndex;
+                        console.log('AI?豢?頛末???);
+                    }
+
+                    const card = this.opponentHand[selectedCardIndex];
+                    this.battlefield.push({
+                        ...card,
+                        player: 'opponent',
+                        winner: false,
+                        damage: false
+                    });
+
+                    this.opponentHand.splice(selectedCardIndex, 1);
+                    
+                    console.log(`撠??箇?: ${card.name}嚗擗??? ${this.opponentHand.length} 撘琛);
+                    
+                    // ?剜AI?箇??單?
+                    setTimeout(() => this.playSound('cardPlay'), 200);
+                    
+                    // 蝘駁????箇??摩嚗?甈∪?箔?撘?
+                },
+
+                evaluateCard(card) {
+                    let score = card.power;
+                    
+                    // 憭批???AI??交?
+                    // 瑼Ｘ?臬???靽?雿???雿?
+                    const playerCard = this.battlefield[this.battlefield.length - 1];
+                    if (this.isPredator(card.name, playerCard.name)) {
+                        score += 2; // ?詨???嚗之撟?雿?
+                    } else if (this.isPredator(playerCard.name, card.name)) {
+                        score -= 1; // 鋡怠?皜?嚗之撟?雿?
+                    }
+                    
+                    // ???寞???賜?甈?
+                    if (this.opponentHealth < 8 && card.special) {
+                        score += 1; // 雿????寞???賢???憭批???嚗?
+                    }
+                    
+                    // 憭批?憓??冽??改?霈I?港?蝛拙?
+                    score += Math.random() * 6 - 3; // ?冽???3??
+                    
+                    // ???I?????撌桃??∠?
+                    if (Math.random() < 0.3) {
+                        score -= 5; // 30%璈????豢?頛榆???
+                    }
+                    
+                    return score;
+                },
+
+                isPredator(predator, prey) {
+                    return this.foodChain[predator] && this.foodChain[predator].includes(prey);
+                },
+
+                checkBattlefield() {
+                    if (this.battlefield.length >= 2) {
+                        const playerCard = this.battlefield[this.battlefield.length - 2];
+                        const opponentCard = this.battlefield[this.battlefield.length - 1];
+
+                        let playerPower = playerCard.power;
+                        let opponentPower = opponentCard.power;
+
+                        // 瑼Ｘ?詨???
+                        if (this.isPredator(playerCard.name, opponentCard.name)) {
+                            playerPower *= 2;
+                            this.gameMessage = `${playerCard.name} ? ${opponentCard.name}嚗??蝧餃?`;
+                        } else if (this.isPredator(opponentCard.name, playerCard.name)) {
+                            opponentPower *= 2;
+                            this.gameMessage = `${opponentCard.name} ? ${playerCard.name}嚗??蝧餃?`;
+                        } else {
+                            this.gameMessage = '??Ｗ??嚗?;
+                        }
+
+                        // ???寞????
+                        this.processSpecialEffects(playerCard, 'player');
+                        this.processSpecialEffects(opponentCard, 'opponent');
+
+                        if (playerPower > opponentPower) {
+                            // ?拙振?
+                            const damage = Math.max(1, Math.floor((playerPower - opponentPower) / 2));
+                            this.opponentHealth -= damage;
+                            this.gameMessage += ` ?拙振?嚗?????{damage}暺摰訢;
+                            this.showDamageEffect('opponent');
+                            playerCard.winner = true;
+                            this.playSound('victory');
+                            this.playSound('damage');
+                            this.triggerStarsEffect('victory');
+                            
+                            // 蝘駁?圈洛銝剔????嚗?券??脩???蝯虫?甈⊥抒???
+                            // const starsEarned = Math.max(2, Math.floor(damage / 1.5));
+                            // this.addStars(starsEarned);
+                            // this.gameMessage += ` ?脣?${starsEarned}憿???`;
+                            // ???敶?? addStars ?寞?銝剛?＊蝷?
+                        } else if (opponentPower > playerPower) {
+                            // 撠??
+                            const damage = Math.max(1, Math.floor((opponentPower - playerPower) / 2));
+                            this.playerHealth -= damage;
+                            this.gameMessage += ` 撠??嚗摰嗅???{damage}暺摰訢;
+                            this.showDamageEffect('player');
+                            opponentCard.winner = true;
+                            this.playSound('damage');
+                            this.triggerStarsEffect('damage');
+                        } else {
+                            // 撟單?
+                            this.gameMessage += ' 撟單?嚗??寥瘝???瑕拿';
+                            // 蝘駁撟單??????嚗?券??脩???蝯虫?甈⊥抒???
+                            // this.addStars(1);
+                            // this.gameMessage += ' 撟單??1憿???';
+                        }
+
+                        // 瑼Ｘ?蝯?
+                        this.checkGameOver();
+                        
+                        // 撱園皜?啣
+                        setTimeout(() => {
+                            this.battlefield = [];
+                            // 蝘駁?芸?銝???瑼Ｘ嚗??拙振?芸楛?批
+                        }, 5000); // 憓???蝘?霈摰嗆??游???閫撖擛亦???
+                    }
+                },
+
+
+
+                processSpecialEffects(card, player) {
+                    if (!card.special) return;
+
+                    switch (card.special) {
+                        case '????:
+                            if (player === 'player') {
+                                this.playerHealth = Math.min(25, this.playerHealth + 2);
+                                this.gameMessage += ' ?拙振?Ｗ儔2暺??踝?';
+                                this.playSound('heal');
+                            } else {
+                                this.opponentHealth = Math.min(25, this.opponentHealth + 2);
+                                this.gameMessage += ' 撠??Ｗ儔2暺??踝?';
+                            }
+                            break;
+                        case '瘥雯?餅?':
+                            if (player === 'player') {
+                                this.opponentHealth -= 1;
+                                this.gameMessage += ' ?拙振憿???1暺?瘨脣摰喉?';
+                                this.playSound('damage');
+                            } else {
+                                this.playerHealth -= 1;
+                                this.gameMessage += ' 撠?憿???1暺?瘨脣摰喉?';
+                            }
+                            break;
+                        case '敹恍':
+                            // 蝘駁憭銝撘菜????寧蝪∪???踵???
+                            this.gameMessage += ' 敹恍嚗???憭???;
+                            break;
+                        case '??':
+                            if (player === 'player') {
+                                this.opponentHealth -= 2;
+                                this.gameMessage += ' ?拙振??2暺??曉摰喉?';
+                                this.playSound('damage');
+                            } else {
+                                this.playerHealth -= 2;
+                                this.gameMessage += ' 撠???2暺??曉摰喉?';
+                            }
+                            break;
+                    }
+                },
+
+                showDamageEffect(target) {
+                    const cards = target === 'player' ? this.playerHand : this.opponentHand;
+                    cards.forEach(card => {
+                        card.damage = true;
+                        setTimeout(() => {
+                            card.damage = false;
+                        }, 500);
+                    });
+                },
+
+                useSpecialSkill() {
+                    if (!this.gameStarted) {
+                        this.gameMessage = '隢????嚗?;
+                        return;
+                    }
+                    
+                    if (this.playerEnergy < 3) return;
+
+                    this.playerEnergy -= 3;
+                    this.showEffects = true;
+                    this.playSound('special');
+
+                    // ??鈭???
+                    this.triggerStarsEffect('interactive');
+
+                    // ?冽??寞???
+                    const effects = [
+                        () => { 
+                            this.playerHealth = Math.min(25, this.playerHealth + 5); 
+                            this.gameMessage = '?拙振雿輻瘝餌???踝??Ｗ儔5暺??踝?'; 
+                            this.playSound('heal');
+                            // 蝘駁?寞???賭葉?????蛛??芸?蝯??策銝甈⊥抒???
+                            // this.addStars(3); // 瘝餌???賜???憿???憓?嚗?
+                            // ???敶?? addStars ?寞?銝剛?＊蝷?
+                        },
+                        () => { 
+                            this.opponentHealth -= 3; 
+                            this.gameMessage = '?拙振雿輻?餅???踝?撠??3暺摰喉?'; 
+                            this.playSound('damage');
+                            // 蝘駁?寞???賭葉?????蛛??芸?蝯??策銝甈⊥抒???
+                            // this.addStars(4); // ?餅???賜???憿???憓?嚗?
+                            // ???敶?? addStars ?寞?銝剛?＊蝷?
+                        },
+                        () => { 
+                            this.gameMessage = '?拙振雿輻?賜???踝?雿???憭???; 
+                            this.playSound('shuffle');
+                            // 蝘駁?寞???賭葉?????蛛??芸?蝯??策銝甈⊥抒???
+                            // this.addStars(2); // ?賜???賜???憿???憓?嚗?
+                            // ???敶?? addStars ?寞?銝剛?＊蝷?
+                        },
+                        () => {
+                            this.gameMessage = '?拙振雿輻?砍???踝?雿???憭???;
+                            this.playSound('victory');
+                            // 蝘駁?寞???賭葉?????蛛??芸?蝯??策銝甈⊥抒???
+                            // this.addStars(5); // ?砍???賜???憿???憓?嚗?
+                            // ???敶?? addStars ?寞?銝剛?＊蝷?
+                        }
+                    ];
+
+                    const randomEffect = effects[Math.floor(Math.random() * effects.length)];
+                    randomEffect();
+
+                    setTimeout(() => {
+                        this.showEffects = false;
+                    }, 2000);
+                },
+
+                endTurn() {
+                    if (!this.gameStarted) {
+                        this.gameMessage = '隢????嚗?;
+                        return;
+                    }
+                    
+                    // 瑼Ｘ?臬????
+                    if (this.playerHand.length > 0) {
+                        this.gameMessage = '隢??箏??????';
+                        return;
+                    }
+                    
+                    this.turn++;
+                    
+                    // 瑼Ｘ?臬?蝚砌???
+                    if (this.turn > 5) {
+                        this.gameMessage = '?撌脤??啁洵鈭?????';
+                        this.checkGameOver();
+                        return;
+                    }
+                    
+                    // 鋆??????
+                    this.drawCards();
+                    this.playerEnergy = Math.min(10, this.playerEnergy + 2);
+                    
+                    this.gameMessage = `?? ${this.turn} - ??撌脰??;
+                    this.playSound('button');
+                    
+                    // 憿舐內?嗅????賊?
+                    console.log(`?? ${this.turn}: ?拙振?? ${this.playerHand.length} 撘蛛?撠??? ${this.opponentHand.length} 撘琛);
+                },
+
+                drawCards() {
+                    // ?拙振?賜?
+                    while (this.playerHand.length < 5 && this.deck.length > 0) {
+                        this.playerHand.push(this.deck.shift());
+                    }
+
+                    // 撠??賜?
+                    while (this.opponentHand.length < 5 && this.deck.length > 0) {
+                        this.opponentHand.push(this.deck.shift());
+                    }
+                    
+                    // 憒????典?嚗??唳??蒂鋆?
+                    if (this.deck.length === 0) {
+                        this.reshuffleDeck();
+                    }
+                },
+
+                reshuffleDeck() {
+                    // ??萄遣??
+                    this.createDeck();
+                    this.shuffleDeck();
+                    console.log('??撌脤??唳????拚??:', this.deck.length);
+                },
+
+                checkGameOver() {
+                    if (this.playerHealth <= 0) {
+                        this.gameOver = true;
+                        this.gameOverMessage = '?蝯?嚗????';
+                        if (!this.gameRewarded) {
+                            this.addStars(-2); // 憭望???2憿???
+                            this.gameMessage += ' 憭望???2憿???';
+                            this.gameRewarded = true;
+                        }
+                        this.playSound('gameOver');
+                        // 蝡皜征?
+                        this.clearAllCards();
+                    } else if (this.opponentHealth <= 0) {
+                        this.gameOver = true;
+                        this.gameOverMessage = '?蝯?嚗摰嗥??';
+                        this.playSound('victory');
+                        // ??20憿????脫迫???嚗?
+                        if (!this.gameRewarded) {
+                            this.addStars(20);
+                            this.gameMessage += ` ??20憿???`;
+                            this.gameRewarded = true;
+                            // ???敶?? addStars ?寞?銝剛?＊蝷?
+                        }
+                        // 蝡皜征?
+                        this.clearAllCards();
+                    } else if (this.turn >= 5 && this.playerHand.length === 0 && this.opponentHand.length === 0) {
+                        // 蝚砌???蝯?銝??寥瘝???嚗?頛??捱摰?鞎?
+                        this.gameOver = true;
+                        if (this.playerHealth > this.opponentHealth) {
+                            this.gameOverMessage = '蝚砌???蝯?嚗摰嗉???憭??';
+                            this.playSound('victory');
+                            // ??20憿????脫迫???嚗?
+                            if (!this.gameRewarded) {
+                                this.addStars(20);
+                                this.gameMessage += ` ??20憿???`;
+                                this.gameRewarded = true;
+                                // ???敶?? addStars ?寞?銝剛?＊蝷?
+                            }
+                        } else if (this.opponentHealth > this.playerHealth) {
+                            this.gameOverMessage = '蝚砌???蝯?嚗?????憭??';
+                            if (!this.gameRewarded) {
+                                this.addStars(-2); // 憭望???2憿???
+                                this.gameMessage += ' 憭望???2憿???';
+                                this.gameRewarded = true;
+                            }
+                            this.playSound('gameOver');
+                        } else {
+                            this.gameOverMessage = '蝚砌???蝯?嚗像??';
+                            if (!this.gameRewarded) {
+                                this.addStars(5); // 撟單??5憿???
+                                this.gameMessage += ' 撟單??5憿???';
+                                this.gameRewarded = true;
+                                // ???敶?? addStars ?寞?銝剛?＊蝷?
+                            }
+                        }
+                        // 蝡皜征?
+                        this.clearAllCards();
+                    } else if (this.deck.length === 0 && this.playerHand.length === 0 && this.opponentHand.length === 0) {
+                        // ???典?銝??寥瘝?????瘜?
+                        this.gameOver = true;
+                        if (this.playerHealth > this.opponentHealth) {
+                            this.gameOverMessage = '?蝯?嚗摰嗥??';
+                            this.playSound('victory');
+                            // ??20憿????脫迫???嚗?
+                            if (!this.gameRewarded) {
+                                this.addStars(20);
+                                this.gameMessage += ` ??20憿???`;
+                                this.gameRewarded = true;
+                                // ???敶?? addStars ?寞?銝剛?＊蝷?
+                            }
+                        } else if (this.opponentHealth > this.playerHealth) {
+                            this.gameOverMessage = '?蝯?嚗????';
+                            if (!this.gameRewarded) {
+                                this.addStars(-2); // 憭望???2憿???
+                                this.gameMessage += ' 憭望???2憿???';
+                                this.gameRewarded = true;
+                            }
+                            this.playSound('gameOver');
+                        } else {
+                            this.gameOverMessage = '?蝯?嚗像??';
+                            if (!this.gameRewarded) {
+                                this.addStars(5); // 撟單??5憿???
+                                this.gameMessage += ' 撟單??5憿???';
+                                this.gameRewarded = true;
+                                // ???敶?? addStars ?寞?銝剛?＊蝷?
+                            }
+                        }
+                        // 蝡皜征?
+                        this.clearAllCards();
+                    }
+                },
+
+                clearAllCards() {
+                    // 蝡皜征?????
+                    this.playerHand = [];
+                    this.opponentHand = [];
+                    this.battlefield = [];
+                    this.selectedCard = null;
+                    console.log('?蝯?嚗????Ｗ歇皜征');
+                },
+
+                newGame() {
+                    // ?蔭????
+                    this.playerHealth = 25;
+                    this.opponentHealth = 20; // ??撠???銵??
+                    this.playerEnergy = 5;
+                    this.turn = 1;
+                    this.playerHand = [];
+                    this.opponentHand = [];
+                    this.battlefield = [];
+                    this.selectedCard = null;
+                    this.gameMessage = '隢???憪??脯???憪?嚗?;
+                    this.gameOver = false;
+                    this.gameOverMessage = '';
+                    this.currentPlayer = 'player';
+                    this.showEffects = false;
+                    this.gameStarted = false; // ?蔭??????
+                    this.gameRewarded = false; // ?蔭?璅?
+                    this.playSound('button');
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html> 

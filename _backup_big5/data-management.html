@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鞈?蝞∠? - ?望?撠??/title>
+  <link rel="stylesheet" href="data-management.css">
+</head>
+<body>
+  <div class="data-management-page">
+    <header class="data-header">
+      <h1>鞈?蝞∠?</h1>
+      <button class="back-btn" onclick="window.history.back()">??餈?</button>
+    </header>
+
+    <main class="data-content">
+      <section class="simple-backup-section">
+        <button
+          type="button"
+          class="simple-backup-toggle"
+          id="localBackupToggleBtn"
+          aria-expanded="false"
+          aria-controls="localBackupPanel"
+        >
+          <span class="simple-backup-title">鞈??遢????/span>
+          <span class="simple-backup-desc">銝??桀?鞈?嚗??臬?遢瑼???/span>
+          <span class="simple-backup-icon">??/span>
+        </button>
+
+        <div class="simple-backup-panel" id="localBackupPanel" hidden>
+          <div class="simple-backup-main-actions">
+            <button type="button" id="downloadLocalBackupBtn">
+              銝??遢
+            </button>
+
+            <label for="uploadLocalBackupInput" class="simple-upload-btn">
+              ?豢??遢瑼?            </label>
+
+            <input
+              type="file"
+              id="uploadLocalBackupInput"
+              accept=".json,application/json"
+              hidden
+            >
+
+            <button type="button" id="applyLocalBackupBtn">
+              憟?遢
+            </button>
+          </div>
+
+          <div class="simple-backup-sub-actions">
+            <button type="button" id="previewLocalBackupBtn">
+              ?汗鞈?
+            </button>
+            <span>嚚?/span>
+            <button type="button" id="clearLocalBackupBtn">
+              皜?怠?
+            </button>
+            <span>嚚?/span>
+            <button type="button" id="restoreBeforeImportBtn">
+              ???臬????            </button>
+          </div>
+
+          <div id="localBackupStatus" class="simple-backup-status"></div>
+          <div id="localBackupPreview" class="simple-backup-preview"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/local-backup.js"></script>
+</body>
+</html>

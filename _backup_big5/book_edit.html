@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>???望?? ??蝺刻摩?桀???/title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="responsive_enhanced.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Sans+Symbols&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
+
+  <style>
+    /*-------------------------
+      ?典??身 & 摮?
+    -------------------------*/
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Noto Sans TC', 'Noto Sans SC', 'Inter', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft JhengHei', 'PingFang TC', 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(to bottom, #020111 0%, #000010 100%);
+      color: #fff;
+      overflow: hidden;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /*-------------------------
+      Scrollbar ?芾? (WebKit)
+    -------------------------*/
+    ::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(69, 162, 158, 0.6);
+      border-radius: 6px;
+      border: 2px solid rgba(0,0,0,0.2);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(69, 162, 158, 0.8);
+    }
+    body {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(69,162,158,0.6) rgba(0,0,0,0.2);
+    }
+
+    /*-------------------------
+      撌虫?閫?TopBar嚗＊蝷箇蜇????+ 餈??桀??砍?銵剁?
+    -------------------------*/
+    #topBar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(10, 20, 40, 0.85);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 3;
+      border-bottom: 2px solid #00ffff;
+      box-shadow: 0 0 16px #00ffff;
+    }
+    
+    /*-------------------------
+      ?單??批??
+    -------------------------*/
+    #audioControls {
+      position: fixed;
+      top: 70px; /* ???0px嚗?銝宏????啗?????*/
+      right: 20px;
+      z-index: 1001;
+      display: flex;
+      gap: 10px;
+    }
+    
+    #toggleMusic {
+      background: rgba(10, 20, 40, 0.85);
+      border: 2px solid #00ffff;
+      color: #00ffff;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 16px #00ffff;
+    }
+    
+    #toggleMusic:hover {
+      background: rgba(0, 255, 255, 0.2);
+      transform: scale(1.1);
+      box-shadow: 0 0 24px #00ffff;
+    }
+    
+    #toggleMusic.playing {
+      background: rgba(0, 255, 255, 0.2);
+      border-color: #00ffff;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    #testMusic {
+      background: rgba(10, 20, 40, 0.85);
+      border: 2px solid #00ffff;
+      color: #00ffff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 16px #00ffff;
+      font-size: 0.8rem;
+    }
+    
+    #testMusic:hover {
+      background: rgba(0, 255, 255, 0.2);
+      transform: scale(1.1);
+    }
+    #topBar #starsDisplay {
+      font-size: 1.2rem;
+      color: #ffd700;
+      font-weight: bold;
+      text-shadow: 0 0 8px #ffd700;
+    }
+    #topBar .back-btn {
+      background: linear-gradient(90deg, #00ffff 0%, #a259ff 100%);
+      border: none;
+      color: #000;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 0 16px #00ffff;
+    }
+    #topBar .back-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 24px #00ffff;
+    }
+
+    /*-------------------------
+      ?征 Canvas ?
+    -------------------------*/
+    canvas#stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    /*-------------------------
+      銝餃捆??    -------------------------*/
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 80px auto 40px;
+      background: rgba(10, 20, 40, 0.7);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 32px #00ffff44, 0 0 80px #a259ff22 inset;
+      border: 2px solid #00ffff;
+      backdrop-filter: blur(8px);
+      overflow-y: auto;
+      max-height: calc(100vh - 140px);
+    }
+    .container h1 {
+      color: #00ffff;
+      text-align: center;
+      text-shadow: 0 0 12px #00ffff, 0 0 32px #a259ff;
+      margin-bottom: 20px;
+      font-size: 2rem;
+      letter-spacing: 1px;
+      font-family: 'Orbitron', sans-serif;
+    }
+    .container h2 {
+      color: #99ccff;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      font-size: 1.3rem;
+      text-shadow: 0 0 6px #3388cc;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    /*-------------------------
+      ??詨 ???憛?    -------------------------*/
+    .game-menu-btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background: linear-gradient(90deg, #00ffff 0%, #a259ff 100%);
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 0;
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin: 16px 0;
+      cursor: pointer;
+      box-shadow: 0 0 16px #00ffff, 0 0 24px #a259ff99;
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-family: 'Orbitron', sans-serif;
+    }
+    .game-menu-btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 24px #00ffff, 0 0 32px #a259ffcc;
+    }
+
+    /*-------------------------
+      ?敶?嚗odal嚗見撘?    -------------------------*/
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 4;
+      backdrop-filter: blur(4px);
+    }
+    .modal-content {
+      background: rgba(10, 20, 40, 0.95);
+      border: 2px solid #00ffff;
+      border-radius: 16px;
+      padding: 30px;
+      width: 90%;
+      max-width: 450px;
+      box-shadow: 0 0 32px #00ffff44, 0 0 80px #a259ff22 inset;
+      backdrop-filter: blur(8px);
+    }
+    .modal-content h2 {
+      text-align: center;
+      color: #00ffff;
+      margin-bottom: 20px;
+      text-shadow: 0 0 8px #00ffff;
+      font-size: 1.5rem;
+    }
+    .modal-content button {
+      width: 100%;
+      background: linear-gradient(90deg, #00ffff 0%, #a259ff 100%);
+      border: none;
+      color: #000;
+      border-radius: 10px;
+      padding: 12px 0;
+      font-size: 1rem;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-weight: bold;
+      box-shadow: 0 0 16px #00ffff;
+    }
+    .modal-content button:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 24px #00ffff;
+    }
+    .modal-close {
+      display: block;
+      margin: 16px auto 0;
+      background: linear-gradient(90deg, #ff4444 0%, #cc0000 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-weight: bold;
+      box-shadow: 0 0 16px #ff4444;
+    }
+    .modal-close:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 24px #ff4444;
+    }
+
+    /*-------------------------
+      Disabled ??璅??
+    -------------------------*/
+    button:disabled {
+      background: #555 !important;
+      color: #aaa !important;
+      cursor: not-allowed !important;
+      box-shadow: none !important;
+      transform: none !important;
+    }
+
+    /*-------------------------
+      ?臬/?臬 ?憛?    -------------------------*/
+    .io-group {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .io-group input[type="file"] {
+      color: #c5c6c7;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid #00ffff;
+      border-radius: 8px;
+      padding: 8px;
+      box-shadow: 0 0 8px #00ffff80;
+    }
+    .io-group button {
+      background: linear-gradient(90deg, #00ffff 0%, #a259ff 100%);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 0 16px #00ffff;
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-weight: bold;
+      font-family: 'Orbitron', sans-serif;
+    }
+    .io-group button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 24px #00ffff;
+    }
+
+    /*-------------------------
+      瑼??澆?隤芣?
+    -------------------------*/
+    .format-info {
+      background: rgba(10, 20, 40, 0.6);
+      border: 1px solid #00ffff;
+      border-radius: 12px;
+      padding: 16px;
+      margin: 16px 0;
+      font-size: 0.9rem;
+      color: #c5c6c7;
+      box-shadow: 0 0 16px #00ffff44;
+    }
+    .format-info strong {
+      color: #00ffff;
+      text-shadow: 0 0 4px #00ffff;
+    }
+    .format-info code {
+      background: rgba(0,0,0,0.3);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #ffd700;
+      font-family: 'Roboto Mono', monospace;
+    }
+
+    /*-------------------------
+      ?啣??桀? ?憛?    -------------------------*/
+    .add-group input,
+    .add-group textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 10px;
+      border: 2px solid #00ffff;
+      background: rgba(10, 20, 40, 0.7);
+      color: #fff;
+      font-size: 1rem;
+      box-shadow: 0 0 16px #00ffff80;
+      font-family: 'Noto Sans TC', 'Noto Sans SC', 'Noto Sans Symbols', 'Noto Sans Symbols 2', 'Inter', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+    .add-group input:focus,
+    .add-group textarea:focus {
+      outline: none;
+      box-shadow: 0 0 24px #00ffff;
+    }
+    .add-group textarea {
+      resize: vertical;
+      height: 80px;
+    }
+    .add-group button {
+      background: linear-gradient(90deg, #00ffff 0%, #a259ff 100%);
+      color: #000;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 0 16px #00ffff;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 12px;
+      font-weight: bold;
+      font-family: 'Orbitron', sans-serif;
+    }
+    .add-group button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 24px #00ffff;
+    }
+
+    /*-------------------------
+      ?桀??”
+    -------------------------*/
+    ul#wordList {
+      list-style: none;
+      margin-top: 16px;
+      padding-left: 0;
+    }
+    ul#wordList li {
+      background: rgba(10, 20, 40, 0.6);
+      margin-bottom: 12px;
+      padding: 16px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #00ffff;
+      box-shadow: 0 0 16px #00ffff44;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    ul#wordList li:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 24px #00ffff66;
+    }
+    ul#wordList li span.word-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      flex: 1;
+      gap: 8px;
+    }
+    ul#wordList li span.word-item .word-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
+    ul#wordList li span.word-item .word-number {
+      font-size: 1rem;
+      color: #00ffff;
+      text-shadow: 0 0 4px #00ffff;
+      font-weight: bold;
+      min-width: 30px;
+      text-align: center;
+      font-family: 'Orbitron', sans-serif;
+      background: rgba(0, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 4px 8px;
+      border: 1px solid rgba(0, 255, 255, 0.3);
+    }
+    ul#wordList li span.word-item .example-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+      margin-left: 20px;
+    }
+    ul#wordList li span.word-item b.english-word {
+      font-size: 1.2rem;
+      color: #ffd700;
+      text-shadow: 0 0 6px #ffd700;
+      min-width: 120px;
+      font-family: 'Source Sans Pro', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    ul#wordList li span.word-item span.chinese-meaning {
+      font-size: 1.1rem;
+      color: #99ccff;
+      text-shadow: 0 0 4px #3388cc;
+      font-family: 'Noto Sans TC', 'Noto Sans SC', 'Noto Sans Symbols', 'Noto Sans Symbols 2', 'Microsoft JhengHei', 'PingFang TC', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 500;
+    }
+    ul#wordList li span.word-item span.english-example {
+      font-size: 0.95rem;
+      color: #c5c6c7;
+      font-style: italic;
+      text-shadow: 0 0 2px #666;
+      font-family: 'Source Sans Pro', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-weight: 400;
+      line-height: 1.4;
+    }
+    ul#wordList li span.word-item span.example-translation {
+      font-size: 0.9rem;
+      color: #888;
+      margin-left: 10px;
+      font-family: 'Noto Sans TC', 'Noto Sans SC', 'Noto Sans Symbols', 'Noto Sans Symbols 2', 'Microsoft JhengHei', 'PingFang TC', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 400;
+    }
+    /* ??蝢斤? */
+    ul#wordList li div {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    /* ?芷?? */
+    ul#wordList li button.btn-delete {
+      background: linear-gradient(90deg, #ff4444 0%, #cc0000 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-weight: bold;
+      box-shadow: 0 0 12px #ff4444;
+    }
+    ul#wordList li button.btn-delete:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 16px #ff4444;
+    }
+    /* ?潮?? */
+    ul#wordList li button.btn-pronounce {
+      background: linear-gradient(90deg, #ffd700 0%, #ffaa00 100%);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-weight: bold;
+      box-shadow: 0 0 12px #ffd700;
+    }
+    ul#wordList li button.btn-pronounce:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 16px #ffd700;
+    }
+    /* 靘?潮?? */
+    ul#wordList li button.btn-pronounce[onclick*="pronounceSentence"] {
+      background: linear-gradient(90deg, #3498db 0%, #2980b9 100%);
+      color: #fff;
+      box-shadow: 0 0 12px #3498db;
+    }
+    ul#wordList li button.btn-pronounce[onclick*="pronounceSentence"]:hover {
+      box-shadow: 0 0 16px #3498db;
+    }
+
+    /*-------------------------
+      Scrollbar for .container
+    -------------------------*/
+    .container::-webkit-scrollbar {
+      width: 12px;
+    }
+    .container::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.2);
+      border-radius: 6px;
+    }
+    .container::-webkit-scrollbar-thumb {
+      background: rgba(69,162,158,0.6);
+      border-radius: 6px;
+      border: 2px solid rgba(0,0,0,0.2);
+    }
+    .container::-webkit-scrollbar-thumb:hover {
+      background: rgba(69,162,158,0.8);
+    }
+    .container {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(69,162,158,0.6) rgba(0,0,0,0.2);
+    }
+
+    /*-------------------------
+      ???桀? ?憛?    -------------------------*/
+    .search-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .search-group input[type="search"] {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 2px solid #00ffff;
+      background: rgba(10, 20, 40, 0.7);
+      color: #fff;
+      font-size: 1rem;
+      box-shadow: 0 0 16px #00ffff80;
+      font-family: 'Inter', 'Source Sans Pro', sans-serif;
+    }
+    .search-group input[type="search"]:focus {
+      outline: none;
+      box-shadow: 0 0 24px #00ffff;
+    }
+    .search-group button {
+      background: linear-gradient(90deg, #ff4444 0%, #cc0000 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      box-shadow: 0 0 12px #ff4444;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+    }
+    #searchNotFound {
+      text-align: center;
+      padding: 20px;
+      margin-top: 10px;
+      background: rgba(255, 215, 0, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: 12px;
+      color: #ffd700;
+      font-size: 1.1rem;
+    }
+    #searchNotFound button {
+      margin-left: 15px;
+      background: linear-gradient(90deg, #00ffff 0%, #a259ff 100%);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      box-shadow: 0 0 12px #00ffff;
+    }
+  </style>
+</head>
+<body>
+  <!-- 撌虫?閫?TopBar嚗?? + 餈??桀??砍?銵?-->
+  <div id="topBar">
+    <div id="starsDisplay">潃?span id="totalStarsCount">0</span></div>
+    <a href="book.html" class="back-btn">漎?餈??桀??砍?銵?/a>
+  </div>
+
+  <!-- ?單??批 -->
+  <div id="audioControls">
+    <button id="toggleMusic" title="??單?">
+      <span class="material-icons">music_note</span>
+    </button>
+    <button id="testMusic" title="皜祈岫?單?蝟餌絞" onclick="diagnoseMusicSystem()" style="font-size: 0.8rem; padding: 2px 6px;">
+      ??
+    </button>
+  </div>
+
+  <!-- ??單??喲?? -->
+  <audio id="backgroundMusic" loop>
+    <source src="sound/???暸???嚗??單?嚗?mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- ?征 Canvas -->
+  <canvas id="stars"></canvas>
+
+  <!-- 銝餃捆?剁?蝺刻摩?桀???-->
+  <div class="container">
+    <h1>?? 蝺刻摩?桀??穿?<span id="bookNameDisplay"></span></h1>
+
+    <!-- ??詨?? -->
+    <button class="game-menu-btn" onclick="openGameModal()">? ??詨</button>
+
+    <!-- ?臬 / ?臬 -->
+    <h2>? ?臬 / ? ?臬</h2>
+    <div class="io-group">
+      <input type="file" id="fileInput" accept=".csv,.txt">
+      <button onclick="importFile()">?臬瑼?</button>
+      <button onclick="exportCSV()">?臬 CSV</button>
+    </div>
+    
+    <!-- 瑼??澆?隤芣? -->
+    <div class="format-info">
+      <strong>?? ?舀??獢撘?</strong><br>
+      ??CSV ?澆?嚗?code>apple,??,This is an apple.,?銝????/code><br>
+      ??銝剜???嚗?code>apple嚗???This is an apple.嚗銝????/code><br>
+      ???望???嚗?code>apple:??:This is an apple.:?銝????/code><br>
+      ??Tab ??嚗?code>apple	??	This is an apple.	?銝????/code><br>
+      ??蝛箸??嚗?code>apple ?? This is an apple. ?銝????/code><br>
+      <em>瘥?銝?摮??澆?嚗?摮?+ ??蝚?+ 銝剜?閫?? + ??蝚?+ ?望?靘 + ??蝚?+ 靘銝剜?閫??</em><br>
+      <em style="color: #999;">瘜冽?嚗??乩葉?圾??舫甈?嚗?????靘??芸?閮剔蝛箏?銝?/em><br>
+      <br>
+      <strong>? ?舀??獢楊蝣潘?</strong><br>
+      ??UTF-8嚗?佗?<br>
+      ??Big5嚗?擃葉??<br>
+      ??GBK嚗陛擃葉??<br>
+      ??GB2312嚗陛擃葉??<br>
+      ??UTF-16<br>
+      <em style="color: #999;">蝟餌絞??炎皜砌蒂??銝?蝺函Ⅳ?澆?嚗圾瘙箔葉??蝣澆?憿?/em><br>
+      <br>
+      <strong>?? ?臬??寡嚗?/strong><br>
+      ?????舀?⊿??賊??摮??br>
+      ?????單??脣漲憿舐內<br>
+      ?????寞活??嚗?汗?典??br>
+      ?????芸?頝喲??⊥?銵蒂憿舐內蝯梯?<br>
+      ?????舀憭批?瑼?嚗?摮?<br>
+      ???? ?芸??蕪???桀?嚗??望??桀??斗嚗?br>
+      <em style="color: #999;">?臬憭折??桀???憿舐內?脣漲璇?隢?蝑?摰?</em>
+    </div>
+
+    <!-- ?啣??桀? -->
+    <h2>???啣??桀?</h2>
+    <div class="add-group">
+      <input id="word" placeholder="?望??桀?">
+      <input id="meaning" placeholder="銝剜?閫??">
+      <textarea id="example" placeholder="?望?靘"></textarea>
+      <textarea id="exampleMeaning" placeholder="靘銝剜?閫??"></textarea>
+      <button onclick="addWord()">?啣?</button>
+    </div>
+
+    <!-- ?桀??” -->
+    <h2>?? ?桀??”</h2>
+
+    <!-- ???桀? -->
+    <div class="search-group">
+      <input type="search" id="searchInput" placeholder="?單????望??桀?..." oninput="searchWord()">
+      <button onclick="clearSearch()">皜??</button>
+    </div>
+
+    <ul id="wordList"></ul>
+    <div id="searchNotFound" style="display: none;"></div>
+  </div>
+
+  <!-- ??詨 Modal -->
+  <div class="modal-overlay" id="gameModal">
+    <div class="modal-content">
+      <h2>?豢??璅∪?</h2>
+      <button onclick="startSpelling()">
+        ?澆??<br>
+        <span style="font-size:0.8rem;color:#ccc;">(憿舐內???澆?望?摮?</span>
+      </button>
+      <button onclick="startMatching()">
+        ?桀????<br>
+        <span style="font-size:0.8rem;color:#ccc;">(閮????</span>
+      </button>
+      <button onclick="startTimeChallenge()">
+        ???<br>
+        <span style="font-size:0.8rem;color:#ccc;">(??蝑?)</span>
+      </button>
+      <button onclick="startQuiz('meaning-to-word')">
+        ?桀??豢?憿?br>
+        <span style="font-size:0.8rem;color:#ccc;">(?望???桀?)</span>
+      </button>
+      <button class="modal-close" onclick="closeGameModal()">??</button>
+    </div>
+  </div>
+
+  <!-- ??梯??撓?交? -->
+  <input type="text" id="secretInput" style="position: absolute; left: -9999px; opacity: 0;" placeholder="頛詨敹急??>
+
+  <!-- 頛敹???JavaScript 瑼? -->
+  <script src="js/userData.js"></script>
+  <script src="js/sound.js"></script>
+  <script src="js/starRewardSystem.js"></script>
+  
+  <script>
+    /***** ??單????蝟餌絞 *****/
+    let backgroundMusic = null;
+    let toggleMusicBtn = null;
+    let isMusicPlaying = false;
+    
+    // ?????舫璅頂蝯?    function initBackgroundMusic() {
+      console.log('? ?????舫璅頂蝯?..');
+      
+      backgroundMusic = document.getElementById('backgroundMusic');
+      toggleMusicBtn = document.getElementById('toggleMusic');
+      
+      if (!backgroundMusic) {
+        console.error('???曆??啗??舫璅?蝝?);
+        return;
+      }
+      
+      if (!toggleMusicBtn) {
+        console.error('???曆??圈璅?嗆???);
+        return;
+      }
+      
+      // 閮剖??單?撅祆?      backgroundMusic.volume = 0.3;
+      backgroundMusic.loop = true;
+      
+      // 瑼Ｘ LinkageSystem ?臬?舐
+      if (typeof LinkageSystem !== 'undefined' && LinkageSystem.music) {
+        isMusicPlaying = LinkageSystem.music.isPlaying();
+        console.log('?? LinkageSystem ?單????', isMusicPlaying);
+      } else {
+        // ??寞?嚗?亙? localStorage 霈??        const musicState = localStorage.getItem('bgMusicState');
+        isMusicPlaying = musicState === 'playing';
+        console.log('? localStorage ?單????', isMusicPlaying);
+      }
+      
+      // ?寞???身摰???閫
+      updateMusicButtonState();
+      
+      // 憒??府?剜嚗?閰行??      if (isMusicPlaying) {
+        playBackgroundMusic();
+      }
+      
+      console.log('????單?蝟餌絞??????);
+    }
+    
+    // ?湔?單??????    function updateMusicButtonState() {
+      if (!toggleMusicBtn) return;
+      
+      if (isMusicPlaying) {
+        toggleMusicBtn.classList.add('playing');
+        toggleMusicBtn.style.background = 'rgba(0, 255, 255, 0.2)';
+      } else {
+        toggleMusicBtn.classList.remove('playing');
+        toggleMusicBtn.style.background = 'rgba(10, 20, 40, 0.85)';
+      }
+    }
+    
+    // ?剜??單?
+    function playBackgroundMusic() {
+      if (!backgroundMusic) return;
+      
+      // ?芸?雿輻 SoundSystem
+      if (typeof SoundSystem !== 'undefined' && SoundSystem.bgm) {
+        SoundSystem.bgm.play();
+        isMusicPlaying = true;
+        updateMusicButtonState();
+        console.log('? ?? SoundSystem ?剜??單?');
+        return;
+      }
+      
+      // ??寞?嚗?交?暹?圈璅?蝝?      backgroundMusic.play().then(() => {
+        isMusicPlaying = true;
+        updateMusicButtonState();
+        
+        // ?郊??LinkageSystem
+        if (typeof LinkageSystem !== 'undefined' && LinkageSystem.music) {
+          LinkageSystem.music.setPlaying(true);
+        } else {
+          localStorage.setItem('bgMusicState', 'playing');
+        }
+        
+        console.log('? ??單????剜');
+      }).catch(err => {
+        console.error('????單??剜憭望?:', err);
+        isMusicPlaying = false;
+        updateMusicButtonState();
+      });
+    }
+    
+    // ?怠???單?
+    function pauseBackgroundMusic() {
+      if (!backgroundMusic) return;
+      
+      // ?芸?雿輻 SoundSystem
+      if (typeof SoundSystem !== 'undefined' && SoundSystem.bgm) {
+        SoundSystem.bgm.pause();
+        isMusicPlaying = false;
+        updateMusicButtonState();
+        console.log('?? ?? SoundSystem ?怠???單?');
+        return;
+      }
+      
+      // ??寞?嚗?交??圈璅?蝝?      backgroundMusic.pause();
+      isMusicPlaying = false;
+      updateMusicButtonState();
+      
+      // ?郊??LinkageSystem
+      if (typeof LinkageSystem !== 'undefined' && LinkageSystem.music) {
+        LinkageSystem.music.setPlaying(false);
+      } else {
+        localStorage.setItem('bgMusicState', 'paused');
+      }
+      
+      console.log('?? ??單?撌脫??);
+    }
+    
+    // ????單??剜???    function toggleBackgroundMusic() {
+      if (isMusicPlaying) {
+        pauseBackgroundMusic();
+      } else {
+        playBackgroundMusic();
+      }
+    }
+    
+    // ?單?蝟餌絞閮箸?賣
+    function diagnoseMusicSystem() {
+      console.log('?? === ?單?蝟餌絞閮箸 ===');
+      console.log('??單???:', backgroundMusic);
+      console.log('?單??批??:', toggleMusicBtn);
+      console.log('?嗅??剜???', isMusicPlaying);
+      console.log('LinkageSystem ?舐:', typeof LinkageSystem !== 'undefined');
+      console.log('SoundSystem ?舐:', typeof SoundSystem !== 'undefined');
+      
+      if (backgroundMusic) {
+        console.log('?單?瑼?頝臬?:', backgroundMusic.src);
+        console.log('?單??喲?:', backgroundMusic.volume);
+        console.log('?單??臬敺芰:', backgroundMusic.loop);
+        console.log('?單??臬?怠?:', backgroundMusic.paused);
+        console.log('?單??嗅???:', backgroundMusic.currentTime);
+      }
+      
+      if (typeof LinkageSystem !== 'undefined' && LinkageSystem.music) {
+        console.log('LinkageSystem ?單????', LinkageSystem.music.isPlaying());
+        console.log('LinkageSystem ?單??喲?:', LinkageSystem.music.getVolume());
+      }
+      
+      if (typeof SoundSystem !== 'undefined' && SoundSystem.bgm) {
+        console.log('SoundSystem ??單?:', SoundSystem.bgm);
+        console.log('SoundSystem ??單????', !SoundSystem.bgm.paused);
+      }
+      
+      alert('?單?蝟餌絞閮箸摰?嚗??亦??批??);
+    }
+    /*----------------------------------------
+      (1) 霈???銝阡＊蝷?    ----------------------------------------*/
+    function loadTotalStars() {
+      const v = localStorage.getItem('totalStars');
+      return v ? parseInt(v, 10) : 0;
+    }
+    function updateStarsDisplay() {
+      StarRewardSystem.updateStarsDisplay();
+    }
+
+    /*----------------------------------------
+      (2) ?征??
+    ----------------------------------------*/
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let W, H;
+    let stars = [];
+    const numStars = 100;
+
+    function initCanvas() {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W;
+      canvas.height = H;
+      stars = [];
+      for (let i = 0; i < numStars; i++) {
+        stars.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          size: Math.random() * 1.5 + 0.5,
+          speed: Math.random() * 0.5 + 0.2
+        });
+      }
+    }
+
+    function updateStars() {
+      stars.forEach(s => {
+        s.y += s.speed;
+        if (s.y > H) {
+          s.y = 0;
+          s.x = Math.random() * W;
+        }
+      });
+    }
+
+    function drawStars() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#ffffff';
+      stars.forEach(s => {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    function animate() {
+      updateStars();
+      drawStars();
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', initCanvas);
+
+    /*----------------------------------------
+      (3) ?桀??祉恣??頛?    ----------------------------------------*/
+    const bookName = new URLSearchParams(location.search).get('book');
+    const storageKey = 'book_' + bookName;
+    let vocab = [];
+
+    async function loadDefaultVocabIfNeeded() {
+      const localData = localStorage.getItem(storageKey);
+      if (localData) {
+        vocab = JSON.parse(localData);
+        return;
+      }
+      // ?芸??? 1000?望炎?桀?.csv
+      try {
+        const response = await fetch('1000?望炎?桀?.csv');
+        if (!response.ok) throw new Error('?⊥?頛 1000?望炎?桀?.csv');
+        const text = await response.text();
+        // 閫?? CSV
+        vocab = text.split('\n').filter(l => l.trim()).map(line => {
+          const parts = line.split(',');
+          return {
+            word: parts[0]?.trim() || '',
+            meaning: parts[1]?.trim() || '',
+            example: parts[2]?.trim() || '',
+            exampleMeaning: parts[3]?.trim() || ''
+          };
+        }).filter(v => v.word && v.meaning && v.example);
+        localStorage.setItem(storageKey, JSON.stringify(vocab));
+      } catch (e) {
+        alert('?身?桀?頛憭望?嚗? + e.message);
+        vocab = [];
+      }
+    }
+
+    document.getElementById('bookNameDisplay').textContent = bookName;
+
+    function saveVocab() {
+      localStorage.setItem(storageKey, JSON.stringify(vocab));
+    }
+
+    function displayWords(filter = '') {
+      const ul = document.getElementById('wordList');
+      const searchNotFoundDiv = document.getElementById('searchNotFound');
+      ul.innerHTML = '';
+      searchNotFoundDiv.style.display = 'none';
+
+      const lowerCaseFilter = filter.toLowerCase();
+      const filteredVocab = vocab.filter(v => 
+        v.word.toLowerCase().includes(lowerCaseFilter) ||
+        v.meaning.toLowerCase().includes(lowerCaseFilter)
+      );
+
+      if (filteredVocab.length === 0 && filter) {
+        searchNotFoundDiv.style.display = 'block';
+        searchNotFoundDiv.innerHTML = `
+          <span>?仄??儭??曆??啣???"<strong>${filter}</strong>" ?摮?/span>
+          <button onclick="prepareAddWord('${filter}')">???啣??箏摮?/button>
+        `;
+      } else {
+        filteredVocab.forEach((v) => {
+          const originalIndex = vocab.findIndex(item => item === v);
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <span class="word-item">
+              <div class="word-row">
+                <span class="word-number">${originalIndex + 1}.</span>
+                <b class="english-word">${v.word}</b>
+                <span class="chinese-meaning">${v.meaning}</span>
+              </div>
+              <div class="example-row">
+                <span class="english-example">${v.example}</span>
+                <span class="example-translation">${v.exampleMeaning || ''}</span>
+              </div>
+            </span>
+            <div>
+              <button class="btn-pronounce" onclick="pronounceWord('${v.word}')" title="?詨?桀?">??</button>
+              <button class="btn-pronounce" onclick="pronounceSentence('${v.example}')" title="?詨靘">??</button>
+              <button class="btn-delete" onclick="deleteWord(${originalIndex})">?芷</button>
+            </div>
+          `;
+          ul.appendChild(li);
+        });
+      }
+    }
+
+    function searchWord() {
+      const searchTerm = document.getElementById('searchInput').value.trim();
+      displayWords(searchTerm);
+    }
+
+    function clearSearch() {
+      document.getElementById('searchInput').value = '';
+      displayWords();
+    }
+
+    function prepareAddWord(word) {
+      const wordInput = document.getElementById('word');
+      // 憒????銝剜?嚗?憛怠銝剜?甈?
+      if (/[\u4e00-\u9fa5]/.test(word)) {
+        document.getElementById('meaning').value = word;
+        document.getElementById('word').focus();
+      } else {
+        wordInput.value = word;
+        document.getElementById('meaning').focus();
+      }
+      document.querySelector('.add-group').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function addWord() {
+      const w = document.getElementById('word').value.trim();
+      const m = document.getElementById('meaning').value.trim();
+      const e = document.getElementById('example').value.trim();
+      const em = document.getElementById('exampleMeaning').value.trim();
+      if (!w || !m || !e) return alert('隢撠撓?亥?葉???望?靘??);
+      vocab.push({ word: w, meaning: m, example: e, exampleMeaning: em });
+      saveVocab();
+      displayWords();
+      document.getElementById('word').value = '';
+      document.getElementById('meaning').value = '';
+      document.getElementById('example').value = '';
+      document.getElementById('exampleMeaning').value = '';
+      
+      // ?啣?敺??斗?撠?隞塚?隞仿＊蝷箏??游?銵?      clearSearch();
+    }
+
+    function deleteWord(index) {
+      if (!confirm('蝣箏??芷?摮?')) return;
+      vocab.splice(index, 1);
+      saveVocab();
+      // 靽??桀???撠???      const searchTerm = document.getElementById('searchInput').value.trim();
+      displayWords(searchTerm);
+    }
+
+    function importFile() {
+      const file = document.getElementById('fileInput').files[0];
+      if (!file) return alert('隢??獢?);
+      
+      // 憿舐內?臬?脣漲
+      const progressModal = document.createElement('div');
+      progressModal.className = 'modal-overlay';
+      progressModal.style.display = 'flex';
+      progressModal.innerHTML = `
+        <div class="modal-content">
+          <h2>? 甇??臬瑼?...</h2>
+          <div style="text-align: center; margin: 20px 0;">
+            <div style="font-size: 1.2rem; color: #00ffff; margin-bottom: 10px;">
+              <span id="importProgress">0</span> / <span id="totalLines">0</span> 銵?            </div>
+            <div style="width: 100%; height: 8px; background: rgba(0,0,0,0.3); border-radius: 4px; overflow: hidden;">
+              <div id="progressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #00ffff, #a259ff); transition: width 0.3s;"></div>
+            </div>
+          </div>
+          <div id="importStatus" style="text-align: center; color: #c5c6c7; font-size: 0.9rem;">
+            甇?霈??獢?..
+          </div>
+        </div>
+      `;
+      document.body.appendChild(progressModal);
+      
+      // ?岫憭車蝺函Ⅳ?澆?靘圾瘙箔葉??蝣澆?憿?      const tryEncoding = (encoding) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result);
+          reader.onerror = reject;
+          reader.readAsText(file, encoding);
+        });
+      };
+      
+      // ???摨?閰虫??楊蝣?      const encodings = ['utf-8', 'big5', 'gbk', 'gb2312', 'utf-16'];
+      
+      Promise.any(encodings.map(encoding => tryEncoding(encoding)))
+        .then(text => {
+          // 蝘駁 BOM 璅?
+          text = text.replace(/^\uFEFF/, '');
+          
+          const lines = text.split('\n').filter(l => l.trim());
+          const totalLines = lines.length;
+          let importedCount = 0;
+          let skippedCount = 0;
+          let duplicateCount = 0;
+          
+          // 撱箇??暹??桀???Set 隞亙??閰ｇ?銝?憭批?撖恬?
+          const existingWords = new Set(vocab.map(v => v.word.toLowerCase()));
+
+          // ?湔蝮質???          document.getElementById('totalLines').textContent = totalLines;
+          document.getElementById('importStatus').textContent = '甇?閫???桀?鞈?...';
+          
+          // ?寞活??嚗?憛I
+          const batchSize = 100;
+          const processBatch = (startIndex) => {
+            const endIndex = Math.min(startIndex + batchSize, totalLines);
+            
+            for (let i = startIndex; i < endIndex; i++) {
+              const line = lines[i];
+              let word, meaning, example, exampleMeaning;
+              
+              // ?岫銝????泵?撘?              if (line.includes(',')) {
+                // CSV ?澆?嚗ord,meaning,example,exampleMeaning
+                const parts = line.split(',').map(s => s.trim());
+                if (parts.length >= 4) {
+                  [word, meaning, example, exampleMeaning] = parts;
+                } else if (parts.length === 3) {
+                  [word, meaning, example] = parts;
+                  exampleMeaning = '';
+                }
+              } else if (line.includes('嚗?)) {
+                // 銝剜????澆?嚗ord嚗eaning嚗xample嚗xampleMeaning
+                const parts = line.split('嚗?).map(s => s.trim());
+                if (parts.length >= 4) {
+                  [word, meaning, example, exampleMeaning] = parts;
+                } else if (parts.length === 3) {
+                  [word, meaning, example] = parts;
+                  exampleMeaning = '';
+                }
+              } else if (line.includes(':')) {
+                // ?望????澆?嚗ord:meaning:example:exampleMeaning
+                const parts = line.split(':').map(s => s.trim());
+                if (parts.length >= 4) {
+                  [word, meaning, example, exampleMeaning] = parts;
+                } else if (parts.length === 3) {
+                  [word, meaning, example] = parts;
+                  exampleMeaning = '';
+                }
+              } else if (line.includes('\t')) {
+                // Tab ???澆?嚗ord\tmeaning\texample\texampleMeaning
+                const parts = line.split('\t').map(s => s.trim());
+                if (parts.length >= 4) {
+                  [word, meaning, example, exampleMeaning] = parts;
+                } else if (parts.length === 3) {
+                  [word, meaning, example] = parts;
+                  exampleMeaning = '';
+                }
+              } else if (line.includes(' ')) {
+                // 蝛箸???澆?嚗ord meaning example exampleMeaning
+                const parts = line.split(' ');
+                if (parts.length >= 4) {
+                  word = parts[0];
+                  meaning = parts[1];
+                  example = parts[2];
+                  exampleMeaning = parts.slice(3).join(' ');
+                } else if (parts.length === 3) {
+                  word = parts[0];
+                  meaning = parts[1];
+                  example = parts[2];
+                  exampleMeaning = '';
+                }
+              }
+              
+              // 憒???閫??銝?閬?雿?潘??憓摮?              if (word && meaning && example) {
+                // 瑼Ｘ?臬??嚗??之撠神嚗?                if (!existingWords.has(word.toLowerCase())) {
+                  vocab.push({ 
+                    word: word, 
+                    meaning: meaning, 
+                    example: example, 
+                    exampleMeaning: exampleMeaning || '' 
+                  });
+                  // 撠?桀?? Set嚗誑??瑼??抒???
+                  existingWords.add(word.toLowerCase());
+                  importedCount++;
+                } else {
+                  duplicateCount++;
+                }
+              } else {
+                skippedCount++;
+              }
+            }
+            
+            // ?湔?脣漲
+            const progress = Math.min(endIndex, totalLines);
+            const progressPercent = (progress / totalLines) * 100;
+            document.getElementById('importProgress').textContent = progress;
+            document.getElementById('progressBar').style.width = progressPercent + '%';
+            
+            // 憒????游?銵???嚗匱蝥甈∟???            if (endIndex < totalLines) {
+              document.getElementById('importStatus').textContent = `甇???蝚?${progress} 銵?..`;
+              setTimeout(() => processBatch(endIndex), 10); // ?剜撱園?踹??餃?UI
+            } else {
+              // 摰???
+              document.getElementById('importStatus').textContent = '甇??脣?鞈?...';
+              
+              setTimeout(() => {
+                saveVocab();
+                displayWords();
+                
+                // 蝘駁?脣漲閬?
+                document.body.removeChild(progressModal);
+                
+                // 憿舐內蝯?
+                let resultMessage = `?????臬 ${importedCount} ?摮;
+                if (duplicateCount > 0) {
+                  resultMessage += `\n?? 撌脣蕭??${duplicateCount} ??銴摮;
+                }
+                if (skippedCount > 0) {
+                  resultMessage += `\n?? 撌脰歲??${skippedCount} ???`;
+                }
+                alert(resultMessage);
+                
+                // ?臬??敺?蝛箸?撠?
+                clearSearch();
+              }, 100);
+            }
+          };
+          
+          // ???寞活??
+          processBatch(0);
+        })
+        .catch(error => {
+          console.error('瑼?霈?仃??', error);
+          document.body.removeChild(progressModal);
+          alert('??瑼?霈?仃??隢炎?交?獢撘?蝺函Ⅳ');
+        });
+    }
+
+    function exportCSV() {
+      if (vocab.length === 0) return alert('?桀?瘝??臬?箇??桀???);
+      const csvContent = vocab.map(v => `${v.word},${v.meaning},${v.example},${v.exampleMeaning || ''}`).join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${bookName}.csv`;
+      link.click();
+    }
+
+    /*----------------------------------------
+      (4) ?潮?
+    ----------------------------------------*/
+    function pronounceWord(text) {
+      if (!('speechSynthesis' in window)) {
+        return alert('甇斤汗?其??舀?潮?');
+      }
+      
+      // 雿輻?啁??潮蝟餌絞
+      SoundSystem.speech.speakWord(text);
+    }
+
+    function pronounceSentence(text) {
+      if (!('speechSynthesis' in window)) {
+        return alert('甇斤汗?其??舀?潮?');
+      }
+      
+      // 雿輻?啁??潮蝟餌絞
+      SoundSystem.speech.speakSentence(text);
+    }
+
+    /*----------------------------------------
+      (5) ??詨 modal ?摩
+    ----------------------------------------*/
+    function openGameModal() {
+      document.getElementById('gameModal').style.display = 'flex';
+    }
+    function closeGameModal() {
+      document.getElementById('gameModal').style.display = 'none';
+    }
+
+    function startSpelling() {
+      // 頝唾??唳摮???      window.location.href = `spelling.html?book=${encodeURIComponent(bookName)}`;
+    }
+    function startMatching() {
+      // 頝唾??圈?撠???      window.location.href = `flipcard_practice.html?book=${encodeURIComponent(bookName)}`;
+    }
+    function startTimeChallenge() {
+      // 頝唾??圈???憿?      window.location.href = `time_challenge.html?book=${encodeURIComponent(bookName)}`;
+    }
+
+    function startQuiz(mode) {
+      // 頝唾??啣摮??
+      window.location.href = `quiz_game.html?book=${encodeURIComponent(bookName)}&mode=${mode}`;
+    }
+
+    /*----------------------------------------
+      (6) ????    ----------------------------------------*/
+    window.addEventListener('load', async () => {
+      updateStarsDisplay();
+      initCanvas();
+      animate();
+      await loadDefaultVocabIfNeeded();
+      displayWords();
+      
+      // ???璅頂蝯?      setTimeout(() => {
+        initBackgroundMusic();
+        
+        // 蝬??單??批??鈭辣
+        const musicBtn = document.getElementById('toggleMusic');
+        if (musicBtn) {
+          musicBtn.addEventListener('click', toggleBackgroundMusic);
+          console.log('? ?單??批??鈭辣撌脩?摰?);
+        }
+        
+        // 瘛餃??冽鈭?閫貊?單??剜
+        let hasUserInteracted = false;
+        
+        function handleUserInteraction() {
+          if (!hasUserInteracted) {
+            hasUserInteracted = true;
+            console.log('?? ?冽鈭?閫貊嚗璅頂蝯勗歇?');
+            
+            // 憒??府?剜雿?瘝?橘??岫?剜
+            if (isMusicPlaying && backgroundMusic && backgroundMusic.paused) {
+              playBackgroundMusic();
+            }
+          }
+        }
+        
+        // ???車?冽鈭?鈭辣
+        ['click', 'touchstart', 'keydown'].forEach(eventType => {
+          document.addEventListener(eventType, handleUserInteraction, { once: true });
+        });
+      }, 500);
+      
+      // ????航??扯??????單??怠?/?Ｗ儔
+      document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+          // ??梯???璅?          if (isMusicPlaying && backgroundMusic) {
+            backgroundMusic.pause();
+          }
+        } else {
+          // ?憿舐內?敺拚璅?          if (isMusicPlaying && backgroundMusic && backgroundMusic.paused) {
+            backgroundMusic.play().catch(err => {
+              console.log('??Ｗ儔?璅?曉仃??', err);
+            });
+          }
+        }
+      });
+      
+      // ?????喟頂蝯?      if ('speechSynthesis' in window) {
+        // 蝑?隤頛摰?
+        window.speechSynthesis.onvoiceschanged = () => {
+          console.log('隤蝟餌絞撌脰???);
+        };
+      }
+      
+      // 瘛餃??萇敹急??      document.addEventListener('keydown', (e) => {
+        // ?單??批敹急??        if (e.key === 'm' || e.key === 'M') {
+          toggleBackgroundMusic();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

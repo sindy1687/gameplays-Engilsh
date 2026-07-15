@@ -1,0 +1,2679 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>?停敺賜? - Typing Hero</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="responsive_enhanced.css">
+  <style>
+    /* ?踵?撘身閮???*/
+    :root {
+      --mobile-padding: 12px;
+      --tablet-padding: 16px;
+      --desktop-padding: 20px;
+      --mobile-font-size: 0.9rem;
+      --tablet-font-size: 1rem;
+      --desktop-font-size: 1.1rem;
+    }
+    
+    body {
+      margin: 0;
+      font-family: 'Orbitron', 'Microsoft JhengHei', '敺株?甇??擃?, sans-serif;
+      background: url('https://wallpaperaccess.com/full/192936.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      text-align: center;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    header {
+      background: rgba(10, 20, 40, 0.9);
+      padding: 20px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 0 30px 12px #00ffff88, 0 0 50px 0 #a259ff33 inset;
+      border-bottom: 3px solid #00ffff;
+      backdrop-filter: blur(8px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.4rem;
+      color: #00ffff;
+      letter-spacing: 3px;
+      text-shadow: 0 0 15px #00ffff, 0 0 35px #a259ff;
+      font-weight: 700;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    
+    /* 蝮賣??＊蝷箸見撘?*/
+    .total-stars-display {
+      background: rgba(10, 20, 40, 0.85);
+      padding: 8px 16px;
+      border-radius: 20px;
+      color: #ffd700;
+      font-weight: bold;
+      box-shadow: 0 0 15px #ffd700, 0 0 30px #00ffff;
+      border: 2px solid #00ffff;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-right: 16px;
+      animation: starGlow 2s ease-in-out infinite alternate;
+    }
+    
+    .total-stars-display .star-icon {
+      font-size: 1.2rem;
+      filter: drop-shadow(0 0 8px #ffd700);
+    }
+    
+    .total-stars-display .star-count {
+      font-family: 'Orbitron', 'Microsoft JhengHei', sans-serif;
+      text-shadow: 0 0 8px #ffd700;
+    }
+    
+    @keyframes starGlow {
+      0% { box-shadow: 0 0 15px #ffd700, 0 0 30px #00ffff; }
+      100% { box-shadow: 0 0 25px #ffd700, 0 0 40px #00ffff; }
+    }
+    .btn {
+      background: linear-gradient(135deg, #00ffff 0%, #a259ff 100%);
+      color: #000;
+      border: none;
+      padding: 12px 26px;
+      border-radius: 15px;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: 0 0 20px #00ffff, 0 0 30px #a259ff99;
+      margin-left: 8px;
+      font-size: 1.2rem;
+      letter-spacing: 1.5px;
+      transition: all 0.3s ease;
+      font-family: 'Orbitron', 'Microsoft JhengHei', sans-serif;
+    }
+    .btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 35px #00ffff, 0 0 50px #a259ffcc;
+    }
+    .achievement-section {
+      background: rgba(10, 20, 40, 0.9);
+      border: 3px solid #00ffff;
+      border-radius: 20px;
+      max-width: 800px;
+      margin: 40px auto 0 auto;
+      padding: 30px 20px 40px 20px;
+      box-shadow: 0 0 40px #00ffff33, 0 0 100px #a259ff22 inset;
+      backdrop-filter: blur(8px);
+    }
+    .achievement-section h2 {
+      color: #ffd700;
+      margin-bottom: 25px;
+      text-shadow: 0 0 15px #ffd700, 0 0 35px #00ffff;
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    .achievement-badges {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      max-width: 100%;
+    }
+    .badge-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid;
+      position: relative;
+      margin-bottom: 4px;
+    }
+    .badge.locked {
+      background: rgba(128, 128, 128, 0.3);
+      border-color: #666;
+      color: #666;
+      cursor: default;
+      filter: grayscale(1);
+    }
+    .badge.unlocked {
+      cursor: pointer;
+      animation: badgeGlow 2s ease-in-out infinite alternate;
+    }
+    .badge.unlocked:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 20px currentColor;
+    }
+    @keyframes badgeGlow {
+      0% { box-shadow: 0 0 12px currentColor; }
+      100% { box-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
+    }
+    .badge-desc {
+      font-size: 0.85rem;
+      color: #ffd700;
+      margin-top: 2px;
+      text-shadow: 0 0 6px #ffd700, 0 0 12px #ffaa00;
+      min-width: 80px;
+      max-width: 120px;
+      margin-left: auto;
+      margin-right: auto;
+      word-break: break-all;
+    }
+    .reward-stars {
+      color: #ffd700;
+      font-weight: bold;
+      text-shadow: 0 0 8px #ffd700;
+      font-size: 0.9rem;
+    }
+    
+    /* ?啣?嚗?撠梯圾隤芣見撘?*/
+    .achievement-detail {
+      background: rgba(20, 40, 80, 0.95);
+      border: 2px solid #00ffff;
+      border-radius: 15px;
+      padding: 18px;
+      margin: 0;
+      box-shadow: 0 0 25px #00ffff33, 0 0 50px #a259ff22 inset;
+      backdrop-filter: blur(8px);
+      height: fit-content;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+    
+    .achievement-detail:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 35px #00ffff44, 0 0 60px #a259ff33 inset;
+    }
+    
+    .achievement-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    
+    .achievement-icon {
+      font-size: 2rem;
+      filter: drop-shadow(0 0 12px currentColor);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    
+    .achievement-info {
+      flex: 1;
+      text-align: left;
+      min-width: 0;
+    }
+    
+    .achievement-name {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #00ffff;
+      margin-bottom: 5px;
+      text-shadow: 0 0 12px #00ffff;
+      line-height: 1.3;
+      letter-spacing: 1px;
+    }
+    
+    .achievement-description {
+      color: #e0e0e0;
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+      line-height: 1.4;
+      letter-spacing: 0.5px;
+    }
+    
+    .progress-container {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 10px;
+      padding: 3px;
+      margin: 8px 0;
+    }
+    
+    .progress-bar {
+      height: 8px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #00ffff, #a259ff);
+      transition: width 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+    
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+    
+    .progress-text {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    
+    .progress-text .current-progress,
+    .progress-text .required-progress {
+      margin: 0 2px;
+      font-size: 1.1em;
+    }
+    
+    .progress-text span {
+      display: inline-block;
+    }
+    
+    .current-progress {
+      color: #00ffff;
+      font-weight: bold;
+      text-shadow: 0 0 6px #00ffff;
+    }
+    
+    .required-progress {
+      color: #ffd700;
+      text-shadow: 0 0 6px #ffd700;
+    }
+    
+    .reward-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffd700;
+      font-weight: bold;
+      text-shadow: 0 0 8px #ffd700;
+      font-size: 0.95rem;
+      margin-top: 8px;
+    }
+    
+    .claimed-badge {
+      opacity: 0.6;
+      position: relative;
+    }
+    
+    .claimed-badge::after {
+      content: '??;
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #00ff00;
+      color: #000;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: bold;
+      box-shadow: 0 0 8px #00ff00;
+    }
+    
+    .achievement-status {
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-left: auto;
+      flex-shrink: 0;
+      text-shadow: 0 0 4px currentColor;
+    }
+    
+    .status-locked {
+      background: rgba(255, 0, 0, 0.3);
+      color: #ff6b6b;
+      border: 1px solid #ff6b6b;
+      box-shadow: 0 0 8px #ff6b6b33;
+    }
+    
+    .status-unlocked {
+      background: rgba(0, 255, 0, 0.3);
+      color: #00ff00;
+      border: 1px solid #00ff00;
+      box-shadow: 0 0 8px #00ff0033;
+    }
+    
+    .status-claimed {
+      background: rgba(255, 215, 0, 0.3);
+      color: #ffd700;
+      border: 1px solid #ffd700;
+      box-shadow: 0 0 8px #ffd70033;
+    }
+    
+    /* ?舫???撠梁??寞?璅?? */
+    .claimable-achievement {
+      border: 3px solid #00ff00;
+      box-shadow: 0 0 25px #00ff00, 0 0 40px #00ff0044 inset;
+      animation: claimableGlow 2s ease-in-out infinite alternate;
+      position: relative;
+    }
+    
+    .claimable-achievement::before {
+      content: '??';
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      font-size: 1.5rem;
+      animation: giftBounce 1s ease-in-out infinite alternate;
+      z-index: 10;
+    }
+    
+    @keyframes claimableGlow {
+      0% { box-shadow: 0 0 25px #00ff00, 0 0 40px #00ff0044 inset; }
+      100% { box-shadow: 0 0 35px #00ff00, 0 0 50px #00ff0066 inset; }
+    }
+    
+    @keyframes giftBounce {
+      0% { transform: scale(1) rotate(0deg); }
+      100% { transform: scale(1.2) rotate(10deg); }
+    }
+    
+    .toggle-details {
+      background: rgba(0, 255, 255, 0.15);
+      border: 2px solid #00ffff;
+      color: #00ffff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-top: 8px;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      text-shadow: 0 0 6px #00ffff;
+    }
+    
+    .toggle-details:hover {
+      background: rgba(0, 255, 255, 0.25);
+      box-shadow: 0 0 15px #00ffff;
+      transform: scale(1.02);
+    }
+    
+    .achievement-details {
+      display: none;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(0, 255, 255, 0.4);
+      font-size: 0.85rem;
+      color: #e0e0e0;
+      line-height: 1.4;
+    }
+    
+    .achievement-details.show {
+      display: block;
+    }
+    
+    /* ?啣?嚗?憿祟?豢見撘?*/
+    .filter-section {
+      background: rgba(20, 40, 80, 0.9);
+      border: 2px solid #00ffff;
+      border-radius: 15px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 800px;
+      box-shadow: 0 0 25px #00ffff33;
+      backdrop-filter: blur(8px);
+    }
+    
+    .filter-title {
+      color: #00ffff;
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+      text-shadow: 0 0 12px #00ffff;
+      letter-spacing: 1px;
+    }
+    
+    .filter-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+    }
+    
+    .filter-btn {
+      background: rgba(0, 255, 255, 0.15);
+      border: 2px solid #00ffff;
+      color: #00ffff;
+      padding: 12px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-shadow: 0 0 8px #00ffff;
+      position: relative;
+    }
+    
+    .filter-btn:hover {
+      background: rgba(0, 255, 255, 0.25);
+      box-shadow: 0 0 20px #00ffff;
+      transform: scale(1.05);
+    }
+    
+    .filter-btn.active {
+      background: linear-gradient(90deg, #00ffff, #a259ff);
+      color: #000;
+      box-shadow: 0 0 25px #00ffff;
+      font-weight: 700;
+    }
+    
+    .filter-btn.all {
+      background: linear-gradient(90deg, #ffd700, #ffaa00);
+      color: #000;
+      border-color: #ffd700;
+      text-shadow: none;
+    }
+    
+    .filter-btn.all:hover {
+      box-shadow: 0 0 25px #ffd700;
+    }
+    
+    .filter-btn.all.active {
+      background: linear-gradient(90deg, #ffd700, #ffaa00);
+      box-shadow: 0 0 30px #ffd700;
+    }
+    
+    /* ?啣?嚗?撠望?部瘜⊥見撘?*/
+    .achievement-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: linear-gradient(135deg, #ff6b6b, #ff4757);
+      color: white;
+      border-radius: 50%;
+      min-width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: bold;
+      box-shadow: 0 0 10px rgba(255, 107, 107, 0.6);
+      border: 2px solid white;
+      animation: badgePulse 2s ease-in-out infinite;
+      z-index: 10;
+    }
+    
+    @keyframes badgePulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(255, 107, 107, 0.6);
+      }
+      50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(255, 107, 107, 0.8);
+      }
+    }
+    
+    .achievement-badge.hidden {
+      display: none;
+    }
+    
+    /* ?啣?嚗?憿摮部瘜⊥見撘?*/
+    .achievement-title {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .total-claimable-badge {
+      position: absolute;
+      top: -15px;
+      right: -25px;
+      background: linear-gradient(135deg, #ff6b6b, #ff4757);
+      color: white;
+      border-radius: 50%;
+      min-width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: bold;
+      box-shadow: 0 0 15px rgba(255, 107, 107, 0.8);
+      border: 3px solid white;
+      animation: totalBadgePulse 2s ease-in-out infinite;
+      z-index: 10;
+    }
+    
+    @keyframes totalBadgePulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 15px rgba(255, 107, 107, 0.8);
+      }
+      50% {
+        transform: scale(1.15);
+        box-shadow: 0 0 25px rgba(255, 107, 107, 1);
+      }
+    }
+    
+    .stats-section {
+      background: rgba(20, 40, 80, 0.9);
+      border: 2px solid #ffd700;
+      border-radius: 15px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 800px;
+      box-shadow: 0 0 25px #ffd70033;
+      backdrop-filter: blur(8px);
+    }
+    
+    .stats-title {
+      color: #ffd700;
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+      text-shadow: 0 0 12px #ffd700;
+      letter-spacing: 1px;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+    
+    .stat-item {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid #ffd700;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 0 15px #ffd70022;
+    }
+    
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #ffd700;
+      text-shadow: 0 0 10px #ffd700;
+      margin-bottom: 5px;
+    }
+    
+    .stat-label {
+      font-size: 1rem;
+      color: #e0e0e0;
+      text-shadow: 0 0 6px #e0e0e0;
+    }
+    
+    .group-hidden {
+      display: none;
+    }
+    
+    .claim-btn {
+      background: linear-gradient(90deg, #00ff00, #00cc00);
+      color: #000;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.85rem;
+      margin-top: 6px;
+      box-shadow: 0 0 12px #00ff00;
+      transition: all 0.3s ease;
+    }
+    
+    .claim-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #00ff00;
+    }
+    
+    /* ?啣?嚗??舫璅??見撘?*/
+    #muteToggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1001;
+      background: rgba(10, 20, 40, 0.85);
+      color: #fff;
+      border: 2px solid #00ffff;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 0 16px #00ffff;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    #muteToggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 32px #00ffff;
+    }
+
+    /* ?啣?嚗?撠梢???蝒見撘?*/
+    .achievement-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+      animation: modalFadeIn 0.4s ease-out;
+    }
+    
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.7);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+    .achievement-modal-content {
+      background: linear-gradient(135deg, rgba(10, 20, 40, 0.98), rgba(20, 40, 80, 0.98));
+      border: 3px solid #00ffff;
+      border-radius: 25px;
+      padding: 0;
+      max-width: 520px;
+      width: 90%;
+      position: relative;
+      box-shadow: 0 0 50px #00ffff, 0 0 100px #a259ff, 0 0 150px rgba(0, 255, 255, 0.4);
+      animation: modalPop 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      overflow: hidden;
+    }
+    
+    @keyframes modalPop {
+      0% {
+        transform: scale(0.2) rotate(-15deg);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.15) rotate(3deg);
+      }
+      100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+    
+    .achievement-modal-header {
+      background: linear-gradient(90deg, #00ffff, #a259ff);
+      padding: 25px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .achievement-modal-header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      animation: shimmer 3s infinite;
+    }
+    
+    .achievement-modal-icon {
+      font-size: 5rem;
+      margin-bottom: 15px;
+      filter: drop-shadow(0 0 25px currentColor);
+      animation: iconFloat 3s ease-in-out infinite;
+      position: relative;
+      z-index: 1;
+    }
+    
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      25% { transform: translateY(-8px) rotate(2deg); }
+      50% { transform: translateY(-15px) rotate(0deg); }
+      75% { transform: translateY(-8px) rotate(-2deg); }
+    }
+    
+    .achievement-modal-title {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #000;
+      margin: 0;
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+      position: relative;
+      z-index: 1;
+      letter-spacing: 1px;
+    }
+    
+    .achievement-modal-body {
+      padding: 30px;
+      text-align: center;
+    }
+    
+    .achievement-modal-description {
+      font-size: 1.2rem;
+      color: #ddd;
+      margin-bottom: 25px;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+    
+    .achievement-modal-reward {
+      background: linear-gradient(90deg, #ffd700, #ffaa00);
+      border-radius: 20px;
+      padding: 20px;
+      margin: 25px 0;
+      color: #000;
+      font-weight: bold;
+      font-size: 1.4rem;
+      box-shadow: 0 0 30px #ffd700;
+      animation: rewardGlow 2s ease-in-out infinite alternate;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .achievement-modal-reward::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+    
+    @keyframes rewardGlow {
+      from { 
+        box-shadow: 0 0 30px #ffd700, 0 0 40px #ffaa00;
+        transform: scale(1);
+      }
+      to { 
+        box-shadow: 0 0 40px #ffd700, 0 0 50px #ffaa00, 0 0 60px #ff8800;
+        transform: scale(1.02);
+      }
+    }
+    
+    .achievement-modal-stars {
+      font-size: 1.6rem;
+      margin-right: 10px;
+      animation: starTwinkle 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes starTwinkle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.1); }
+    }
+    
+    .achievement-modal-total {
+      background: rgba(0, 255, 255, 0.15);
+      border: 2px solid #00ffff;
+      border-radius: 15px;
+      padding: 15px;
+      margin: 20px 0;
+      color: #00ffff;
+      font-weight: bold;
+      font-size: 1.1rem;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    }
+    
+    .achievement-modal-close {
+      background: linear-gradient(90deg, #00ffff, #a259ff);
+      color: #000;
+      border: none;
+      padding: 15px 35px;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+      box-shadow: 0 0 25px #00ffff;
+      transition: all 0.3s ease;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 1px;
+    }
+    
+    .achievement-modal-close:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 40px #00ffff, 0 0 50px #a259ff;
+    }
+    
+    .achievement-modal-close:active {
+      transform: scale(0.95);
+    }
+    
+    .achievement-modal-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #ffd700;
+      border-radius: 50%;
+      animation: particleFloat 4s ease-out forwards;
+      box-shadow: 0 0 10px currentColor;
+    }
+    
+    @keyframes particleFloat {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-150px) scale(0) rotate(360deg);
+      }
+    }
+    
+    .confetti {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      animation: confettiFall 3s ease-out forwards;
+      border-radius: 2px;
+    }
+    
+    @keyframes confettiFall {
+      0% {
+        opacity: 1;
+        transform: translateY(-50px) rotate(0deg) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(100vh) rotate(720deg) scale(0.5);
+      }
+    }
+
+    /* ?啣?嚗蔣???見撘?*/
+    .video-button {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 0, 0, 0.8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 15;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .video-button:hover {
+      transform: scale(1.1);
+      background: rgba(255, 0, 0, 1);
+      box-shadow: 0 0 16px rgba(255, 0, 0, 0.8);
+      border-color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .video-icon {
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+    }
+
+    /* ?啣?嚗蔣??Modal 璅?? */
+    .video-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      backdrop-filter: blur(8px);
+    }
+    
+    .video-modal-content {
+      background: rgba(10, 20, 40, 0.95);
+      border: 2px solid #00ffff;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow: hidden;
+      box-shadow: 0 0 32px #00ffff, 0 0 48px #a259ffcc;
+    }
+    
+    .video-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      background: rgba(0, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+    }
+    
+    .video-modal-header h3 {
+      color: #00ffff;
+      margin: 0;
+      font-size: 1.2rem;
+      text-shadow: 0 0 8px #00ffff;
+    }
+    
+    .video-modal-close {
+      background: rgba(255, 0, 0, 0.8);
+      color: white;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .video-modal-close:hover {
+      background: rgba(255, 0, 0, 1);
+      transform: scale(1.1);
+      box-shadow: 0 0 12px rgba(255, 0, 0, 0.8);
+    }
+    
+    .video-modal-body {
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 400px;
+    }
+    
+    .video-modal-body iframe,
+    .video-modal-body video {
+      width: 100%;
+      height: 400px;
+      border-radius: 12px;
+      border: 2px solid rgba(0, 255, 255, 0.3);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    }
+    
+    .video-modal-body iframe {
+      background: #000;
+    }
+    
+    .video-modal-body video {
+      background: #000;
+    }
+
+    /* ?啣?嚗?撠勗?葉?蔣????*/
+    .achievement-detail .video-button {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      background: rgba(255, 0, 0, 0.8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 15;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .achievement-detail .video-button:hover {
+      transform: scale(1.1);
+      background: rgba(255, 0, 0, 1);
+      box-shadow: 0 0 16px rgba(255, 0, 0, 0.8);
+      border-color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .achievement-detail .video-icon {
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+    }
+    
+    /* ========== ?踵?撘身閮?========== */
+    
+    /* 撟單閮剖? (768px - 1024px) */
+    @media (max-width: 1024px) {
+      header {
+        padding: 16px 20px;
+      }
+      
+      .total-stars-display {
+        padding: 6px 12px;
+        font-size: 1rem;
+      }
+      
+      header h1 {
+        font-size: 2rem;
+      }
+      
+      .header-actions {
+        gap: 16px;
+      }
+      
+      .btn {
+        padding: 10px 20px;
+        font-size: 1rem;
+      }
+      
+      .achievement-section {
+        max-width: 90%;
+        padding: 25px 15px 35px 15px;
+      }
+      
+      .achievement-section h2 {
+        font-size: 1.8rem;
+      }
+      
+      .achievement-badges {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 14px;
+      }
+      
+      .achievement-name {
+        font-size: 1.2rem;
+      }
+      
+      .achievement-description {
+        font-size: 0.9rem;
+      }
+    }
+    
+    /* ??閮剖? (480px - 768px) */
+    @media (max-width: 768px) {
+      header {
+        padding: 12px 15px;
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .total-stars-display {
+        padding: 5px 10px;
+        font-size: 0.9rem;
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+      
+      header h1 {
+        font-size: 1.6rem;
+        letter-spacing: 2px;
+      }
+      
+      .header-actions {
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        margin-left: 4px;
+        margin-right: 4px;
+      }
+      
+      .achievement-section {
+        max-width: 95%;
+        margin: 20px auto 0 auto;
+        padding: 20px 12px 30px 12px;
+      }
+      
+      .achievement-section h2 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+      }
+      
+      .achievement-badges {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+      }
+      
+      .achievement-detail {
+        padding: 15px;
+      }
+      
+      .achievement-header {
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+      
+      .achievement-icon {
+        font-size: 1.6rem;
+      }
+      
+      .achievement-name {
+        font-size: 1.1rem;
+      }
+      
+      .achievement-description {
+        font-size: 0.85rem;
+      }
+      
+      .stats-section, .filter-section {
+        max-width: 95%;
+        margin: 15px auto;
+        padding: 15px 12px;
+      }
+      
+      .stats-title, .filter-title {
+        font-size: 1.2rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      
+      .filter-buttons {
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      
+      .filter-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
+    }
+    
+    /* 撠?璈身??(320px - 480px) */
+    @media (max-width: 480px) {
+      header {
+        padding: 10px 12px;
+      }
+      
+      .total-stars-display {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+      }
+      
+      header h1 {
+        font-size: 1.4rem;
+        letter-spacing: 1px;
+      }
+      
+      .header-actions {
+        gap: 6px;
+      }
+      
+      .btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        margin-left: 2px;
+        margin-right: 2px;
+      }
+      
+      .achievement-section {
+        max-width: 98%;
+        margin: 15px auto 0 auto;
+        padding: 15px 10px 25px 10px;
+      }
+      
+      .achievement-section h2 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+      }
+      
+      .achievement-badges {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      
+      .achievement-detail {
+        padding: 12px;
+      }
+      
+      .achievement-header {
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      
+      .achievement-icon {
+        font-size: 1.4rem;
+      }
+      
+      .achievement-name {
+        font-size: 1rem;
+      }
+      
+      .achievement-description {
+        font-size: 0.8rem;
+      }
+      
+      .stats-section, .filter-section {
+        max-width: 98%;
+        margin: 10px auto;
+        padding: 12px 10px;
+      }
+      
+      .stats-title, .filter-title {
+        font-size: 1.1rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      
+      .filter-buttons {
+        gap: 6px;
+      }
+      
+      .filter-btn {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+      }
+      
+      .achievement-modal-content {
+        max-width: 95%;
+        padding: 20px 15px;
+      }
+      
+      .achievement-modal-title {
+        font-size: 1.2rem;
+      }
+      
+      .achievement-modal-description {
+        font-size: 0.9rem;
+      }
+    }
+    
+    /* 璈怠??? (landscape) */
+    @media (max-width: 768px) and (orientation: landscape) {
+      header {
+        flex-direction: row;
+        padding: 8px 15px;
+      }
+      
+      .total-stars-display {
+        margin-right: 12px;
+        margin-bottom: 0;
+      }
+      
+      header h1 {
+        font-size: 1.4rem;
+      }
+      
+      .achievement-section {
+        margin: 10px auto 0 auto;
+        padding: 15px 12px 20px 12px;
+      }
+      
+      .achievement-badges {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 10px;
+      }
+    }
+    
+    /* 閫豢閮剖??芸? */
+    @media (hover: none) and (pointer: coarse) {
+      .btn:hover, .achievement-detail:hover {
+        transform: none;
+      }
+      
+      .btn:active, .achievement-detail:active {
+        transform: scale(0.95);
+      }
+      
+      .badge.unlocked:hover {
+        transform: none;
+      }
+      
+      .badge.unlocked:active {
+        transform: scale(1.1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 暺??單? -->
+  <audio id="clickSfx" src="sound/click.mp3" preload="auto"></audio>
+  
+  <!-- ??單? -->
+  <audio id="bgm" src="sound/???暸???嚗??單?嚗?mp3" loop></audio>
+  <button id="muteToggle">??</button>
+
+  <header>
+    <h1>?? ?停敺賜?</h1>
+    <div class="header-actions">
+      <div class="total-stars-display">
+        <span class="star-icon">潃?/span>
+        <span class="star-count" id="totalStarsDisplay">0</span>
+      </div>
+      <button class="btn" onclick="location.href='index.html'">?? 擐?</button>
+      <button class="btn" onclick="location.href='cards.html'">?? ?∠??澈</button>
+      <button class="btn" onclick="location.href='atlas.html'">?? ?漣??</button>
+    </div>
+  </header>
+  
+  <!-- ?啣?嚗?撠梢???蝒?-->
+  <div id="achievementModal" class="achievement-modal">
+    <div class="achievement-modal-content">
+      <div class="achievement-modal-particles" id="particles"></div>
+      <div class="achievement-modal-header">
+        <div class="achievement-modal-icon" id="modalIcon">??</div>
+        <h2 class="achievement-modal-title" id="modalTitle">?停??嚗?/h2>
+      </div>
+      <div class="achievement-modal-body">
+        <div class="achievement-modal-description" id="modalDescription">
+          ?剖??券???銝???撠梧?
+        </div>
+        <div class="achievement-modal-reward" id="modalReward">
+          <span class="achievement-modal-stars">潃?/span>
+          <span id="modalRewardText">???嚗? 憿?/span>
+        </div>
+        <div class="achievement-modal-total" id="modalTotal">
+          ?嗅???蝮賣嚗? 憿?
+        </div>
+        <button class="achievement-modal-close" onclick="closeAchievementModal()">
+          ?? 憭芣?鈭?
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ?啣?嚗絞閮?閮???-->
+  <div class="stats-section">
+    <div class="stats-title">?? ?停蝯梯?</div>
+    <div class="stats-grid" id="statsGrid">
+      <!-- 蝯梯?鞈?撠JavaScript???? -->
+    </div>
+  </div>
+  
+  <!-- ?啣?嚗?憿祟?詨???-->
+  <div class="filter-section">
+    <div class="filter-title">?? ??蝭拚</div>
+    <div class="filter-buttons" id="filterButtons">
+      <!-- 蝭拚??撠JavaScript???? -->
+    </div>
+  </div>
+  
+  <div class="achievement-section">
+    <h2 class="achievement-title">
+      ???撠勗噬蝡?
+      <span id="totalClaimableBadge" class="total-claimable-badge" style="display: none;">0</span>
+    </h2>
+    <div id="achievementBadges" class="achievement-badges"></div>
+  </div>
+  <script src="js/cards.js"></script>
+  <script src="js/userData.js"></script>
+  <script>
+    // ?頛???憪??停?
+    document.addEventListener('DOMContentLoaded', function() {
+      // 撱園銝暺??Ⅱ靽??頂蝯梢撌脰???
+      setTimeout(() => {
+        // ????撠梢???
+        initializeAchievementPage();
+      }, 1000);
+    });
+
+    // ????撠梢???
+    function initializeAchievementPage() {
+      // ?萄遣????
+      renderFilterButtons();
+      // 皜脫??停敺賜?
+      renderBadges();
+      // ?湔蝮賣??＊蝷?
+      updateTotalStarsDisplay();
+      // ?湔璅??詨?瘜⊥部
+      updateTitleBadge();
+      // 瑼Ｘ銝阡＊蝷箏???停?
+      checkAndShowClaimableNotification();
+    }
+
+    // ?ㄐ銴ˊ cards.html ?抒? achievements ???
+    const achievements = [
+      { id: 'bronze', name: '???園???, requirement: 10, reward: 5, icon: '??', type: 'collection', description: '?園?10撘萄????雿??園?銋?' },
+      { id: 'silver', name: '????, requirement: 25, reward: 15, icon: '??', type: 'collection', description: '?園?25撘萄??撅雿??園?撖血?' },
+      { id: 'gold', name: '???園???, requirement: 50, reward: 30, icon: '??', type: 'collection', description: '?園?50撘萄????迤??? },
+      { id: 'platinum', name: '?賡??園???, requirement: 100, reward: 60, icon: '??', type: 'collection', description: '?園?100撘萄????賡?蝑?' },
+      { id: 'diamond', name: '?賜?園???, requirement: 200, reward: 120, icon: '??', type: 'collection', description: '?園?200撘萄???脣??賜璁株' },
+      { id: 'master', name: '?園?憭批葦', requirement: 500, reward: 300, icon: '??', type: 'collection', description: '?園?500撘萄????園?憭批葦' },
+      { id: 'common_master', name: '?桅憭批葦', requirement: 50, reward: 20, icon: '??', type: 'rarity', rarity: '?桅?, description: '?園?50撘菜?????箇?閰?' },
+      { id: 'rare_master', name: '蝔?憭批葦', requirement: 30, reward: 40, icon: '?', type: 'rarity', rarity: '蝔??, description: '?園?30撘萇?????游?閰?蝭?' },
+      { id: 'epic_master', name: '頞??之撣?, requirement: 20, reward: 80, icon: '??', type: 'rarity', rarity: '頞???, description: '?園?20撘菔?蝔????擃?閰?' },
+      { id: 'shard_collector', name: '蝣??園???, requirement: 100, reward: 25, icon: '??', type: 'shards', description: '?園?100??????蝣??園?銋楝' },
+      { id: 'shard_hoarder', name: '蝣??斤???, requirement: 500, reward: 100, icon: '?', type: 'shards', description: '?園?500?????蝣??斤??? },
+      { id: 'shard_master', name: '蝣?憭批葦', requirement: 1000, reward: 200, icon: '??', type: 'shards', description: '?園?1000?????蝣?憭批葦' },
+      { id: 'first_card', name: '?飛??, requirement: 1, reward: 1, icon: '?', type: 'special', description: '?脣?蝚砌?撘萄????摮貊?銋?' },
+      { id: 'lucky_starter', name: '撟賊??唳?', requirement: 5, reward: 5, icon: '??', type: 'special', description: '?脣?5撘萄??撅雿?撟賊?' },
+      { id: 'dedicated', name: '撠釣摮貊???, requirement: 25, reward: 20, icon: '??', type: 'special', description: '?脣?25撘萄??撅雿?撠釣' },
+      { id: 'persistent', name: '??銝?', requirement: 75, reward: 60, icon: '?', type: 'special', description: '?脣?75撘萄??撅雿???' },
+      { id: 'vocabulary_king', name: '閰?銋?', requirement: 150, reward: 150, icon: '??', type: 'special', description: '?脣?150撘萄???閰?銋?' },
+      { id: 'language_legend', name: '隤??喳?', requirement: 300, reward: 300, icon: '??', type: 'special', description: '?脣?300撘萄???隤??喳?' },
+      { id: 'daily_1', name: '瘥蝪賢1憭?, requirement: 1, reward: 2, icon: '??', type: 'daily', description: '???蝪賢1憭抬?擗?憟賜??? },
+      { id: 'daily_7', name: '瘥蝪賢7憭?, requirement: 7, reward: 10, icon: '??', type: 'daily', description: '???蝪賢7憭抬???銝?? },
+      { id: 'daily_30', name: '瘥蝪賢30憭?, requirement: 30, reward: 50, icon: '??儭?, type: 'daily', description: '???蝪賢30憭抬???銝??' },
+      { id: 'daily_100', name: '瘥蝪賢100憭?, requirement: 100, reward: 200, icon: '??', type: 'daily', description: '???蝪賢100憭抬??敹祕?冽' },
+      { id: 'star_collector', name: '???園???, requirement: 100, reward: 10, icon: '潃?, type: 'stars', description: '?園?100憿????????園?' },
+      { id: 'star_hoarder', name: '???斤???, requirement: 500, reward: 50, icon: '??, type: 'stars', description: '?園?500憿???????斤??? },
+      { id: 'star_master', name: '??憭批葦', requirement: 1000, reward: 100, icon: '??', type: 'stars', description: '?園?1000憿??????憭批葦' },
+      { id: 'star_legend', name: '???喳?', requirement: 5000, reward: 500, icon: '?', type: 'stars', description: '?園?5000憿???????喳?' },
+      { id: 'speed_learner', name: '敹恍飛蝧?, requirement: 10, reward: 15, icon: '??, type: 'performance', description: '??10???∴?撅敹恍飛蝧?? },
+      { id: 'accuracy_master', name: '皞Ⅱ憭批葦', requirement: 20, reward: 25, icon: '?', type: 'performance', description: '??20???∴?撅皞Ⅱ?飛蝧?? },
+      { id: 'combo_king', name: '???銋?', requirement: 15, reward: 30, icon: '?', type: 'performance', description: '??15???∴?撅????賢?' },
+      // ?啣?嚗??⊥?撠?
+      { id: 'fill_beginner', name: '憛怎征?唳?', requirement: 1, reward: 5, icon: '??', type: 'fill', description: '摰?蝚砌?甈∪‵蝛箸??? },
+      { id: 'fill_regular', name: '憛怎征撣詨恥', requirement: 10, reward: 20, icon: '??', type: 'fill', description: '摰?10甈∪‵蝛箸??? },
+      { id: 'fill_expert', name: '憛怎征撠振', requirement: 50, reward: 80, icon: '??', type: 'fill', description: '摰?50甈∪‵蝛箸??? },
+      { id: 'fill_master', name: '憛怎征憭批葦', requirement: 100, reward: 150, icon: '??', type: 'fill', description: '摰?100甈∪‵蝛箸??? },
+      { id: 'fill_perfect', name: '摰?憛怎征', requirement: 1, reward: 30, icon: '?', type: 'fill', description: '?典‵蝛箸??唬葉?脣?皛踹?' },
+      { id: 'fill_speed', name: '敹恍‵蝛?, requirement: 5, reward: 25, icon: '??, type: 'fill', description: '??甈∪‵蝛箸??唬葉撟喳???撠15蝘? },
+      { id: 'fill_streak', name: '???憛怎征', requirement: 7, reward: 40, icon: '?', type: 'fill', description: '???7憭拙??‵蝛箸??? },
+      { id: 'fill_vocab', name: '閰?憛怎征', requirement: 100, reward: 60, icon: '??', type: 'fill', description: '?典‵蝛箸??唬葉蝑?100?摮? },
+      // ?啣?嚗摮?鈭箸?撠?
+      { id: 'vocab_beginner', name: '?桀??唳?', requirement: 10, reward: 15, icon: '??', type: 'vocabulary', description: '蝑?10?摮?摮????桀?摮貊?銋?' },
+      { id: 'vocab_regular', name: '?桀?撣詨恥', requirement: 50, reward: 40, icon: '??', type: 'vocabulary', description: '蝑?50?摮?摮?撅摮貊??望?' },
+      { id: 'vocab_expert', name: '?桀?撠振', requirement: 100, reward: 80, icon: '??', type: 'vocabulary', description: '蝑?100?摮?摮???桀?撠振' },
+      { id: 'vocab_master', name: '?桀?憭批葦', requirement: 200, reward: 150, icon: '??', type: 'vocabulary', description: '蝑?200?摮?摮???桀?憭批葦' },
+      { id: 'vocab_400', name: '?桀??犖', requirement: 400, reward: 250, icon: '??', type: 'vocabulary', description: '蝑?400?摮?摮?撅????敶?? },
+      { id: 'vocab_800', name: '?桀???, requirement: 800, reward: 400, icon: '??', type: 'vocabulary', description: '蝑?800?摮?摮???桀?摮貊????? },
+      { id: 'vocab_1000', name: '?桀??喳?', requirement: 1000, reward: 600, icon: '??', type: 'vocabulary', description: '蝑?1000?摮?摮???桀?摮貊???撜啣??? },
+      { id: 'vocab_1200', name: '?桀?蟡店', requirement: 1200, reward: 800, icon: '??', type: 'vocabulary', description: '蝑?1200?摮?摮??菟摮飛蝧?蟡店?唾牧' },
+      { id: 'vocab_legend', name: '?桀??喳?', requirement: 500, reward: 300, icon: '??', type: 'vocabulary', description: '蝑?500?摮?摮???桀??喳?' },
+      // 撣?蟡???停
+      { id: 'pass_zeus', name: '??摰?', requirement: 1, reward: 100, icon: '??, type: 'greek', description: '??摰?嚗??∪予蝛箄??琿????, rewardRange: [100,150] },
+      { id: 'pass_hera', name: '??韏急??', requirement: 1, reward: 100, icon: '??', type: 'greek', description: '??韏急??嚗???憪餉?摰嗅滬????, rewardRange: [100,150] },
+      { id: 'pass_poseidon', name: '??瘜Ｗ?????, requirement: 1, reward: 100, icon: '??', type: 'greek', description: '??瘜Ｗ????∴??瘚瑟??????', rewardRange: [100,150] },
+      { id: 'pass_demeter', name: '??敺◢敹喲???, requirement: 1, reward: 100, icon: '?', type: 'greek', description: '??敺◢敹喲??∴?擃?颲脫平??擖?蟡?', rewardRange: [100,150] },
+      { id: 'pass_athena', name: '???憡???, requirement: 1, reward: 100, icon: '??', type: 'greek', description: '???憡??∴??脣??箸??亦??', rewardRange: [100,150] },
+      { id: 'pass_apollo', name: '???踵郭蝢???, requirement: 1, reward: 100, icon: '?儭?, type: 'greek', description: '???踵郭蝢??∴?瘝絕???璅?瘣旨', rewardRange: [100,150] },
+      { id: 'pass_aphrodite', name: '???輯??輸?????, requirement: 1, reward: 100, icon: '??', type: 'greek', description: '???輯??輸????∴?????蝢???', rewardRange: [100,150] },
+      { id: 'pass_ares', name: '???輻??舫???, requirement: 1, reward: 100, icon: '??', type: 'greek', description: '???輻??舫??∴?擃??啁??瘞????', rewardRange: [100,150] },
+      { id: 'pass_artemis', name: '???踵?撖?', requirement: 1, reward: 100, icon: '?', type: 'greek', description: '???踵?撖?嚗??∠?菔??漁?尼蝘?, rewardRange: [100,150] },
+      { id: 'pass_hades', name: '???羲?舫???, requirement: 1, reward: 100, icon: '??', type: 'greek', description: '???羲?舫??∴??Ｙ揣?亦??香鈭∠???', rewardRange: [100,150] },
+      { id: 'pass_hephaestus', name: '??韏怨?舀??舫???, requirement: 1, reward: 100, icon: '?', type: 'greek', description: '??韏怨?舀??舫??∴?摮貊???撌亥?????, rewardRange: [100,150] },
+      { id: 'pass_hermes', name: '??韏怎憓冽?', requirement: 1, reward: 100, icon: '??, type: 'greek', description: '??韏怎憓冽?嚗?撽漲?縑雿輻?雿踹', rewardRange: [100,150] },
+      { id: 'pass_hestia', name: '??韏急???', requirement: 1, reward: 100, icon: '?', type: 'greek', description: '??韏急???嚗????怨?摰嗅滬?澈??, rewardRange: [100,150] },
+      { id: 'pass_dionysus', name: '????撠潛揣?舫???, requirement: 1, reward: 100, icon: '?', type: 'greek', description: '????撠潛揣?舫??∴?擃?????甇∠?璅閎', rewardRange: [100,150] },
+      { id: 'pass_eros', name: '?????舫???, requirement: 1, reward: 100, icon: '??', type: 'greek', description: '?????舫??∴????????擳?', rewardRange: [100,150] },
+      { id: 'pass_persephone', name: '????喳?蝳??', requirement: 1, reward: 100, icon: '?', type: 'greek', description: '????喳?蝳??嚗蝝Ｘ蟡??亙????澈隞?, rewardRange: [100,150] },
+      { id: 'article_practice_3', name: '??蝺渡??唳?', requirement: 1, reward: 20, icon: '??', type: 'article', description: '摰?1蝭??蝡毀蝧?撅?梯??神雿祕?? },
+      { id: 'article_level_1', name: '??蝺渡??飛??, requirement: 1, reward: 30, icon: '??', type: 'article', description: '??蝚???蝡毀蝧??∴????梯?銋?' },
+      { id: 'article_level_2', name: '??蝺渡??脤???, requirement: 1, reward: 50, icon: '??', type: 'article', description: '??蝚???蝡毀蝧??∴?撅摮貊??望?' },
+      { id: 'article_level_3', name: '??蝺渡?撠振', requirement: 1, reward: 80, icon: '??', type: 'article', description: '??蝚???蝡毀蝧??∴???梯?撠振' },
+      { id: 'article_level_4', name: '??蝺渡?憭批葦', requirement: 1, reward: 120, icon: '??', type: 'article', description: '??蝚???蝡毀蝧??∴???梯?憭批葦' },
+      { id: 'article_level_5', name: '??蝺渡???, requirement: 1, reward: 150, icon: '??', type: 'article', description: '??蝚???蝡毀蝧??∴???梯??? },
+      { id: 'article_level_6', name: '??蝺渡??喳?', requirement: 1, reward: 200, icon: '??', type: 'article', description: '??蝚???蝡毀蝧??∴??菟霈?喳?' },
+      { id: 'article_level_7', name: '??蝺渡?蟡店', requirement: 1, reward: 250, icon: '??', type: 'article', description: '??蝚???蝡毀蝧??∴??蟡店憓?' },
+      { id: 'article_level_8', name: '??蝺渡??喳?', requirement: 1, reward: 300, icon: '??', type: 'article', description: '??蝚???蝡毀蝧??∴???梯??喳?' },
+      { id: 'article_level_9', name: '??蝺渡???, requirement: 1, reward: 350, icon: '??, type: 'article', description: '??蝚???蝡毀蝧??∴???梯??? },
+      { id: 'article_level_10', name: '??蝺渡?蟡?', requirement: 1, reward: 400, icon: '?', type: 'article', description: '??蝚?0??蝡毀蝧??∴??澈?梯?蟡?' },
+      { id: 'article_level_11', name: '??蝺渡??劓', requirement: 1, reward: 450, icon: '潃?, type: 'article', description: '??蝚?1??蝡毀蝧??∴?憒?颲啗?' },
+      { id: 'article_level_12', name: '??蝺渡??瘝?, requirement: 1, reward: 500, icon: '??', type: 'article', description: '??蝚?2??蝡毀蝧??∴?頝刻??瘝喟??? },
+      { id: 'article_level_13', name: '??蝺渡?摰?', requirement: 1, reward: 550, icon: '??', type: 'article', description: '??蝚?3??蝡毀蝧??∴??Ｙ揣摰?憟抒?' },
+      { id: 'article_level_14', name: '??蝺渡??征', requirement: 1, reward: 600, icon: '??, type: 'article', description: '??蝚?4??蝡毀蝧??∴???征銋?' },
+      { id: 'article_level_15', name: '??蝺渡?蝬剖漲', requirement: 1, reward: 650, icon: '?', type: 'article', description: '??蝚?5??蝡毀蝧??∴?蝒蝬剖漲憯?' },
+      { id: 'article_level_16', name: '??蝺渡?甈∪?', requirement: 1, reward: 700, icon: '??', type: 'article', description: '??蝚?6??蝡毀蝧??∴?蝛踵╲甈∪?銋?' },
+      { id: 'article_level_17', name: '??蝺渡??征', requirement: 1, reward: 750, icon: '??, type: 'article', description: '??蝚?7??蝡毀蝧??∴?敺??征瘛望殿' },
+      { id: 'article_level_18', name: '??蝺渡?瘛瑟?', requirement: 1, reward: 800, icon: '?儭?, type: 'article', description: '??蝚?8??蝡毀蝧??∴?擏早瘛瑟?銋?' },
+      { id: 'article_level_19', name: '??蝺渡?蝘拙?', requirement: 1, reward: 850, icon: '??', type: 'article', description: '??蝚?9??蝡毀蝧??∴?撱箇?蝘拙?瘜?' },
+      { id: 'article_level_20', name: '??蝺渡?撟唾﹛', requirement: 1, reward: 900, icon: '??', type: 'article', description: '??蝚?0??蝡毀蝧??∴??撟唾﹛銋?' },
+      { id: 'article_level_21', name: '??蝺渡??箸', requirement: 1, reward: 950, icon: '??', type: 'article', description: '??蝚?1??蝡毀蝧??∴??脣??∩??箸' },
+      { id: 'article_level_22', name: '??蝺渡??亥?', requirement: 1, reward: 1000, icon: '??', type: 'article', description: '??蝚?2??蝡毀蝧??∴?蝛敞瘚拍霅? },
+      { id: 'article_level_23', name: '??蝺渡???', requirement: 1, reward: 1050, icon: '?', type: 'article', description: '??蝚?3??蝡毀蝧??∴?????憟抒儔' },
+      { id: 'article_level_24', name: '??蝺渡??內', requirement: 1, reward: 1100, icon: '??, type: 'article', description: '??蝚?4??蝡毀蝧??∴??脣?蟡??內' },
+      { id: 'article_level_25', name: '??蝺渡?閬粹?', requirement: 1, reward: 1150, icon: '??儭?, type: 'article', description: '??蝚?5??蝡毀蝧??∴?閬粹??批瞏' },
+      { id: 'article_level_26', name: '??蝺渡?頞?', requirement: 1, reward: 1200, icon: '??', type: 'article', description: '??蝚?6??蝡毀蝧??∴?頞??芣?璆菟?' },
+      { id: 'article_level_27', name: '??蝺渡??', requirement: 1, reward: 1250, icon: '漎?', type: 'article', description: '??蝚?7??蝡毀蝧??∴???敺?' },
+      { id: 'article_level_28', name: '??蝺渡?瘨?', requirement: 1, reward: 1300, icon: '?', type: 'article', description: '??蝚?8??蝡毀蝧??∴?蝬風瘨???' },
+      { id: 'article_level_29', name: '??蝺渡?瘞豢?', requirement: 1, reward: 1350, icon: '?橘?', type: 'article', description: '??蝚?9??蝡毀蝧??∴?閫豢瘞豢?銋?' },
+      { id: 'article_level_30', name: '??蝺渡?銝', requirement: 1, reward: 1400, icon: '??', type: 'article', description: '??蝚?0??蝡毀蝧??∴??停銝?喳?' },
+      { id: 'article_level_31', name: '??蝺渡?蟡店', requirement: 1, reward: 1450, icon: '??儭?, type: 'article', description: '??蝚?1??蝡毀蝧??∴??詨神蟡店蝭?' },
+      { id: 'article_level_32', name: '??蝺渡??唾牧', requirement: 1, reward: 1500, icon: '??', type: 'article', description: '??蝚?2??蝡毀蝧??∴???唾牧摮' },
+      { id: 'article_level_33', name: '??蝺渡??脰帘', requirement: 1, reward: 1550, icon: '??', type: 'article', description: '??蝚?3??蝡毀蝧??∴??菟閰拍?蝡? },
+      { id: 'article_level_34', name: '??蝺渡?蟡?', requirement: 1, reward: 1600, icon: '?', type: 'article', description: '??蝚?4??蝡毀蝧??∴??脣?蟡?蟡?' },
+      { id: 'article_level_35', name: '??蝺渡?憭拚', requirement: 1, reward: 1650, icon: '??', type: 'article', description: '??蝚?5??蝡毀蝧??∴??憭拚銋犖' },
+      { id: 'article_level_36', name: '??蝺渡??賡?', requirement: 1, reward: 1700, icon: '?', type: 'article', description: '??蝚?6??蝡毀蝧??∴???賡?銋憚' },
+      { id: 'article_level_37', name: '??蝺渡???', requirement: 1, reward: 1750, icon: '??', type: 'article', description: '??蝚?7??蝡毀蝧??∴????尼蝘? },
+      { id: 'article_level_38', name: '??蝺渡?頛芾艘', requirement: 1, reward: 1800, icon: '??', type: 'article', description: '??蝚?8??蝡毀蝧??∴?頞頛芾艘??' },
+      { id: 'article_level_39', name: '??蝺渡?蝯扔', requirement: 1, reward: 1850, icon: '??, type: 'article', description: '??蝚?9??蝡毀蝧??∴??蝯扔憓?' },
+      { id: 'article_level_40', name: '??蝺渡??∩?', requirement: 1, reward: 2000, icon: '??', type: 'article', description: '??蝚?0??蝡毀蝧??∴??停?∩??喳?' },
+      { id: 'article_perfect_score', name: '摰??梯???, requirement: 1, reward: 100, icon: '?', type: 'article', description: '?冽?蝡毀蝧葉?脣?皛踹?嚗??曉?頞??梯??賢?' },
+    ];
+    // ???砍?脣漲
+    let ownedCards = JSON.parse(localStorage.getItem('ownedCards') || '{}');
+    let shards = JSON.parse(localStorage.getItem('cardShards') || '{}');
+    // ????蝯?
+    const groupTitles = {
+      collection: '?? ?園??脣漲',
+      rarity: '? 蝔?漲撠移',
+      shards: '?? 蝣?蝟餌絞',
+      special: '?? ?寞??停',
+      daily: '?? 瘥蝪賢',
+      stars: '潃????園?',
+      performance: '???銵函',
+      fill: '?? 憛怎征?',
+      vocabulary: '?? ?桀??犖',
+      zodiac: '?? ?漣?',
+      greek: '??儭?撣?蟡?',
+      ssr_special: '?? SSR 撠?',
+      article: '?? ??蝺渡?',
+    };
+    
+    // ?啣?嚗?銝剔???
+    let currentFilter = 'all';
+    
+    // ?啣?嚗?撠勗?蝒???
+    function showAchievementModal(achievement, reward, totalStars) {
+      // ?剜???單?
+      playStarSound();
+      
+      const modal = document.getElementById('achievementModal');
+      const icon = document.getElementById('modalIcon');
+      const title = document.getElementById('modalTitle');
+      const description = document.getElementById('modalDescription');
+      const rewardText = document.getElementById('modalRewardText');
+      const totalText = document.getElementById('modalTotal');
+      
+      // ?湔敶??批捆
+      icon.textContent = achievement.icon;
+      title.textContent = achievement.name;
+      description.textContent = achievement.description;
+      rewardText.textContent = `???嚗?{reward} 憿;
+      totalText.textContent = `?嗅???蝮賣嚗?{totalStars} 憿;
+      
+      // 憿舐內敶?
+      modal.style.display = 'flex';
+      
+      // ?萄遣蝎???
+      createParticles();
+      createConfetti();
+      
+      // 瘛餃?暺?憭???
+      modal.onclick = function(e) {
+        if (e.target === modal) {
+          closeAchievementModal();
+        }
+      };
+    }
+    
+    function closeAchievementModal() {
+      const modal = document.getElementById('achievementModal');
+      modal.style.display = 'none';
+      
+      // 皜蝎?
+      const particles = document.getElementById('particles');
+      particles.innerHTML = '';
+      
+      // 蝘駁暺?鈭辣
+      modal.onclick = null;
+    }
+    
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      particlesContainer.innerHTML = '';
+      
+      const colors = ['#ffd700', '#00ffff', '#a259ff', '#ff6b6b', '#00ff00', '#ffaa00'];
+      const shapes = ['circle', 'square', 'triangle'];
+      
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 3 + 's';
+        particle.style.animationDuration = (3 + Math.random() * 2) + 's';
+        
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.backgroundColor = color;
+        particle.style.boxShadow = `0 0 15px ${color}`;
+        
+        // ?冽?憭批?
+        const size = 4 + Math.random() * 6;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+        
+        particlesContainer.appendChild(particle);
+      }
+    }
+    
+    function createConfetti() {
+      const particlesContainer = document.getElementById('particles');
+      const colors = ['#ffd700', '#00ffff', '#a259ff', '#ff6b6b', '#00ff00', '#ffaa00', '#ff8800'];
+      
+      for (let i = 0; i < 25; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDelay = Math.random() * 2 + 's';
+        confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
+        
+        // ?冽?敶Ｙ?
+        const shape = Math.random() > 0.5 ? 'circle' : 'square';
+        if (shape === 'circle') {
+          confetti.style.borderRadius = '50%';
+        }
+        
+        // ?冽?憭批?
+        const size = 8 + Math.random() * 8;
+        confetti.style.width = size + 'px';
+        confetti.style.height = size + 'px';
+        
+        particlesContainer.appendChild(confetti);
+      }
+    }
+    
+    function playStarSound() {
+      try {
+        const starSound = new Audio('sound/shine.mp3');
+        starSound.currentTime = 0;
+        starSound.volume = 0.6;
+        starSound.play().catch(e => {
+          console.log('?⊥??剜???單?:', e);
+        });
+      } catch (e) {
+        console.log('???單??剜憭望?:', e);
+      }
+    }
+    
+    // ?啣?嚗葡?絞閮?閮?
+    function renderStats() {
+      const statsGrid = document.getElementById('statsGrid');
+      const claimed = getClaimedAchievements();
+      
+      const totalAchievements = achievements.length;
+      const unlockedAchievements = achievements.filter(ach => checkAchievementUnlocked(ach)).length;
+      const claimedAchievements = claimed.length;
+      const totalRewards = claimed.reduce((sum, id) => {
+        const ach = achievements.find(a => a.id === id);
+        return sum + (ach ? ach.reward : 0);
+      }, 0);
+      
+      const stats = [
+        { number: totalAchievements, label: '蝮賣?撠望' },
+        { number: unlockedAchievements, label: '撌脤??? },
+        { number: claimedAchievements, label: '撌脤??? },
+        { number: totalRewards, label: '蝮賜??菜??? }
+      ];
+      
+      statsGrid.innerHTML = '';
+      stats.forEach(stat => {
+        const statItem = document.createElement('div');
+        statItem.className = 'stat-item';
+        statItem.innerHTML = `
+          <div class="stat-value">${stat.number}</div>
+          <div class="stat-label">${stat.label}</div>
+        `;
+        statsGrid.appendChild(statItem);
+      });
+    }
+    
+    // ?啣?嚗?啁蜇??憿舐內
+    function updateTotalStarsDisplay() {
+      const totalStars = parseInt(localStorage.getItem('totalStars') || '0');
+      const starsDisplay = document.getElementById('totalStarsDisplay');
+      if (starsDisplay) {
+        starsDisplay.textContent = totalStars;
+      }
+    }
+    
+    // ?啣?嚗葡?祟?豢???
+    function renderFilterButtons() {
+      const filterButtons = document.getElementById('filterButtons');
+      filterButtons.innerHTML = '';
+      
+      // ?券??
+      const allBtn = document.createElement('button');
+      allBtn.className = 'filter-btn all active';
+      allBtn.textContent = '?? ?券?停';
+      allBtn.onclick = () => setFilter('all');
+      
+      // 瘛餃??券?停??部瘜?
+      const allCount = getUnclaimedAchievementsCount();
+      if (allCount > 0) {
+        const allBadge = document.createElement('div');
+        allBadge.className = 'achievement-badge';
+        allBadge.textContent = allCount;
+        allBadge.id = 'badge-all';
+        allBtn.appendChild(allBadge);
+      }
+      
+      filterButtons.appendChild(allBtn);
+      
+      // ??????
+      Object.entries(groupTitles).forEach(([type, title]) => {
+        const btn = document.createElement('button');
+        btn.className = 'filter-btn';
+        btn.textContent = title;
+        btn.onclick = () => setFilter(type);
+        
+        // 瘛餃?閰脣?憿??賊?瘜⊥部
+        const typeCount = getUnclaimedAchievementsCountByType(type);
+        if (typeCount > 0) {
+          const typeBadge = document.createElement('div');
+          typeBadge.className = 'achievement-badge';
+          typeBadge.textContent = typeCount;
+          typeBadge.id = `badge-${type}`;
+          btn.appendChild(typeBadge);
+        }
+        
+        filterButtons.appendChild(btn);
+      });
+    }
+    
+    // ?啣?嚗?蝞?????停?賊?
+    function getUnclaimedAchievementsCount() {
+      const claimed = getClaimedAchievements();
+      return achievements.filter(ach => 
+        checkAchievementUnlocked(ach) && !claimed.includes(ach.id)
+      ).length;
+    }
+    
+    // ?啣?嚗?蝞摰?????停?賊?
+    function getUnclaimedAchievementsCountByType(type) {
+      const claimed = getClaimedAchievements();
+      return achievements.filter(ach => 
+        ach.type === type && checkAchievementUnlocked(ach) && !claimed.includes(ach.id)
+      ).length;
+    }
+    
+    // ?啣?嚗?唳??部瘜⊥??
+    function updateAllBadges() {
+      // ?湔?券?停瘜⊥部
+      const allBadge = document.getElementById('badge-all');
+      const allCount = getUnclaimedAchievementsCount();
+      
+      if (allCount > 0) {
+        if (allBadge) {
+          allBadge.textContent = allCount;
+        } else {
+          // 憒?瘝?瘜⊥部雿?冽??停嚗撱箸部瘜?
+          const allBtn = document.querySelector('.filter-btn.all');
+          if (allBtn) {
+            const newBadge = document.createElement('div');
+            newBadge.className = 'achievement-badge';
+            newBadge.textContent = allCount;
+            newBadge.id = 'badge-all';
+            allBtn.appendChild(newBadge);
+          }
+        }
+      } else if (allBadge) {
+        allBadge.remove();
+      }
+      
+      // ?湔??憿部瘜?
+      Object.entries(groupTitles).forEach(([type, title]) => {
+        const typeBadge = document.getElementById(`badge-${type}`);
+        const typeCount = getUnclaimedAchievementsCountByType(type);
+        
+        if (typeCount > 0) {
+          if (typeBadge) {
+            typeBadge.textContent = typeCount;
+          } else {
+            // 憒?瘝?瘜⊥部雿?冽??停嚗撱箸部瘜?
+            const typeBtns = document.querySelectorAll('.filter-btn:not(.all)');
+            typeBtns.forEach(btn => {
+              if (btn.textContent === title) {
+                const newBadge = document.createElement('div');
+                newBadge.className = 'achievement-badge';
+                newBadge.textContent = typeCount;
+                newBadge.id = `badge-${type}`;
+                btn.appendChild(newBadge);
+              }
+            });
+          }
+        } else if (typeBadge) {
+          typeBadge.remove();
+        }
+      });
+      
+      // ?湔璅??詨?瘜⊥部
+      updateTitleBadge();
+    }
+    
+    // ?啣?嚗?唳?憿摮部瘜?
+    function updateTitleBadge() {
+      const titleBadge = document.getElementById('totalClaimableBadge');
+      const totalCount = getUnclaimedAchievementsCount();
+      
+      if (totalCount > 0) {
+        titleBadge.textContent = totalCount;
+        titleBadge.style.display = 'flex';
+      } else {
+        titleBadge.style.display = 'none';
+      }
+    }
+    
+    // ?啣?嚗身蝵桃祟?豢?隞?
+    function setFilter(filterType) {
+      currentFilter = filterType;
+      
+      // ?湔?????
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // ?曉撠???銝西身?榮ctive
+      if (filterType === 'all') {
+        document.querySelector('.filter-btn.all').classList.add('active');
+      } else {
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+          if (btn.textContent === groupTitles[filterType]) {
+            btn.classList.add('active');
+          }
+        });
+      }
+      
+      // ?皜脫??停
+      renderBadges();
+    }
+    
+    function getCardsByRarity(rarity) {
+      if (!window.allCards) return [];
+      return allCards.filter(card => card.rarity === rarity && ownedCards[card.word]);
+    }
+    
+    // ?啣?嚗?蝞?撠梢脣漲
+    function getAchievementProgress(ach) {
+      let current = 0;
+      switch (ach.type) {
+        case 'collection':
+        case 'special':
+          current = Object.keys(ownedCards).length;
+          break;
+        case 'rarity':
+          current = getCardsByRarity(ach.rarity).length;
+          break;
+        case 'shards':
+          current = Object.values(shards).reduce((sum, c) => sum + c, 0);
+          break;
+        case 'daily':
+          current = parseInt(localStorage.getItem('loginDays') || '0');
+          break;
+        case 'stars':
+          current = parseInt(localStorage.getItem('totalStars') || '0');
+          break;
+        case 'performance':
+          // 閮??????⊥???箸銝??憿????活?賂?
+          const fillGames = parseInt(localStorage.getItem('fillGamesCompleted') || '0');
+          const cardGames = parseInt(localStorage.getItem('cardGamesCompleted') || '0');
+          const quizGames = parseInt(localStorage.getItem('quizGamesCompleted') || '0');
+          const spellingGames = parseInt(localStorage.getItem('spellingGamesCompleted') || '0');
+          const matchingGames = parseInt(localStorage.getItem('matchingGamesCompleted') || '0');
+          const timeChallengeGames = parseInt(localStorage.getItem('timeChallengeGamesCompleted') || '0');
+          current = fillGames + cardGames + quizGames + spellingGames + matchingGames + timeChallengeGames;
+          break;
+        case 'fill':
+          switch (ach.id) {
+            case 'fill_beginner':
+            case 'fill_regular':
+            case 'fill_expert':
+            case 'fill_master':
+              current = parseInt(localStorage.getItem('fillGamesCompleted') || '0');
+              break;
+            case 'fill_perfect':
+              current = parseInt(localStorage.getItem('fillPerfectScores') || '0');
+              break;
+            case 'fill_speed':
+              current = parseInt(localStorage.getItem('fillSpeedGames') || '0');
+              break;
+            case 'fill_streak':
+              current = parseInt(localStorage.getItem('fillStreakDays') || '0');
+              break;
+            case 'fill_vocab':
+              current = parseInt(localStorage.getItem('fillCorrectWords') || '0');
+              break;
+            default:
+              current = 0;
+          }
+          break;
+        case 'zodiac':
+          // ?漣??停嚗炎?亥府?漣?臬撌脤?
+          const zodiacKey = ach.id.replace('pass_', '');
+          const passedAtlas = JSON.parse(localStorage.getItem('passed_atlas') || '[]');
+          current = passedAtlas.includes(zodiacKey) ? 1 : 0;
+          break;
+        case 'greek':
+          // 撣?蟡???停嚗炎?亥府蟡???臬撌脤?
+          const greekKey = ach.id.replace('pass_', '');
+          const passedGreek = JSON.parse(localStorage.getItem('passed_greek') || '[]');
+          current = passedGreek.includes(greekKey) ? 1 : 0;
+          break;
+        case 'vocabulary':
+          // ?桀??犖?停嚗?蝞?撠??桀??砍摮??
+          current = parseInt(localStorage.getItem('vocabularyCorrectWords') || '0');
+          break;
+        case 'ssr_special':
+          // SSR ?寞??停嚗炎?交?血歇閫??閰?SSR ?∠?
+          const cardWord = ach.id.replace('ssr_', '');
+          current = ownedCards[cardWord] ? 1 : 0;
+          break;
+        case 'article':
+          // ??蝺渡??停嚗?蝞?蝡毀蝧?脣漲
+          switch (ach.id) {
+            case 'article_practice_3':
+              // 瑼Ｘ??蝺渡?摰?甈⊥
+              current = parseInt(localStorage.getItem('articlePracticeCount') || '0');
+              break;
+            case 'article_perfect_score':
+              // 瑼Ｘ皛踹?甈⊥
+              const perfectScores = JSON.parse(localStorage.getItem('readingPerfectScores') || '[]');
+              current = perfectScores.length;
+              break;
+            default:
+              // 瑼Ｘ?孵?????脣漲
+              if (ach.id.startsWith('article_level_')) {
+                const levelNumber = parseInt(ach.id.replace('article_level_', ''));
+                const completedLevels = JSON.parse(localStorage.getItem('completedReadingLevels') || '[]');
+                current = completedLevels.includes(levelNumber) ? 1 : 0;
+              } else {
+                current = 0;
+              }
+              break;
+          }
+          break;
+        default:
+          current = 0;
+      }
+      return Math.min(current, ach.requirement);
+    }
+    
+    // ?啣?嚗?敺脣漲?曉?瘥?
+    function getProgressPercentage(ach) {
+      const current = getAchievementProgress(ach);
+      return Math.min((current / ach.requirement) * 100, 100);
+    }
+    
+    function checkAchievementUnlocked(ach) {
+      switch (ach.type) {
+        case 'collection':
+        case 'special':
+          return Object.keys(ownedCards).length >= ach.requirement;
+        case 'rarity':
+          return getCardsByRarity(ach.rarity).length >= ach.requirement;
+        case 'shards':
+          return Object.values(shards).reduce((sum, c) => sum + c, 0) >= ach.requirement;
+        case 'daily':
+          return parseInt(localStorage.getItem('loginDays') || '0') >= ach.requirement;
+        case 'stars':
+          return parseInt(localStorage.getItem('totalStars') || '0') >= ach.requirement;
+        case 'performance':
+          // 閮??????⊥???箸銝??憿????活?賂?
+          const fillGames = parseInt(localStorage.getItem('fillGamesCompleted') || '0');
+          const cardGames = parseInt(localStorage.getItem('cardGamesCompleted') || '0');
+          const quizGames = parseInt(localStorage.getItem('quizGamesCompleted') || '0');
+          const spellingGames = parseInt(localStorage.getItem('spellingGamesCompleted') || '0');
+          const matchingGames = parseInt(localStorage.getItem('matchingGamesCompleted') || '0');
+          const timeChallengeGames = parseInt(localStorage.getItem('timeChallengeGamesCompleted') || '0');
+          return (fillGames + cardGames + quizGames + spellingGames + matchingGames + timeChallengeGames) >= ach.requirement;
+        case 'fill':
+          switch (ach.id) {
+            case 'fill_beginner':
+            case 'fill_regular':
+            case 'fill_expert':
+            case 'fill_master':
+              return parseInt(localStorage.getItem('fillGamesCompleted') || '0') >= ach.requirement;
+            case 'fill_perfect':
+              return parseInt(localStorage.getItem('fillPerfectScores') || '0') >= ach.requirement;
+            case 'fill_speed':
+              return parseInt(localStorage.getItem('fillSpeedGames') || '0') >= ach.requirement;
+            case 'fill_streak':
+              return parseInt(localStorage.getItem('fillStreakDays') || '0') >= ach.requirement;
+            case 'fill_vocab':
+              return parseInt(localStorage.getItem('fillCorrectWords') || '0') >= ach.requirement;
+            default:
+              return false;
+          }
+        case 'zodiac':
+          // ?漣??停嚗炎?亥府?漣?臬撌脤?
+          const zodiacKey = ach.id.replace('pass_', '');
+          const passedAtlas = JSON.parse(localStorage.getItem('passed_atlas') || '[]');
+          return passedAtlas.includes(zodiacKey);
+        case 'greek':
+          // 撣?蟡???停嚗炎?亥府蟡???臬撌脤?
+          const greekKey = ach.id.replace('pass_', '');
+          const passedGreek = JSON.parse(localStorage.getItem('passed_greek') || '[]');
+          return passedGreek.includes(greekKey);
+        case 'vocabulary':
+          // ?桀??犖?停嚗?蝞?撠??桀??砍摮??
+          return parseInt(localStorage.getItem('vocabularyCorrectWords') || '0') >= ach.requirement;
+        case 'ssr_special':
+          // SSR ?寞??停嚗炎?交?血歇閫??閰?SSR ?∠?
+          const cardWord = ach.id.replace('ssr_', '');
+          return ownedCards[cardWord] ? 1 : 0;
+        case 'article':
+          // ??蝺渡??停嚗炎?交?蝡毀蝧??撠?
+          switch (ach.id) {
+            case 'article_practice_3':
+              // 瑼Ｘ?臬摰???蝡毀蝧?
+              const articlePracticeCount = parseInt(localStorage.getItem('articlePracticeCount') || '0');
+              return articlePracticeCount >= ach.requirement;
+            case 'article_perfect_score':
+              // 瑼Ｘ?臬?脣??遛??
+              const perfectScores = JSON.parse(localStorage.getItem('readingPerfectScores') || '[]');
+              return perfectScores.length >= ach.requirement;
+            default:
+              // 瑼Ｘ?孵?????停
+              if (ach.id.startsWith('article_level_')) {
+                const levelNumber = parseInt(ach.id.replace('article_level_', ''));
+                const completedLevels = JSON.parse(localStorage.getItem('completedReadingLevels') || '[]');
+                return completedLevels.includes(levelNumber);
+              }
+              return false;
+          }
+        default:
+          return false;
+      }
+    }
+
+    // ====== ??????摩 ======
+    function getClaimedAchievements() {
+      return JSON.parse(localStorage.getItem('claimedAchievements') || '[]');
+    }
+    function setClaimedAchievements(arr) {
+      localStorage.setItem('claimedAchievements', JSON.stringify(arr));
+    }
+    function claimAchievement(ach) {
+      const claimed = getClaimedAchievements();
+      if (claimed.includes(ach.id)) {
+        alert(`?典歇蝬??? ${ach.name} ???萎?嚗);
+        return;
+      }
+      let stars = parseInt(localStorage.getItem('totalStars') || '0');
+      let reward = ach.reward;
+      // ?漣?停?寞???
+      if (ach.type === 'zodiac') {
+        // 撌脤??????貉?? localStorage
+        let zodiacRewards = JSON.parse(localStorage.getItem('zodiacRewards') || '{}');
+        if (!zodiacRewards[ach.id]) {
+          // ?冽?瘙箏??
+          const [min, max] = ach.rewardRange;
+          reward = min === max ? min : Math.floor(Math.random() * (max - min + 1)) + min;
+          zodiacRewards[ach.id] = reward;
+          localStorage.setItem('zodiacRewards', JSON.stringify(zodiacRewards));
+        } else {
+          reward = zodiacRewards[ach.id];
+        }
+      }
+      // 撣?蟡??停?寞???
+      if (ach.type === 'greek') {
+        // 撌脤??????貉?? localStorage
+        let greekRewards = JSON.parse(localStorage.getItem('greekRewards') || '{}');
+        if (!greekRewards[ach.id]) {
+          // ?冽?瘙箏??
+          const [min, max] = ach.rewardRange;
+          reward = min === max ? min : Math.floor(Math.random() * (max - min + 1)) + min;
+          greekRewards[ach.id] = reward;
+          localStorage.setItem('greekRewards', JSON.stringify(greekRewards));
+        } else {
+          reward = greekRewards[ach.id];
+        }
+      }
+      stars += reward;
+      localStorage.setItem('totalStars', stars);
+      claimed.push(ach.id);
+      setClaimedAchievements(claimed);
+      
+      // ?剜???單?
+      playStarSound();
+      
+      // 雿輻?啁?蝢?敶?
+      showAchievementModal(ach, reward, stars);
+      
+      // ?湔?停憿舐內?部瘜⊥??
+      renderBadges();
+      updateAllBadges();
+      updateTotalStarsDisplay();
+      // ?瑼Ｘ?舫???撠梢
+      setTimeout(checkAndShowClaimableNotification, 1000);
+    }
+
+    function renderBadges() {
+      const container = document.getElementById('achievementBadges');
+      container.innerHTML = '';
+      
+      // 蝭拚?停
+      const filteredAchievements = achievements.filter(ach => {
+        if (currentFilter === 'all') return true;
+        return ach.type === currentFilter;
+      });
+      
+      const claimed = getClaimedAchievements();
+      // ??撌脤???摨扳?撠梁??
+      let zodiacRewards = {};
+      try { zodiacRewards = JSON.parse(localStorage.getItem('zodiacRewards') || '{}'); } catch {}
+      // ??撌脤?????蟡?撠梁??
+      let greekRewards = {};
+      try { greekRewards = JSON.parse(localStorage.getItem('greekRewards') || '{}'); } catch {}
+      
+      // ???停嚗?????典??ｇ?撌脤????敺
+      const sortedAchievements = filteredAchievements.sort((a, b) => {
+        const aUnlocked = checkAchievementUnlocked(a);
+        const bUnlocked = checkAchievementUnlocked(b);
+        const aClaimed = claimed.includes(a.id);
+        const bClaimed = claimed.includes(b.id);
+        
+        // ?舫????停??
+        if (aUnlocked && !aClaimed && !(bUnlocked && !bClaimed)) {
+          return -1;
+        }
+        if (bUnlocked && !bClaimed && !(aUnlocked && !aClaimed)) {
+          return 1;
+        }
+        
+        // 撌脤????停?敺
+        if (aClaimed && !bClaimed) {
+          return 1;
+        }
+        if (bClaimed && !aClaimed) {
+          return -1;
+        }
+        
+        // 憒??賣撌脤????賣?芷?????憪?摨???
+        return 0;
+      });
+      
+      // 皜脫???敺??停?∠??啁雯?潔葉
+      sortedAchievements.forEach(ach => {
+        const unlocked = checkAchievementUnlocked(ach);
+        const isClaimed = claimed.includes(ach.id);
+        const currentProgress = getAchievementProgress(ach);
+        const progressPercentage = getProgressPercentage(ach);
+        const achievementDetail = document.createElement('div');
+        achievementDetail.className = 'achievement-detail';
+        
+        // ?箏????撠望溶?畾見撘?
+        if (unlocked && !isClaimed) {
+          achievementDetail.classList.add('claimable-achievement');
+        }
+        
+        // ?停璅????
+        const header = document.createElement('div');
+        header.className = 'achievement-header';
+        const icon = document.createElement('div');
+        icon.className = 'achievement-icon';
+        icon.textContent = ach.icon;
+        if (isClaimed) {
+          icon.classList.add('claimed-badge');
+        }
+        const info = document.createElement('div');
+        info.className = 'achievement-info';
+        const name = document.createElement('div');
+        name.className = 'achievement-name';
+        name.textContent = ach.name;
+        const description = document.createElement('div');
+        description.className = 'achievement-description';
+        description.textContent = ach.description;
+        info.appendChild(name);
+        info.appendChild(description);
+        
+        // ?啣?嚗蔣????憒??停???臬蔣??
+        if (ach.youtube) {
+          const videoButton = document.createElement('div');
+          videoButton.className = 'video-button';
+          videoButton.innerHTML = '<span class="video-icon">??/span>';
+          videoButton.title = '閫??蔣??;
+          videoButton.onclick = (e) => {
+            e.stopPropagation();
+            showVideoModal(ach);
+          };
+          achievementDetail.appendChild(videoButton);
+        }
+        
+        // ???蝐?
+        const status = document.createElement('div');
+        status.className = 'achievement-status';
+        if (isClaimed) status.classList.add('status-claimed');
+        else if (unlocked) status.classList.add('status-unlocked');
+        else status.classList.add('status-locked');
+        status.textContent = isClaimed ? '撌脤??? : unlocked ? '?舫??? : '?芷???;
+        
+        header.appendChild(icon);
+        header.appendChild(info);
+        header.appendChild(status);
+        achievementDetail.appendChild(header);
+        
+        // ?脣漲璇?
+        const progressContainer = document.createElement('div');
+        progressContainer.className = 'progress-container';
+        const progressBar = document.createElement('div');
+        progressBar.className = 'progress-bar';
+        progressBar.style.width = progressPercentage + '%';
+        const progressText = document.createElement('div');
+        progressText.className = 'progress-text';
+        progressText.innerHTML = `<span class='current-progress'>${currentProgress}</span> / <span class='required-progress'>${ach.requirement}</span>`;
+        progressContainer.appendChild(progressBar);
+        progressContainer.appendChild(progressText);
+        
+        // ?鞈?
+        const rewardInfo = document.createElement('div');
+        rewardInfo.className = 'reward-info';
+        if (ach.type === 'zodiac') {
+          if (isClaimed) {
+            rewardInfo.innerHTML = `<span>潃?/span><span>?: ${zodiacRewards[ach.id] || '?'} ??</span>`;
+          } else {
+            const [min, max] = ach.rewardRange;
+            rewardInfo.innerHTML = `<span>潃?/span><span>?: ${min === max ? min : `${min}~${max}`} ??</span>`;
+          }
+        } else if (ach.type === 'greek') {
+          if (isClaimed) {
+            rewardInfo.innerHTML = `<span>潃?/span><span>?: ${greekRewards[ach.id] || '?'} ??</span>`;
+          } else {
+            const [min, max] = ach.rewardRange;
+            rewardInfo.innerHTML = `<span>潃?/span><span>?: ${min === max ? min : `${min}~${max}`} ??</span>`;
+          }
+        } else {
+          rewardInfo.innerHTML = `<span>潃?/span><span>?: ${ach.reward} ??</span>`;
+        }
+        
+        // 閰喟敦鞈?????
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'toggle-details';
+        toggleBtn.textContent = '?亦?閰喟敦鞈?';
+        toggleBtn.onclick = function() {
+          const details = this.nextElementSibling;
+          if (details.classList.contains('show')) {
+            details.classList.remove('show');
+            this.textContent = '?亦?閰喟敦鞈?';
+          } else {
+            details.classList.add('show');
+            this.textContent = '?梯?閰喟敦鞈?';
+          }
+        };
+        
+        // 閰喟敦鞈????
+        const details = document.createElement('div');
+        details.className = 'achievement-details';
+        const detailsContent = document.createElement('div');
+        detailsContent.innerHTML = `
+          <div style="margin-bottom: 8px;"><strong>??璇辣嚗?/strong>${ach.description}</div>
+          <div style="margin-bottom: 8px;"><strong>?嗅??脣漲嚗?/strong>${currentProgress} / ${ach.requirement} (${progressPercentage.toFixed(1)}%)</div>
+          <div style="margin-bottom: 8px;"><strong>??批捆嚗?/strong>${ach.type === 'zodiac' ? (isClaimed ? (zodiacRewards[ach.id] || '?') : (ach.rewardRange[0] === ach.rewardRange[1] ? ach.rewardRange[0] : `${ach.rewardRange[0]}~${ach.rewardRange[1]}`)) : ach.type === 'greek' ? (isClaimed ? (greekRewards[ach.id] || '?') : (ach.rewardRange[0] === ach.rewardRange[1] ? ach.rewardRange[0] : `${ach.rewardRange[0]}-${ach.rewardRange[1]}?冽?`)) : ach.reward} 憿???/div>
+          <div><strong>?停憿?嚗?/strong>${groupTitles[ach.type]}</div>
+        `;
+        details.appendChild(detailsContent);
+        
+        achievementDetail.appendChild(progressContainer);
+        achievementDetail.appendChild(rewardInfo);
+        achievementDetail.appendChild(toggleBtn);
+        achievementDetail.appendChild(details);
+        
+        // ????
+        if (unlocked && !isClaimed) {
+          const claimBtn = document.createElement('button');
+          claimBtn.className = 'claim-btn';
+          claimBtn.textContent = '???';
+          claimBtn.onclick = () => claimAchievement(ach);
+          achievementDetail.appendChild(claimBtn);
+        }
+        
+        container.appendChild(achievementDetail);
+      });
+    }
+    
+    // ?啣?嚗炎?乩蒂憿舐內?舫???撠梢
+    function checkAndShowClaimableNotification() {
+      const claimed = getClaimedAchievements();
+      const claimableAchievements = achievements.filter(ach => 
+        checkAchievementUnlocked(ach) && !claimed.includes(ach.id)
+      );
+      
+      if (claimableAchievements.length > 0) {
+        showClaimableNotification(claimableAchievements.length);
+      }
+    }
+    
+    // 憿舐內?舫???撠梢
+    function showClaimableNotification(count) {
+      // 瑼Ｘ?臬撌脩?憿舐內?
+      if (document.getElementById('claimableNotification')) {
+        return;
+      }
+      
+      const notification = document.createElement('div');
+      notification.id = 'claimableNotification';
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #00ff00, #00cc00);
+        color: #000;
+        padding: 15px 20px;
+        border-radius: 15px;
+        box-shadow: 0 0 30px #00ff00;
+        z-index: 10000;
+        text-align: center;
+        min-width: 200px;
+        animation: notificationPop 0.8s cubic-bezier(.68, -0.55, .27, 1.55);
+        border: 2px solid #fff;
+        font-weight: bold;
+        font-size: 1.1rem;
+      `;
+      
+      notification.innerHTML = `
+        <div style="font-size: 2rem; margin-bottom: 8px;">??</div>
+        <div style="margin-bottom: 5px;">??${count} ??撠勗隞仿???</div>
+        <button onclick="this.parentElement.remove()" style="
+          background: rgba(255, 255, 255, 0.3);
+          color: #000;
+          border: none;
+          padding: 5px 10px;
+          border-radius: 5px;
+          cursor: pointer;
+          font-weight: bold;
+          margin-top: 8px;
+        ">??</button>
+      `;
+      
+      // 瘛餃??璅??
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes notificationPop {
+          0% { transform: translateX(100%) scale(0.3); opacity: 0; }
+          50% { transform: translateX(0) scale(1.1); }
+          100% { transform: translateX(0) scale(1); opacity: 1; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      // 瘛餃??圈???
+      document.body.appendChild(notification);
+      
+      // 5蝘??芸???
+      setTimeout(() => {
+        if (notification.parentElement) {
+          notification.remove();
+        }
+      }, 5000);
+    }
+    
+    // ?啣?嚗???擖????
+    function initializeClickFeedback() {
+      const clickSfx = document.getElementById('clickSfx');
+      if (!clickSfx) return;
+
+      const playClickSound = () => {
+        clickSfx.currentTime = 0;
+        clickSfx.volume = 0.5;
+        clickSfx.play().catch(e => console.error("Click sound failed:", e));
+      };
+
+      // ????
+      document.querySelectorAll('.btn, #muteToggle, .achievement-modal-close').forEach(btn => {
+        btn.addEventListener('click', playClickSound);
+      });
+
+      // ????嚗蝙?其?隞嗅?瘣橘?
+      document.getElementById('filterButtons').addEventListener('click', (e) => {
+        if (e.target.matches('.filter-btn')) {
+          playClickSound();
+        }
+      });
+
+      document.getElementById('achievementBadges').addEventListener('click', (e) => {
+        if (e.target.matches('.claim-btn') || e.target.matches('.toggle-details')) {
+          playClickSound();
+        }
+      });
+    }
+    
+    // ?啣?嚗??舫璅???
+    function initializeBackgroundMusic() {
+      const bgm = document.getElementById('bgm');
+      const muteToggle = document.getElementById('muteToggle');
+      if (!bgm || !muteToggle) return;
+
+      bgm.volume = 0.3;
+
+      const playMusic = () => {
+        bgm.play().catch(e => console.error("BGM play failed:", e));
+        muteToggle.textContent = '??';
+        localStorage.setItem('bgmPlaying', 'true');
+      };
+
+      const pauseMusic = () => {
+        bgm.pause();
+        muteToggle.textContent = '??';
+        localStorage.setItem('bgmPlaying', 'false');
+      };
+
+      muteToggle.addEventListener('click', () => {
+        if (bgm.paused) {
+          playMusic();
+        } else {
+          pauseMusic();
+        }
+      });
+
+      // ?頛??甇亦???
+      if (localStorage.getItem('bgmPlaying') === 'true') {
+        bgm.currentTime = parseFloat(localStorage.getItem('bgmTime') || '0');
+        playMusic();
+      } else {
+        pauseMusic();
+      }
+
+      // ?ａ???摮???
+      window.addEventListener('beforeunload', () => {
+        localStorage.setItem('bgmTime', bgm.currentTime.toString());
+      });
+    }
+
+    // 靽格嚗??Ｚ??交?????????
+    window.addEventListener('load', function() {
+      initializeClickFeedback();
+      initializeBackgroundMusic();
+      addSSRVideosToAchievements(); // ?啣?嚗 SSR ?∠?瘛餃?敶梁??停
+      renderFilterButtons();
+      renderStats();
+      renderBadges();
+      updateTotalStarsDisplay();
+      updateAllBadges(); // 蝣箔?瘜⊥部?賊?甇?Ⅱ憿舐內
+    });
+
+    // ?芸??Ｙ?20???⊥?撠梧???atlas.html?身閮?
+    (function() {
+      const atlasCategories = [
+        { key: 'aries', name: '?賜?摨?, icon: '??, rewardRange: [5,5] },
+        { key: 'taurus', name: '??摨?, icon: '??, rewardRange: [5,5] },
+        { key: 'gemini', name: '??摨?, icon: '??, rewardRange: [5,5] },
+        { key: 'cancer', name: '撌刻摨?, icon: '??, rewardRange: [7,10] },
+        { key: 'leo', name: '??摨?, icon: '??, rewardRange: [8,12] },
+        { key: 'virgo', name: '?戊摨?, icon: '??, rewardRange: [9,13] },
+        { key: 'libra', name: '憭拍坐摨?, icon: '??, rewardRange: [10,14] },
+        { key: 'scorpio', name: '憭抵?摨?, icon: '??, rewardRange: [11,15] },
+        { key: 'sagittarius', name: '撠?摨?, icon: '??, rewardRange: [12,16] },
+        { key: 'capricorn', name: '?拍劑摨?, icon: '??, rewardRange: [13,17] },
+        { key: 'aquarius', name: '瘞渡摨?, icon: '??, rewardRange: [14,18] },
+        { key: 'pisces', name: '??摨?, icon: '??, rewardRange: [15,20] },
+        { key: 'andromeda', name: '隞戊摨?, icon: '?', rewardRange: [16,20] },
+        { key: 'cygnus', name: '憭拚?摨?, icon: '?弛', rewardRange: [17,20] },
+        { key: 'orion', name: '?菜摨?, icon: '?', rewardRange: [17,20] },
+        { key: 'pegasus', name: '憌收摨?, icon: '??', rewardRange: [17,20] },
+        { key: 'cassiopeia', name: '隞?摨?, icon: '??', rewardRange: [17,20] },
+        { key: 'scorpius', name: '憭抵?摨?, icon: '??', rewardRange: [17,20] },
+        { key: 'phoenix', name: '曈喳摨?, icon: '?', rewardRange: [17,20] },
+        { key: 'vela', name: '?孵?摨?, icon: '??, rewardRange: [17,20] }
+      ];
+      
+      atlasCategories.forEach((category, index) => {
+        achievements.push({
+          id: `pass_${category.key}`,
+          name: `??${category.name}`,
+          requirement: 1,
+          reward: category.rewardRange[0] === category.rewardRange[1] ? category.rewardRange[0] : null,
+          icon: category.icon,
+          type: 'zodiac',
+          description: `??${category.name}?`,
+          rewardRange: category.rewardRange
+        });
+      });
+    })();
+
+    // ?啣?嚗蔣??曄???
+    function showVideoModal(achievement) {
+      const modal = document.getElementById('videoModal');
+      const title = document.getElementById('videoModalTitle');
+      const player = document.getElementById('videoPlayer');
+      
+      // 閮剔蔭璅?
+      title.textContent = `${achievement.name} - ?賊?敶梁?`;
+      
+      // 閮剔蔭敶梁? URL
+      if (achievement.youtube) {
+        // 撠?YouTube URL 頧??箏??交撘?
+        let videoUrl = achievement.youtube;
+        if (videoUrl.includes('youtube.com/watch?v=')) {
+          const videoId = videoUrl.split('v=')[1].split('&')[0];
+          videoUrl = `https://www.youtube.com/embed/${videoId}`;
+        } else if (videoUrl.includes('youtu.be/')) {
+          const videoId = videoUrl.split('youtu.be/')[1];
+          videoUrl = `https://www.youtube.com/embed/${videoId}`;
+        }
+        player.src = videoUrl;
+      }
+      
+      // 憿舐內 Modal
+      modal.style.display = 'flex';
+      
+      // 瘛餃?暺?憭???
+      modal.onclick = function(e) {
+        if (e.target === modal) {
+          closeVideoModal();
+        }
+      };
+    }
+    
+    function closeVideoModal() {
+      const modal = document.getElementById('videoModal');
+      const player = document.getElementById('videoPlayer');
+      
+      // ?迫敶梁??剜
+      player.src = '';
+      
+      // ?梯? Modal
+      modal.style.display = 'none';
+      
+      // 蝘駁暺?鈭辣
+      modal.onclick = null;
+    }
+    
+    // ?啣?嚗 SSR ?∠??停瘛餃?敶梁????
+    function addSSRVideosToAchievements() {
+      if (!window.allCards) return;
+      
+      // ?箸?撘?SSR ?∠??萄遣撠???撠?
+      const ssrCards = allCards.filter(card => card.rarity === '頞???);
+      
+      ssrCards.forEach(card => {
+        // 瑼Ｘ?臬撌脣??刻府?停
+        const existingAchievement = achievements.find(ach => ach.id === `ssr_${card.word}`);
+        if (!existingAchievement) {
+          achievements.push({
+            id: `ssr_${card.word}`,
+            name: `閫?? SSR嚗?{card.zh}`,
+            requirement: 1,
+            reward: 50,
+            icon: '??',
+            type: 'ssr_special',
+            description: `閫??頞????{card.zh}?,
+            youtube: card.youtube || null // 憒??∠???YouTube ???撠曹蝙??
+          });
+        }
+      });
+    }
+
+    // ?啣?嚗pen+Enter 銝?菟?????撠?
+    (function(){
+      let keySequence = '';
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          if (keySequence.toLowerCase() === 'open') {
+            claimAllUnlockedAchievements();
+            keySequence = '';
+          } else {
+            keySequence = '';
+          }
+        } else if (e.key.length === 1) {
+          keySequence += e.key;
+          if (keySequence.length > 10) keySequence = keySequence.slice(-10);
+        }
+      });
+    })();
+
+    // ?啣?嚗??菟????歇閫???停
+    function claimAllUnlockedAchievements() {
+      const claimed = getClaimedAchievements();
+      let count = 0;
+      achievements.forEach(ach => {
+        if (checkAchievementUnlocked(ach) && !claimed.includes(ach.id)) {
+          claimAchievement(ach);
+          count++;
+        }
+      });
+      if (count > 0) {
+        alert(`?? 撌脰????${count} ??撠梧?`);
+        // ?湔瘜⊥部?賊?嚗??構laimAchievement撌脩???堆??ㄐ蝣箔??敺?唬?甈∴?
+        updateAllBadges();
+        // ?瑼Ｘ?舫???撠梢
+        setTimeout(checkAndShowClaimableNotification, 1000);
+      } else {
+        alert('?桀?瘝??舫????停??);
+      }
+    }
+  </script>
+
+  <!-- ?啣?嚗蔣???Modal -->
+  <div id="videoModal" class="video-modal" style="display: none;">
+    <div class="video-modal-content">
+      <div class="video-modal-header">
+        <h3 id="videoModalTitle">閫?蔣??/h3>
+        <button class="video-modal-close" onclick="closeVideoModal()">??/button>
+      </div>
+      <div class="video-modal-body">
+        <iframe id="videoPlayer" width="100%" height="400" frameborder="0" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</body>
+</html> 

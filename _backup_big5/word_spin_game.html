@@ -1,0 +1,3289 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>? ?璈???/title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-y: auto;
+            overflow-x: auto;
+        }
+
+        .slot-machine-container {
+            background: linear-gradient(145deg, #2a2a3e, #1a1a2e);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border: 3px solid #ffd700;
+            position: relative;
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .slot-machine-container::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+            border-radius: 25px;
+            z-index: -1;
+            animation: borderGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes borderGlow {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .machine-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .machine-title {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .machine-subtitle {
+            font-size: 1.2em;
+            color: #ccc;
+            opacity: 0.8;
+        }
+
+        .slot-display {
+            background: #000;
+            border: 5px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slot-display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            animation: slotShine 3s ease-in-out infinite;
+        }
+
+        @keyframes slotShine {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .slot-reels {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            height: 200px;
+        }
+
+        .slot-reel {
+            flex: 1;
+            background: linear-gradient(180deg, #333, #000);
+            border: 3px solid #555;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .reel-strip {
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.1s ease-out;
+            position: relative;
+        }
+
+        .reel-item {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            border-bottom: 1px solid #333;
+            flex-shrink: 0;
+        }
+
+        .reel-item img {
+            max-width: 100%;
+            max-height: 100%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .reel-item.symbol {
+            font-size: 3em;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .controls {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .spin-button {
+            background: linear-gradient(145deg, #ffd700, #ffed4e);
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #000;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spin-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .bet-multipliers {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .bet-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .bet-btn:hover {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .all-in-button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #ff4757, #ff3742);
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .all-in-button:hover {
+            background: linear-gradient(135deg, #ff3742, #ff4757);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 71, 87, 0.4);
+        }
+
+        .normal-spin-button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #2ed573, #1e90ff);
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .normal-spin-button:hover {
+            background: linear-gradient(135deg, #1e90ff, #2ed573);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 213, 115, 0.4);
+        }
+
+        /* 憭抒?敶?璅?? - 蝢???*/
+        .jackpot-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 237, 78, 0.9));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(15px);
+            animation: modalFadeIn 0.6s ease-out;
+        }
+
+        .jackpot-content {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border: 4px solid #ffd700;
+            border-radius: 30px;
+            padding: 50px 40px;
+            text-align: center;
+            max-width: 550px;
+            width: 90%;
+            box-shadow: 
+                0 25px 80px rgba(255, 215, 0, 0.4),
+                0 0 0 20px rgba(255, 215, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            animation: jackpotBounce 1.2s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .jackpot-content::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        .jackpot-title {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ff6b35, #f7931e, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+
+        .jackpot-amount {
+            font-size: 3.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ff4757, #ff6b35, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 25px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .jackpot-symbol {
+            font-size: 5rem;
+            margin: 25px 0;
+            animation: symbolGlow 1.2s ease-in-out infinite alternate;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            position: relative;
+            z-index: 2;
+        }
+
+        .jackpot-message {
+            font-size: 1.3rem;
+            color: #2f3542;
+            margin: 25px 0;
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+        }
+
+        .jackpot-close {
+            background: linear-gradient(135deg, #ff6b35, #ff4757);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 25px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .jackpot-close:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255, 107, 53, 0.5);
+        }
+
+        .jackpot-close:active {
+            transform: translateY(-1px);
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes jackpotBounce {
+            0% { transform: scale(0.3) rotate(-10deg); opacity: 0; }
+            50% { transform: scale(1.1) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes symbolGlow {
+            0% { 
+                text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+                transform: scale(1);
+            }
+            50% {
+                text-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.5);
+                transform: scale(1.1);
+            }
+            100% { 
+                text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+                transform: scale(1);
+            }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .bet-btn.active {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .spin-button:hover::before {
+            left: 100%;
+        }
+
+        .spin-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+        }
+
+        .spin-button:active {
+            transform: translateY(0);
+        }
+
+        .spin-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .info-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .info-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .info-label {
+            font-size: 0.9em;
+            color: #ccc;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .result-display {
+            text-align: center;
+            margin: 15px 0;
+            min-height: 50px;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .result-text {
+            font-size: 1.1em;
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: inline-block;
+            animation: resultPulse 0.5s ease-in-out;
+            margin: 0;
+        }
+
+        .result-text.win {
+            background: linear-gradient(145deg, #4CAF50, #45a049);
+            color: white;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+        }
+
+        .result-text.lose {
+            background: linear-gradient(145deg, #f44336, #d32f2f);
+            color: white;
+            box-shadow: 0 0 20px rgba(244, 67, 54, 0.5);
+        }
+
+        @keyframes resultPulse {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .jackpot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4em;
+            color: #ffd700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+            animation: jackpotGlow 0.5s ease-in-out infinite alternate;
+            z-index: 100;
+        }
+
+        @keyframes jackpotGlow {
+            0% { text-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
+            100% { text-shadow: 0 0 50px rgba(255, 215, 0, 1), 0 0 70px rgba(255, 215, 0, 0.5); }
+        }
+
+        .coin-display {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 2px solid #ffd700;
+        }
+
+        .coin-amount {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .star-display {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 2px solid #ffd700;
+        }
+
+        .star-amount {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .exchange-button {
+            background: linear-gradient(145deg, #a259ff, #7c3aed);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(162, 89, 255, 0.3);
+        }
+
+        .exchange-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(162, 89, 255, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .slot-machine-container {
+                margin: 20px;
+                padding: 20px;
+            }
+
+            .machine-title {
+                font-size: 2em;
+            }
+
+            .slot-reels {
+                height: 150px;
+            }
+
+            .reel-item {
+                height: 150px;
+            }
+
+            .spin-button {
+                padding: 12px 30px;
+                font-size: 1.2em;
+            }
+        }
+
+        .win-animation {
+            animation: winShake 0.5s ease-in-out;
+        }
+
+        @keyframes winShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* ????璅?? - ???銵◢??*/
+        .exchange-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .exchange-content {
+            background: white;
+            border-radius: 25px;
+            padding: 0;
+            max-width: 400px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .bank-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 25px 20px;
+            border-radius: 25px 25px 0 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .bank-header::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+
+        .exchange-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .bank-balance {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            margin: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .balance-title {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .balance-amount {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .balance-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+            text-align: center;
+        }
+
+        .bank-section {
+            padding: 0 20px 20px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .bank-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .bank-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 15px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .bank-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        }
+
+        .bank-btn:active {
+            transform: translateY(0);
+        }
+
+        .bank-close {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px;
+            width: calc(100% - 40px);
+            font-size: 1rem;
+        }
+
+        .bank-close:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
+        }
+
+        .bank-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #dee2e6, transparent);
+            margin: 20px 0;
+        }
+
+        .no-coins-hint {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 10px 0;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .symbol-guide {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .symbol-guide h3 {
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .symbol-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .symbol-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .symbol-item:hover {
+            background: rgba(255, 215, 0, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .symbol-item .symbol {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        .symbol-item .reward {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+
+        .symbol-item .description {
+            color: #cccccc;
+            font-size: 0.9rem;
+            text-align: right;
+        }
+
+        .help-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 0;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .help-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .help-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            backdrop-filter: blur(10px);
+        }
+
+        .help-content {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border: 3px solid #667eea;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+        }
+
+        .help-title {
+            color: #667eea;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .help-section {
+            margin: 20px 0;
+        }
+
+        .help-section h3 {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .help-section p {
+            color: #34495e;
+            line-height: 1.6;
+            margin: 5px 0;
+        }
+
+        .help-close {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .help-close:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* ?芸?頧??Ｘ璅?? */
+        .auto-spin-panel {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .auto-spin-header h3 {
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .auto-spin-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .auto-spin-input {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .auto-spin-input label {
+            color: #ccc;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .auto-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .auto-input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .auto-spin-buttons {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .auto-spin-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .auto-spin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        }
+
+        .auto-spin-btn.stop {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .auto-spin-btn.stop:hover {
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+        }
+
+        .auto-spin-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auto-spin-status {
+            text-align: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .auto-spin-status span {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .auto-spin-status.running span {
+            animation: pulse 1s infinite;
+        }
+
+        .sound-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .sound-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #ccc;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .sound-option input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #ffd700;
+        }
+
+        .sound-option span {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        /* 皛▼璅?? */
+        .slider-container {
+            margin-top: 10px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(90deg, #ffd700 0%, #ffd700 50%, rgba(255, 215, 0, 0.3) 50%, rgba(255, 215, 0, 0.3) 100%);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border: 2px solid #fff;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.6);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border: 2px solid #fff;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider::-moz-range-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.6);
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+
+        .slider-labels span {
+            font-weight: bold;
+        }
+
+        .auto-spin-input label {
+            color: #ccc;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .auto-spin-input label span {
+            color: #ffd700;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+
+        /* ?芸?蝢拇遝??璅?? */
+        ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #ffd700, #ffed4e);
+            border-radius: 6px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            min-height: 20px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #ffed4e, #ffd700);
+        }
+
+        ::-webkit-scrollbar-thumb:active {
+            background: linear-gradient(180deg, #ffb700, #ffd700);
+        }
+
+        ::-webkit-scrollbar-corner {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Firefox 皛曉?璇見撘?*/
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #ffd700 rgba(255, 255, 255, 0.1);
+        }
+
+        /* 蝣箔???臭誑皛曉? */
+        html, body {
+            overflow-y: auto;
+            overflow-x: auto;
+        }
+
+        /* 瘛餃?銝鈭??函征??皜祈岫皛曉? */
+        .slot-machine-container::after {
+            content: '';
+            display: block;
+            height: 100px;
+        }
+
+        @media (max-width: 768px) {
+            .auto-spin-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .auto-spin-buttons {
+                flex-direction: column;
+            }
+
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .help-button,
+            .exchange-button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slot-machine-container">
+        <div class="star-display">
+            <span class="star-amount">潃?<span id="stars">0</span></span>
+        </div>
+
+        <div class="coin-display">
+            <span class="coin-amount">?? <span id="coins">0</span></span>
+        </div>
+
+        <div class="machine-header">
+            <h1 class="machine-title">? ?璈?/h1>
+            <p class="machine-subtitle">頧銝?泵??舐??</p>
+        </div>
+
+        <div class="button-container">
+            <button class="help-button" id="helpBtn" onclick="showHelpModal()">
+                ???隤芣?
+            </button>
+            <button class="exchange-button" id="exchangeBtn">潃?????</button>
+        </div>
+
+        <div class="no-coins-hint" id="noCoinsHint" style="display: none;">
+            ? 瘝??馳鈭?嚗??????????撟??
+        </div>
+
+        <div class="slot-display">
+            <div class="slot-reels">
+                <div class="slot-reel" id="reel1">
+                    <div class="reel-strip" id="strip1">
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                    </div>
+                </div>
+                <div class="slot-reel" id="reel2">
+                    <div class="reel-strip" id="strip2">
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                    </div>
+                </div>
+                <div class="slot-reel" id="reel3">
+                    <div class="reel-strip" id="strip3">
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="reel-item symbol">
+                            <img src="https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg" alt="??" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="result-display" id="resultDisplay">
+                <div class="result-text" id="resultText"></div>
+            </div>
+            
+            <button class="all-in-button" id="allInButton" onclick="spinAllIn()">
+                ? 鞈凋????撟?
+            </button>
+            <div class="bet-multipliers">
+                <button class="bet-btn active" data-multiplier="1">1??(5,000??)</button>
+                <button class="bet-btn" data-multiplier="2">2??(10,000??)</button>
+                <button class="bet-btn" data-multiplier="4">4??(20,000??)</button>
+                <button class="bet-btn" data-multiplier="6">6??(30,000??)</button>
+                <button class="bet-btn" data-multiplier="10">10??(50,000??)</button>
+            </div>
+            <button class="normal-spin-button" id="normalSpinButton" onclick="spinNormal()">
+                ? 銝?砌?瘜?(5,000??)
+            </button>
+            
+            <!-- ?芸?頧??批?Ｘ -->
+            <div class="auto-spin-panel">
+                <div class="auto-spin-header">
+                    <h3>?? ?芸?頧?</h3>
+                </div>
+                <div class="auto-spin-controls">
+                    <div class="auto-spin-input">
+                        <label>頧?甈⊥嚗?span id="spinCountValue">10</span></label>
+                        <div class="slider-container">
+                            <input type="range" id="autoSpinCountSlider" min="1" max="100" value="10" class="slider">
+                            <div class="slider-labels">
+                                <span>1</span>
+                                <span>50</span>
+                                <span>100</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="auto-spin-input">
+                        <label>????嚗?span id="intervalValue">10</span>蝘?/label>
+                        <div class="slider-container">
+                            <input type="range" id="autoSpinIntervalSlider" min="10" max="60" value="10" class="slider">
+                            <div class="slider-labels">
+                                <span>10s</span>
+                                <span>35s</span>
+                                <span>60s</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="auto-spin-input">
+                        <label>?單?閮剖?嚗?/label>
+                        <div class="sound-options">
+                            <label class="sound-option">
+                                <input type="checkbox" id="autoSpinSound" checked>
+                                <span>?剜?單?</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="auto-spin-buttons">
+                        <button class="auto-spin-btn" id="startAutoSpinBtn" onclick="startAutoSpin()">
+                            ?塚? ???芸?頧?
+                        </button>
+                        <button class="auto-spin-btn stop" id="stopAutoSpinBtn" onclick="stopAutoSpin()" style="display: none;">
+                            ?對? ?迫?芸?頧?
+                        </button>
+                    </div>
+                </div>
+                <div class="auto-spin-status" id="autoSpinStatus">
+                    <span id="autoSpinProgress">皞?撠梁?</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <div class="info-item">
+                <div class="info-label">????脣?</div>
+                <div class="info-value" id="streak">0</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">蝮賜??/div>
+                <div class="info-value" id="totalWins">0</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">蝮賡???/div>
+                <div class="info-value" id="totalGames">0</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">?脣???/div>
+                <div class="info-value" id="winRate">0%</div>
+            </div>
+            <div class="info-item" id="streakBonusItem" style="display: none;">
+                <div class="info-label">?????</div>
+                <div class="info-value" id="streakBonus">+0%</div>
+            </div>
+            <div class="info-item" id="maxStreakItem" style="display: none;">
+                <div class="info-label">?擃??</div>
+                <div class="info-value" id="maxStreak">0</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ?馳蝟餌絞憿
+        class CoinSystem {
+            constructor() {
+                this.coins = parseInt(localStorage.getItem('coins')) || 0;
+            }
+
+            getCoins() {
+                return this.coins;
+            }
+
+            addCoins(amount) {
+                this.coins += amount;
+                this.saveCoins();
+                this.updateDisplay();
+            }
+
+            useCoins(amount) {
+                if (this.coins >= amount) {
+                    this.coins -= amount;
+                    this.saveCoins();
+                    this.updateDisplay();
+                    return true;
+                }
+                return false;
+            }
+
+            saveCoins() {
+                localStorage.setItem('coins', this.coins.toString());
+            }
+
+            updateDisplay() {
+                const coinsElement = document.getElementById('coins');
+                if (coinsElement) {
+                    coinsElement.textContent = this.coins.toLocaleString();
+                }
+            }
+        }
+
+        // ??蝟餌絞憿
+        class StarSystem {
+            constructor() {
+                this.stars = 0;
+                this.loadTotalStars();
+            }
+
+            getStars() {
+                return this.stars;
+            }
+
+            addStars(amount) {
+                this.stars += amount;
+                this.saveStars();
+                this.updateDisplay();
+            }
+
+            useStars(amount) {
+                if (this.stars >= amount) {
+                    this.stars -= amount;
+                    this.saveStars();
+                    this.updateDisplay();
+                    return true;
+                }
+                return false;
+            }
+
+            // 頛蝮賣??嚗????皞?
+            loadTotalStars() {
+                let totalStars = 0;
+                
+                // 敺?StarRewardSystem ?脣???
+                if (window.StarRewardSystem) {
+                    totalStars += window.StarRewardSystem.getStars();
+                }
+                
+                // 敺?localStorage ?脣??嗡???蝟餌絞????
+                try {
+                    const savedStars = localStorage.getItem('totalStars');
+                    if (savedStars) {
+                        totalStars += parseInt(savedStars);
+                    }
+                } catch (error) {
+                    console.log('頛?嗡???蝟餌絞憭望?:', error);
+                }
+                
+                // 敺???脩???
+                try {
+                    const currentStars = localStorage.getItem('stars');
+                    if (currentStars) {
+                        totalStars += parseInt(currentStars);
+                    }
+                } catch (error) {
+                    console.log('頛?嗅????憭望?:', error);
+                }
+                
+                this.stars = totalStars;
+                console.log('潃?蝮賣??頛摰?:', this.stars);
+            }
+
+            // 靽????唳???頂蝯?
+            saveStars() {
+                // 靽??啁???脩???
+                localStorage.setItem('stars', this.stars.toString());
+                
+                // 靽??啁蜇??蝟餌絞
+                localStorage.setItem('totalStars', this.stars.toString());
+                
+                // 憒? StarRewardSystem 摮嚗?甇交??
+                if (window.StarRewardSystem) {
+                    window.StarRewardSystem.addStars(0); // 閫貊?湔憿舐內
+                }
+                
+                console.log('潃???撌脣?甇乩?摮??頂蝯?', this.stars);
+            }
+
+            updateDisplay() {
+                const starsElement = document.getElementById('stars');
+                if (starsElement) {
+                    starsElement.textContent = this.stars.toLocaleString();
+                }
+            }
+        }
+
+        // ?單?蝟餌絞
+        const soundSystem = {
+            playSound: function(soundName) {
+                const audio = new Audio(`sound/${soundName}.mp3`);
+                audio.volume = 0.3;
+                audio.play().catch(e => console.log('?單??剜憭望?:', e));
+            },
+            playSpinSound: function() {
+                this.playSound('winning-82808');
+            },
+            playLoseSound: function() {
+                this.playSound('8-bit-video-game-lose-sound-version-1-145828');
+            },
+            playWinSound: function() {
+                this.playSound('game-bonus-144751');
+            },
+            playJackpotSound: function() {
+                this.playSound('brass-fanfare-with-timpani-and-winchimes-reverberated-146260');
+            }
+        };
+
+        // ????脣??單?蝟餌絞
+        function playStreakSound(streak) {
+            // ?寞?????脣?甈⊥?剜銝??單?
+            if (streak >= 10) {
+                soundSystem.playJackpotSound(); // 10???雿輻憭抒??單?
+            } else if (streak >= 7) {
+                soundSystem.playWinSound(); // 7???雿輻?脣??單?
+                setTimeout(() => soundSystem.playWinSound(), 500); // ???剜
+            } else if (streak >= 5) {
+                soundSystem.playWinSound(); // 5???雿輻?脣??單?
+            } else {
+                soundSystem.playWinSound(); // ?嗡?????脣?雿輻?脣??單?
+            }
+            
+            // 瘛餃?閬死??
+            const slotDisplay = document.querySelector('.slot-display');
+            if (slotDisplay) {
+                slotDisplay.style.animation = 'none';
+                slotDisplay.offsetHeight; // 撘瑕?鼓
+                slotDisplay.style.animation = `winShake 0.8s ease-in-out`;
+                
+                // ?寞?????脣?甈⊥瘛餃?銝?憿??
+                if (streak >= 10) {
+                    slotDisplay.style.boxShadow = '0 0 50px rgba(255, 215, 0, 0.8)';
+                } else if (streak >= 7) {
+                    slotDisplay.style.boxShadow = '0 0 40px rgba(255, 107, 53, 0.8)';
+                } else if (streak >= 5) {
+                    slotDisplay.style.boxShadow = '0 0 30px rgba(255, 193, 7, 0.8)';
+                } else {
+                    slotDisplay.style.boxShadow = '0 0 20px rgba(76, 175, 80, 0.8)';
+                }
+                
+                setTimeout(() => {
+                    slotDisplay.style.boxShadow = '';
+                }, 2000);
+            }
+        }
+
+        // ????
+        let gameState = {
+            streak: 0,
+            maxStreak: 0, // ?擃??閮?
+            totalWins: 0,
+            totalGames: 0,
+            isSpinning: false,
+            betMultiplier: 1, // 銝釣?
+            currentBet: 0, // ?嗅?銝釣??
+            isNormalBet: false, // ?臬?箔??砌?瘜?
+            autoSpin: {
+                isActive: false,
+                count: 0,
+                totalCount: 0,
+                interval: null,
+                wins: 0,
+                losses: 0
+            }
+        };
+
+        // ?馳???頂蝯勗祕靘?
+        let coinSystem;
+        let starSystem;
+
+        // 蝚西?摰儔
+        const symbols = ['??', '??', '??', '??', '??', '??', '??', '??'];
+        
+        // 蝚西?甈?嚗蔣?踹?暹???
+        const symbolWeights = {
+            '??': 25,  // ?? - ?撣貉? (2??
+            '??': 20,  // 璈? - 撣貉? (3??
+            '??': 18,  // ?∟? - 頛虜閬?(4??
+            '??': 15,  // ?? - 銝剔? (5??
+            '??': 12,  // 擐? - 銝剔? (6??
+            '??': 8,   // 瑹餅? - 頛???(8??
+            '??': 6,   // 獢? - 蝔??(10??
+            '??': 4    // 憟??- ?蝔??(15??
+        };
+
+        // ??
+        const rewards = {
+            '??': 1.2, // ?? - 1.2??
+            '??': 1.5, // 璈? - 1.5??
+            '??': 1.8, // ?∟? - 1.8??
+            '??': 2.0, // ?? - 2??
+            '??': 2.5, // 擐? - 2.5??
+            '??': 3.0, // 瑹餅? - 3??
+            '??': 4.0, // 獢? - 4??
+            '??': 10.0 // 憟??- 10??
+        };
+
+        // 蝚西?????
+        const symbolImages = {
+            '??': 'https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg',
+            '??': 'https://i.pinimg.com/736x/4e/fa/98/4efa98d2e58f88eafe11af6237ea223f.jpg',
+            '??': 'https://i.pinimg.com/736x/43/45/52/43455278054c88bcf23c98a22c310930.jpg',
+            '??': 'https://i.pinimg.com/736x/4c/46/3e/4c463ed4ba5987c44f383bafa186ddd9.jpg',
+            '??': 'https://i.pinimg.com/736x/05/a3/21/05a321e41dd66b31d74b8ccd74f00c1b.jpg',
+            '??': 'https://i.pinimg.com/736x/1d/cb/e1/1dcbe1dbc84baa65c10c6189db67fe6e.jpg',
+            '??': 'https://i.pinimg.com/736x/1b/cb/e4/1bcbe4117c1bd36174de3d0f437fd81c.jpg',
+            '??': 'https://i.pinimg.com/736x/76/db/e0/76dbe099ac26042038bb37ea1ee3d8c0.jpg'
+        };
+
+        // ???啁泵??????嚗?潸??伐?
+        const imageToSymbol = {
+            'https://i.pinimg.com/736x/a3/5e/9a/a35e9aa0e9f5a6af14e2572214b2d214.jpg': ['??'],
+            'https://i.pinimg.com/736x/05/a3/21/05a321e41dd66b31d74b8ccd74f00c1b.jpg': ['??'],
+            'https://i.pinimg.com/736x/4e/fa/98/4efa98d2e58f88eafe11af6237ea223f.jpg': ['??'],
+            'https://i.pinimg.com/736x/43/45/52/43455278054c88bcf23c98a22c310930.jpg': ['??'],
+            'https://i.pinimg.com/736x/4c/46/3e/4c463ed4ba5987c44f383bafa186ddd9.jpg': ['??'],
+            'https://i.pinimg.com/736x/1d/cb/e1/1dcbe1dbc84baa65c10c6189db67fe6e.jpg': ['??'],
+            'https://i.pinimg.com/736x/76/db/e0/76dbe099ac26042038bb37ea1ee3d8c0.jpg': ['??'],
+            'https://i.pinimg.com/736x/1b/cb/e4/1bcbe4117c1bd36174de3d0f437fd81c.jpg': ['??']
+        };
+
+        // ??????
+        function initGame() {
+            // ????撟????蝟餌絞
+            coinSystem = new CoinSystem();
+            starSystem = new StarSystem();
+            
+            loadGameData();
+            updateDisplay();
+            generateReelStrips();
+            setupEventListeners();
+            
+            // 摰??郊???賂?瘥?蝘?
+            setInterval(() => {
+                if (starSystem) {
+                    starSystem.loadTotalStars();
+                    starSystem.updateDisplay();
+                }
+            }, 5000);
+            
+            console.log('? ?璈??脣?憪?摰?嚗蜇?????撌脣???);
+        }
+
+        // 閮剖?鈭辣????
+        function setupEventListeners() {
+            const exchangeBtn = document.getElementById('exchangeBtn');
+            if (exchangeBtn) {
+                exchangeBtn.addEventListener('click', showExchangeShop);
+            }
+
+            // 銝釣???鈭辣
+            const betButtons = document.querySelectorAll('.bet-btn');
+            betButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 蝘駁?????active憿
+                    betButtons.forEach(b => b.classList.remove('active'));
+                    // 瘛餃??嗅????ctive憿
+                    this.classList.add('active');
+                    // ?湔銝釣?
+                    gameState.betMultiplier = parseInt(this.dataset.multiplier);
+                    updateButtonTexts();
+                });
+            });
+
+            // 皛▼鈭辣????
+            setupSliderListeners();
+        }
+
+        // 閮剖?皛▼鈭辣????
+        function setupSliderListeners() {
+            // 頧?甈⊥皛▼
+            const spinCountSlider = document.getElementById('autoSpinCountSlider');
+            const spinCountValue = document.getElementById('spinCountValue');
+            
+            if (spinCountSlider && spinCountValue) {
+                spinCountSlider.addEventListener('input', function() {
+                    const value = this.value;
+                    spinCountValue.textContent = value;
+                    updateSliderBackground(this);
+                });
+                
+                // ????獢輯???
+                updateSliderBackground(spinCountSlider);
+            }
+
+            // ????皛▼
+            const intervalSlider = document.getElementById('autoSpinIntervalSlider');
+            const intervalValue = document.getElementById('intervalValue');
+            
+            if (intervalSlider && intervalValue) {
+                intervalSlider.addEventListener('input', function() {
+                    const value = this.value;
+                    intervalValue.textContent = value;
+                    updateSliderBackground(this);
+                });
+                
+                // ????獢輯???
+                updateSliderBackground(intervalSlider);
+            }
+        }
+
+        // ?湔皛▼?
+        function updateSliderBackground(slider) {
+            const value = slider.value;
+            const min = slider.min;
+            const max = slider.max;
+            const percentage = ((value - min) / (max - min)) * 100;
+            
+            slider.style.background = `linear-gradient(90deg, #ffd700 0%, #ffd700 ${percentage}%, rgba(255, 215, 0, 0.3) ${percentage}%, rgba(255, 215, 0, 0.3) 100%)`;
+        }
+
+        // 頛?鞈?
+        function loadGameData() {
+            const saved = localStorage.getItem('slotMachineData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                gameState = { ...gameState, ...data };
+            }
+        }
+
+        // 靽??鞈?
+        function saveGameData() {
+            localStorage.setItem('slotMachineData', JSON.stringify(gameState));
+        }
+
+        // ?湔?擃??憿舐內
+        function updateMaxStreakDisplay() {
+            const maxStreakItem = document.getElementById('maxStreakItem');
+            const maxStreak = document.getElementById('maxStreak');
+            
+            if (gameState.maxStreak > 0) {
+                maxStreakItem.style.display = 'block';
+                maxStreak.textContent = gameState.maxStreak;
+                
+                // ?寞??擃??甈⊥閮剔蔭銝?憿
+                if (gameState.maxStreak >= 10) {
+                    maxStreak.style.color = '#ffd700';
+                    maxStreak.style.textShadow = '0 0 10px rgba(255, 215, 0, 0.8)';
+                } else if (gameState.maxStreak >= 7) {
+                    maxStreak.style.color = '#ff6b35';
+                    maxStreak.style.textShadow = '0 0 8px rgba(255, 107, 53, 0.8)';
+                } else if (gameState.maxStreak >= 5) {
+                    maxStreak.style.color = '#ffc107';
+                    maxStreak.style.textShadow = '0 0 6px rgba(255, 193, 7, 0.8)';
+                } else {
+                    maxStreak.style.color = '#4CAF50';
+                    maxStreak.style.textShadow = '0 0 4px rgba(76, 175, 80, 0.8)';
+                }
+            } else {
+                maxStreakItem.style.display = 'none';
+            }
+        }
+
+        // ?湔?????憿舐內
+        function updateStreakBonusDisplay() {
+            const streakBonusItem = document.getElementById('streakBonusItem');
+            const streakBonus = document.getElementById('streakBonus');
+            
+            let bonusPercentage = 0;
+            
+            // 閮???????曉?瘥?
+            if (gameState.streak >= 1) {
+                bonusPercentage += 5; // 1???嚗?5%璈?
+            }
+            if (gameState.streak >= 2) {
+                bonusPercentage += 8; // 2???嚗?8%璈?
+            }
+            if (gameState.streak >= 3) {
+                bonusPercentage += 10; // 3???嚗?10%璈?
+            }
+            if (gameState.streak >= 5) {
+                bonusPercentage += 15; // 5???嚗?15%璈?
+            }
+            
+            if (bonusPercentage > 0) {
+                streakBonusItem.style.display = 'block';
+                streakBonus.textContent = `+${bonusPercentage}%`;
+                streakBonus.style.color = '#ffd700';
+                streakBonus.style.textShadow = '0 0 10px rgba(255, 215, 0, 0.5)';
+            } else {
+                streakBonusItem.style.display = 'none';
+            }
+        }
+
+        // ?湔????
+        function updateButtonTexts() {
+            const allInButton = document.getElementById('allInButton');
+            const normalSpinButton = document.getElementById('normalSpinButton');
+            
+            if (allInButton) {
+                const currentCoins = coinSystem ? coinSystem.getCoins() : 0;
+                allInButton.textContent = `? 鞈凋????撟?(${currentCoins.toLocaleString()}??)`;
+            }
+            
+            if (normalSpinButton) {
+                const normalBetCost = 5000 * gameState.betMultiplier;
+                normalSpinButton.textContent = `? 銝?砌?瘜?(${normalBetCost.toLocaleString()}??)`;
+            }
+        }
+
+        // ?湔憿舐內
+        function updateDisplay() {
+            document.getElementById('streak').textContent = gameState.streak;
+            document.getElementById('totalWins').textContent = gameState.totalWins;
+            document.getElementById('totalGames').textContent = gameState.totalGames;
+            
+            const winRate = gameState.totalGames > 0 ? 
+                Math.round((gameState.totalWins / gameState.totalGames) * 100) : 0;
+            document.getElementById('winRate').textContent = winRate + '%';
+
+            // ?湔?擃??憿舐內
+            updateMaxStreakDisplay();
+
+            // ?湔?????憿舐內
+            updateStreakBonusDisplay();
+
+            // ?湔?馳???＊蝷?
+            if (coinSystem) coinSystem.updateDisplay();
+            if (starSystem) starSystem.updateDisplay();
+
+            // 瑼Ｘ?臬瘝??馳嚗＊蝷箸?蝷?
+            const noCoinsHint = document.getElementById('noCoinsHint');
+            if (noCoinsHint) {
+                const currentCoins = coinSystem ? coinSystem.getCoins() : 0;
+                if (currentCoins <= 0) {
+                    noCoinsHint.style.display = 'block';
+                } else {
+                    noCoinsHint.style.display = 'none';
+                }
+            }
+
+            // ?湔????
+            updateButtonTexts();
+        }
+
+        // ??頧憚璇?
+        function generateReelStrips() {
+            const strips = ['strip1', 'strip2', 'strip3'];
+            
+            console.log('? ????頧憚璇?..');
+            
+            strips.forEach((stripId, reelIndex) => {
+                const strip = document.getElementById(stripId);
+                if (!strip) {
+                    console.error(`???曆??啗?頛芸?蝝? ${stripId}`);
+                    return;
+                }
+                
+                strip.innerHTML = '';
+                console.log(`? ??頧憚 ${reelIndex + 1} (${stripId})`);
+                
+                // ?箸???頛芰???0?泵??蝣箔?????賜?蝚西?
+                const allSymbols = Object.keys(symbolWeights);
+                const symbolsForReel = [];
+                
+                // 蝣箔?瘥?頛芷???泵??
+                for (let i = 0; i < 20; i++) {
+                    if (i < allSymbols.length) {
+                        // ?嗾??蝵格蝵格?????蝚西?
+                        symbolsForReel.push(allSymbols[i]);
+                    } else {
+                        // ?園?雿蔭?冽??豢?
+                        symbolsForReel.push(getRandomSymbol());
+                    }
+                }
+                
+                // ??蝚西???
+                for (let i = symbolsForReel.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [symbolsForReel[i], symbolsForReel[j]] = [symbolsForReel[j], symbolsForReel[i]];
+                }
+                
+                // ?萄遣頧憚?
+                symbolsForReel.forEach((symbol, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'reel-item symbol';
+                    
+                    // 瑼Ｘ?臬??????
+                    if (symbolImages[symbol] && symbolImages[symbol].startsWith('http')) {
+                        // 雿輻??
+                        const img = document.createElement('img');
+                        img.src = symbolImages[symbol];
+                        img.alt = symbol;
+                        img.style.width = '100%';
+                        img.style.height = '100%';
+                        img.style.objectFit = 'cover';
+                        img.style.borderRadius = '8px';
+                        item.appendChild(img);
+                    } else {
+                        // 雿輻 emoji嚗??冽獢?
+                        item.textContent = symbol;
+                    }
+                    
+                    strip.appendChild(item);
+                });
+                
+                console.log(`??頧憚 ${reelIndex + 1} ??摰?嚗 ${strip.children.length} ???害);
+                console.log(`?? 頧憚 ${reelIndex + 1} 蝚西???:`, symbolsForReel);
+            });
+            
+            console.log('? ???頛芣???摰?');
+        }
+
+        // ???頧憚璇??冽頧???
+        function regenerateReelStrips() {
+            const strips = ['strip1', 'strip2', 'strip3'];
+            
+            console.log('?? ???頧憚璇?..');
+            
+            strips.forEach((stripId, reelIndex) => {
+                const strip = document.getElementById(stripId);
+                if (!strip) {
+                    console.error(`???曆??啗?頛芸?蝝? ${stripId}`);
+                    return;
+                }
+                
+                // 皜征?暹??批捆
+                strip.innerHTML = '';
+                
+                // ?箸???頛芰???0?泵??蝣箔?????賜?蝚西?
+                const allSymbols = Object.keys(symbolWeights);
+                const symbolsForReel = [];
+                
+                // 蝣箔?瘥?頛芷???泵??
+                for (let i = 0; i < 20; i++) {
+                    if (i < allSymbols.length) {
+                        // ?嗾??蝵格蝵格?????蝚西?
+                        symbolsForReel.push(allSymbols[i]);
+                    } else {
+                        // ?園?雿蔭?冽??豢?
+                        symbolsForReel.push(getRandomSymbol());
+                    }
+                }
+                
+                // ??蝚西???
+                for (let i = symbolsForReel.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [symbolsForReel[i], symbolsForReel[j]] = [symbolsForReel[j], symbolsForReel[i]];
+                }
+                
+                // ?萄遣頧憚?
+                symbolsForReel.forEach((symbol, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'reel-item symbol';
+                    
+                    // 瑼Ｘ?臬??????
+                    if (symbolImages[symbol] && symbolImages[symbol].startsWith('http')) {
+                        // 雿輻??
+                        const img = document.createElement('img');
+                        img.src = symbolImages[symbol];
+                        img.alt = symbol;
+                        img.style.width = '100%';
+                        img.style.height = '100%';
+                        img.style.objectFit = 'cover';
+                        img.style.borderRadius = '8px';
+                        item.appendChild(img);
+                    } else {
+                        // 雿輻 emoji嚗??冽獢?
+                        item.textContent = symbol;
+                    }
+                    
+                    strip.appendChild(item);
+                });
+                
+                console.log(`??頧憚 ${reelIndex + 1} ???摰?`);
+            });
+            
+            console.log('?? ???頛芣????摰?');
+        }
+
+        // ???冽?蝚西?
+        function getRandomSymbol() {
+            const totalWeight = Object.values(symbolWeights).reduce((a, b) => a + b, 0);
+            let random = Math.random() * totalWeight;
+            
+            for (const [symbol, weight] of Object.entries(symbolWeights)) {
+                random -= weight;
+                if (random <= 0) {
+                    return symbol;
+                }
+            }
+            
+            return symbols[0]; // ?身??
+        }
+
+        // 鞈凋????撟????
+        function spinAllIn() {
+            if (gameState.isSpinning) return;
+            
+            // 銝甈⊥扯撓????撟?
+            const allCoins = coinSystem.getCoins();
+            
+            if (!coinSystem || allCoins <= 0) {
+                showResult('?馳銝雲嚗??????敺?撟?, 'lose');
+                return;
+            }
+
+            // ?剜頧??單?
+            soundSystem.playSpinSound();
+
+            // ?????撟?
+            coinSystem.useCoins(allCoins);
+            gameState.isSpinning = true;
+            gameState.totalGames++;
+            gameState.currentBet = allCoins; // 靽??嗅?銝釣??
+            gameState.isNormalBet = false; // 璅??箄陪銝???撟?
+            
+            const allInButton = document.getElementById('allInButton');
+            const normalSpinButton = document.getElementById('normalSpinButton');
+            allInButton.disabled = true;
+            normalSpinButton.disabled = true;
+            allInButton.textContent = '? 頧?銝?..';
+            normalSpinButton.textContent = '? 頧?銝?..';
+
+            // ???頧憚璇誑蝣箔?????蝚西?
+            regenerateReelStrips();
+
+            // ?寞?銝釣??隤踵?脣?璈? - 霈摰嗆?璈??脣?
+            let winChance = 0.40; // ?箇?40%?脣?璈?
+            
+            // ????脣??? - 憓?????脣?????
+            if (gameState.streak >= 1) {
+                winChance += 0.03; // 1???嚗?3%璈?
+            }
+            if (gameState.streak >= 2) {
+                winChance += 0.05; // 2???嚗?5%璈?
+            }
+            if (gameState.streak >= 3) {
+                winChance += 0.07; // 3???嚗?7%璈?
+            }
+            if (gameState.streak >= 5) {
+                winChance += 0.10; // 5???嚗?10%璈?
+            }
+            
+            // 憒??航陪銝???撟????頛?嚗摨阡?雿????
+            if (gameState.currentBet > 50000) {
+                winChance = Math.max(0.25, winChance - 0.15); // 鞈凋?頞?50000?馳嚗?雿?5%?脣?璈?
+            } else if (gameState.currentBet > 20000) {
+                winChance = Math.max(0.30, winChance - 0.10); // 鞈凋?頞?20000?馳嚗?雿?0%?脣?璈?
+            }
+            
+            const shouldWin = Math.random() < winChance;
+            let resultSymbols = [];
+            
+            if (shouldWin) {
+                // ?脣?嚗???泵??
+                const winningSymbol = getRandomSymbol();
+                resultSymbols = [winningSymbol, winningSymbol, winningSymbol];
+            } else {
+                // 憭望?嚗??泵??
+                const symbols = Object.keys(symbolWeights);
+                resultSymbols = [
+                    symbols[Math.floor(Math.random() * symbols.length)],
+                    symbols[Math.floor(Math.random() * symbols.length)],
+                    symbols[Math.floor(Math.random() * symbols.length)]
+                ];
+                
+                // 蝣箔?銝銝??
+                while (resultSymbols[0] === resultSymbols[1] && resultSymbols[1] === resultSymbols[2]) {
+                    resultSymbols[2] = symbols[Math.floor(Math.random() * symbols.length)];
+                }
+            }
+
+            console.log('? ??頧?嚗??泵??', resultSymbols);
+            
+            // 蝣箔?頧憚璇歇??
+            setTimeout(() => {
+                // ???
+                animateSpin(resultSymbols);
+            }, 100);
+        }
+
+        // ?頧?
+        function animateSpin(resultSymbols) {
+            const strips = ['strip1', 'strip2', 'strip3'];
+            const spinDuration = 2000; // 2蝘?
+            const delays = [0, 200, 400]; // 瘥?頛芸辣?脖?????
+
+            console.log('? ???頧?嚗璅泵??', resultSymbols);
+
+            // 蝣箔????頛芷摮銝行??批捆
+            const validStrips = strips.filter(stripId => {
+                const strip = document.getElementById(stripId);
+                if (!strip) {
+                    console.error(`???曆??啗?頛芸?蝝? ${stripId}`);
+                    return false;
+                }
+                const items = strip.querySelectorAll('.reel-item');
+                if (items.length === 0) {
+                    console.error(`??頧憚 ${stripId} 瘝??批捆`);
+                    return false;
+                }
+                return true;
+            });
+
+            if (validStrips.length !== 3) {
+                console.error('??頧憚??銝??湛??⊥????');
+                // ?蔭????
+                gameState.isSpinning = false;
+                const spinButton = document.getElementById('spinButton');
+                if (spinButton) {
+                    spinButton.disabled = false;
+                    updateSpinButtonText();
+                }
+                return;
+            }
+
+            validStrips.forEach((stripId, index) => {
+                const strip = document.getElementById(stripId);
+                const finalSymbol = resultSymbols[index];
+                
+                console.log(`? 頧憚 ${index + 1} (${stripId})嚗璅泵?? ${finalSymbol}`);
+                
+                // ?蔭頧憚雿蔭
+                strip.style.transition = 'none';
+                strip.style.transform = 'translateY(0)';
+                
+                // 撘瑕?鼓
+                strip.offsetHeight;
+                
+                // 閮剔蔭?蝯?蝵?
+                setTimeout(() => {
+                    // ?曉?蝯泵??雿蔭
+                    const items = strip.querySelectorAll('.reel-item');
+                    let targetIndex = 0;
+                    
+                    console.log(`?? ??頧憚 ${index + 1} 銝剔?蝚西?嚗 ${items.length} ???害);
+                    
+                    for (let i = 0; i < items.length; i++) {
+                        const item = items[i];
+                        let itemSymbol = '';
+                        
+                        // 瑼Ｘ?臬????
+                        const img = item.querySelector('img');
+                        if (img) {
+                            // 憒??????寞???靘??斗蝚西?
+                            if (img.src.includes('76dbe099ac26042038bb37ea1ee3d8c0')) {
+                                itemSymbol = '??'; // 憟??
+                            } else if (img.src.includes('1bcbe4117c1bd36174de3d0f437fd81c')) {
+                                itemSymbol = '??'; // 獢?
+                            } else if (img.src.includes('4efa98d2e58f88eafe11af6237ea223f')) {
+                                itemSymbol = '??'; // 璈?
+                            } else if (img.src.includes('1dcbe1dbc84baa65c10c6189db67fe6e')) {
+                                itemSymbol = '??'; // 瑹餅?
+                            } else if (img.src.includes('4c463ed4ba5987c44f383bafa186ddd9')) {
+                                itemSymbol = '??'; // ??
+                            } else if (img.src.includes('e706a23d838d46d6752139259103ae48')) {
+                                // 撠蝚砌?蝔桀?????閬??蝵格??嗡??孵?靘Ⅱ摰擃泵??
+                                // ?急?雿輻??雿隞?”
+                                itemSymbol = '??';
+                            } else if (img.src.includes('43455278054c88bcf23c98a22c310930')) {
+                                itemSymbol = '??'; // ?∟?
+                            } else if (img.src.includes('05a321e41dd66b31d74b8ccd74f00c1b')) {
+                                itemSymbol = '??'; // 擐?
+                            } else if (img.src.includes('a35e9aa0e9f5a6af14e2572214b2d214')) {
+                                itemSymbol = '??'; // ??
+                            } else {
+                                itemSymbol = '??'; // ?身?箄???
+                            }
+                        } else {
+                            // 雿輻???批捆
+                            itemSymbol = item.textContent;
+                        }
+                        
+                        console.log(`  - ? ${i}: ${itemSymbol} (??: ${img ? '?? : '??})`);
+                        
+                        if (itemSymbol === finalSymbol) {
+                            targetIndex = i;
+                            console.log(`???曉?格?蝚西? ${finalSymbol} ?其?蝵?${i}`);
+                            break;
+                        }
+                    }
+                    
+                    // 閮??閬宏??頝
+                    const itemHeight = 200; // 瘥??桅?摨?
+                    const targetPosition = -(targetIndex * itemHeight);
+                    
+                    console.log(`? 頧憚 ${index + 1} 蝘餃??唬?蝵?${targetIndex}嚗???${targetPosition}px`);
+                    
+                    // 瘛餃??
+                    strip.style.transition = `transform ${spinDuration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+                    strip.style.transform = `translateY(${targetPosition}px)`;
+                    
+                    console.log(`? 頧憚 ${index + 1} ?撌脣??);
+                    
+                }, delays[index]);
+            });
+
+            // ?摰?敺炎?亦???
+            setTimeout(() => {
+                console.log('? ?摰?嚗炎?亦???);
+                checkResult(resultSymbols);
+            }, spinDuration + Math.max(...delays));
+        }
+
+        // 銝?砌?瘜刻???
+        function spinNormal() {
+            if (gameState.isSpinning) return;
+            
+            const betCost = 5000 * gameState.betMultiplier; // ?敶梢???
+            
+                            if (!coinSystem || coinSystem.getCoins() < betCost) {
+                    showResult(`?馳銝雲嚗?閬?{betCost.toLocaleString()}??嚗??????敺?撟ε, 'lose');
+                    return;
+                }
+
+            // ?剜頧??單?
+            soundSystem.playSpinSound();
+
+            // ???箏???
+            coinSystem.useCoins(betCost);
+            gameState.isSpinning = true;
+            gameState.totalGames++;
+            gameState.currentBet = betCost; // 靽??嗅?銝釣??
+            gameState.isNormalBet = true; // 璅??箔??砌?瘜?
+
+            const allInButton = document.getElementById('allInButton');
+            const normalSpinButton = document.getElementById('normalSpinButton');
+            allInButton.disabled = true;
+            normalSpinButton.disabled = true;
+            allInButton.textContent = '? 頧?銝?..';
+            normalSpinButton.textContent = '? 頧?銝?..';
+
+            // ???頧憚璇誑蝣箔?????蝚西?
+            regenerateReelStrips();
+
+            // ?寞?銝釣?隤踵?脣?璈? - 霈摰嗆?璈??脣?
+            let winChance = 0.40; // ?箇?40%?脣?璈?
+            
+            // ????脣??? - 憓?????脣?????
+            if (gameState.streak >= 1) {
+                winChance += 0.03; // 1???嚗?3%璈?
+            }
+            if (gameState.streak >= 2) {
+                winChance += 0.05; // 2???嚗?5%璈?
+            }
+            if (gameState.streak >= 3) {
+                winChance += 0.07; // 3???嚗?7%璈?
+            }
+            if (gameState.streak >= 5) {
+                winChance += 0.10; // 5???嚗?10%璈?
+            }
+            
+            // 憒??臭??砌?瘜其??頛?嚗摨阡?雿????
+            if (gameState.betMultiplier >= 10) {
+                winChance = Math.max(0.25, winChance - 0.15); // 10?誑銝??雿?5%?脣?璈?
+            } else if (gameState.betMultiplier >= 6) {
+                winChance = Math.max(0.30, winChance - 0.10); // 6?誑銝??雿?0%?脣?璈?
+            } else if (gameState.betMultiplier >= 4) {
+                winChance = Math.max(0.35, winChance - 0.05); // 4?誑銝??雿?5%?脣?璈?
+            } else if (gameState.betMultiplier >= 2) {
+                winChance = Math.max(0.40, winChance - 0.05); // 2?誑銝??雿?0%?脣?璈?
+            }
+            
+            const shouldWin = Math.random() < winChance;
+            let resultSymbols = [];
+            
+            if (shouldWin) {
+                // ?脣?嚗???泵??
+                const winningSymbol = getRandomSymbol();
+                resultSymbols = [winningSymbol, winningSymbol, winningSymbol];
+            } else {
+                // 憭望?嚗??泵??
+                const symbols = Object.keys(symbolWeights);
+                resultSymbols = [
+                    symbols[Math.floor(Math.random() * symbols.length)],
+                    symbols[Math.floor(Math.random() * symbols.length)],
+                    symbols[Math.floor(Math.random() * symbols.length)]
+                ];
+                
+                // 蝣箔?銝銝??
+                while (resultSymbols[0] === resultSymbols[1] && resultSymbols[1] === resultSymbols[2]) {
+                    resultSymbols[2] = symbols[Math.floor(Math.random() * symbols.length)];
+                }
+            }
+
+            console.log('? ??銝?砌?瘜刻???蝯?蝚西?:', resultSymbols);
+            
+            // 蝣箔?頧憚璇歇??
+            setTimeout(() => {
+                // ???
+                animateSpin(resultSymbols);
+            }, 100);
+        }
+
+        // 瑼Ｘ蝯?
+        function checkResult(symbols) {
+            const isWin = symbols[0] === symbols[1] && symbols[1] === symbols[2];
+            
+            if (isWin) {
+                // ?剜???單?
+                soundSystem.playWinSound();
+                
+                const symbol = symbols[0];
+                const baseMultiplier = rewards[symbol] || 2;
+                // ??箸撖阡?銝釣??撟???銝行??函??萄
+                const betAmount = gameState.currentBet;
+                let winAmount;
+                
+                if (gameState.isNormalBet) {
+                    // 銝?砌?瘜剁?? = 銝釣?? ? 蝚西??
+                    winAmount = betAmount * baseMultiplier;
+                } else {
+                    // 鞈凋????撟??? = 銝釣?? ? 蝚西??
+                    winAmount = betAmount * baseMultiplier;
+                }
+                
+                coinSystem.addCoins(winAmount);
+                gameState.streak++;
+                gameState.totalWins++;
+                
+                // ?湔?擃??閮?
+                if (gameState.streak > gameState.maxStreak) {
+                    gameState.maxStreak = gameState.streak;
+                }
+                
+                // ?斗?臬?箏之???頞?300000嚗?
+                const isJackpot = winAmount >= 300000;
+                
+                if (isJackpot) {
+                    showJackpotModal(symbol, winAmount, baseMultiplier);
+                } else {
+                    showResult(`?? ?脣?嚗?{symbol} x${baseMultiplier}??= +${winAmount.toLocaleString()}??`, 'win');
+                }
+                
+                // ????脣?? - 憓??游?蝑??擃???
+                if (gameState.streak >= 2) {
+                    const bonus = Math.floor(winAmount * 0.15); // 敺?0%????5%
+                    coinSystem.addCoins(bonus);
+                    showResult(`? ????脣??嚗?${bonus.toLocaleString()}??`, 'win');
+                    playStreakSound(2);
+                } else if (gameState.streak >= 3) {
+                    const bonus = Math.floor(winAmount * 0.25); // 敺?5%????5%
+                    coinSystem.addCoins(bonus);
+                    showResult(`?? 銝???嚗?${bonus.toLocaleString()}??`, 'win');
+                    playStreakSound(3);
+                } else if (gameState.streak >= 4) {
+                    const bonus = Math.floor(winAmount * 0.35); // ?啣?4????
+                    coinSystem.addCoins(bonus);
+                    showResult(`??? ????嚗?${bonus.toLocaleString()}??`, 'win');
+                    playStreakSound(4);
+                } else if (gameState.streak >= 5) {
+                    const bonus = Math.floor(winAmount * 0.50); // 敺?5%????0%
+                    coinSystem.addCoins(bonus);
+                    showResult(`???? 鈭??頞??嚗?${bonus.toLocaleString()}??`, 'win');
+                    playStreakSound(5);
+                } else if (gameState.streak >= 7) {
+                    const bonus = Math.floor(winAmount * 0.75); // ?啣?7????
+                    coinSystem.addCoins(bonus);
+                    showResult(`????? 銝???喳??嚗?${bonus.toLocaleString()}??`, 'win');
+                    playStreakSound(7);
+                } else if (gameState.streak >= 10) {
+                    const bonus = Math.floor(winAmount * 1.0); // ?啣?10????
+                    coinSystem.addCoins(bonus);
+                    showResult(`?????? ???蟡店?嚗?${bonus.toLocaleString()}??`, 'win');
+                    playStreakSound(10);
+                }
+                
+                // 瘛餃??脣??
+                document.querySelector('.slot-display').classList.add('win-animation');
+                setTimeout(() => {
+                    document.querySelector('.slot-display').classList.remove('win-animation');
+                }, 500);
+                
+            } else {
+                // ?剜憭望??單?嚗???頧?嚗?
+                soundSystem.playLoseSound();
+                
+                gameState.streak = 0;
+                showResult('?? ?芯葉???岫銝甈∴?', 'lose');
+            }
+
+            // ?蔭????
+            gameState.isSpinning = false;
+            const allInButton = document.getElementById('allInButton');
+            const normalSpinButton = document.getElementById('normalSpinButton');
+            allInButton.disabled = false;
+            normalSpinButton.disabled = false;
+            allInButton.textContent = '? 鞈凋????撟?;
+            const normalBetCost = 5000 * gameState.betMultiplier;
+            normalSpinButton.textContent = `? 銝?砌?瘜?(${normalBetCost.toLocaleString()}??)`;
+            
+            updateDisplay();
+            saveGameData();
+        }
+
+        // 憿舐內?隤芣?
+        function showHelpModal() {
+            const modal = document.createElement('div');
+            modal.className = 'help-modal';
+            
+            modal.innerHTML = `
+                <div class="help-content">
+                    <h2 class="help-title">?? ?隤芣?</h2>
+                    
+                    <div class="help-section">
+                        <h3>? ?閬?</h3>
+                        <p>頧銝?泵??舐????馳頞?嚗???菔?擃?/p>
+                    </div>
+                    
+                    <div class="help-section">
+                        <h3>? 銝釣?</h3>
+                        <p>??1??? 5,000?馳</p>
+                        <p>??2??? 10,000?馳</p>
+                        <p>??4??? 20,000?馳</p>
+                        <p>??6??? 30,000?馳</p>
+                        <p>??10??? 50,000?馳</p>
+                    </div>
+                    
+                    <div class="help-section">
+                        <h3>?? 蝚西??</h3>
+                        <div class="symbol-list">
+                            <div class="symbol-item">
+                                <span class="symbol">??</span>
+                                <span class="reward">1.2??/span>
+                                <span class="description">?? - ?撣貉?</span>
+                            </div>
+                            <div class="symbol-item">
+                                <span class="symbol">??</span>
+                                <span class="reward">1.5??/span>
+                                <span class="description">璈? - 撣貉?</span>
+                            </div>
+                            <div class="symbol-item">
+                                <span class="symbol">??</span>
+                                <span class="reward">1.8??/span>
+                                <span class="description">?∟? - 頛虜閬?/span>
+                            </div>
+                            <div class="symbol-item">
+                                <span class="symbol">??</span>
+                                <span class="reward">2.0??/span>
+                                <span class="description">?? - 銝剔?</span>
+                            </div>
+                            <div class="symbol-item">
+                                <span class="symbol">??</span>
+                                <span class="reward">2.5??/span>
+                                <span class="description">擐? - 銝剔?</span>
+                            </div>
+                            <div class="symbol-item">
+                                <span class="symbol">??</span>
+                                <span class="reward">3.0??/span>
+                                <span class="description">瑹餅? - 頛???/span>
+                            </div>
+                            <div class="symbol-item">
+                                <span class="symbol">??</span>
+                                <span class="reward">4.0??/span>
+                                <span class="description">獢? - 蝔??/span>
+                            </div>
+                            <div class="symbol-item">
+                                <span class="symbol">??</span>
+                                <span class="reward">10.0??/span>
+                                <span class="description">憟??- ?蝔??/span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="help-section">
+                        <h3>? ????脣??</h3>
+                        <p>??2???嚗?憭?5%?</p>
+                        <p>??3???嚗?憭?5%?</p>
+                        <p>??4???嚗?憭?5%?</p>
+                        <p>??5???嚗?憭?0%?</p>
+                        <p>??7???嚗?憭?5%?</p>
+                        <p>??10???嚗?憭?00%?</p>
+                        <p><strong>? ????脣???憓?銝活?脣?璈?嚗?/strong></p>
+                    </div>
+                    
+                    <div class="help-section">
+                        <h3>?? 憭抒?蝟餌絞</h3>
+                        <p>???頞?300,000?馳?孛?澆之??/p>
+                        <p>??憭抒???曄畾??敶?</p>
+                    </div>
+                    
+                    <div class="help-section">
+                        <h3>?? ?芸?頧??</h3>
+                        <p>??雿輻皛▼閮剖?頧?甈⊥嚗?-100甈∴???????10-60蝘?</p>
+                        <p>??蝟餌絞??銵????⊿???暺?</p>
+                        <p>???芸?頧????＊蝷箏祕?脣漲???</p>
+                        <p>???馳銝雲???芸??迫</p>
+                        <p>???舫????甇Ｚ????/p>
+                        <p>???舫??行?曇????/p>
+                        <p><strong>?? 瘜冽?嚗?????脣?璈?頛?嚗?瑟??唳?/strong></p>
+                    </div>
+                    
+                    <button class="help-close" onclick="this.parentElement.parentElement.remove()">
+                        ???
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        // 憿舐內憭抒?敶?
+        function showJackpotModal(symbol, winAmount, multiplier) {
+            // ?怠??
+            pauseGame();
+            
+            const modal = document.createElement('div');
+            modal.className = 'jackpot-modal';
+            
+            modal.innerHTML = `
+                <div class="jackpot-content">
+                    <div class="jackpot-title">?? 憭抒?嚗??/div>
+                    <div class="jackpot-symbol">${symbol}</div>
+                    <div class="jackpot-amount">+${winAmount.toLocaleString()}??</div>
+                    <div class="jackpot-message">
+                        ?剖??函敺之??<br>
+                        蝚西?: ${symbol} x${multiplier}??
+                    </div>
+                    <button class="jackpot-close" onclick="closeJackpotModal(this)">
+                        憭芣?鈭?
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // ?剜憭抒??單?
+            soundSystem.playJackpotSound();
+            
+            // 5蝘??芸???
+            setTimeout(() => {
+                if (modal.parentElement) {
+                    closeJackpotModal(modal.querySelector('.jackpot-close'));
+                }
+            }, 5000);
+        }
+
+        // ??憭抒?敶?銝行敺拚???
+        function closeJackpotModal(button) {
+            const modal = button.parentElement.parentElement;
+            if (modal && modal.parentElement) {
+                modal.remove();
+                // ?Ｗ儔?
+                resumeGame();
+            }
+        }
+
+        // ?怠??
+        function pauseGame() {
+            // 蝳??賊???
+            const allInButton = document.getElementById('allInButton');
+            const normalSpinButton = document.getElementById('normalSpinButton');
+            const startAutoSpinBtn = document.getElementById('startAutoSpinBtn');
+            const stopAutoSpinBtn = document.getElementById('stopAutoSpinBtn');
+            
+            if (allInButton) allInButton.disabled = true;
+            if (normalSpinButton) normalSpinButton.disabled = true;
+            if (startAutoSpinBtn) startAutoSpinBtn.disabled = true;
+            if (stopAutoSpinBtn) stopAutoSpinBtn.disabled = true;
+            
+            // ?怠??芸?頧?嚗??迤?券脰?嚗?
+            if (gameState.autoSpin.isActive) {
+                gameState.autoSpin.isPaused = true;
+            }
+            
+            console.log('?賂? ?撌脫??);
+        }
+
+        // ?Ｗ儔?
+        function resumeGame() {
+            // ????
+            const allInButton = document.getElementById('allInButton');
+            const normalSpinButton = document.getElementById('normalSpinButton');
+            const startAutoSpinBtn = document.getElementById('startAutoSpinBtn');
+            const stopAutoSpinBtn = document.getElementById('stopAutoSpinBtn');
+            
+            if (allInButton) allInButton.disabled = false;
+            if (normalSpinButton) normalSpinButton.disabled = false;
+            if (startAutoSpinBtn) startAutoSpinBtn.disabled = false;
+            if (stopAutoSpinBtn) stopAutoSpinBtn.disabled = false;
+            
+            // ?Ｗ儔?芸?頧?嚗????◤?怠?嚗?
+            if (gameState.autoSpin.isActive && gameState.autoSpin.isPaused) {
+                gameState.autoSpin.isPaused = false;
+                console.log('?塚? ?芸?頧?撌脫敺?);
+                // 蝜潛??瑁??芸?頧?嚗????刻??葉嚗?
+                if (!gameState.isSpinning) {
+                    setTimeout(() => {
+                        performAutoSpin();
+                    }, 100);
+                }
+            }
+            
+            console.log('?塚? ?撌脫敺?);
+        }
+
+        // 憿舐內蝯?
+        function showResult(message, type) {
+            const resultText = document.getElementById('resultText');
+            resultText.textContent = message;
+            resultText.className = `result-text ${type}`;
+            
+            // 皜銋?????
+            setTimeout(() => {
+                resultText.textContent = '';
+                resultText.className = 'result-text';
+            }, 3000);
+        }
+
+        // 憿舐內????
+        function showExchangeShop() {
+            // ?頛??唳??
+            if (starSystem) {
+                starSystem.loadTotalStars();
+            }
+            
+            const currentCoins = coinSystem ? coinSystem.getCoins() : 0;
+            const currentStars = starSystem ? starSystem.getStars() : 0;
+            
+            console.log('潃???????嚗?蜇????', currentStars);
+            
+            // 撱箇???璅⊥?獢?
+            const modal = document.createElement('div');
+            modal.className = 'exchange-modal';
+            
+            modal.innerHTML = `
+                <div class="exchange-content">
+                    <div class="bank-header">
+                        <h2 class="exchange-title">? ???銵?/h2>
+                    </div>
+                    
+                    <div class="bank-balance">
+                        <div class="balance-title">?嗅?擗?</div>
+                        <div class="balance-amount">${currentStars} 潃?/div>
+                        <div class="balance-label">蝮賣??</div>
+                    </div>
+                    
+                    <div class="bank-balance">
+                        <div class="balance-title">?馳擗?</div>
+                        <div class="balance-amount">${currentCoins.toLocaleString()} ??</div>
+                        <div class="balance-label">?舐?馳</div>
+                    </div>
+                    
+                    <div class="bank-section">
+                        <div class="section-title">? ?????馳</div>
+                        <div class="bank-buttons">
+                            <button class="bank-btn" id="starToCoin1Btn">
+                                潃?1?? = 10,000??
+                            </button>
+                            <button class="bank-btn" id="starToCoin10Btn">
+                                潃?10?? = 100,000??
+                            </button>
+                            <button class="bank-btn" id="starToCoin20Btn">
+                                潃?20?? = 220,000??
+                            </button>
+                            <button class="bank-btn" id="starToCoin50Btn">
+                                潃?50?? = 600,000??
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="bank-divider"></div>
+                    
+                    <div class="bank-section">
+                        <div class="section-title">? ?馳????</div>
+                        <div class="bank-buttons">
+                            <button class="bank-btn" id="coinToStar10Btn">
+                                ?? 1,000??= 潃?10??
+                            </button>
+                            <button class="bank-btn" id="coinToStar50Btn">
+                                ?? 5,000??= 潃?50??
+                            </button>
+                            <button class="bank-btn" id="coinToStar100Btn">
+                                ?? 1??= 潃?100??
+                            </button>
+                            <button class="bank-btn" id="coinToStar200Btn">
+                                ?? 2??= 潃?200??
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button class="bank-close" id="closeShopBtn">???銵?/button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // ????撟???
+            function exchangeStarsToCoins(starAmount, coinAmount) {
+                if (starSystem && starSystem.getStars() >= starAmount) {
+                    // 閮??閬??頂蝯望?斤???
+                    let remainingStars = starAmount;
+                    
+                    // ?芸?敺?StarRewardSystem ????
+                    if (window.StarRewardSystem && window.StarRewardSystem.getStars() > 0) {
+                        const currentStarRewardStars = window.StarRewardSystem.getStars();
+                        const deductFromStarReward = Math.min(remainingStars, currentStarRewardStars);
+                        window.StarRewardSystem.addStars(-deductFromStarReward);
+                        remainingStars -= deductFromStarReward;
+                    }
+                    
+                    // 憒???閬?斗???敺?localStorage ??
+                    if (remainingStars > 0) {
+                        try {
+                            const savedStars = localStorage.getItem('totalStars');
+                            if (savedStars) {
+                                const currentStars = parseInt(savedStars);
+                                const deductFromLocalStorage = Math.min(remainingStars, currentStars);
+                                if (deductFromLocalStorage > 0) {
+                                    localStorage.setItem('totalStars', (currentStars - deductFromLocalStorage).toString());
+                                }
+                            }
+                        } catch (error) {
+                            console.log('???嗡???蝟餌絞憭望?:', error);
+                        }
+                    }
+                    
+                    // ?頛蝮賣??
+                    starSystem.loadTotalStars();
+                    
+                    // 憓??馳
+                    coinSystem.addCoins(coinAmount);
+                    
+                    // 憿舐內????閮
+                    showExchangeNotification(coinAmount, false);
+                    
+                    // ?湔璅⊥?獢＊蝷?
+                    updateModalDisplay();
+                } else {
+                    alert(`??蝮賣???頞喉??閬撠?{starAmount}憿????賢??);
+                }
+            }
+            
+            // ?馳?????
+            function exchangeCoinsToStars(coinAmount, starAmount) {
+                if (coinSystem && coinSystem.getCoins() >= coinAmount) {
+                    // ???馳
+                    coinSystem.useCoins(coinAmount);
+                    
+                    // 憓?????StarRewardSystem
+                    if (window.StarRewardSystem) {
+                        window.StarRewardSystem.addStars(starAmount);
+                    }
+                    
+                    // ???湔蝮賣??頂蝯?
+                    try {
+                        const currentTotalStars = parseInt(localStorage.getItem('totalStars')) || 0;
+                        localStorage.setItem('totalStars', (currentTotalStars + starAmount).toString());
+                    } catch (error) {
+                        console.log('?湔蝮賣??頂蝯勗仃??', error);
+                    }
+                    
+                    // ?頛蝮賣??
+                    starSystem.loadTotalStars();
+                    
+                    // 憿舐內????閮
+                    showExchangeNotification(starAmount, true);
+                    
+                    // ?湔璅⊥?獢＊蝷?
+                    updateModalDisplay();
+                } else {
+                    alert(`???馳銝雲嚗?閬撠?{coinAmount.toLocaleString()}?馳????);
+                }
+            }
+            
+            // ?湔璅⊥?獢＊蝷?
+            function updateModalDisplay() {
+                // ?頛??唳??
+                if (starSystem) {
+                    starSystem.loadTotalStars();
+                }
+                
+                const starsDisplay = modal.querySelector('.exchange-stats div:first-child div:nth-child(2)');
+                const coinsDisplay = modal.querySelector('.exchange-stats div:nth-child(2) div:nth-child(2)');
+                if (starsDisplay) starsDisplay.textContent = starSystem.getStars().toLocaleString();
+                if (coinsDisplay) coinsDisplay.textContent = coinSystem.getCoins().toLocaleString();
+                
+                console.log('潃?????憿舐內撌脫?堆?蝮賣??:', starSystem.getStars());
+            }
+            
+            // ????撟????隞?
+            const starToCoin1Btn = modal.querySelector('#starToCoin1Btn');
+            const starToCoin10Btn = modal.querySelector('#starToCoin10Btn');
+            const starToCoin20Btn = modal.querySelector('#starToCoin20Btn');
+            const starToCoin50Btn = modal.querySelector('#starToCoin50Btn');
+            
+            starToCoin1Btn.addEventListener('click', () => exchangeStarsToCoins(1, 10000));
+            starToCoin10Btn.addEventListener('click', () => exchangeStarsToCoins(10, 100000));
+            starToCoin20Btn.addEventListener('click', () => exchangeStarsToCoins(20, 220000));
+            starToCoin50Btn.addEventListener('click', () => exchangeStarsToCoins(50, 600000));
+            
+            // ?馳??????隞?
+            const coinToStar10Btn = modal.querySelector('#coinToStar10Btn');
+            const coinToStar50Btn = modal.querySelector('#coinToStar50Btn');
+            const coinToStar100Btn = modal.querySelector('#coinToStar100Btn');
+            const coinToStar200Btn = modal.querySelector('#coinToStar200Btn');
+            
+            coinToStar10Btn.addEventListener('click', () => exchangeCoinsToStars(10000000, 10));
+            coinToStar50Btn.addEventListener('click', () => exchangeCoinsToStars(50000000, 50));
+            coinToStar100Btn.addEventListener('click', () => exchangeCoinsToStars(100000000, 100));
+            coinToStar200Btn.addEventListener('click', () => exchangeCoinsToStars(200000000, 200));
+            
+            // ????鈭辣
+            const closeBtn = modal.querySelector('#closeShopBtn');
+            closeBtn.addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+            
+            // 暺????
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            });
+        }
+
+        // 憿舐內?????
+        function showExchangeNotification(amount, isStarExchange = false) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, rgba(255, 193, 7, 0.95), rgba(255, 152, 0, 0.95));
+                color: #000;
+                padding: 20px 30px;
+                border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(255, 193, 7, 0.5);
+                z-index: 10001;
+                font-weight: bold;
+                font-size: 1.2rem;
+                text-align: center;
+                font-family: 'Orbitron', monospace;
+                animation: exchangePop 0.5s ease-out;
+            `;
+            
+            if (isStarExchange) {
+                notification.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span style="font-size: 2rem;">???∴?潃?/span>
+                        <div>
+                            <div>?馳????嚗?/div>
+                            <div style="font-size: 1rem; opacity: 0.8;">?脣? ${amount} ??</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                notification.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span style="font-size: 2rem;">潃儭?/span>
+                        <div>
+                            <div>??????嚗?/div>
+                            <div style="font-size: 1rem; opacity: 0.8;">?脣? ${amount} ?馳</div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // ??CSS
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes exchangePop {
+                    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+                    50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+                    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(notification);
+            
+            // 3蝘??芸?蝘駁
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+                if (document.head.contains(style)) {
+                    document.head.removeChild(style);
+                }
+            }, 3000);
+        }
+
+        // ?芸?頧??
+        function startAutoSpin() {
+            const spinCount = parseInt(document.getElementById('autoSpinCountSlider').value);
+            const spinInterval = parseFloat(document.getElementById('autoSpinIntervalSlider').value);
+            
+            if (spinCount < 1 || spinCount > 100) {
+                alert('頧?甈⊥敹???-100銋?嚗?);
+                return;
+            }
+            
+            if (spinInterval < 10 || spinInterval > 60) {
+                alert('????敹???0-60蝘???');
+                return;
+            }
+            
+            // 瑼Ｘ?馳?臬頞喳?
+            const betCost = 5000 * gameState.betMultiplier;
+            const totalCost = betCost * spinCount;
+            const currentCoins = coinSystem.getCoins();
+            
+            if (currentCoins < totalCost) {
+                alert(`?馳銝雲嚗?閬?{totalCost.toLocaleString()}??嚗???{currentCoins.toLocaleString()}??`);
+                return;
+            }
+            
+            // ???芸?頧?
+            gameState.autoSpin.isActive = true;
+            gameState.autoSpin.count = 0;
+            gameState.autoSpin.totalCount = spinCount;
+            gameState.autoSpin.wins = 0;
+            gameState.autoSpin.losses = 0;
+            
+            // ?湔UI
+            document.getElementById('startAutoSpinBtn').style.display = 'none';
+            document.getElementById('stopAutoSpinBtn').style.display = 'inline-block';
+            document.getElementById('autoSpinStatus').classList.add('running');
+            
+            // 蝳????
+            document.getElementById('allInButton').disabled = true;
+            document.getElementById('normalSpinButton').disabled = true;
+            
+            // ??蝚砌?甈∟???
+            performAutoSpin();
+            
+            // 閮剖???
+            gameState.autoSpin.interval = setInterval(() => {
+                if (gameState.autoSpin.isActive && gameState.autoSpin.count < gameState.autoSpin.totalCount && !gameState.autoSpin.isPaused) {
+                    performAutoSpin();
+                } else if (gameState.autoSpin.count >= gameState.autoSpin.totalCount) {
+                    stopAutoSpin();
+                }
+            }, spinInterval * 1000);
+            
+            console.log(`?? ???芸?頧?嚗?{spinCount}甈∴???${spinInterval}蝘);
+        }
+        
+        function stopAutoSpin() {
+            if (gameState.autoSpin.interval) {
+                clearInterval(gameState.autoSpin.interval);
+                gameState.autoSpin.interval = null;
+            }
+            
+            gameState.autoSpin.isActive = false;
+            
+            // ?湔UI
+            document.getElementById('startAutoSpinBtn').style.display = 'inline-block';
+            document.getElementById('stopAutoSpinBtn').style.display = 'none';
+            document.getElementById('autoSpinStatus').classList.remove('running');
+            
+            // ?????
+            document.getElementById('allInButton').disabled = false;
+            document.getElementById('normalSpinButton').disabled = false;
+            
+            // 憿舐內蝯?
+            const winRate = gameState.autoSpin.totalCount > 0 ? 
+                Math.round((gameState.autoSpin.wins / gameState.autoSpin.totalCount) * 100) : 0;
+            
+            showResult(`?? ?芸?頧?摰?嚗??${gameState.autoSpin.wins}甈∴?憭望?嚗?{gameState.autoSpin.losses}甈∴??脣???${winRate}%`, 'win');
+            
+            console.log(`?? ?芸?頧??迫嚗???{gameState.autoSpin.count}甈∴??脣?${gameState.autoSpin.wins}甈︶);
+        }
+        
+        function performAutoSpin() {
+            if (!gameState.autoSpin.isActive || gameState.isSpinning || gameState.autoSpin.isPaused) {
+                return;
+            }
+            
+            gameState.autoSpin.count++;
+            
+            // ?湔?脣漲憿舐內
+            const progress = document.getElementById('autoSpinProgress');
+            const winRate = gameState.autoSpin.count > 0 ? 
+                Math.round((gameState.autoSpin.wins / gameState.autoSpin.count) * 100) : 0;
+            progress.textContent = `?脰?銝?${gameState.autoSpin.count}/${gameState.autoSpin.totalCount} (?脣??? ${winRate}%)`;
+            
+            // ?剜頧??單?嚗????剁?
+            const soundEnabled = document.getElementById('autoSpinSound').checked;
+            if (soundEnabled) {
+                soundSystem.playSpinSound();
+            }
+            
+            // ?瑁?頧?
+            const betCost = 5000 * gameState.betMultiplier;
+            
+            if (!coinSystem.useCoins(betCost)) {
+                stopAutoSpin();
+                showResult('?? ?芸?頧??迫嚗?撟??頞喉?', 'lose');
+                return;
+            }
+            
+            gameState.isSpinning = true;
+            gameState.totalGames++;
+            gameState.currentBet = betCost;
+            gameState.isNormalBet = true;
+            
+            // ???頧憚璇?
+            regenerateReelStrips();
+            
+            // 閮??脣?璈?嚗????雿???
+            let winChance = 0.30; // ?箇?璈?30%
+            
+            // ????脣???嚗?雿???
+            if (gameState.streak >= 1) winChance += 0.02; // 敺?%????%
+            if (gameState.streak >= 2) winChance += 0.03; // 敺?%????%
+            if (gameState.streak >= 3) winChance += 0.05; // 敺?%????%
+            if (gameState.streak >= 5) winChance += 0.07; // 敺?0%????%
+            
+            // ?隤踵嚗?湔?矽?湛?
+            if (gameState.betMultiplier >= 10) {
+                winChance = Math.max(0.15, winChance - 0.20); // ?雿?5%
+            } else if (gameState.betMultiplier >= 6) {
+                winChance = Math.max(0.20, winChance - 0.15); // ?雿?0%
+            } else if (gameState.betMultiplier >= 4) {
+                winChance = Math.max(0.25, winChance - 0.10); // ?雿?5%
+            } else if (gameState.betMultiplier >= 2) {
+                winChance = Math.max(0.30, winChance - 0.05); // ?雿?0%
+            }
+            
+            const shouldWin = Math.random() < winChance;
+            let resultSymbols = [];
+            
+            if (shouldWin) {
+                const winningSymbol = getRandomSymbol();
+                resultSymbols = [winningSymbol, winningSymbol, winningSymbol];
+            } else {
+                const symbols = Object.keys(symbolWeights);
+                resultSymbols = [
+                    symbols[Math.floor(Math.random() * symbols.length)],
+                    symbols[Math.floor(Math.random() * symbols.length)],
+                    symbols[Math.floor(Math.random() * symbols.length)]
+                ];
+                
+                while (resultSymbols[0] === resultSymbols[1] && resultSymbols[1] === resultSymbols[2]) {
+                    resultSymbols[2] = symbols[Math.floor(Math.random() * symbols.length)];
+                }
+            }
+            
+            // ?瑁??
+            setTimeout(() => {
+                animateSpin(resultSymbols);
+                
+                // ?摰?敺炎?亦???
+                setTimeout(() => {
+                    checkAutoSpinResult(resultSymbols);
+                }, 2000 + 400);
+            }, 100);
+        }
+        
+        function checkAutoSpinResult(symbols) {
+            const isWin = symbols[0] === symbols[1] && symbols[1] === symbols[2];
+            
+            if (isWin) {
+                // ?剜?脣??單?嚗????剁?
+                // const soundEnabled = document.getElementById('autoSpinSound').checked;
+                // if (soundEnabled) {
+                //     soundSystem.playWinSound();
+                // }
+                
+                gameState.autoSpin.wins++;
+                const symbol = symbols[0];
+                const baseMultiplier = rewards[symbol] || 2;
+                const betAmount = gameState.currentBet;
+                const winAmount = betAmount * baseMultiplier;
+                
+                coinSystem.addCoins(winAmount);
+                gameState.streak++;
+                gameState.totalWins++;
+                
+                // ?湔?擃??閮?
+                if (gameState.streak > gameState.maxStreak) {
+                    gameState.maxStreak = gameState.streak;
+                }
+                
+                // ?斗?臬?箏之???頞?300000嚗?
+                const isJackpot = winAmount >= 300000;
+                
+                if (isJackpot) {
+                    showJackpotModal(symbol, winAmount, baseMultiplier);
+                }
+                
+                // ????脣??
+                if (gameState.streak >= 2) {
+                    const bonus = Math.floor(winAmount * 0.15);
+                    coinSystem.addCoins(bonus);
+                } else if (gameState.streak >= 3) {
+                    const bonus = Math.floor(winAmount * 0.25);
+                    coinSystem.addCoins(bonus);
+                } else if (gameState.streak >= 4) {
+                    const bonus = Math.floor(winAmount * 0.35);
+                    coinSystem.addCoins(bonus);
+                } else if (gameState.streak >= 5) {
+                    const bonus = Math.floor(winAmount * 0.50);
+                    coinSystem.addCoins(bonus);
+                } else if (gameState.streak >= 7) {
+                    const bonus = Math.floor(winAmount * 0.75);
+                    coinSystem.addCoins(bonus);
+                } else if (gameState.streak >= 10) {
+                    const bonus = Math.floor(winAmount * 1.0);
+                    coinSystem.addCoins(bonus);
+                }
+                
+            } else {
+                gameState.autoSpin.losses++;
+                gameState.streak = 0;
+            }
+            
+            // ?蔭????
+            gameState.isSpinning = false;
+            
+            // ?湔憿舐內
+            updateDisplay();
+            saveGameData();
+            
+            // 瑼Ｘ?臬蝜潛??芸?頧?
+            if (gameState.autoSpin.isActive && gameState.autoSpin.count < gameState.autoSpin.totalCount) {
+                // 蝜潛?銝?甈∟???
+                setTimeout(() => {
+                    performAutoSpin();
+                }, 500); // ?剜撱園
+            } else if (gameState.autoSpin.count >= gameState.autoSpin.totalCount) {
+                stopAutoSpin();
+            }
+        }
+
+        // ?頛??憪?
+        window.addEventListener('load', initGame);
+        
+        // ?????甇Ｚ????
+        window.addEventListener('beforeunload', function() {
+            if (gameState.autoSpin.isActive) {
+                stopAutoSpin();
+            }
+        });
+        
+        // ?憭勗?阡????????舫嚗?
+        window.addEventListener('blur', function() {
+            if (gameState.autoSpin.isActive) {
+                console.log('?? ?憭勗?阡?嚗???匱蝥脰?銝?..');
+            }
+        });
+        
+        // 皜祈岫頧??
+        function testSpin() {
+            console.log('?妒 皜祈岫頧??...');
+            console.log('? ?嗅?????', gameState);
+            console.log('?? ?嗅??馳:', coinSystem ? coinSystem.getCoins() : 'N/A');
+            console.log('潃??嗅???:', starSystem ? starSystem.getStars() : 'N/A');
+            
+            // 瑼Ｘ頧憚??
+            const strips = ['strip1', 'strip2', 'strip3'];
+            strips.forEach((stripId, index) => {
+                const strip = document.getElementById(stripId);
+                if (strip) {
+                    console.log(`??頧憚 ${index + 1} (${stripId}) 摮嚗??格?? ${strip.children.length}`);
+                    
+                    // 瑼Ｘ頧憚?批捆
+                    const items = strip.querySelectorAll('.reel-item');
+                    console.log(`?? 頧憚 ${index + 1} ?批捆:`, Array.from(items).map(item => {
+                        const img = item.querySelector('img');
+                        return img ? `??(${img.src.substring(0, 50)}...)` : item.textContent;
+                    }));
+                } else {
+                    console.error(`??頧憚 ${index + 1} (${stripId}) 銝??灼);
+                }
+            });
+            
+            // ?岫頧?
+            if (!gameState.isSpinning) {
+                console.log('? ??皜祈岫頧?...');
+                spin();
+            } else {
+                console.log('?? ?甇?頧?銝哨??⊥?皜祈岫');
+            }
+        }
+        
+        // 皜祈岫頧憚?
+        function testReelAnimation() {
+            console.log('? 皜祈岫頧憚?...');
+            
+            const strips = ['strip1', 'strip2', 'strip3'];
+            strips.forEach((stripId, index) => {
+                const strip = document.getElementById(stripId);
+                if (strip) {
+                    console.log(`? 皜祈岫頧憚 ${index + 1} (${stripId})`);
+                    
+                    // 蝪∪??銝宏?葫閰?
+                    strip.style.transition = 'transform 1s ease-in-out';
+                    strip.style.transform = 'translateY(-200px)';
+                    
+                    setTimeout(() => {
+                        strip.style.transform = 'translateY(0)';
+                        console.log(`??頧憚 ${index + 1} ?皜祈岫摰?`);
+                    }, 1000);
+                }
+            });
+        }
+        
+        // 撘瑕頧?皜祈岫
+        function forceSpin() {
+            console.log('? 撘瑕頧?皜祈岫...');
+            
+            const strips = ['strip1', 'strip2', 'strip3'];
+            const spinDuration = 2000;
+            
+            strips.forEach((stripId, index) => {
+                const strip = document.getElementById(stripId);
+                if (strip) {
+                    console.log(`? 撘瑕頧?頧憚 ${index + 1} (${stripId})`);
+                    
+                    // ?蔭雿蔭
+                    strip.style.transition = 'none';
+                    strip.style.transform = 'translateY(0)';
+                    strip.offsetHeight; // 撘瑕?鼓
+                    
+                    // ???
+                    setTimeout(() => {
+                        strip.style.transition = `transform ${spinDuration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+                        strip.style.transform = `translateY(-${(index + 1) * 200}px)`;
+                        console.log(`??頧憚 ${index + 1} 撘瑕頧?撌脣??);
+                    }, index * 200);
+                } else {
+                    console.error(`???曆??啗?頛? ${stripId}`);
+                }
+            });
+            
+            // ?蔭??
+            setTimeout(() => {
+                const spinButton = document.getElementById('spinButton');
+                if (spinButton) {
+                    spinButton.disabled = false;
+                    spinButton.textContent = '? SPIN! (100??)';
+                }
+                gameState.isSpinning = false;
+                console.log('? 撘瑕頧?皜祈岫摰?');
+            }, spinDuration + 1000);
+        }
+        
+        // 撠葫閰血?豢?脣?典?
+        window.testSpin = testSpin;
+        window.testReelAnimation = testReelAnimation;
+        window.forceSpin = forceSpin;
+    </script>
+</body>
+</html> 

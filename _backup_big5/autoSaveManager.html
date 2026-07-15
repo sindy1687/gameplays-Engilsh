@@ -1,0 +1,3763 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?芸??脣?蝞∠???- ?梯?摮貊??</title>
+    <link rel="stylesheet" href="responsive_enhanced.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            color: white;
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ?? */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 200, 255, 0.2) 0%, transparent 50%);
+            z-index: -1;
+            animation: backgroundFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(1deg); }
+            66% { transform: translate(-20px, 20px) rotate(-1deg); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 25px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            animation: containerGlow 8s ease-in-out infinite;
+        }
+
+        @keyframes containerGlow {
+            0%, 100% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 0 rgba(103, 126, 234, 0); }
+            50% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 30px rgba(103, 126, 234, 0.3); }
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(45deg, #00ffff, #ff6b9d, #ffd93d);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 
+                0 0 30px rgba(0, 255, 255, 0.5),
+                0 0 60px rgba(255, 107, 157, 0.3);
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            animation: titleGradient 4s ease-in-out infinite, titleFloat 6s ease-in-out infinite;
+            position: relative;
+        }
+
+        h1::before {
+            content: '??';
+            position: absolute;
+            left: -60px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2.5rem;
+            animation: iconSpin 8s linear infinite;
+        }
+
+        @keyframes titleGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @keyframes iconSpin {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
+
+        .status-panel {
+            max-width: 520px;
+            margin: 40px auto 32px auto;
+            padding: 32px 32px 24px 32px;
+            border-radius: 24px;
+            background: rgba(255,255,255,0.13);
+            box-shadow: 0 6px 32px rgba(0,0,0,0.13);
+            border: 2px solid rgba(0,0,0,0.08);
+        }
+        .status-panel h3 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #174ea6;
+            margin-bottom: 24px;
+            letter-spacing: 1.5px;
+        }
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+            padding: 18px 28px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.09));
+            border-radius: 16px;
+            border: 2px solid rgba(0,0,0,0.07);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .status-label {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #26324a;
+            letter-spacing: 1px;
+            margin-right: 12px;
+            background: none !important;
+            -webkit-text-fill-color: unset !important;
+            text-shadow: 0 2px 8px rgba(255,255,255,0.2), 0 1px 0 #fff;
+        }
+        .status-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #222;
+            background: #fff6;
+            border-radius: 8px;
+            padding: 8px 16px;
+            min-width: 120px;
+            text-align: right;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        }
+        @media (max-width: 600px) {
+            .status-panel {
+                max-width: 98vw;
+                padding: 16px 4vw 12px 4vw;
+            }
+            .status-panel h3 { font-size: 1.15rem; }
+            .status-label, .status-value { font-size: 1rem; }
+            .status-item { padding: 10px 8px; }
+        }
+
+        .status-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .status-item:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.12));
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .status-item:hover::before {
+            left: 100%;
+        }
+
+        .status-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .status-label {
+            font-weight: 700;
+            background: linear-gradient(45deg, #00ffff, #ff6b9d, #ffd93d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 2;
+            text-shadow: 
+                0 0 10px rgba(0, 255, 255, 0.3),
+                0 0 20px rgba(255, 107, 157, 0.2);
+            letter-spacing: 0.5px;
+        }
+
+        .status-value {
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4));
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .status-value:hover {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+            transform: scale(1.05);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        /* ?寞???見撘?*/
+        .status-value.success {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.4), rgba(0, 212, 170, 0.3));
+            border-color: rgba(0, 255, 136, 0.6);
+            color: #00ff88;
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.7);
+            font-weight: 700;
+            animation: successPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes successPulse {
+            0%, 100% { 
+                box-shadow: 
+                    0 2px 8px rgba(0, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                    0 0 0 rgba(0, 255, 136, 0);
+            }
+            50% { 
+                box-shadow: 
+                    0 2px 8px rgba(0, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                    0 0 20px rgba(0, 255, 136, 0.4);
+            }
+        }
+        
+        .status-value.error {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.4), rgba(231, 76, 60, 0.3));
+            border-color: rgba(255, 107, 107, 0.6);
+            color: #ff6b6b;
+            text-shadow: 0 0 15px rgba(255, 107, 107, 0.7);
+            font-weight: 700;
+            animation: errorPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes errorPulse {
+            0%, 100% { 
+                box-shadow: 
+                    0 2px 8px rgba(0, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                    0 0 0 rgba(255, 107, 107, 0);
+            }
+            50% { 
+                box-shadow: 
+                    0 2px 8px rgba(0, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                    0 0 20px rgba(255, 107, 107, 0.4);
+            }
+        }
+        
+        .status-value.warning {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.3), rgba(255, 152, 0, 0.2));
+            border-color: rgba(255, 193, 7, 0.5);
+            color: #ffc107;
+            text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+        }
+        
+        .status-value.info {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.3), rgba(41, 128, 185, 0.2));
+            border-color: rgba(52, 152, 219, 0.5);
+            color: #3498db;
+            text-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+        
+        /* ?芸??脣???畾見撘?*/
+        #autoSaveStatus {
+            font-size: 1.2rem !important;
+            font-weight: 900 !important;
+            letter-spacing: 1.5px !important;
+            padding: 15px 25px !important;
+            border-width: 4px !important;
+            position: relative;
+            background: linear-gradient(135deg, 
+                rgba(0, 0, 0, 0.9) 0%, 
+                rgba(0, 0, 0, 0.8) 50%, 
+                rgba(0, 0, 0, 0.9) 100%) !important;
+            color: #ffffff !important;
+            text-shadow: 
+                0 0 10px rgba(255, 255, 255, 0.8),
+                0 0 20px rgba(255, 255, 255, 0.6),
+                0 0 30px rgba(255, 255, 255, 0.4) !important;
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.6),
+                0 0 30px rgba(255, 255, 255, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+        
+        #autoSaveStatus::before {
+            content: '??';
+            position: absolute;
+            left: -35px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.4rem;
+            animation: spin 2s linear infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+        }
+        
+        @keyframes spin {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
+        
+        /* ?芸??脣????銝?憿?璅?? */
+        #autoSaveStatus.saving {
+            background: linear-gradient(135deg, 
+                rgba(52, 152, 219, 0.9) 0%, 
+                rgba(41, 128, 185, 0.8) 50%, 
+                rgba(52, 152, 219, 0.9) 100%) !important;
+            border-color: rgba(52, 152, 219, 0.8) !important;
+            color: #ffffff !important;
+            animation: savingPulse 1.5s ease-in-out infinite !important;
+        }
+        
+        @keyframes savingPulse {
+            0%, 100% { 
+                box-shadow: 
+                    0 4px 15px rgba(0, 0, 0, 0.6),
+                    0 0 30px rgba(52, 152, 219, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            }
+            50% { 
+                box-shadow: 
+                    0 4px 15px rgba(0, 0, 0, 0.6),
+                    0 0 50px rgba(52, 152, 219, 0.7),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            }
+        }
+        
+        #autoSaveStatus.success {
+            background: linear-gradient(135deg, 
+                rgba(0, 255, 136, 0.9) 0%, 
+                rgba(0, 212, 170, 0.8) 50%, 
+                rgba(0, 255, 136, 0.9) 100%) !important;
+            border-color: rgba(0, 255, 136, 0.8) !important;
+            color: #ffffff !important;
+            animation: successPulse 2s ease-in-out infinite !important;
+        }
+        
+        #autoSaveStatus.error {
+            background: linear-gradient(135deg, 
+                rgba(255, 107, 107, 0.9) 0%, 
+                rgba(231, 76, 60, 0.8) 50%, 
+                rgba(255, 107, 107, 0.9) 100%) !important;
+            border-color: rgba(255, 107, 107, 0.8) !important;
+            color: #ffffff !important;
+            animation: errorPulse 2s ease-in-out infinite !important;
+        }
+
+        .control-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .control-group {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .control-group::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00ffff, #ff6b9d, #ffd93d, #00ffff);
+            background-size: 200% 100%;
+            animation: borderGlow 3s linear infinite;
+        }
+
+        .control-group:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        @keyframes borderGlow {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+
+        .control-group h3 {
+            background: linear-gradient(45deg, #00ff88, #00d4aa, #a8edea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 16px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: 12px 8px;
+            min-width: 220px;
+            box-shadow: 
+                0 8px 25px rgba(102, 126, 234, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 
+                0 15px 35px rgba(102, 126, 234, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 30%, #f093fb 100%);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:active {
+            transform: translateY(-2px) scale(0.98);
+            transition: all 0.1s ease;
+        }
+
+        .btn.danger {
+            background: linear-gradient(45deg, #ff6b6b, #e74c3c);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn.danger:hover {
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+        }
+
+        .btn.success {
+            background: linear-gradient(45deg, #00ff88, #00d4aa);
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn.success:hover {
+            box-shadow: 0 6px 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Modal 璅?? */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(231, 76, 60, 0.1));
+            padding: 20px 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #ff6b6b;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close {
+            color: #ff6b6b;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close:hover {
+            color: #e74c3c;
+            transform: scale(1.1);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .clear-option {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .clear-option:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .clear-option h4 {
+            margin: 0 0 10px 0;
+            color: #ff6b6b;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .clear-option p {
+            margin: 0 0 15px 0;
+            color: #ffffff;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .clear-option .btn {
+            min-width: 150px;
+            padding: 12px 20px;
+            font-size: 0.9rem;
+        }
+
+        .rarity-select {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #ffffff;
+            padding: 8px 12px;
+            margin-right: 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .rarity-select:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+        }
+
+        .rarity-select option {
+            background: #2c3e50;
+            color: #ffffff;
+        }
+
+        .backup-list {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .backup-list::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ffd93d, #ff6b9d, #667eea);
+            background-size: 200% 100%;
+            animation: listGlow 4s linear infinite;
+        }
+
+        @keyframes listGlow {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+
+        .backup-item {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .backup-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.8s ease;
+        }
+
+        .backup-item:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .backup-item:hover::before {
+            left: 100%;
+        }
+
+        .backup-info {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .backup-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .backup-actions .btn {
+            min-width: 100px;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+        }
+
+        .log-panel {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
+            border-radius: 20px;
+            padding: 30px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            max-height: 350px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .log-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00ff88, #00d4aa, #a8edea);
+            background-size: 200% 100%;
+            animation: logGlow 3s linear infinite;
+        }
+
+        @keyframes logGlow {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+
+        /* ?芸?蝢拇遝?? */
+        .log-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .log-panel::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .log-panel::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 4px;
+        }
+
+        .log-panel::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #764ba2, #f093fb);
+        }
+
+        .log-item {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e8e8e8;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .log-item:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+            padding-left: 10px;
+            border-radius: 5px;
+        }
+
+        .log-item:last-child {
+            border-bottom: none;
+        }
+
+        /* ?亥????璅?? */
+        .log-item:before {
+            content: '??;
+            color: #667eea;
+            margin-right: 8px;
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+
+        .nav-buttons {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .nav-buttons .btn {
+            margin: 0 10px;
+            background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .control-panel {
+                grid-template-columns: 1fr;
+            }
+
+            .backup-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .backup-actions {
+                justify-content: center;
+            }
+        }
+
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.95), rgba(0, 212, 170, 0.95));
+            color: white;
+            padding: 18px 30px;
+            border-radius: 15px;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+
+        .notification.show {
+            transform: translateX(0) scale(1);
+            animation: notificationPulse 0.6s ease;
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.95), rgba(231, 76, 60, 0.95));
+        }
+
+        @keyframes notificationPulse {
+            0% { transform: translateX(0) scale(1); }
+            50% { transform: translateX(0) scale(1.05); }
+            100% { transform: translateX(0) scale(1); }
+        }
+
+        /* ========== ?踵?撘身閮?========== */
+        
+        /* 撟單?拚? (1024px 隞乩?) */
+        @media (max-width: 1024px) {
+            .container {
+                max-width: 95%;
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .status-panel, .control-panel, .backup-list, .log-panel {
+                padding: 20px;
+            }
+            
+            .control-group {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .control-group button {
+                width: 100%;
+                margin: 0;
+            }
+        }
+
+        /* ??璈怠??拚? (768px 隞乩?) */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .container {
+                max-width: 100%;
+                padding: 20px;
+                border-radius: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 20px;
+            }
+            
+            .status-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                padding: 15px;
+            }
+            
+            .status-label {
+                font-size: 1rem;
+                text-shadow: 
+                    0 0 8px rgba(0, 255, 255, 0.4),
+                    0 0 16px rgba(255, 107, 157, 0.3);
+            }
+            
+            .status-value {
+                font-size: 0.95rem;
+                word-break: break-all;
+                padding: 6px 12px;
+                background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+                border: 1px solid rgba(255, 255, 255, 0.4);
+            }
+            
+            .backup-item {
+                padding: 12px;
+            }
+            
+            .backup-info {
+                font-size: 0.85rem;
+                line-height: 1.4;
+            }
+            
+            .backup-actions {
+                flex-direction: column;
+                gap: 8px;
+                margin-top: 10px;
+            }
+            
+            .backup-actions button {
+                width: 100%;
+                padding: 10px;
+                font-size: 0.85rem;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .nav-buttons button {
+                width: 100%;
+                max-width: none;
+            }
+            
+            .log-container {
+                max-height: 200px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* ??鞊??拚? (600px 隞乩?) */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+                border-radius: 12px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+                margin-bottom: 15px;
+            }
+            
+            h3 {
+                font-size: 1.3rem;
+                margin-bottom: 12px;
+            }
+            
+            .status-panel, .control-panel, .backup-list, .log-panel {
+                padding: 15px;
+                margin-bottom: 20px;
+                border-radius: 12px;
+            }
+            
+            .status-item {
+                padding: 12px;
+                border-radius: 10px;
+                margin-bottom: 12px;
+                border-width: 1px;
+            }
+            
+            button, .btn {
+                padding: 12px 16px;
+                font-size: 0.9rem;
+                border-radius: 8px;
+                min-height: 44px; /* 閫豢?末 */
+            }
+            
+            .backup-item {
+                padding: 10px;
+                border-radius: 8px;
+                margin-bottom: 10px;
+            }
+            
+            #importFile {
+                width: 100%;
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* 頞??Ｗ??拚? (480px 隞乩?) */
+        @media (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+            
+            .container {
+                padding: 12px;
+                border-radius: 10px;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+                margin-bottom: 12px;
+            }
+            
+            h3 {
+                font-size: 1.2rem;
+                margin-bottom: 10px;
+            }
+            
+            .status-panel, .control-panel, .backup-list, .log-panel {
+                padding: 12px;
+                margin-bottom: 15px;
+                border-radius: 10px;
+            }
+            
+            .status-item {
+                padding: 8px;
+                margin-bottom: 8px;
+            }
+            
+            .status-label, .status-value {
+                font-size: 0.85rem;
+            }
+            
+            .status-value {
+                padding: 4px 8px;
+                background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6));
+                border: 1px solid rgba(255, 255, 255, 0.5);
+            }
+            
+            button, .btn {
+                padding: 10px 12px;
+                font-size: 0.85rem;
+                min-height: 48px; /* ?游之?孛?批???*/
+            }
+            
+            .backup-item {
+                padding: 8px;
+                margin-bottom: 8px;
+            }
+            
+            .backup-info {
+                font-size: 0.8rem;
+            }
+            
+            .backup-actions button {
+                padding: 8px;
+                font-size: 0.8rem;
+            }
+            
+            .log-container {
+                max-height: 150px;
+                font-size: 0.75rem;
+                padding: 8px;
+            }
+            
+            .notification {
+                font-size: 0.85rem;
+                padding: 10px 15px;
+                border-radius: 8px;
+                margin: 8px;
+            }
+        }
+
+        /* 閫豢鋆蔭?芸? */
+        @media (hover: none) and (pointer: coarse) {
+            button, .btn {
+                min-height: 44px;
+                min-width: 44px;
+                padding: 12px 16px;
+            }
+            
+            .btn:hover {
+                transform: none; /* 蝘駁hover?? */
+            }
+            
+            .btn:active {
+                transform: scale(0.98);
+                opacity: 0.8;
+            }
+            
+            .backup-item {
+                cursor: default;
+            }
+            
+            .backup-item:hover {
+                transform: none;
+            }
+        }
+
+        /* 璈怠?璅∪??芸? */
+        @media (max-width: 900px) and (orientation: landscape) {
+            .container {
+                max-width: 95%;
+                padding: 15px;
+            }
+            
+            .status-panel, .control-panel {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+                align-items: start;
+            }
+            
+            .status-panel h3, .control-panel h3 {
+                grid-column: 1 / -1;
+                margin-bottom: 10px;
+            }
+            
+            .nav-buttons {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 10px;
+            }
+        }
+
+        /* ========== ?∠?蝞∠??冽芋??璅?? ========== */
+        
+        .modal {
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+            margin: 2% auto;
+            padding: 0;
+            border-radius: 25px;
+            width: 90%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes modalSlideIn {
+            from { 
+                transform: translateY(-50px) scale(0.9);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.2), rgba(41, 128, 185, 0.1));
+            padding: 25px 30px;
+            border-radius: 25px 25px 0 0;
+            border-bottom: 2px solid rgba(52, 152, 219, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .close:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .card-stats-panel, .rarity-progress-panel, .category-progress-panel, .card-actions-panel {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-stats-panel::before, .rarity-progress-panel::before, 
+        .category-progress-panel::before, .card-actions-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3498db, #2980b9, #3498db);
+            background-size: 200% 100%;
+            animation: borderGlow 3s linear infinite;
+        }
+
+        .card-stats-panel h3, .rarity-progress-panel h3, 
+        .category-progress-panel h3, .card-actions-panel h3 {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-item {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-label {
+            display: block;
+            color: #ccc;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            display: block;
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .progress-item {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .progress-title {
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .progress-count {
+            color: #3498db;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            border-radius: 4px;
+            transition: width 0.8s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: progressShine 2s linear infinite;
+        }
+
+        @keyframes progressShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .action-buttons .btn {
+            margin: 0;
+            min-width: auto;
+        }
+
+        /* ?踵?撘身閮?*/
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+                max-height: 95vh;
+            }
+
+            .modal-header {
+                padding: 20px;
+            }
+
+            .modal-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .modal-body {
+                padding: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+        }
+
+        /* 摰閮剖????*/
+        .card {
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+          border-radius: 15px;
+          padding: 20px;
+          margin-bottom: 30px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .setting-group {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 20px;
+        }
+
+        .setting-item {
+          flex: 1;
+          min-width: 200px;
+        }
+
+        .setting-item label {
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: #fff;
+          margin-bottom: 10px;
+        }
+
+        .setting-controls {
+          display: flex;
+          gap: 10px;
+        }
+
+        .setting-description {
+          font-size: 0.9rem;
+          color: #ccc;
+          margin-top: 5px;
+        }
+
+        /* ?????*/
+        @media (max-width: 600px) {
+          #audioControls {
+            bottom: 10px;
+            right: 10px;
+          }
+          
+          #audioControls button {
+            width: 30px;
+            height: 30px;
+          }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>?? ?芸??脣?蝞∠???/h1>
+        
+        <!-- ????-->
+        <div class="status-panel">
+            <h3 style="color: #00ff88; margin-bottom: 20px; text-align: center;">?? 蝟餌絞???/h3>
+            <div class="status-item">
+                <span class="status-label">?芸??脣????</span>
+                <span class="status-value" id="autoSaveStatus">瑼Ｘ銝?..</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">?敺摮???</span>
+                <span class="status-value" id="lastSaveTime">瑼Ｘ銝?..</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">??鞈??嚗?/span>
+                <span class="status-value" id="dataKeysCount">瑼Ｘ銝?..</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">?遢?賊?嚗?/span>
+                <span class="status-value" id="backupCount">瑼Ｘ銝?..</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">?? 撖嗥蝟餌絞嚗?/span>
+                <span class="status-value" id="gemSystemStatus">瑼Ｘ銝?..</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">?? 撖嗥蝮賣嚗?/span>
+                <span class="status-value" id="totalGems">閮?銝?..</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">?? 撖嗥蝔桅?嚗?/span>
+                <span class="status-value" id="gemTypes">閮?銝?..</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">? ?∠?蝟餌絞嚗?/span>
+                <span class="status-value" id="cardSystemStatus">瑼Ｘ銝?..</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">? 撌脫???</span>
+                <span class="status-value" id="collectedCards">閮?銝?..</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">? ?∠?蝣?嚗?/span>
+                <span class="status-value" id="cardShards">閮?銝?..</span>
+            </div>
+        </div>
+
+        <!-- ?批?Ｘ -->
+        <div class="control-panel">
+            <div class="control-group">
+                <h3>? ?箸?批</h3>
+                <button class="btn" id="toggleAutoSave" onclick="toggleAutoSave()">
+                    ???芸??脣?
+                </button>
+                <button class="btn success" onclick="manualSave()">
+                    ? 蝡?脣?
+                </button>
+                <button class="btn" onclick="refreshStatus()">
+                    ?? ??渡????
+                </button>
+            </div>
+
+            <div class="control-group">
+                <h3>?? ?脩垢?遢</h3>
+                <button class="btn" onclick="loadFromCloud()">
+                    ? 頛?脩垢?遢
+                </button>
+                <button class="btn" onclick="exportBackup()">
+                    ? ?臬?遢瑼?
+                </button>
+                <button class="btn" onclick="importBackup()">
+                    ? ?臬?遢瑼?
+                </button>
+                <input type="file" id="importFile" accept=".json" style="display: none;" onchange="handleImportFile(event)">
+            </div>
+
+            <div class="control-group">
+                <h3>?? ?遢蝞∠?</h3>
+                <button class="btn" onclick="generateFiveBackups()" style="background: linear-gradient(135deg, #FF6B6B, #4ECDC4);">
+                    ?? ??5??隞?
+                </button>
+            </div>
+            
+            <div class="control-group">
+                <h3>?? 撖嗥蝟餌絞蝞∠?</h3>
+                <button class="btn" onclick="syncGemData()" style="background: linear-gradient(135deg, #9b59b6, #e74c3c);">
+                    ?? ?郊撖嗥鞈?
+                </button>
+                <button class="btn" onclick="exportGemData()">
+                    ? ?臬撖嗥鞈?
+                </button>
+                <button class="btn" onclick="validateGemData()">
+                    ??撽?撖嗥鞈?
+                </button>
+            </div>
+            
+            <div class="control-group">
+                <h3>? ?∠?蝟餌絞蝞∠?</h3>
+                <button class="btn" onclick="syncCardData()" style="background: linear-gradient(135deg, #3498db, #2980b9);">
+                    ?? ?郊?∠?鞈?
+                </button>
+                <button class="btn" onclick="exportCardData()">
+                    ? ?臬?∠?鞈?
+                </button>
+                <button class="btn" onclick="validateCardData()">
+                    ??撽??∠?鞈?
+                </button>
+                <button class="btn" onclick="showCardManager()">
+                    ?? ?∠?蝞∠???
+                </button>
+                <button class="btn" onclick="importCardFile()" style="background: linear-gradient(135deg, #e67e22, #d35400);">
+                    ? ?臬?∠?瑼?
+                </button>
+                <input type="file" id="cardFileInput" accept=".json,.txt,.csv" style="display: none;" onchange="handleCardFileImport(event)">
+            </div>
+            
+            <div class="control-group">
+                <h3>?? ?梢??</h3>
+                <button class="btn danger" onclick="clearAllBackups()">
+                    ??儭?皜???隞?
+                </button>
+                <button class="btn danger" onclick="resetAutoSave()">
+                    ???身?芸??脣?
+                </button>
+            </div>
+        </div>
+
+        <!-- ?遢?” -->
+        <div class="backup-list">
+            <h3 style="color: #00ff88; margin-bottom: 20px; text-align: center;">?? ?遢?”</h3>
+            <div id="backupListContainer">
+                頛銝?..
+            </div>
+        </div>
+
+        <!-- ??蝝??-->
+        <div class="log-panel">
+            <h3 style="color: #00ff88; margin-bottom: 15px;">?? ??蝝??/h3>
+            <div id="logContainer">
+                蝟餌絞??銝?..
+            </div>
+        </div>
+
+        <!-- 撠?? -->
+        <div class="nav-buttons">
+            <button class="btn" onclick="window.location.href='index.html'">
+                ?? ?擐?
+            </button>
+            <button class="btn" onclick="window.location.href='cards.html'">
+                ? ?∠??園?
+            </button>
+            <button class="btn" onclick="window.location.href='gacha.html'">
+                ? 頧?蝟餌絞
+            </button>
+        </div>
+    </div>
+
+    <!-- ?摰孵 -->
+    <div id="notification" class="notification"></div>
+
+    <!-- ?∠?蝞∠??冽芋?? -->
+    <div id="cardManagerModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>? ?∠?蝞∠???/h2>
+                <span class="close" onclick="closeCardManager()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <!-- ?∠?蝯梯??Ｘ -->
+                <div class="card-stats-panel">
+                    <h3>?? ?∠?蝯梯?</h3>
+                    <div id="raritySummary" style="color:#3498db;font-weight:700;margin-bottom:10px;"></div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">蝮賢?</span>
+                            <span class="stat-value" id="totalCardsCount">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">撌脫??/span>
+                            <span class="stat-value" id="collectedCardsCount">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">?園??脣漲</span>
+                            <span class="stat-value" id="collectionProgress">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">蝣?蝮賣</span>
+                            <span class="stat-value" id="totalShardsCount">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 蝔?漲?脣漲 -->
+                <div class="rarity-progress-panel">
+                    <h3>潃?蝔?漲?脣漲</h3>
+                    <div id="rarityProgressContainer"></div>
+                </div>
+
+                <!-- 憿?脣漲 -->
+                <div class="category-progress-panel">
+                    <h3>?? 憿?脣漲</h3>
+                    <div id="categoryProgressContainer"></div>
+                </div>
+
+                <!-- ?∠????Ｘ -->
+                <div class="card-actions-panel">
+                    <h3>?? ?∠???</h3>
+                    <div class="action-buttons">
+                        <button class="btn" onclick="addRandomCard()">
+                            ? 瘛餃??冽??∠?
+                        </button>
+                        <button class="btn" onclick="addRandomShards()">
+                            ?? 瘛餃??冽?蝣?
+                        </button>
+                        <button class="btn danger" onclick="showClearOptions()">
+                            ??儭?皜?賊?
+                        </button>
+                        <button class="btn" onclick="exportCardBackup()">
+                            ? ?臬?∠??遢
+                        </button>
+                        <button class="btn" onclick="importCardBackup()">
+                            ? ?臬?∠??遢
+                        </button>
+                        <input type="file" id="cardImportFile" accept=".json" style="display: none;" onchange="handleCardImportFile(event)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 皜?賊? Modal -->
+    <div id="clearOptionsModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>??儭?皜?賊?</h3>
+                <span class="close" onclick="closeClearOptionsModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="clear-option">
+                    <h4>? 皜?∠?</h4>
+                    <p>皜??歇?????雿?????/p>
+                    <button class="btn danger" onclick="clearCardsOnly()">皜?∠?</button>
+                </div>
+                <div class="clear-option">
+                    <h4>? 皜?孵?蝔?漲?∠?</h4>
+                    <p>?芣??斤摰??漲???雿?????/p>
+                    <select id="raritySelect" class="rarity-select">
+                        <option value="?桅?>?桅?/option>
+                        <option value="蝔??>蝔??/option>
+                        <option value="頞???>頞???/option>
+                    </select>
+                    <button class="btn danger" onclick="clearCardsByRarity()">皜?詨?蝔?漲?∠?</button>
+                </div>
+                <div class="clear-option">
+                    <h4>?? 皜蝣?</h4>
+                    <p>皜?????雿??歇閫?????/p>
+                    <button class="btn danger" onclick="clearShardsOnly()">皜蝣?</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ?單??批?? -->
+    <button id="bgMusicControl" onclick="toggleBackgroundMusic()" title="??單??批">?</button>
+    <button id="toggleMusic" title="??單?"></button>
+
+    <!-- 頛敹???JavaScript -->
+    <script src="js/userData.js"></script>
+    <script src="js/gemSystem.js"></script>
+    <script src="js/autoSaveSystem.js"></script>
+    <script src="js/cards.js"></script>
+    <!-- 蝘駁?湔頛 cardStorage.js嚗?箏????乩誑?踹?????蝒?-->
+    
+    <script>
+        // ?典?霈
+        let logs = [];
+        
+        // ?頛摰?敺?憪?
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                initializeManager();
+            }, 1000);
+        });
+        
+        /**
+         * ???恣?
+         */
+        function initializeManager() {
+            addLog('?芸??脣?蝞∠??典??葉...');
+            
+            // 瑼Ｘ?芸??脣?蝟餌絞?臬頛
+            if (typeof window.UnifiedAutoSave === 'undefined') {
+                addLog('???芸??脣?蝟餌絞?芾??伐?隢??唳????);
+                showNotification('?芸??脣?蝟餌絞頛憭望?嚗???渡??', 'error');
+                return;
+            }
+            
+            addLog('???芸??脣?蝟餌絞撌脰???);
+            
+            // ??頛?∠??脣?蝟餌絞嚗??憪?銵?嚗?
+            loadCardStorageSystem();
+            
+            // 瘛餃?鞈?霈?????
+            window.UnifiedAutoSave.addListener((key, value) => {
+                addLog(`?? 鞈?霈?嚗?{key}`);
+            });
+            
+            // ???＊蝷?
+            refreshStatus();
+            loadBackupList();
+            
+            addLog('? 蝞∠??典?憪?摰?');
+        }
+        
+        /**
+         * ??頛?∠??脣?蝟餌絞
+         */
+        function loadCardStorageSystem() {
+            addLog('? ??頛?∠??脣?蝟餌絞...');
+            
+            // 瑼Ｘ?臬撌脩?頛
+            if (typeof window.CardStorage !== 'undefined') {
+                addLog('???∠??脣?蝟餌絞撌脰???);
+                return;
+            }
+            
+            // ??頛 cardStorage.js
+            const script = document.createElement('script');
+            script.src = 'js/cardStorage.js';
+            script.onload = function() {
+                addLog('???∠??脣?蝟餌絞頛摰?');
+                
+                // ???????踹??芸?????蝒?
+                if (typeof window.CardStorage !== 'undefined') {
+                    window.CardStorage.init();
+                    addLog('???∠??脣?蝟餌絞??????);
+                }
+                
+                // ??渡??∠????
+                setTimeout(() => {
+                    refreshCardStatus();
+                }, 500);
+            };
+            script.onerror = function() {
+                addLog('???∠??脣?蝟餌絞頛憭望?');
+            };
+            document.head.appendChild(script);
+        }
+        
+        /**
+         * ???芸??脣????
+         */
+        function toggleAutoSave() {
+            if (typeof window.UnifiedAutoSave === 'undefined') {
+                showNotification('?芸??脣?蝟餌絞?芾???, 'error');
+                return;
+            }
+            
+            const newState = window.UnifiedAutoSave.toggleAutoSave();
+            const statusText = newState ? '撌脣??? : '撌脣???;
+            
+            addLog(`?? ?芸??脣?撌?{statusText}`);
+            showNotification(`?芸??脣?${statusText}`, 'success');
+            
+            refreshStatus();
+        }
+        
+        /**
+         * ???脣?
+         */
+        function manualSave() {
+            if (typeof window.UnifiedAutoSave === 'undefined') {
+                showNotification('?芸??脣?蝟餌絞?芾???, 'error');
+                return;
+            }
+            
+            addLog('? ?瑁????脣?...');
+            
+            try {
+                window.UnifiedAutoSave.performImmediateSave();
+                addLog('?????脣?摰?');
+                showNotification('???脣?摰?', 'success');
+                refreshStatus();
+                loadBackupList();
+            } catch (error) {
+                addLog('?????脣?憭望?嚗? + error.message);
+                showNotification('???脣?憭望?', 'error');
+            }
+        }
+        
+        /**
+         * 頛?脩垢?遢
+         */
+        function loadFromCloud() {
+            if (typeof window.UnifiedAutoSave === 'undefined') {
+                showNotification('?芸??脣?蝟餌絞?芾???, 'error');
+                return;
+            }
+            
+            addLog('? 皞?頛?脩垢?遢...');
+            
+            const success = window.UnifiedAutoSave.loadFromCloud();
+            
+            if (success) {
+                addLog('???脩垢?遢頛??');
+            } else {
+                addLog('???脩垢?遢頛憭望???瘨?);
+            }
+        }
+        
+        /**
+         * 頛???遢
+         */
+        function loadBackup(backupId) {
+            if (typeof window.UnifiedAutoSave === 'undefined') {
+                showNotification('?芸??脣?蝟餌絞?芾???, 'error');
+                return;
+            }
+            
+            addLog(`? 頛?遢 ID: ${backupId}...`);
+            
+            const success = window.UnifiedAutoSave.loadFromBackup(backupId);
+            
+            if (success) {
+                addLog('???遢頛??');
+            } else {
+                addLog('???遢頛憭望???瘨?);
+            }
+        }
+        
+        /**
+         * ?臬?遢瑼?
+         */
+        function exportBackup() {
+            if (typeof window.UnifiedAutoSave === 'undefined') {
+                showNotification('?芸??脣?蝟餌絞?芾???, 'error');
+                return;
+            }
+            
+            try {
+                const data = window.UnifiedAutoSave.collectAllGameData();
+                const exportData = {
+                    gameData: data,
+                    exportTime: new Date().toISOString(),
+                    version: '2.0'
+                };
+                
+                const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+                    type: 'application/json'
+                });
+                
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `??遢_${new Date().toISOString().slice(0, 10)}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                addLog('? ?遢瑼??臬摰?');
+                showNotification('?遢瑼??臬摰?', 'success');
+                
+            } catch (error) {
+                addLog('???臬憭望?嚗? + error.message);
+                showNotification('?臬憭望?', 'error');
+            }
+        }
+        
+        /**
+         * ?臬?遢瑼?
+         */
+        function importBackup() {
+            document.getElementById('importFile').click();
+        }
+        
+        /**
+         * ???臬瑼?
+         */
+        function handleImportFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importData = JSON.parse(e.target.result);
+                    
+                    if (!importData.gameData) {
+                        throw new Error('瑼??澆?銝迤蝣?);
+                    }
+                    
+                    if (!confirm(`蝣箏?閬?交迨?遢瑼???\n\n?臬??嚗?{new Date(importData.exportTime).toLocaleString()}\n?嚗?{importData.version}\n\n?? ???????????脰???`)) {
+                        return;
+                    }
+                    
+                    // 頛鞈?
+                    const gameData = importData.gameData;
+                    
+                    // ?芸?敺蜓蝟餌絞?園?
+                    if (typeof window.gemSystem !== 'undefined' && window.gemSystem.gems) {
+                        gameData['gems'] = JSON.stringify(window.gemSystem.gems);
+                    } else {
+                        // ?敺ocalStorage?園?
+                        const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
+                        if (userData.gems) {
+                            gameData['gems'] = JSON.stringify(userData.gems);
+                        }
+                    }
+                    
+                    // ?郊?啣??刻???
+                    localStorage.setItem('grammarGameData', JSON.stringify(gameData));
+                    
+                    addLog('? ?遢瑼??臬摰?');
+                    showNotification('?遢瑼??臬??嚗??Ｗ???渡?...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                    
+                } catch (error) {
+                    addLog('???臬憭望?嚗? + error.message);
+                    showNotification('?臬憭望?嚗?獢撘隤?, 'error');
+                }
+            };
+            
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+        
+        /**
+         * ??5??隞?
+         */
+        function generateFiveBackups() {
+            if (typeof window.UnifiedAutoSave === 'undefined') {
+                showNotification('?芸??脣?蝟餌絞?芾???, 'error');
+                return;
+            }
+            
+            if (!confirm('蝣箏?閬???????0????隞賢?嚗n\n?????斤??隞賭蒂?萄遣?啁??遢摨???)) {
+                return;
+            }
+            
+            addLog('?? ????5??隞?..');
+            
+            try {
+                // ???斤??隞?
+                window.UnifiedAutoSave.clearAllBackups();
+                
+                // 蝑?皜摰?敺????啣?隞?
+                setTimeout(() => {
+                    window.UnifiedAutoSave.ensureFiveBackups();
+                    
+                    addLog('??5??隞賜?????);
+                    showNotification('撌脩???????0????隞?, 'success');
+                    
+                    // ??渡?憿舐內
+                    setTimeout(() => {
+                        refreshStatus();
+                        loadBackupList();
+                    }, 500);
+                }, 500);
+                
+            } catch (error) {
+                addLog('?????遢憭望?嚗? + error.message);
+                showNotification('???遢憭望?', 'error');
+            }
+        }
+        
+        /**
+         * 皜???隞?
+         */
+        function clearAllBackups() {
+            if (typeof window.UnifiedAutoSave === 'undefined') {
+                showNotification('?芸??脣?蝟餌絞?芾???, 'error');
+                return;
+            }
+            
+            addLog('??儭?皞?皜???隞?..');
+            window.UnifiedAutoSave.clearAllBackups();
+            
+            setTimeout(() => {
+                refreshStatus();
+                loadBackupList();
+            }, 1000);
+        }
+        
+        /**
+         * ?身?芸??脣?蝟餌絞
+         */
+        function resetAutoSave() {
+            // 憓??渲底蝝啁?蝣箄?撠店獢?
+            const confirmMessage = `蝣箏?閬?閮剛?摮頂蝯勗?嚗n\n` +
+                `?? 甇斗?雿???\n` +
+                `???迫?芸??脣??\n` +
+                `??皜?芸??脣?閮剖?\n` +
+                `??靽??鞈?嚗???蝛箏????嚗n\n` +
+                `?? ?桀????\n` +
+                `???芸??脣?嚗?{typeof window.UnifiedAutoSave !== 'undefined' && window.UnifiedAutoSave.autoSaveEnabled ? '撌脣??? : '撌脣???}\n` +
+                `???遢?賊?嚗?{typeof window.UnifiedAutoSave !== 'undefined' ? window.UnifiedAutoSave.getBackupList().length : '?⊥?瑼Ｘ'} ?n\n` +
+                `蝣箏?閬匱蝥?嚗;
+            
+            if (!confirm(confirmMessage)) {
+                return;
+            }
+            
+            try {
+                // ?券?閮剖??撱箔???隞?
+                if (typeof window.UnifiedAutoSave !== 'undefined') {
+                    window.UnifiedAutoSave.performImmediateSave();
+                    addLog('? ?身?歇?萄遣?遢');
+                }
+                
+                // ?迫?芸??脣?
+                if (typeof window.UnifiedAutoSave !== 'undefined') {
+                    window.UnifiedAutoSave.stopAutoSave();
+                }
+                
+                // 皜?芸??脣??賊?閮剖?嚗?靽??鞈?嚗?
+                localStorage.removeItem('unifiedAutoSaveEnabled');
+                localStorage.removeItem('unifiedAutoSaveInterval');
+                localStorage.removeItem('lastAutoSaveTime');
+                
+                addLog('???芸??脣?蝟餌絞撌脤?閮?);
+                showNotification('?芸??脣?蝟餌絞撌脤?閮哨??撠??唳??..', 'success');
+                
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+                
+            } catch (error) {
+                addLog('???身憭望?嚗? + error.message);
+                showNotification('?身憭望?', 'error');
+            }
+        }
+        
+        /**
+         * ??渡????
+         */
+        function refreshStatus() {
+            if (typeof window.UnifiedAutoSave === 'undefined') {
+                const autoSaveStatusEl = document.getElementById('autoSaveStatus');
+                const lastSaveTimeEl = document.getElementById('lastSaveTime');
+                const dataKeysCountEl = document.getElementById('dataKeysCount');
+                const backupCountEl = document.getElementById('backupCount');
+                const gemSystemStatusEl = document.getElementById('gemSystemStatus');
+                const totalGemsEl = document.getElementById('totalGems');
+                const gemTypesEl = document.getElementById('gemTypes');
+                
+                autoSaveStatusEl.textContent = '???芸??脣?蝟餌絞?芾???;
+                autoSaveStatusEl.className = 'status-value error';
+                lastSaveTimeEl.textContent = '?⊥?瑼Ｘ';
+                lastSaveTimeEl.className = 'status-value error';
+                dataKeysCountEl.textContent = '?⊥?瑼Ｘ';
+                dataKeysCountEl.className = 'status-value error';
+                backupCountEl.textContent = '?⊥?瑼Ｘ';
+                backupCountEl.className = 'status-value error';
+                gemSystemStatusEl.textContent = '?⊥?瑼Ｘ';
+                gemSystemStatusEl.className = 'status-value error';
+                totalGemsEl.textContent = '?⊥?瑼Ｘ';
+                totalGemsEl.className = 'status-value error';
+                gemTypesEl.textContent = '?⊥?瑼Ｘ';
+                gemTypesEl.className = 'status-value error';
+                return;
+            }
+            
+            try {
+                const status = window.UnifiedAutoSave.getStatus();
+                
+                const autoSaveStatusEl = document.getElementById('autoSaveStatus');
+                const lastSaveTimeEl = document.getElementById('lastSaveTime');
+                const dataKeysCountEl = document.getElementById('dataKeysCount');
+                const backupCountEl = document.getElementById('backupCount');
+                
+                autoSaveStatusEl.textContent = status.enabled ? '? ?芸??脣?撌脣??? : '? ?芸??脣?撌脣???;
+                autoSaveStatusEl.className = 'status-value ' + (status.enabled ? 'success' : 'error');
+                
+                lastSaveTimeEl.textContent = status.lastSaveTime;
+                lastSaveTimeEl.className = 'status-value info';
+                
+                dataKeysCountEl.textContent = status.dataKeysCount + ' ??;
+                dataKeysCountEl.className = 'status-value info';
+                
+                backupCountEl.textContent = status.backupCount + ' ??;
+                backupCountEl.className = 'status-value info';
+                
+                // 瑼Ｘ撖嗥蝟餌絞???
+                refreshGemStatus();
+                
+                // 瑼Ｘ?∠?蝟餌絞???
+                refreshCardStatus();
+                
+                // ?湔??????
+                const toggleBtn = document.getElementById('toggleAutoSave');
+                if (toggleBtn) {
+                    toggleBtn.textContent = status.enabled ? '?賂? ??芸??脣?' : '?? ??芸??脣?';
+                    toggleBtn.className = status.enabled ? 'btn danger' : 'btn success';
+                }
+                
+            } catch (error) {
+                addLog('?????啣仃??' + error.message);
+            }
+        }
+        
+        /**
+         * ?瑟撖嗥蝟餌絞???
+         */
+        function refreshGemStatus() {
+            try {
+                // 瑼Ｘ撖嗥蝟餌絞?臬頛
+                const gemSystemLoaded = typeof window.gemSystem !== 'undefined';
+                const gemSystemStatusEl = document.getElementById('gemSystemStatus');
+                gemSystemStatusEl.textContent = gemSystemLoaded ? '? 撌脰??? : '? ?芾???;
+                gemSystemStatusEl.className = 'status-value ' + (gemSystemLoaded ? 'success' : 'error');
+                
+                if (gemSystemLoaded && window.gemSystem.gems) {
+                    // ?湔敺窄?喟頂蝯梯?蝞?
+                    const totalGems = Object.values(window.gemSystem.gems)
+                        .reduce((total, count) => total + (parseInt(count) || 0), 0);
+                    const uniqueTypes = Object.keys(window.gemSystem.gems)
+                        .filter(key => parseInt(window.gemSystem.gems[key]) > 0).length;
+                        
+                                            const totalGemsEl = document.getElementById('totalGems');
+                        const gemTypesEl = document.getElementById('gemTypes');
+                        totalGemsEl.textContent = totalGems + ' 憿?;
+                        totalGemsEl.className = 'status-value success';
+                        gemTypesEl.textContent = uniqueTypes + ' 蝔?;
+                        gemTypesEl.className = 'status-value info';
+                } else {
+                    // 敺??冽獢炎??
+                    const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
+                    if (userData.gems) {
+                        const totalGems = Object.values(userData.gems)
+                            .reduce((total, count) => total + (parseInt(count) || 0), 0);
+                        const uniqueTypes = Object.keys(userData.gems)
+                            .filter(key => parseInt(userData.gems[key]) > 0).length;
+                            
+                        const totalGemsEl = document.getElementById('totalGems');
+                        const gemTypesEl = document.getElementById('gemTypes');
+                        totalGemsEl.textContent = totalGems + ' 憿?(?)';
+                        totalGemsEl.className = 'status-value warning';
+                        gemTypesEl.textContent = uniqueTypes + ' 蝔?(?)';
+                        gemTypesEl.className = 'status-value warning';
+                    } else {
+                        const totalGemsEl = document.getElementById('totalGems');
+                        const gemTypesEl = document.getElementById('gemTypes');
+                        totalGemsEl.textContent = '0 憿?;
+                        totalGemsEl.className = 'status-value error';
+                        gemTypesEl.textContent = '0 蝔?;
+                        gemTypesEl.className = 'status-value error';
+                    }
+                }
+                
+            } catch (error) {
+                const gemSystemStatusEl = document.getElementById('gemSystemStatus');
+                const totalGemsEl = document.getElementById('totalGems');
+                const gemTypesEl = document.getElementById('gemTypes');
+                gemSystemStatusEl.textContent = '??瑼Ｘ憭望?';
+                gemSystemStatusEl.className = 'status-value error';
+                totalGemsEl.textContent = '?⊥?閮?';
+                totalGemsEl.className = 'status-value error';
+                gemTypesEl.textContent = '?⊥?閮?';
+                gemTypesEl.className = 'status-value error';
+                console.error('撖嗥??炎?亙仃??', error);
+            }
+        }
+        
+        /**
+         * ?瑟?∠?蝟餌絞???
+         */
+        function refreshCardStatus() {
+            try {
+                // 瑼Ｘ?∠?蝟餌絞?臬頛
+                const cardSystemLoaded = typeof window.CardStorage !== 'undefined';
+                const cardSystemStatusEl = document.getElementById('cardSystemStatus');
+                cardSystemStatusEl.textContent = cardSystemLoaded ? '? 撌脰??? : '?? 頛銝?..';
+                cardSystemStatusEl.className = 'status-value ' + (cardSystemLoaded ? 'success' : 'info');
+                
+                if (cardSystemLoaded) {
+                    // ?脣??∠??園??脣漲
+                    const progress = window.CardStorage.getCollectionProgress();
+                    const shards = window.CardStorage.getShards();
+                    const totalShards = Object.values(shards).reduce((total, count) => total + (parseInt(count) || 0), 0);
+                    
+                    const collectedCardsEl = document.getElementById('collectedCards');
+                    const cardShardsEl = document.getElementById('cardShards');
+                    collectedCardsEl.textContent = `${progress.unlocked}/${progress.total} (${progress.percentage}%)`;
+                    collectedCardsEl.className = 'status-value success';
+                    cardShardsEl.textContent = totalShards + ' ??;
+                    cardShardsEl.className = 'status-value info';
+                } else {
+                    // 敺??冽獢炎?伐??芾???銝耨?對?
+                    const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
+                    if (userData.ownedCards) {
+                        const ownedCount = Object.keys(userData.ownedCards).length;
+                        const shards = userData.cardShards || {};
+                        const totalShards = Object.values(shards).reduce((total, count) => total + (parseInt(count) || 0), 0);
+                        
+                        const collectedCardsEl = document.getElementById('collectedCards');
+                        const cardShardsEl = document.getElementById('cardShards');
+                        collectedCardsEl.textContent = ownedCount + ' 撘?(?)';
+                        collectedCardsEl.className = 'status-value warning';
+                        cardShardsEl.textContent = totalShards + ' ??(?)';
+                        cardShardsEl.className = 'status-value warning';
+                    } else {
+                        const collectedCardsEl = document.getElementById('collectedCards');
+                        const cardShardsEl = document.getElementById('cardShards');
+                        collectedCardsEl.textContent = '0 撘?;
+                        collectedCardsEl.className = 'status-value error';
+                        cardShardsEl.textContent = '0 ??;
+                        cardShardsEl.className = 'status-value error';
+                    }
+                }
+                
+            } catch (error) {
+                const cardSystemStatusEl = document.getElementById('cardSystemStatus');
+                const collectedCardsEl = document.getElementById('collectedCards');
+                const cardShardsEl = document.getElementById('cardShards');
+                cardSystemStatusEl.textContent = '??瑼Ｘ憭望?';
+                cardSystemStatusEl.className = 'status-value error';
+                collectedCardsEl.textContent = '?⊥?閮?';
+                collectedCardsEl.className = 'status-value error';
+                cardShardsEl.textContent = '?⊥?閮?';
+                cardShardsEl.className = 'status-value error';
+                console.error('?∠???炎?亙仃??', error);
+            }
+        }
+        
+        /**
+         * 頛?遢?”
+         */
+        function loadBackupList() {
+            const container = document.getElementById('backupListContainer');
+            
+            if (typeof window.UnifiedAutoSave === 'undefined') {
+                container.innerHTML = '<div style="text-align: center; color: #ff6b6b;">?芸??脣?蝟餌絞?芾???/div>';
+                return;
+            }
+            
+            try {
+                const backupList = window.UnifiedAutoSave.getBackupList();
+                
+                if (backupList.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; color: #aaa;">?桀?瘝??遢</div>';
+                    return;
+                }
+                
+                let html = '';
+                backupList.forEach((backup, index) => {
+                    const saveTime = new Date(backup.saveTime).toLocaleString();
+                    let saveType = backup.saveType === 'auto' ? '?芸??脣?' : '???脣?';
+                    
+                    // 憒??舀風?脣?隞踝?瘛餃?璅?
+                    if (backup.isHistorical) {
+                        saveType += ' (甇瑕)';
+                    }
+                    
+                    const dataSize = (backup.dataSize / 1024).toFixed(1) + ' KB';
+                    
+                    // 憿舐內???賊?????撖嗥?賊?嚗????店嚗?
+                    const totalStars = backup.totalStars !== undefined ? backup.totalStars : '?芰';
+                    const cardCount = backup.cardCount !== undefined ? backup.cardCount : '?芰';
+                    const totalGems = backup.totalGems !== undefined ? backup.totalGems : '?芰';
+                    const uniqueGemTypes = backup.uniqueGemTypes !== undefined ? backup.uniqueGemTypes : '?芰';
+                    
+                    // 閮???撌株?
+                    const now = new Date();
+                    const backupTime = new Date(backup.saveTime);
+                    const timeDiff = Math.round((now - backupTime) / (1000 * 60)); // ??
+                    let timeAgo = '';
+                    if (timeDiff < 60) {
+                        timeAgo = `${timeDiff} ???;
+                    } else if (timeDiff < 1440) {
+                        timeAgo = `${Math.round(timeDiff / 60)} 撠??;
+                    } else {
+                        timeAgo = `${Math.round(timeDiff / 1440)} 憭拙?`;
+                    }
+                    
+                    html += `
+                        <div class="backup-item" style="${backup.isHistorical ? 'opacity: 0.8; border-left: 3px solid #888;' : ''}">
+                            <div class="backup-info">
+                                <div><strong>?? ${saveTime}</strong> <span style="color: #aaa; font-size: 0.9em;">(${timeAgo})</span></div>
+                                <div>憿?嚗?{saveType} | 憭批?嚗?{dataSize}</div>
+                                <div style="color: #ffd700;">潃?${totalStars} 憿???| ? ${cardCount} 撘萄??| ?? ${totalGems} 憿窄??(${uniqueGemTypes} 蝔?</div>
+                            </div>
+                            <div class="backup-actions">
+                                <button class="btn" onclick="loadBackup(${backup.id})">
+                                    ? 頛
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+                
+            } catch (error) {
+                container.innerHTML = '<div style="text-align: center; color: #ff6b6b;">頛?遢?”憭望?</div>';
+                addLog('??頛?遢?”憭望?嚗? + error.message);
+            }
+        }
+        
+        /**
+         * 瘛餃???蝝??
+         */
+        function addLog(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logs.unshift(`[${timestamp}] ${message}`);
+            
+            // ?芯????啁?50璇???
+            if (logs.length > 50) {
+                logs = logs.slice(0, 50);
+            }
+            
+            updateLogDisplay();
+        }
+        
+        /**
+         * ?湔蝝?＊蝷?
+         */
+        function updateLogDisplay() {
+            const container = document.getElementById('logContainer');
+            container.innerHTML = logs.map(log => `<div class="log-item">${log}</div>`).join('');
+        }
+        
+        /**
+         * 憿舐內?
+         */
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 瘥?0蝘???唳????
+        setInterval(() => {
+            if (typeof window.UnifiedAutoSave !== 'undefined') {
+                refreshStatus();
+            }
+        }, 30000);
+        
+        // 暺?璅⊥?獢??券???
+        window.onclick = function(event) {
+            const modal = document.getElementById('cardManagerModal');
+            if (event.target === modal) {
+                closeCardManager();
+            }
+        }
+        
+        // 蝑??∠?蝟餌絞頛摰?
+        function waitForCardSystem() {
+            if (typeof window.CardStorage !== 'undefined' && window.allCards) {
+                addLog('? ?∠?蝟餌絞撌脰??亙???);
+                refreshCardStatus();
+            } else {
+                setTimeout(waitForCardSystem, 500);
+            }
+        }
+        
+        // ?頛敺?敺?頂蝯?
+        setTimeout(waitForCardSystem, 2000);
+        
+        // =================
+        // 撖嗥蝟餌絞蝞∠??
+        // =================
+        
+        /**
+         * ?郊撖嗥鞈?
+         */
+        function syncGemData() {
+            addLog('?? ???郊撖嗥鞈?...');
+            
+            try {
+                // 瑼Ｘ撖嗥蝟餌絞?臬頛
+                if (typeof window.gemSystem === 'undefined') {
+                    addLog('??撖嗥蝟餌絞?芾??伐??⊥??郊');
+                    showNotification('撖嗥蝟餌絞?芾??伐??⊥??郊', 'error');
+                    return;
+                }
+                
+                // 撘瑕閫貊撖嗥鞈??湔
+                const currentGems = window.gemSystem.gems;
+                const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
+                
+                // ?郊?啣??刻???
+                userData.gems = currentGems;
+                localStorage.setItem('grammarGameData', JSON.stringify(userData));
+                
+                // 閫貊?芸??脣?
+                if (window.UnifiedAutoSave && window.UnifiedAutoSave.autoSaveEnabled) {
+                    window.UnifiedAutoSave.scheduleAutoSave();
+                }
+                
+                addLog('??撖嗥鞈??郊摰?');
+                showNotification('撖嗥鞈?撌脫???甇?, 'success');
+                
+                // ??渡????
+                refreshGemStatus();
+                
+            } catch (error) {
+                addLog('??撖嗥鞈??郊憭望?嚗? + error.message);
+                showNotification('撖嗥鞈??郊憭望?', 'error');
+            }
+        }
+        
+        /**
+         * ?臬撖嗥鞈?
+         */
+        function exportGemData() {
+            addLog('?? 皞??臬撖嗥鞈?...');
+            
+            try {
+                let gemData = {};
+                
+                // 敺窄?喟頂蝯勗?敺???
+                if (typeof window.gemSystem !== 'undefined' && window.gemSystem.gems) {
+                    gemData = window.gemSystem.gems;
+                } else {
+                    // 敺??冽獢?敺?
+                    const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
+                    gemData = userData.gems || {};
+                }
+                
+                // ?萄遣?臬鞈?
+                const exportData = {
+                    exportTime: new Date().toISOString(),
+                    version: '1.0',
+                    gems: gemData,
+                    statistics: {
+                        totalGems: Object.values(gemData).reduce((total, count) => total + (parseInt(count) || 0), 0),
+                        uniqueTypes: Object.keys(gemData).filter(key => parseInt(gemData[key]) > 0).length
+                    }
+                };
+                
+                // 銝?瑼?
+                const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `gem_data_${new Date().toISOString().slice(0, 10)}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                addLog('??撖嗥鞈??臬摰?');
+                showNotification('撖嗥鞈?撌脣??, 'success');
+                
+            } catch (error) {
+                addLog('??撖嗥鞈??臬憭望?嚗? + error.message);
+                showNotification('撖嗥鞈??臬憭望?', 'error');
+            }
+        }
+        
+        /**
+         * 撽?撖嗥鞈?
+         */
+        function validateGemData() {
+            addLog('?? ??撽?撖嗥鞈?...');
+            
+            try {
+                let issues = [];
+                let totalGems = 0;
+                let validTypes = 0;
+                
+                // 瑼Ｘ銝餉?撖嗥蝟餌絞
+                if (typeof window.gemSystem !== 'undefined' && window.gemSystem.gems) {
+                    const mainGems = window.gemSystem.gems;
+                    
+                    for (const [gemType, count] of Object.entries(mainGems)) {
+                        const numCount = parseInt(count);
+                        if (isNaN(numCount) || numCount < 0) {
+                            issues.push(`撖嗥憿? "${gemType}" ?賊??⊥?: ${count}`);
+                        } else {
+                            totalGems += numCount;
+                            if (numCount > 0) validTypes++;
+                        }
+                    }
+                    
+                    addLog(`?? 銝餌頂蝯梧?${totalGems} 憿窄?喉?${validTypes} 蝔桅??);
+                } else {
+                    issues.push('銝餉?撖嗥蝟餌絞?芾???);
+                }
+                
+                // 瑼Ｘ?蝟餌絞
+                const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
+                if (userData.gems) {
+                    let backupTotal = 0;
+                    let backupTypes = 0;
+                    
+                    for (const [gemType, count] of Object.entries(userData.gems)) {
+                        const numCount = parseInt(count);
+                        if (!isNaN(numCount) && numCount > 0) {
+                            backupTotal += numCount;
+                            backupTypes++;
+                        }
+                    }
+                    
+                    addLog(`?? ?蝟餌絞嚗?{backupTotal} 憿窄?喉?${backupTypes} 蝔桅??);
+                    
+                    // 瘥?銝餌頂蝯勗??蝟餌絞
+                    if (totalGems !== backupTotal) {
+                        issues.push(`銝餌頂蝯梯??蝟餌絞撖嗥蝮賣銝泵 (${totalGems} vs ${backupTotal})`);
+                    }
+                } else {
+                    issues.push('?撖嗥鞈?銝???);
+                }
+                
+                // ?勗?蝯?
+                if (issues.length === 0) {
+                    addLog('??撖嗥鞈?撽???');
+                    showNotification('撖嗥鞈?撽???', 'success');
+                } else {
+                    addLog('?? ?潛隞乩???嚗?);
+                    issues.forEach(issue => addLog(`  - ${issue}`));
+                    showNotification(`?潛 ${issues.length} ??憿?隢?隤, 'error');
+                }
+                
+                // ??渡?憿舐內
+                refreshGemStatus();
+                
+            } catch (error) {
+                addLog('??撖嗥鞈?撽?憭望?嚗? + error.message);
+                showNotification('撖嗥鞈?撽?憭望?', 'error');
+            }
+        }
+        
+        // =================
+        // ?∠?蝟餌絞蝞∠??
+        // =================
+        
+        /**
+         * ?郊?∠?鞈?
+         */
+        function syncCardData() {
+            addLog('? ???郊?∠?鞈?...');
+            
+            try {
+                // 瑼Ｘ?∠?蝟餌絞?臬頛
+                if (typeof window.CardStorage === 'undefined') {
+                    addLog('???∠?蝟餌絞?芾??伐?甇??岫頛...');
+                    loadCardStorageSystem();
+                    
+                    // 蝑?頛摰?
+                    setTimeout(() => {
+                        if (typeof window.CardStorage !== 'undefined') {
+                            syncCardData(); // ??岫
+                        } else {
+                            showNotification('?∠?蝟餌絞頛憭望?嚗瘜?甇?, 'error');
+                        }
+                    }, 2000);
+                    return;
+                }
+                
+                // ?郊?啣??刻???
+                const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
+                userData.ownedCards = window.CardStorage.getOwnedCards();
+                userData.cardShards = window.CardStorage.getShards();
+                userData.cardStats = window.CardStorage.getCardStats();
+                localStorage.setItem('grammarGameData', JSON.stringify(userData));
+                
+                // 閫貊?芸??脣?
+                if (window.UnifiedAutoSave && window.UnifiedAutoSave.autoSaveEnabled) {
+                    window.UnifiedAutoSave.scheduleAutoSave();
+                }
+                
+                addLog('???∠?鞈??郊摰?');
+                showNotification('?∠?鞈?撌脫???甇?, 'success');
+                
+                // ??渡????
+                refreshCardStatus();
+                
+            } catch (error) {
+                addLog('???∠?鞈??郊憭望?嚗? + error.message);
+                showNotification('?∠?鞈??郊憭望?', 'error');
+            }
+        }
+        
+        /**
+         * ?臬?∠?鞈?
+         */
+        function exportCardData() {
+            addLog('? 皞??臬?∠?鞈?...');
+            
+            try {
+                let cardData = {};
+                
+                // 敺?頂蝯勗?敺???
+                if (typeof window.CardStorage !== 'undefined') {
+                    cardData = {
+                        ownedCards: window.CardStorage.getOwnedCards(),
+                        cardShards: window.CardStorage.getShards(),
+                        cardStats: window.CardStorage.getCardStats()
+                    };
+                } else {
+                    // 敺??冽獢?敺?
+                    const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
+                    cardData = {
+                        ownedCards: userData.ownedCards || {},
+                        cardShards: userData.cardShards || {},
+                        cardStats: userData.cardStats || {}
+                    };
+                }
+                
+                // ?萄遣?臬鞈?
+                const exportData = {
+                    exportTime: new Date().toISOString(),
+                    version: '1.0',
+                    ...cardData,
+                    statistics: {
+                        totalCards: Object.keys(cardData.ownedCards).length,
+                        totalShards: Object.values(cardData.cardShards).reduce((total, count) => total + (parseInt(count) || 0), 0)
+                    }
+                };
+                
+                // 銝?瑼?
+                const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `card_data_${new Date().toISOString().slice(0, 10)}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                addLog('???∠?鞈??臬摰?');
+                showNotification('?∠?鞈?撌脣??, 'success');
+                
+            } catch (error) {
+                addLog('???∠?鞈??臬憭望?嚗? + error.message);
+                showNotification('?∠?鞈??臬憭望?', 'error');
+            }
+        }
+        
+        /**
+         * 撽??∠?鞈?
+         */
+        function validateCardData() {
+            addLog('? ??撽??∠?鞈?...');
+            
+            try {
+                let issues = [];
+                
+                // 瑼Ｘ銝餉??∠?蝟餌絞
+                if (typeof window.CardStorage !== 'undefined') {
+                    const ownedCards = window.CardStorage.getOwnedCards();
+                    const shards = window.CardStorage.getShards();
+                    const stats = window.CardStorage.getCardStats();
+                    
+                    addLog(`? 銝餌頂蝯梧?${Object.keys(ownedCards).length} 撘萄??${Object.keys(shards).length} 蝔桃??);
+                    
+                    // 瑼Ｘ蝣??賊??臬?箸迤??
+                    for (const [cardId, count] of Object.entries(shards)) {
+                        if (parseInt(count) < 0) {
+                            issues.push(`?∠? "${cardId}" 蝣??賊??箄??? ${count}`);
+                        }
+                    }
+                } else {
+                    issues.push('銝餉??∠?蝟餌絞?芾???);
+                }
+                
+                // 瑼Ｘ?蝟餌絞
+                const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
+                if (userData.ownedCards) {
+                    addLog(`? ?蝟餌絞嚗?{Object.keys(userData.ownedCards).length} 撘萄?);
+                } else {
+                    issues.push('??∠?鞈?銝???);
+                }
+                
+                // ?勗?蝯?
+                if (issues.length === 0) {
+                    addLog('???∠?鞈?撽???');
+                    showNotification('?∠?鞈?撽???', 'success');
+                } else {
+                    addLog('?? ?潛隞乩???嚗?);
+                    issues.forEach(issue => addLog(`  - ${issue}`));
+                    showNotification(`?潛 ${issues.length} ??憿?隢?隤, 'error');
+                }
+                
+                // ??渡?憿舐內
+                refreshCardStatus();
+                
+            } catch (error) {
+                addLog('???∠?鞈?撽?憭望?嚗? + error.message);
+                showNotification('?∠?鞈?撽?憭望?', 'error');
+            }
+        }
+        
+        /**
+         * 憿舐內?∠?蝞∠???
+         */
+        function showCardManager() {
+            addLog('? ???∠?蝞∠???..');
+            
+            try {
+                // 瑼Ｘ?∠?蝟餌絞?臬頛
+                if (typeof window.CardStorage === 'undefined') {
+                    addLog('???∠?蝟餌絞?芾??伐?甇??岫頛...');
+                    loadCardStorageSystem();
+                    
+                    // 蝑?頛摰?
+                    setTimeout(() => {
+                        if (typeof window.CardStorage !== 'undefined') {
+                            showCardManager(); // ??岫
+                        } else {
+                            showNotification('?∠?蝟餌絞頛憭望?嚗瘜??恣?', 'error');
+                        }
+                    }, 2000);
+                    return;
+                }
+                
+                // ?湔?∠?蝯梯?
+                updateCardManagerStats();
+                
+                // 憿舐內璅⊥?獢?
+                document.getElementById('cardManagerModal').style.display = 'block';
+                
+                addLog('???∠?蝞∠??典歇??');
+                
+            } catch (error) {
+                addLog('?????∠?蝞∠??典仃??' + error.message);
+                showNotification('???∠?蝞∠??典仃??, 'error');
+            }
+        }
+        
+        /**
+         * ???∠?蝞∠???
+         */
+        function closeCardManager() {
+            document.getElementById('cardManagerModal').style.display = 'none';
+            addLog('? ?∠?蝞∠??典歇??');
+        }
+        
+        /**
+         * ?湔?∠?蝞∠??函絞閮?
+         */
+        function updateCardManagerStats() {
+            try {
+                if (typeof window.CardStorage === 'undefined') {
+                    throw new Error('?∠?蝟餌絞?芾???);
+                }
+                
+                // ?湔?箸蝯梯?
+                const progress = window.CardStorage.getCollectionProgress();
+                const shards = window.CardStorage.getShards();
+                const totalShards = Object.values(shards).reduce((total, count) => total + (parseInt(count) || 0), 0);
+                
+                document.getElementById('totalCardsCount').textContent = progress.total;
+                document.getElementById('collectedCardsCount').textContent = progress.unlocked;
+                document.getElementById('collectionProgress').textContent = progress.percentage + '%';
+                document.getElementById('totalShardsCount').textContent = totalShards;
+                
+                // ?啣?嚗?蝔?漲?園??賊?
+                const rarityProgress = window.CardStorage.getRarityProgress();
+                let raritySummary = '';
+                for (const [rarity, data] of Object.entries(rarityProgress)) {
+                    raritySummary += `${rarity}嚗?{data.unlocked} 撘萸`;
+                }
+                document.getElementById('raritySummary').textContent = raritySummary.trim();
+                
+                // ?湔蝔?漲?脣漲
+                updateRarityProgress();
+                
+                // ?湔憿?脣漲
+                updateCategoryProgress();
+                
+            } catch (error) {
+                console.error('?湔?∠?蝯梯?憭望?:', error);
+                // 憿舐內?航炊???
+                document.getElementById('totalCardsCount').textContent = '?航炊';
+                document.getElementById('collectedCardsCount').textContent = '?航炊';
+                document.getElementById('collectionProgress').textContent = '?航炊';
+                document.getElementById('totalShardsCount').textContent = '?航炊';
+                document.getElementById('raritySummary').textContent = '';
+                
+                // ?岫?頛?∠?蝟餌絞
+                if (typeof window.CardStorage === 'undefined') {
+                    loadCardStorageSystem();
+                }
+            }
+        }
+        
+        /**
+         * ?湔蝔?漲?脣漲
+         */
+        function updateRarityProgress() {
+            try {
+                const rarityProgress = window.CardStorage.getRarityProgress();
+                const container = document.getElementById('rarityProgressContainer');
+                
+                let html = '';
+                for (const [rarity, data] of Object.entries(rarityProgress)) {
+                    const percentage = data.total > 0 ? (data.unlocked / data.total * 100).toFixed(1) : 0;
+                    const color = rarity === '?桅? ? '#3498db' : rarity === '蝔?? ? '#f39c12' : '#e74c3c';
+                    
+                    html += `
+                        <div class="progress-item">
+                            <div class="progress-header">
+                                <span class="progress-title">${rarity}</span>
+                                <span class="progress-count">${data.unlocked}/${data.total}</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${percentage}%; background: linear-gradient(90deg, ${color}, ${color}dd);"></div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                container.innerHTML = html;
+                
+            } catch (error) {
+                console.error('?湔蝔?漲?脣漲憭望?:', error);
+            }
+        }
+        
+        /**
+         * ?湔憿?脣漲
+         */
+        function updateCategoryProgress() {
+            try {
+                const categoryProgress = window.CardStorage.getCategoryProgress();
+                const container = document.getElementById('categoryProgressContainer');
+                
+                let html = '';
+                for (const [category, data] of Object.entries(categoryProgress)) {
+                    const percentage = data.total > 0 ? (data.unlocked / data.total * 100).toFixed(1) : 0;
+                    
+                    html += `
+                        <div class="progress-item">
+                            <div class="progress-header">
+                                <span class="progress-title">${category}</span>
+                                <span class="progress-count">${data.unlocked}/${data.total}</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${percentage}%;"></div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                container.innerHTML = html;
+                
+            } catch (error) {
+                console.error('?湔憿?脣漲憭望?:', error);
+            }
+        }
+        
+        /**
+         * 瘛餃??冽??∠?
+         */
+        function addRandomCard() {
+            try {
+                if (typeof window.CardStorage === 'undefined') {
+                    throw new Error('?∠?蝟餌絞?芾???);
+                }
+                
+                if (!window.allCards || window.allCards.length === 0) {
+                    throw new Error('?∠?鞈??芾???);
+                }
+                
+                // ?脣??芣????∠?
+                const ownedCards = window.CardStorage.getOwnedCards();
+                const availableCards = window.allCards.filter(card => !ownedCards[card.word]);
+                
+                if (availableCards.length === 0) {
+                    showNotification('撌脫?????', 'success');
+                    return;
+                }
+                
+                // ?冽??豢?銝撘萄??
+                const randomCard = availableCards[Math.floor(Math.random() * availableCards.length)];
+                window.CardStorage.addCard(randomCard.word);
+                
+                addLog(`? 瘛餃??冽??∠?嚗?{randomCard.word} (${randomCard.rarity})`);
+                showNotification(`撌脫溶???${randomCard.word}`, 'success');
+                
+                // ?湔憿舐內
+                updateCardManagerStats();
+                refreshCardStatus();
+                
+            } catch (error) {
+                addLog('??瘛餃??冽??∠?憭望?嚗? + error.message);
+                showNotification('瘛餃??冽??∠?憭望?', 'error');
+            }
+        }
+        
+        /**
+         * 瘛餃??冽?蝣?
+         */
+        function addRandomShards() {
+            try {
+                if (typeof window.CardStorage === 'undefined') {
+                    throw new Error('?∠?蝟餌絞?芾???);
+                }
+                
+                if (!window.allCards || window.allCards.length === 0) {
+                    throw new Error('?∠?鞈??芾???);
+                }
+                
+                // ?冽??豢?銝撘萄??
+                const randomCard = window.allCards[Math.floor(Math.random() * window.allCards.length)];
+                const amount = Math.floor(Math.random() * 5) + 1; // 1-5????
+                
+                window.CardStorage.addShard(randomCard.word, amount);
+                
+                addLog(`?? 瘛餃??冽?蝣?嚗?{randomCard.word} +${amount} ?);
+                showNotification(`撌脫溶??${amount} ??${randomCard.word} 蝣?`, 'success');
+                
+                // ?湔憿舐內
+                updateCardManagerStats();
+                refreshCardStatus();
+                
+            } catch (error) {
+                addLog('??瘛餃??冽?蝣?憭望?嚗? + error.message);
+                showNotification('瘛餃??冽?蝣?憭望?', 'error');
+            }
+        }
+        
+        /**
+         * 憿舐內皜?賊? Modal
+         */
+        function showClearOptions() {
+            const modal = document.getElementById('clearOptionsModal');
+            modal.style.display = 'block';
+        }
+
+        /**
+         * ??皜?賊? Modal
+         */
+        function closeClearOptionsModal() {
+            const modal = document.getElementById('clearOptionsModal');
+            modal.style.display = 'none';
+        }
+
+        /**
+         * ?芣??文??靽?蝣?
+         */
+        function clearCardsOnly() {
+            // ?脣??桀????蝣?鞈?
+            let currentCards = 0;
+            let currentShards = 0;
+            
+            try {
+                if (typeof window.CardStorage !== 'undefined') {
+                    const ownedCards = window.CardStorage.getOwnedCards();
+                    const shards = window.CardStorage.getShards();
+                    currentCards = Object.keys(ownedCards).length;
+                    currentShards = Object.values(shards).reduce((sum, count) => sum + (parseInt(count) || 0), 0);
+                } else {
+                    // ??寞?
+                    const ownedCards = JSON.parse(localStorage.getItem('ownedCards') || '{}');
+                    const shards = JSON.parse(localStorage.getItem('cardShards') || '{}');
+                    currentCards = Object.keys(ownedCards).length;
+                    currentShards = Object.values(shards).reduce((sum, count) => sum + (parseInt(count) || 0), 0);
+                }
+            } catch (error) {
+                console.warn('?⊥??脣??桀??∠?鞈?:', error);
+            }
+            
+            const confirmMessage = `蝣箏?閬??斗??歇?????嚗n\n` +
+                `?? ?桀????\n` +
+                `??撌脫????${currentCards} 撘琵n` +
+                `??蝣??賊?嚗?{currentShards} ?n\n` +
+                `?? 甇斗?雿???\n` +
+                `??皜??歇????n` +
+                `??靽??????${currentShards} ??\n` +
+                `??靽????隞??脰??n\n` +
+                `?? 蝣?撠?靽?嚗?臭誑?其?????∠?\n\n` +
+                `蝣箏?閬匱蝥?嚗;
+            
+            if (!confirm(confirmMessage)) {
+                return;
+            }
+            
+            try {
+                // ?冽??文??撱箏?隞?
+                if (typeof window.UnifiedAutoSave !== 'undefined') {
+                    window.UnifiedAutoSave.performImmediateSave();
+                    addLog('? 皜?歇?萄遣?遢');
+                }
+                
+                if (typeof window.CardStorage === 'undefined') {
+                    throw new Error('?∠?蝟餌絞?芾???);
+                }
+                
+                // ?芣??文??靽?蝣?
+                const ownedCards = window.CardStorage.getOwnedCards();
+                const clearedCount = Object.keys(ownedCards).length;
+                
+                // 皜征?∠?
+                window.CardStorage.setOwnedCards({});
+                
+                addLog(`? 撌脫???${clearedCount} 撘萄??蝣?撌脖??);
+                showNotification(`撌脫???${clearedCount} 撘萄??蝣?撌脖??, 'success');
+                
+                // ?? Modal
+                closeClearOptionsModal();
+                
+                // ?湔憿舐內
+                updateCardManagerStats();
+                refreshCardStatus();
+                
+            } catch (error) {
+                addLog('??皜?∠?憭望?嚗? + error.message);
+                showNotification('皜?∠?憭望?', 'error');
+            }
+        }
+
+        /**
+         * 皜?孵?蝔?漲???靽?蝣?
+         */
+        function clearCardsByRarity() {
+            const rarity = document.getElementById('raritySelect').value;
+            
+            if (!confirm(`蝣箏?閬??斗???{rarity}???漲???嚗n\n?? 蝣?撠?靽?`)) {
+                return;
+            }
+            
+            try {
+                if (typeof window.CardStorage === 'undefined') {
+                    throw new Error('?∠?蝟餌絞?芾???);
+                }
+                
+                if (!window.allCards || window.allCards.length === 0) {
+                    throw new Error('?∠?鞈??芾???);
+                }
+                
+                const ownedCards = window.CardStorage.getOwnedCards();
+                let clearedCount = 0;
+                const newOwnedCards = {};
+                
+                // ?芯?????蝔?漲???
+                for (const [cardId, isOwned] of Object.entries(ownedCards)) {
+                    const card = window.allCards.find(c => c.word === cardId);
+                    if (card && card.rarity !== rarity) {
+                        newOwnedCards[cardId] = isOwned;
+                    } else if (card && card.rarity === rarity) {
+                        clearedCount++;
+                    }
+                }
+                
+                window.CardStorage.setOwnedCards(newOwnedCards);
+                
+                addLog(`? 撌脫???${clearedCount} 撘萸?{rarity}???蝣?撌脖??);
+                showNotification(`撌脫???${clearedCount} 撘萸?{rarity}???蝣?撌脖??, 'success');
+                
+                // ?? Modal
+                closeClearOptionsModal();
+                
+                // ?湔憿舐內
+                updateCardManagerStats();
+                refreshCardStatus();
+                
+            } catch (error) {
+                addLog('??皜?孵?蝔?漲?∠?憭望?嚗? + error.message);
+                showNotification('皜?孵?蝔?漲?∠?憭望?', 'error');
+            }
+        }
+
+        /**
+         * ?芣??斤???靽?撌脰圾???∠?
+         */
+        function clearShardsOnly() {
+            // ?脣??桀????蝣?鞈?
+            let currentCards = 0;
+            let currentShards = 0;
+            
+            try {
+                if (typeof window.CardStorage !== 'undefined') {
+                    const ownedCards = window.CardStorage.getOwnedCards();
+                    const shards = window.CardStorage.getShards();
+                    currentCards = Object.keys(ownedCards).length;
+                    currentShards = Object.values(shards).reduce((sum, count) => sum + (parseInt(count) || 0), 0);
+                } else {
+                    // ??寞?
+                    const ownedCards = JSON.parse(localStorage.getItem('ownedCards') || '{}');
+                    const shards = JSON.parse(localStorage.getItem('cardShards') || '{}');
+                    currentCards = Object.keys(ownedCards).length;
+                    currentShards = Object.values(shards).reduce((sum, count) => sum + (parseInt(count) || 0), 0);
+                }
+            } catch (error) {
+                console.warn('?⊥??脣??桀??∠?鞈?:', error);
+            }
+            
+            const confirmMessage = `蝣箏?閬??斗?????嚗n\n` +
+                `?? ?桀????\n` +
+                `??撌脫????${currentCards} 撘琵n` +
+                `??蝣??賊?嚗?{currentShards} ?n\n` +
+                `?? 甇斗?雿???\n` +
+                `??靽???歇閫????n` +
+                `??皜?????${currentShards} ??\n` +
+                `??靽????隞??脰??n\n` +
+                `? 撌脰圾???∠?撠?靽?嚗隞?臭誑雿輻摰n\n` +
+                `蝣箏?閬匱蝥?嚗;
+            
+            if (!confirm(confirmMessage)) {
+                return;
+            }
+            
+            try {
+                // ?冽??文??撱箏?隞?
+                if (typeof window.UnifiedAutoSave !== 'undefined') {
+                    window.UnifiedAutoSave.performImmediateSave();
+                    addLog('? 皜?歇?萄遣?遢');
+                }
+                
+                if (typeof window.CardStorage === 'undefined') {
+                    throw new Error('?∠?蝟餌絞?芾???);
+                }
+                
+                // ?芣??斤???靽??∠?
+                const shards = window.CardStorage.getShards();
+                const clearedShards = Object.values(shards).reduce((sum, count) => sum + (parseInt(count) || 0), 0);
+                
+                // 皜征蝣?
+                window.CardStorage.setShards({});
+                
+                addLog(`?? 撌脫???${clearedShards} ?????∠?撌脖??);
+                showNotification(`撌脫???${clearedShards} ?????∠?撌脖??, 'success');
+                
+                // ?? Modal
+                closeClearOptionsModal();
+                
+                // ?湔憿舐內
+                updateCardManagerStats();
+                refreshCardStatus();
+                
+            } catch (error) {
+                addLog('??皜蝣?憭望?嚗? + error.message);
+                showNotification('皜蝣?憭望?', 'error');
+            }
+        }
+
+        
+        /**
+         * ?臬?∠??遢
+         */
+        function exportCardBackup() {
+            try {
+                if (typeof window.CardStorage === 'undefined') {
+                    throw new Error('?∠?蝟餌絞?芾???);
+                }
+                
+                const exportData = window.CardStorage.exportData();
+                const blob = new Blob([exportData], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `card_backup_${new Date().toISOString().slice(0, 10)}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                addLog('? ?∠??遢?臬摰?');
+                showNotification('?∠??遢撌脣??, 'success');
+                
+            } catch (error) {
+                addLog('???臬?∠??遢憭望?嚗? + error.message);
+                showNotification('?臬?∠??遢憭望?', 'error');
+            }
+        }
+        
+        /**
+         * ?臬?∠??遢
+         */
+        function importCardBackup() {
+            document.getElementById('cardImportFile').click();
+        }
+        
+        /**
+         * ???∠??臬瑼?
+         */
+        function handleCardImportFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    if (typeof window.CardStorage === 'undefined') {
+                        throw new Error('?∠?蝟餌絞?芾???);
+                    }
+                    
+                    const success = window.CardStorage.importData(e.target.result);
+                    
+                    if (success) {
+                        addLog('? ?∠??遢?臬摰?');
+                        showNotification('?∠??遢?臬??嚗?, 'success');
+                        
+                        // ?湔憿舐內
+                        updateCardManagerStats();
+                        refreshCardStatus();
+                    } else {
+                        throw new Error('?臬憭望?');
+                    }
+                    
+                } catch (error) {
+                    addLog('???臬?∠??遢憭望?嚗? + error.message);
+                    showNotification('?臬?∠??遢憭望?', 'error');
+                }
+            };
+            
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+        
+        /**
+         * ?臬?∠?瑼?
+         */
+        function importCardFile() {
+            addLog('? 皞??臬?∠?瑼?...');
+            document.getElementById('cardFileInput').click();
+        }
+        
+        /**
+         * ???∠?瑼??臬
+         */
+        function handleCardFileImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            addLog(`? ??瑼?嚗?{file.name} (${(file.size / 1024).toFixed(1)} KB)`);
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    if (typeof window.CardStorage === 'undefined') {
+                        throw new Error('?∠?蝟餌絞?芾???);
+                    }
+                    
+                    const fileContent = e.target.result;
+                    const fileName = file.name.toLowerCase();
+                    let importResult = false;
+                    
+                    // ?寞?瑼?憿???
+                    if (fileName.endsWith('.json')) {
+                        importResult = handleJsonCardFile(fileContent);
+                    } else if (fileName.endsWith('.txt')) {
+                        importResult = handleTextCardFile(fileContent);
+                    } else if (fileName.endsWith('.csv')) {
+                        importResult = handleCsvCardFile(fileContent);
+                    } else {
+                        throw new Error('銝?渡?瑼??澆?');
+                    }
+                    
+                    if (importResult) {
+                        addLog('???∠?瑼??臬??');
+                        showNotification('?∠?瑼??臬??嚗?, 'success');
+                        
+                        // ?湔憿舐內
+                        updateCardManagerStats();
+                        refreshCardStatus();
+                        
+                        // 閫貊?芸??脣?
+                        if (window.UnifiedAutoSave && window.UnifiedAutoSave.autoSaveEnabled) {
+                            window.UnifiedAutoSave.scheduleAutoSave();
+                        }
+                    } else {
+                        throw new Error('?臬??憭望?');
+                    }
+                    
+                } catch (error) {
+                    addLog('???∠?瑼??臬憭望?嚗? + error.message);
+                    showNotification('?∠?瑼??臬憭望?嚗? + error.message, 'error');
+                }
+            };
+            
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+        
+        /**
+         * ?? JSON ?澆????獢?
+         */
+        function handleJsonCardFile(content) {
+            try {
+                const data = JSON.parse(content);
+                
+                // 瑼Ｘ?臬?箏??隞賣撘?
+                if (data.ownedCards && data.cardShards) {
+                    return window.CardStorage.importData(content);
+                }
+                
+                // 瑼Ｘ?臬?箏摮?銵冽撘?
+                if (Array.isArray(data)) {
+                    return importWordList(data);
+                }
+                
+                // 瑼Ｘ?臬?箇隞嗆撘??桀??”
+                if (typeof data === 'object' && !data.ownedCards) {
+                    const wordList = Object.keys(data);
+                    return importWordList(wordList);
+                }
+                
+                throw new Error('?⊥?霅??JSON ?澆?');
+                
+            } catch (error) {
+                throw new Error('JSON 閫??憭望?嚗? + error.message);
+            }
+        }
+        
+        /**
+         * ?????澆????獢?
+         */
+        function handleTextCardFile(content) {
+            try {
+                // ???銝阡?瞈曄征銵?
+                const lines = content.split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line.length > 0);
+                
+                if (lines.length === 0) {
+                    throw new Error('瑼??批捆?箇征');
+                }
+                
+                addLog(`?? 敺?摮?獢?? ${lines.length} ?摮);
+                return importWordList(lines);
+                
+            } catch (error) {
+                throw new Error('??瑼???憭望?嚗? + error.message);
+            }
+        }
+        
+        /**
+         * ?? CSV ?澆????獢?
+         */
+        function handleCsvCardFile(content) {
+            try {
+                // ???銝阡?瞈曄征銵?
+                const lines = content.split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line.length > 0);
+                
+                if (lines.length === 0) {
+                    throw new Error('瑼??批捆?箇征');
+                }
+                
+                // 閫?? CSV 銵?
+                const wordList = [];
+                lines.forEach((line, index) => {
+                    // 頝喲?璅?銵?憒?蝚砌?銵??急?憿?
+                    if (index === 0 && (line.includes('word') || line.includes('?桀?') || line.includes('Word'))) {
+                        return;
+                    }
+                    
+                    // ? CSV 甈?
+                    const columns = line.split(',').map(col => col.trim().replace(/"/g, ''));
+                    const word = columns[0]; // ?身蝚砌?甈?桀?
+                    
+                    if (word && word.length > 0) {
+                        wordList.push(word);
+                    }
+                });
+                
+                if (wordList.length === 0) {
+                    throw new Error('?芣?唳????桀?');
+                }
+                
+                addLog(`?? 敺?CSV 瑼?霈? ${wordList.length} ?摮);
+                return importWordList(wordList);
+                
+            } catch (error) {
+                throw new Error('CSV 瑼???憭望?嚗? + error.message);
+            }
+        }
+        
+        /**
+         * ?臬?桀??”
+         */
+        function importWordList(wordList) {
+            try {
+                if (!window.allCards || window.allCards.length === 0) {
+                    throw new Error('?∠?鞈??芾???);
+                }
+                
+                let addedCount = 0;
+                let shardCount = 0;
+                const addedCards = [];
+                
+                // ?箸??摮溶???蝣?
+                wordList.forEach(word => {
+                    const card = window.allCards.find(c => c.word.toLowerCase() === word.toLowerCase());
+                    
+                    if (card) {
+                        const ownedCards = window.CardStorage.getOwnedCards();
+                        
+                        // 憒??∠?撠??嚗?瘛餃??∠?
+                        if (!ownedCards[card.word]) {
+                            window.CardStorage.addCard(card.word);
+                            addedCards.push(card.word);
+                            addedCount++;
+                        } else {
+                            // 憒??∠?撌脫????溶????
+                            window.CardStorage.addShard(card.word, 1);
+                            shardCount++;
+                        }
+                    }
+                });
+                
+                addLog(`????瘛餃? ${addedCount} 撘菜?∠?嚗?{shardCount} ???);
+                if (addedCards.length > 0) {
+                    addLog(`?? ?啣??∠?嚗?{addedCards.slice(0, 10).join(', ')}${addedCards.length > 10 ? '...' : ''}`);
+                }
+                
+                return true;
+                
+            } catch (error) {
+                throw new Error('?桀??”?臬憭望?嚗? + error.message);
+            }
+        }
+        
+        /**
+         * ?郊撖嗥鞈?
+         */
+        function syncGemData() {
+            addLog('?? ???郊撖嗥鞈?...');
+            
+            try {
+                // 瑼Ｘ撖嗥蝟餌絞?臬頛
+                if (typeof window.gemSystem === 'undefined') {
+                    addLog('??撖嗥蝟餌絞?芾??伐??⊥??郊');
+                    showNotification('撖嗥蝟餌絞?芾??伐??⊥??郊', 'error');
+                    return;
+                }
+                
+                // 撘瑕閫貊撖嗥鞈??湔
+                const currentGems = window.gemSystem.gems;
+                const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
+                
+                // ?郊?啣??刻???
+                userData.gems = currentGems;
+                localStorage.setItem('grammarGameData', JSON.stringify(userData));
+                
+                // 閫貊?芸??脣?
+                if (window.UnifiedAutoSave && window.UnifiedAutoSave.autoSaveEnabled) {
+                    window.UnifiedAutoSave.scheduleAutoSave();
+                }
+                
+                addLog('??撖嗥鞈??郊摰?');
+                showNotification('撖嗥鞈?撌脫???甇?, 'success');
+                
+                // ??渡????
+                refreshGemStatus();
+                
+            } catch (error) {
+                addLog('??撖嗥鞈??郊憭望?嚗? + error.message);
+                showNotification('撖嗥鞈??郊憭望?', 'error');
+            }
+        }
+        
+        /**
+         * ?臬撖嗥鞈?
+         */
+        function exportGemData() {
+            addLog('?? 皞??臬撖嗥鞈?...');
+            
+            try {
+                let gemData = {};
+                
+                // 敺窄?喟頂蝯勗?敺???
+                if (typeof window.gemSystem !== 'undefined' && window.gemSystem.gems) {
+                    gemData = window.gemSystem.gems;
+                } else {
+                    // 敺??冽獢?敺?
+                    const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
+                    gemData = userData.gems || {};
+                }
+                
+                // ?萄遣?臬鞈?
+                const exportData = {
+                    exportTime: new Date().toISOString(),
+                    version: '1.0',
+                    gems: gemData,
+                    statistics: {
+                        totalGems: Object.values(gemData).reduce((total, count) => total + (parseInt(count) || 0), 0),
+                        uniqueTypes: Object.keys(gemData).filter(key => parseInt(gemData[key]) > 0).length
+                    }
+                };
+                
+                // 銝?瑼?
+                const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `gem_data_${new Date().toISOString().slice(0, 10)}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                addLog('??撖嗥鞈??臬摰?');
+                showNotification('撖嗥鞈?撌脣??, 'success');
+                
+            } catch (error) {
+                addLog('??撖嗥鞈??臬憭望?嚗? + error.message);
+                showNotification('撖嗥鞈??臬憭望?', 'error');
+            }
+        }
+        
+        /**
+         * 撽?撖嗥鞈?
+         */
+        function validateGemData() {
+            addLog('?? ??撽?撖嗥鞈?...');
+            
+            try {
+                let issues = [];
+                let totalGems = 0;
+                let validTypes = 0;
+                
+                // 瑼Ｘ銝餉?撖嗥蝟餌絞
+                if (typeof window.gemSystem !== 'undefined' && window.gemSystem.gems) {
+                    const mainGems = window.gemSystem.gems;
+                    
+                    for (const [gemType, count] of Object.entries(mainGems)) {
+                        const numCount = parseInt(count);
+                        if (isNaN(numCount) || numCount < 0) {
+                            issues.push(`撖嗥憿? "${gemType}" ?賊??⊥?: ${count}`);
+                        } else {
+                            totalGems += numCount;
+                            if (numCount > 0) validTypes++;
+                        }
+                    }
+                    
+                    addLog(`?? 銝餌頂蝯梧?${totalGems} 憿窄?喉?${validTypes} 蝔桅??);
+                } else {
+                    issues.push('銝餉?撖嗥蝟餌絞?芾???);
+                }
+                
+                // 瑼Ｘ?蝟餌絞
+                const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
+                if (userData.gems) {
+                    let backupTotal = 0;
+                    let backupTypes = 0;
+                    
+                    for (const [gemType, count] of Object.entries(userData.gems)) {
+                        const numCount = parseInt(count);
+                        if (!isNaN(numCount) && numCount > 0) {
+                            backupTotal += numCount;
+                            backupTypes++;
+                        }
+                    }
+                    
+                    addLog(`?? ?蝟餌絞嚗?{backupTotal} 憿窄?喉?${backupTypes} 蝔桅??);
+                    
+                    // 瘥?銝餌頂蝯勗??蝟餌絞
+                    if (totalGems !== backupTotal) {
+                        issues.push(`銝餌頂蝯梯??蝟餌絞撖嗥蝮賣銝泵 (${totalGems} vs ${backupTotal})`);
+                    }
+                } else {
+                    issues.push('?撖嗥鞈?銝???);
+                }
+                
+                // ?勗?蝯?
+                if (issues.length === 0) {
+                    addLog('??撖嗥鞈?撽???');
+                    showNotification('撖嗥鞈?撽???', 'success');
+                } else {
+                    addLog('?? ?潛隞乩???嚗?);
+                    issues.forEach(issue => addLog(`  - ${issue}`));
+                    showNotification(`?潛 ${issues.length} ??憿?隢?隤, 'error');
+                }
+                
+                // ??渡?憿舐內
+                refreshGemStatus();
+                
+            } catch (error) {
+                addLog('??撖嗥鞈?撽?憭望?嚗? + error.message);
+                showNotification('撖嗥鞈?撽?憭望?', 'error');
+            }
+        }
+
+        // ????單?
+        function toggleBackgroundMusic() {
+          if (isMusicPlaying) {
+            pauseBackgroundMusic();
+          } else {
+            playBackgroundMusic();
+          }
+        }
+
+        // ?剜??單?
+        function playBackgroundMusic() {
+          if (bgMusic) {
+            bgMusic.play().then(() => {
+              isMusicPlaying = true;
+              document.getElementById('bgMusicControl').textContent = '??';
+              localStorage.setItem('bgMusicState', 'playing');
+            });
+          }
+        }
+
+        // ?怠???單?
+        function pauseBackgroundMusic() {
+          if (bgMusic) {
+            bgMusic.pause();
+            isMusicPlaying = false;
+            document.getElementById('bgMusicControl').textContent = '';
+            localStorage.setItem('bgMusicState', 'paused');
+          }
+        }
+
+        // ?頛?炎?仿璅???
+        const musicState = localStorage.getItem('bgMusicState');
+        if (musicState === 'playing') {
+          playBackgroundMusic();
+        }
+
+        // ?湔??璅?嗆???
+        function updateAllControls() {
+          const controls = [
+            document.getElementById('bgmControl'),
+            document.getElementById('bgMusicControl'),
+            document.getElementById('toggleMusic'),
+            document.getElementById('musicToggle')
+          ];
+          
+          controls.forEach(control => {
+            if (control) {
+              if (isPlaying) {
+                control.textContent = '??';
+                control.classList.remove('paused');
+              } else {
+                control.textContent = '??';
+                control.classList.add('paused');
+              }
+            }
+          });
+        }
+
+        // ??單??批
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const toggleMusicBtn = document.getElementById('toggleMusic');
+        let isMusicPlaying = LinkageSystem.music.isPlaying();
+
+        // 敺?localStorage 霈?璅?曄???
+        if (isMusicPlaying) {
+          backgroundMusic.play();
+          toggleMusicBtn.style.background = 'rgba(0, 255, 255, 0.2)';
+        }
+
+        toggleMusicBtn.addEventListener('click', () => {
+          if (isMusicPlaying) {
+            backgroundMusic.pause();
+            toggleMusicBtn.style.background = 'rgba(10, 20, 40, 0.85)';
+            LinkageSystem.music.setPlaying(false);
+          } else {
+            backgroundMusic.play();
+            toggleMusicBtn.style.background = 'rgba(0, 255, 255, 0.2)';
+            LinkageSystem.music.setPlaying(true);
+          }
+          isMusicPlaying = !isMusicPlaying;
+        });
+
+        // ???單??批
+        let isSoundEnabled = true;
+        const typingSound = document.getElementById('typingSound');
+
+        function playTypingSound() {
+          if (isSoundEnabled) {
+            typingSound.currentTime = 0;
+            typingSound.play().catch(error => {
+              console.log('?單??剜憭望?:', error);
+            });
+          }
+        }
+
+    </script>
+    <audio id="backgroundMusic" loop>
+      <source src="sound/???暸???嚗??單?嚗?mp3" type="audio/mpeg">
+    </audio>
+</body>
+</html> 

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?∠?鞈?閮箸撌亙</title>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .diagnostic-section {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .diagnostic-section h2 {
+            color: #00ffff;
+            margin-top: 0;
+            border-bottom: 2px solid #00ffff;
+            padding-bottom: 10px;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .status.success {
+            background: rgba(0, 255, 0, 0.2);
+            border: 1px solid #00ff00;
+            color: #00ff00;
+        }
+        
+        .status.warning {
+            background: rgba(255, 255, 0, 0.2);
+            border: 1px solid #ffff00;
+            color: #ffff00;
+        }
+        
+        .status.error {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff0000;
+            color: #ff0000;
+        }
+        
+        .card-list {
+            max-height: 300px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .card-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            border-left: 4px solid #00ffff;
+        }
+        
+        .card-item.problem {
+            border-left-color: #ff0000;
+            background: rgba(255, 0, 0, 0.1);
+        }
+        
+        .card-item.fixed {
+            border-left-color: #00ff00;
+            background: rgba(0, 255, 0, 0.1);
+        }
+        
+        .button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .button.danger {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+        }
+        
+        .button.success {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        
+        .stat-label {
+            color: #ccc;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>?? ?∠?鞈?閮箸撌亙</h1>
+        
+        <div class="diagnostic-section">
+            <h2>?? 蝟餌絞??炎??/h2>
+            <div id="systemStatus"></div>
+            <button class="button" onclick="runDiagnostic()">?? ?瑁?閮箸</button>
+            <button class="button success" onclick="fixProblems()">? ?芸?靽桀儔</button>
+            <button class="button danger" onclick="resetCardData()">??儭??蔭?∠?鞈?</button>
+        </div>
+        
+        <div class="diagnostic-section">
+            <h2>?? 蝯梯?鞈?</h2>
+            <div class="stats-grid" id="statsGrid"></div>
+        </div>
+        
+        <div class="diagnostic-section">
+            <h2>?? ?潛??憿?/h2>
+            <div id="problemsList"></div>
+        </div>
+        
+        <div class="diagnostic-section">
+            <h2>??靽桀儔蝯?</h2>
+            <div id="fixResults"></div>
+        </div>
+    </div>
+
+    <script src="js/userData.js"></script>
+    <script src="js/cardStorage.js"></script>
+    <script>
+        let diagnosticResults = {
+            problems: [],
+            fixed: [],
+            stats: {}
+        };
+
+        function runDiagnostic() {
+            diagnosticResults = {
+                problems: [],
+                fixed: [],
+                stats: {}
+            };
+            
+            console.log('?? ???瑁??∠?鞈?閮箸...');
+            
+            // 瑼Ｘ蝟餌絞?臬頛
+            checkSystemLoaded();
+            
+            // 瑼Ｘ?∠?鞈?摰??
+            checkCardDataIntegrity();
+            
+            // 瑼Ｘ蝣?鞈?銝?湔?
+            checkShardConsistency();
+            
+            // 瑼Ｘ撌脰圾?????
+            checkUnlockedCards();
+            
+            // ?湔憿舐內
+            updateDisplay();
+        }
+
+        function checkSystemLoaded() {
+            const status = document.getElementById('systemStatus');
+            
+            if (typeof LinkageSystem === 'undefined') {
+                diagnosticResults.problems.push({
+                    type: 'system',
+                    message: 'LinkageSystem ?芾???,
+                    severity: 'error'
+                });
+                status.innerHTML = '<div class="status error">??蝟餌絞?芣迤蝣箄???/div>';
+                return;
+            }
+            
+            if (typeof window.allCards === 'undefined' || !window.allCards.length) {
+                diagnosticResults.problems.push({
+                    type: 'system',
+                    message: '?∠?鞈??芾???,
+                    severity: 'error'
+                });
+                status.innerHTML = '<div class="status error">???∠?鞈??芾???/div>';
+                return;
+            }
+            
+            status.innerHTML = '<div class="status success">??蝟餌絞甇?虜頛</div>';
+        }
+
+        function checkCardDataIntegrity() {
+            console.log('?? 瑼Ｘ?∠?鞈?摰??..');
+            
+            const ownedCards = LinkageSystem.cards.getOwnedCards();
+            const shards = LinkageSystem.cards.getShards();
+            
+            diagnosticResults.stats = {
+                totalCards: window.allCards.length,
+                ownedCards: Object.keys(ownedCards).length,
+                totalShards: Object.values(shards).reduce((sum, count) => sum + (parseInt(count) || 0), 0),
+                shardTypes: Object.keys(shards).length
+            };
+            
+            // 瑼Ｘ?臬?? ownedCards 銝凋?銝 allCards 銝?
+            const invalidOwnedCards = Object.keys(ownedCards).filter(cardWord => 
+                !window.allCards.find(card => card.word === cardWord)
+            );
+            
+            if (invalidOwnedCards.length > 0) {
+                diagnosticResults.problems.push({
+                    type: 'integrity',
+                    message: `?潛 ${invalidOwnedCards.length} 撘萇??撌脫???,
+                    details: invalidOwnedCards,
+                    severity: 'warning'
+                });
+            }
+            
+            // 瑼Ｘ?臬?????∠?銝???
+            const invalidShards = Object.keys(shards).filter(cardWord => 
+                !window.allCards.find(card => card.word === cardWord)
+            );
+            
+            if (invalidShards.length > 0) {
+                diagnosticResults.problems.push({
+                    type: 'integrity',
+                    message: `?潛 ${invalidShards.length} ???蝣?閮?`,
+                    details: invalidShards,
+                    severity: 'warning'
+                });
+            }
+        }
+
+        function checkShardConsistency() {
+            console.log('?? 瑼Ｘ蝣?鞈?銝?湔?..');
+            
+            const ownedCards = LinkageSystem.cards.getOwnedCards();
+            const shards = LinkageSystem.cards.getShards();
+            
+            // 瑼Ｘ撌脰圾???行?憭?蝣?
+            const unlockedWithExcessShards = [];
+            
+            Object.keys(ownedCards).forEach(cardWord => {
+                const card = window.allCards.find(c => c.word === cardWord);
+                if (!card) return;
+                
+                const required = getRequiredShards(card.rarity);
+                const haveShards = shards[cardWord] || 0;
+                
+                if (haveShards > required) {
+                    unlockedWithExcessShards.push({
+                        card: card,
+                        required: required,
+                        have: haveShards,
+                        excess: haveShards - required
+                    });
+                }
+            });
+            
+            if (unlockedWithExcessShards.length > 0) {
+                diagnosticResults.problems.push({
+                    type: 'consistency',
+                    message: `?潛 ${unlockedWithExcessShards.length} 撘萄歇閫???∠???擗??,
+                    details: unlockedWithExcessShards,
+                    severity: 'warning'
+                });
+            }
+        }
+
+        function checkUnlockedCards() {
+            console.log('?? 瑼Ｘ撌脰圾?????..');
+            
+            const ownedCards = LinkageSystem.cards.getOwnedCards();
+            const shards = LinkageSystem.cards.getShards();
+            
+            // 瑼Ｘ?府閫??雿閫?????
+            const shouldBeUnlocked = [];
+            
+            window.allCards.forEach(card => {
+                const required = getRequiredShards(card.rarity);
+                const haveShards = shards[card.word] || 0;
+                const isOwned = ownedCards[card.word] || false;
+                
+                if (haveShards >= required && !isOwned) {
+                    shouldBeUnlocked.push({
+                        card: card,
+                        required: required,
+                        have: haveShards
+                    });
+                }
+            });
+            
+            if (shouldBeUnlocked.length > 0) {
+                diagnosticResults.problems.push({
+                    type: 'unlock',
+                    message: `?潛 ${shouldBeUnlocked.length} 撘萄??閰脰圾???芾圾?,
+                    details: shouldBeUnlocked,
+                    severity: 'error'
+                });
+            }
+            
+            // 瑼Ｘ撌脰圾??蝣?銝雲???
+            const unlockedWithInsufficientShards = [];
+            
+            Object.keys(ownedCards).forEach(cardWord => {
+                const card = window.allCards.find(c => c.word === cardWord);
+                if (!card) return;
+                
+                const required = getRequiredShards(card.rarity);
+                const haveShards = shards[cardWord] || 0;
+                
+                if (haveShards < required) {
+                    unlockedWithInsufficientShards.push({
+                        card: card,
+                        required: required,
+                        have: haveShards
+                    });
+                }
+            });
+            
+            if (unlockedWithInsufficientShards.length > 0) {
+                diagnosticResults.problems.push({
+                    type: 'unlock',
+                    message: `?潛 ${unlockedWithInsufficientShards.length} 撘萄歇閫???∠?蝣?銝雲`,
+                    details: unlockedWithInsufficientShards,
+                    severity: 'warning'
+                });
+            }
+        }
+
+        function fixProblems() {
+            console.log('? ???芸?靽桀儔...');
+            
+            const fixResults = [];
+            
+            diagnosticResults.problems.forEach(problem => {
+                if (problem.type === 'unlock') {
+                    // 靽桀儔?府閫??雿閫?????
+                    problem.details.forEach(item => {
+                        LinkageSystem.cards.addCard(item.card.word);
+                        fixResults.push(`??閫???∠?: ${item.card.zh} (${item.card.word})`);
+                    });
+                }
+                
+                if (problem.type === 'integrity') {
+                    // 皜??⊥???????
+                    if (problem.message.includes('?⊥???????)) {
+                        const shards = LinkageSystem.cards.getShards();
+                        problem.details.forEach(cardWord => {
+                            delete shards[cardWord];
+                            fixResults.push(`??儭?皜??⊥?蝣?: ${cardWord}`);
+                        });
+                        LinkageSystem.cards.setShards(shards);
+                    }
+                    
+                    // 皜??⊥??歇???∠?
+                    if (problem.message.includes('?⊥??歇???∠?')) {
+                        const ownedCards = LinkageSystem.cards.getOwnedCards();
+                        problem.details.forEach(cardWord => {
+                            delete ownedCards[cardWord];
+                            fixResults.push(`??儭?皜??⊥??∠?: ${cardWord}`);
+                        });
+                        LinkageSystem.cards.setOwnedCards(ownedCards);
+                    }
+                }
+            });
+            
+            diagnosticResults.fixed = fixResults;
+            
+            // ??瑁?閮箸
+            setTimeout(() => {
+                runDiagnostic();
+            }, 100);
+        }
+
+        function resetCardData() {
+            if (!confirm('?? 蝣箏?閬?蝵格??????嚗n\n????\n??皜??歇閫????n??皜????n???⊥?敺拙?\n\n蝣箏?閬匱蝥?嚗?)) {
+                return;
+            }
+            
+            // 皜?∠?鞈?
+            localStorage.removeItem('ownedCards');
+            localStorage.removeItem('cardShards');
+            localStorage.removeItem('recentlyObtainedCards');
+            localStorage.removeItem('newCardTimestamps');
+            
+            // ?頛?
+            location.reload();
+        }
+
+        function updateDisplay() {
+            // ?湔蝯梯?鞈?
+            const statsGrid = document.getElementById('statsGrid');
+            if (diagnosticResults.stats) {
+                statsGrid.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-number">${diagnosticResults.stats.totalCards || 0}</div>
+                        <div class="stat-label">蝮賢?</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${diagnosticResults.stats.ownedCards || 0}</div>
+                        <div class="stat-label">撌脰圾???/div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${diagnosticResults.stats.totalShards || 0}</div>
+                        <div class="stat-label">蝮賜??</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${diagnosticResults.stats.shardTypes || 0}</div>
+                        <div class="stat-label">蝣?蝔桅?</div>
+                    </div>
+                `;
+            }
+            
+            // ?湔???”
+            const problemsList = document.getElementById('problemsList');
+            if (diagnosticResults.problems.length === 0) {
+                problemsList.innerHTML = '<div class="status success">??瘝??潛??</div>';
+            } else {
+                problemsList.innerHTML = diagnosticResults.problems.map(problem => `
+                    <div class="card-item ${problem.severity === 'error' ? 'problem' : 'warning'}">
+                        <div>
+                            <strong>${problem.message}</strong>
+                            ${problem.details ? `<br><small>${JSON.stringify(problem.details)}</small>` : ''}
+                        </div>
+                        <div style="color: ${problem.severity === 'error' ? '#ff0000' : '#ffff00'}">
+                            ${problem.severity === 'error' ? '???航炊' : '?? 霅血?'}
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // ?湔靽桀儔蝯?
+            const fixResults = document.getElementById('fixResults');
+            if (diagnosticResults.fixed.length === 0) {
+                fixResults.innerHTML = '<div class="status">撠?瑁?靽桀儔</div>';
+            } else {
+                fixResults.innerHTML = diagnosticResults.fixed.map(result => `
+                    <div class="card-item fixed">
+                        <div>${result}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function getRequiredShards(rarity) {
+            switch (rarity) {
+                case '頞???: return 5;
+                case '蝔??: return 3;
+                case '?桅?: return 1;
+                default: return 1;
+            }
+        }
+
+        // ?頛??銵那??
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                runDiagnostic();
+            }, 1000);
+        });
+    </script>
+</body>
+</html> 

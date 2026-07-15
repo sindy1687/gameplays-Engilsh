@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>??憛??⊿??/title>
+    <link rel="stylesheet" href="responsive.css">
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
+            min-height: 100vh;
+            margin: 0;
+            color: #e0eaff;
+            position: relative;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('images/cards/galaxy.gif') repeat center center, radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            opacity: 0.5;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: rgba(30, 40, 70, 0.7);
+            border-radius: 24px;
+            box-shadow: 0 8px 40px #00ffe055, 0 1.5px 8px #0ff2  inset;
+            padding: 40px 28px;
+            backdrop-filter: blur(8px);
+            border: 1.5px solid #3ecfff55;
+        }
+        h1 {
+            text-align: center;
+            color: #7eeeff;
+            margin-bottom: 32px;
+            font-size: 2.3em;
+            text-shadow: 0 0 16px #00ffe0, 0 2px 8px #0ff2;
+            letter-spacing: 2px;
+        }
+        .level-list {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+        .level-card {
+            background: linear-gradient(90deg, #232b3a 60%, #1b2735 100%);
+            border-radius: 18px;
+            box-shadow: 0 4px 24px #00ffe022;
+            padding: 28px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            border: 1.5px solid #3ecfff33;
+            position: relative;
+        }
+        .level-title {
+            font-size: 1.5em;
+            color: #7eeeff;
+            margin-bottom: 8px;
+            text-shadow: 0 0 8px #00ffe0;
+            letter-spacing: 1px;
+        }
+        .level-desc {
+            font-size: 1.1em;
+            color: #b2cfff;
+            margin-bottom: 16px;
+            text-shadow: 0 0 6px #00ffe0;
+        }
+        .start-btn {
+            background: linear-gradient(135deg, #00ffe0, #3ecfff);
+            color: #222;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 32px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: bold;
+            box-shadow: 0 2px 12px #00ffe055;
+        }
+        .start-btn:hover {
+            background: linear-gradient(135deg, #3ecfff, #00ffe0);
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 8px 24px #00ffe0cc;
+            color: #111;
+        }
+
+        /* ========== 隤???豢???踵?撘身閮?========== */
+        
+        /* 撟單?拚? (1024px隞乩?) */
+        @media (max-width: 1024px) {
+            .container {
+                max-width: 95%;
+                padding: 32px 24px;
+                margin: 20px auto;
+            }
+            
+            h1 {
+                font-size: 2.1em;
+                letter-spacing: 1.5px;
+                margin-bottom: 28px;
+            }
+            
+            .level-list {
+                gap: 24px;
+            }
+            
+            .level-card {
+                padding: 24px 18px;
+            }
+            
+            .level-title {
+                font-size: 1.4em;
+            }
+            
+            .level-desc {
+                font-size: 1.05em;
+                margin-bottom: 14px;
+            }
+            
+            .start-btn {
+                padding: 11px 28px;
+                font-size: 1.05em;
+            }
+        }
+        
+        /* ??璈怠? (768px隞乩?) */
+        @media (max-width: 768px) {
+            .container {
+                max-width: 98%;
+                padding: 24px 16px;
+                margin: 15px auto;
+                border-radius: 18px;
+            }
+            
+            h1 {
+                font-size: 1.9em;
+                letter-spacing: 1px;
+                margin-bottom: 24px;
+            }
+            
+            .level-list {
+                gap: 20px;
+            }
+            
+            .level-card {
+                padding: 20px 16px;
+                border-radius: 14px;
+            }
+            
+            .level-title {
+                font-size: 1.3em;
+                margin-bottom: 6px;
+            }
+            
+            .level-desc {
+                font-size: 1em;
+                margin-bottom: 12px;
+                line-height: 1.5;
+            }
+            
+            .start-btn {
+                padding: 10px 24px;
+                font-size: 1em;
+                border-radius: 8px;
+            }
+        }
+        
+        /* ??鞊? (600px隞乩?) */
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px auto;
+                padding: 20px 12px;
+            }
+            
+            h1 {
+                font-size: 1.7em;
+                margin-bottom: 20px;
+            }
+            
+            .level-list {
+                gap: 16px;
+            }
+            
+            .level-card {
+                padding: 18px 14px;
+            }
+            
+            .level-title {
+                font-size: 1.25em;
+                margin-bottom: 5px;
+            }
+            
+            .level-desc {
+                font-size: 0.95em;
+                margin-bottom: 10px;
+            }
+            
+            .start-btn {
+                padding: 9px 20px;
+                font-size: 0.95em;
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+        
+        /* 頞??Ｗ? (480px隞乩?) */
+        @media (max-width: 480px) {
+            .container {
+                margin: 5px auto;
+                padding: 16px 8px;
+                border-radius: 12px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+                margin-bottom: 16px;
+                letter-spacing: 0.5px;
+            }
+            
+            .level-list {
+                gap: 14px;
+            }
+            
+            .level-card {
+                padding: 16px 12px;
+                border-radius: 10px;
+            }
+            
+            .level-title {
+                font-size: 1.15em;
+                margin-bottom: 4px;
+            }
+            
+            .level-desc {
+                font-size: 0.9em;
+                margin-bottom: 8px;
+                line-height: 1.4;
+            }
+            
+            .start-btn {
+                padding: 8px 16px;
+                font-size: 0.9em;
+                width: 100%;
+                max-width: 180px;
+            }
+        }
+        
+        /* 閫豢鋆蔭?芸? */
+        @media (hover: none) {
+            .start-btn:hover {
+                transform: none;
+                background: linear-gradient(135deg, #00ffe0, #3ecfff);
+            }
+            
+            .start-btn:active {
+                transform: scale(0.98);
+                background: linear-gradient(135deg, #3ecfff, #00ffe0);
+                box-shadow: 0 4px 16px #00ffe0aa;
+            }
+        }
+        
+        /* 璈怠?璅∪??孵?? */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .container {
+                margin: 5px auto;
+                padding: 16px;
+            }
+            
+            h1 {
+                font-size: 1.6em;
+                margin-bottom: 12px;
+            }
+            
+            .level-list {
+                gap: 12px;
+            }
+            
+            .level-card {
+                padding: 14px 16px;
+            }
+        }
+
+        /* ========== 隤???豢???踵?撘身閮?========== */
+        
+        /* 撟單?拚? (1024px隞乩?) */
+        @media (max-width: 1024px) {
+            .container {
+                max-width: 95%;
+                padding: 32px 24px;
+                margin: 20px auto;
+            }
+            
+            h1 {
+                font-size: 2.1em;
+                letter-spacing: 1.5px;
+                margin-bottom: 28px;
+            }
+            
+            .level-list {
+                gap: 24px;
+            }
+            
+            .level-card {
+                padding: 24px 18px;
+            }
+            
+            .level-title {
+                font-size: 1.4em;
+            }
+            
+            .level-desc {
+                font-size: 1.05em;
+                margin-bottom: 14px;
+            }
+            
+            .start-btn {
+                padding: 11px 28px;
+                font-size: 1.05em;
+            }
+        }
+        
+        /* ??璈怠? (768px隞乩?) */
+        @media (max-width: 768px) {
+            .container {
+                max-width: 98%;
+                padding: 24px 16px;
+                margin: 15px auto;
+                border-radius: 18px;
+            }
+            
+            h1 {
+                font-size: 1.9em;
+                letter-spacing: 1px;
+                margin-bottom: 24px;
+            }
+            
+            .level-list {
+                gap: 20px;
+            }
+            
+            .level-card {
+                padding: 20px 16px;
+                border-radius: 14px;
+            }
+            
+            .level-title {
+                font-size: 1.3em;
+                margin-bottom: 6px;
+            }
+            
+            .level-desc {
+                font-size: 1em;
+                margin-bottom: 12px;
+                line-height: 1.5;
+            }
+            
+            .start-btn {
+                padding: 10px 24px;
+                font-size: 1em;
+                border-radius: 8px;
+            }
+        }
+        
+        /* ??鞊? (600px隞乩?) */
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px auto;
+                padding: 20px 12px;
+            }
+            
+            h1 {
+                font-size: 1.7em;
+                margin-bottom: 20px;
+            }
+            
+            .level-list {
+                gap: 16px;
+            }
+            
+            .level-card {
+                padding: 18px 14px;
+            }
+            
+            .level-title {
+                font-size: 1.25em;
+                margin-bottom: 5px;
+            }
+            
+            .level-desc {
+                font-size: 0.95em;
+                margin-bottom: 10px;
+            }
+            
+            .start-btn {
+                padding: 9px 20px;
+                font-size: 0.95em;
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+        
+        /* 頞??Ｗ? (480px隞乩?) */
+        @media (max-width: 480px) {
+            .container {
+                margin: 5px auto;
+                padding: 16px 8px;
+                border-radius: 12px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+                margin-bottom: 16px;
+                letter-spacing: 0.5px;
+            }
+            
+            .level-list {
+                gap: 14px;
+            }
+            
+            .level-card {
+                padding: 16px 12px;
+                border-radius: 10px;
+            }
+            
+            .level-title {
+                font-size: 1.15em;
+                margin-bottom: 4px;
+            }
+            
+            .level-desc {
+                font-size: 0.9em;
+                margin-bottom: 8px;
+                line-height: 1.4;
+            }
+            
+            .start-btn {
+                padding: 8px 16px;
+                font-size: 0.9em;
+                width: 100%;
+                max-width: 180px;
+            }
+        }
+        
+        /* 閫豢鋆蔭?芸? */
+        @media (hover: none) {
+            .start-btn:hover {
+                transform: none;
+                background: linear-gradient(135deg, #00ffe0, #3ecfff);
+            }
+            
+            .start-btn:active {
+                transform: scale(0.98);
+                background: linear-gradient(135deg, #3ecfff, #00ffe0);
+                box-shadow: 0 4px 16px #00ffe0aa;
+            }
+        }
+        
+        /* 璈怠?璅∪??孵?? */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .container {
+                margin: 5px auto;
+                padding: 16px;
+            }
+            
+            h1 {
+                font-size: 1.6em;
+                margin-bottom: 12px;
+            }
+            
+            .level-list {
+                gap: 12px;
+            }
+            
+            .level-card {
+                padding: 14px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>??儭???憛???豢?</h1>
+        <div class="level-list">
+            <div class="level-card">
+                <div class="level-title">蝚砌?????璅寞摰風??/div>
+                <div class="level-desc">銝駁?嚗?b>be???臬???/b><br>?be??(am/is/are)?摰????銝???舐敺e??撖嗥??/div>
+                <button class="start-btn" onclick="location.href='grammar_level1_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砌????暺?餈琿</div>
+                <div class="level-desc">銝駁?嚗?b>be???血???/b><br>摮豢?be??(am/is/are)?摰???渲圾暺?餈琿??憿?</div>
+                <button class="start-btn" onclick="location.href='grammar_level2_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砌???敺??劓銋?</div>
+                <div class="level-desc">銝駁?嚗?b>be??????/b><br>?be??(am/is/are)?????閫???劓銋???撖?</div>
+                <button class="start-btn" onclick="location.href='grammar_level3_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砍????Ｙ揣?征?折?</div>
+                <div class="level-desc">銝駁?嚗?b>be??瘛瑕?憿?/b><br>摮豢?be????蝔桀??蝛輯??征?折?嚗?/div>
+                <button class="start-btn" onclick="location.href='grammar_level4_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砌????渲圾擳???/div>
+                <div class="level-desc">銝駁?嚗?b>銝?砍?閰?典??臬???/b><br>?銝?砍?閰??曉撘摰???渲圾?方?瘜嚗?/div>
+                <button class="start-btn" onclick="location.href='grammar_level5_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砍??摰風瘞湔蟡挪</div>
+                <div class="level-desc">銝駁?嚗?b>?曉?脰?撘?/b><br>??曉?脰?撘?be + V-ing)嚗?霅瑞???瘞湔蟡挪嚗?/div>
+                <button class="start-btn" onclick="location.href='grammar_level6_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砌????砍?憸冽蝎暸?</div>
+                <div class="level-desc">銝駁?嚗?b>銝?砍?閰?典??</b><br>摮豢?銝?砍?閰??曉撘???Do/Does)嚗?撥憭抒?憸冽蝎暸?嚗?/div>
+                <button class="start-btn" onclick="location.href='grammar_level7_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砍??蝛輯??蔣璉格?</div>
+                <div class="level-desc">銝駁?嚗?b>銝?砍?閰?典??剔???/b><br>?銝?砍?閰??剔??伐?摰蝛輯?蟡???敶望ㄝ??</div>
+                <button class="start-btn" onclick="location.href='grammar_level8_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砌?????樴??唾牧</div>
+                <div class="level-desc">銝駁?嚗?b>?曉撘??曉?脰?撘毽??</b><br>摮豢??曉撘??脰?撘?瘛瑕??嚗????∠??日?嚗?/div>
+                <button class="start-btn" onclick="location.href='grammar_level9_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砍??????銋?</div>
+                <div class="level-desc">銝駁?嚗?b>WH?</b><br>?WH?(What/Where/Who/How)嚗??批?憭批?蝝???</div>
+                <button class="start-btn" onclick="location.href='grammar_level10_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砍?銝??閫??蝳???</div>
+                <div class="level-desc">銝駁?嚗?b>銝?砍?閰?典??血???/b><br>摮豢?銝?砍?閰??血???don't/doesn't)嚗圾撠撥憭抒?蝳???嚗?/div>
+                <button class="start-btn" onclick="location.href='grammar_level11_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砍?鈭?嚗??????/div>
+                <div class="level-desc">銝駁?嚗?b>銝?砍?閰?典??</b><br>?銝?砍?閰??(Do/Does)嚗?????佗?</div>
+                <button class="start-btn" onclick="location.href='grammar_level12_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砍?銝?嚗??活???</div>
+                <div class="level-desc">銝駁?嚗?b>be???撘摰</b><br>摮豢?be?????餃?(was/were)嚗????嗡?甈∪??之?嚗?/div>
+                <button class="start-btn" onclick="location.href='grammar_level13_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砍???嚗楊蝜?蝛箇???/div>
+                <div class="level-desc">銝駁?嚗?b>be???撘???/b><br>?be?????餃??嚗楊蝜?憟??征蝜嚗?/div>
+                <button class="start-btn" onclick="location.href='grammar_level14_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砍?鈭?嚗??∪??頛?/div>
+                <div class="level-desc">銝駁?嚗?b>銝?砍?閰??餃??臬???/b><br>摮豢?銝?砍?閰??撘???賡?銋憚????</div>
+                <button class="start-btn" onclick="location.href='grammar_level15_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砍??剝?嚗??箸?瘜???/div>
+                <div class="level-desc">銝駁?嚗?b>銝?砍?閰??餃??血???/b><br>?銝?砍?閰??撘摰嚗??箇?甇????銋?嚗?/div>
+                <button class="start-btn" onclick="location.href='grammar_level16_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砍?銝?嚗閫????蝣?/div>
+                <div class="level-desc">銝駁?嚗?b>銝?砍?閰??餃??</b><br>??撘???Did + ?耦??)嚗閫???斗???蝣潘?</div>
+                <button class="start-btn" onclick="location.href='grammar_level17_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砍??恍?嚗?蝛箔漱?舀???/div>
+                <div class="level-desc">銝駁?嚗?b>?芯?撘摰</b><br>摮豢??芯?撘摰(will + ?耦??)嚗?征銝剔忽璇哨?</div>
+                <button class="start-btn" onclick="location.href='grammar_level18_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砍?銋?嚗?閬靘???/div>
+                <div class="level-desc">銝駁?嚗?b>?芯?撘摰</b><br>摮豢??芯?撘摰(will not)嚗?閬????芯?嚗?/div>
+                <button class="start-btn" onclick="location.href='grammar_level19_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砌???嚗摰靘??/div>
+                <div class="level-desc">銝駁?嚗?b>?芯?撘??</b><br>??芯?撘??(Will + 銝餉? + ?耦??)嚗???靘??圈嚗?/div>
+                <button class="start-btn" onclick="location.href='grammar_level20_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砌??????Ｗ??芯?憟抒?</div>
+                <div class="level-desc">銝駁?嚗?b>?芯?撘毽??</b><br>??芯?撘??車?亙?嚗?靘??∠憟抒?嚗?/div>
+                <button class="start-btn" onclick="location.href='grammar_level21_1.html'">???</button>
+            </div>
+            <div class="level-card">
+                <div class="level-title">蝚砌?????瘥?蝝???/div>
+                <div class="level-desc">銝駁?嚗?b>瘥?蝝?/b><br>?敶Ｗ捆閰??航???頛?霈?閬?嚗??箄?瘜?頛?憭批葦嚗?/div>
+                <button class="start-btn" onclick="location.href='grammar_level22_1.html'">???</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

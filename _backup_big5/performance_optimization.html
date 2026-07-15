@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?扯?芸???</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .optimization-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-left: 4px solid #3498db;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .optimization-section h2 {
+            color: #2980b9;
+            margin-top: 0;
+        }
+        .problem {
+            background: #ffe6e6;
+            border-left-color: #e74c3c;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .solution {
+            background: #e8f5e8;
+            border-left-color: #27ae60;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .code {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        .priority {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .high { background: #e74c3c; color: white; }
+        .medium { background: #f39c12; color: white; }
+        .low { background: #27ae60; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>?? 蝟餌絞?扯?芸???</h1>
+        
+        <div class="optimization-section">
+            <h2>1. 瑼?頛?芸? <span class="priority high">擃??</span></h2>
+            
+            <div class="problem">
+                <strong>??嚗?/strong>憭批?瑼?頛蝺拇
+                <ul>
+                    <li>cards.js (124.77 KB) - ?憭折??∠?鞈?</li>
+                    <li>cards_backup.js (116.07 KB) - ???遢瑼?</li>
+                    <li>grammarTower.js (56.96 KB) - 隤?憛?頛?/li>
+                </ul>
+            </div>
+            
+            <div class="solution">
+                <strong>閫?捱?寞?嚗?/strong>
+                <ol>
+                    <li><strong>蝘駁??瑼?嚗?/strong>?芷 cards_backup.js 蝑?隞賣?獢?/li>
+                    <li><strong>?頛嚗?/strong>撠???宏??JSON 瑼?嚗??頛</li>
+                    <li><strong>憯葬瑼?嚗?/strong>雿輻 minified ?</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="optimization-section">
+            <h2>2. ????芸? <span class="priority medium">銝剖??</span></h2>
+            
+            <div class="problem">
+                <strong>??嚗?/strong>???敶梢?扯
+                <ul>
+                    <li>?征??????</li>
+                    <li>憭?CSS ????瑁?</li>
+                    <li>GPU 雿輻??擃?/li>
+                </ul>
+            </div>
+            
+            <div class="solution">
+                <strong>閫?捱?寞?嚗?/strong>
+                <ol>
+                    <li><strong>?怠???閬??恬?</strong>?園??Ｖ??航??????/li>
+                    <li><strong>皜???賊?嚗?/strong>?芯???閬?閬箸???/li>
+                    <li><strong>雿輻 CSS transform嚗?/strong>?芸? GPU ??/li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="optimization-section">
+            <h2>3. 閮擃恣???<span class="priority high">擃??</span></h2>
+            
+            <div class="problem">
+                <strong>??嚗?/strong>閮擃援瞍??漲雿輻
+                <ul>
+                    <li>憭折?鞈??脣??刻??園?銝?/li>
+                    <li>鈭辣???冽甇?Ⅱ皜?</li>
+                    <li>摰??冽??皜</li>
+                </ul>
+            </div>
+            
+            <div class="solution">
+                <strong>閫?捱?寞?嚗?/strong>
+                <ol>
+                    <li><strong>皜?鈭辣???剁?</strong>??貉??宏?斗???賢</li>
+                    <li><strong>皜摰??剁?</strong>雿輻 clearInterval ??clearTimeout</li>
+                    <li><strong>???鞈?嚗?/strong>?踹?銝甈⊥扯??亙之????/li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="optimization-section">
+            <h2>4. 蝡?瑁?????/h2>
+            
+            <div class="solution">
+                <strong>敹恍耨敺抬?</strong>
+                <ol>
+                    <li><strong>?芷?遢瑼?嚗?/strong>蝘駁 cards_backup.js</li>
+                    <li><strong>?怠???嚗?/strong>?券?瘣餃???怠??征?</li>
+                    <li><strong>皜???頛嚗?/strong>?芾??亦???ａ?閬?瑼?</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="optimization-section">
+            <h2>5. 蝔?蝣澆??靘?/h2>
+            
+            <div class="code">
+// ?芸???????????
+function animate() {
+    updateStars();
+    drawStars();
+    requestAnimationFrame(animate);
+}
+
+// ?芸?敺??舀?嗥??
+let animationId = null;
+let isPageVisible = true;
+
+function animate() {
+    if (!isPageVisible) return;
+    
+    updateStars();
+    drawStars();
+    animationId = requestAnimationFrame(animate);
+}
+
+// ??航??扳??
+document.addEventListener('visibilitychange', () => {
+    isPageVisible = !document.hidden;
+    if (!isPageVisible && animationId) {
+        cancelAnimationFrame(animationId);
+    } else if (isPageVisible && !animationId) {
+        animate();
+    }
+});
+            </div>
+        </div>
+
+        <div class="optimization-section">
+            <h2>6. ???孵???</h2>
+            
+            <ul>
+                <li><strong>頛?漲嚗?/strong>?? 40-60%</li>
+                <li><strong>閮擃蝙?剁?</strong>皜? 30-50%</li>
+                <li><strong>CPU 雿輻??</strong>?? 20-40%</li>
+                <li><strong>?餅?憯賢嚗?/strong>撱園 25-35%</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

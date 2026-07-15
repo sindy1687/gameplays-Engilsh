@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?賢?予摰?/title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background:
+                radial-gradient(circle at 20% 15%, rgba(0, 255, 255, 0.10) 0%, transparent 40%),
+                radial-gradient(circle at 80% 75%, rgba(255, 215, 0, 0.08) 0%, transparent 45%),
+                linear-gradient(180deg, #060a12 0%, #0a1428 45%, #050811 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* ???? */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                repeating-linear-gradient(
+                    90deg,
+                    rgba(0, 255, 255, 0.05) 0px,
+                    rgba(0, 255, 255, 0.05) 1px,
+                    transparent 1px,
+                    transparent 140px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(255, 255, 255, 0.04) 0px,
+                    rgba(255, 255, 255, 0.04) 1px,
+                    transparent 1px,
+                    transparent 140px
+                );
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.55;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ?予摰支蜓???*/
+        .chat-main-area {
+            flex: 1;
+            display: block;
+            margin-top: 16px;
+            position: relative;
+            min-height: 0;
+        }
+
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 900;
+            display: none;
+        }
+
+        .chat-main-area.drawer-open .drawer-overlay {
+            display: block;
+        }
+
+        .header {
+            background: linear-gradient(180deg, rgba(12, 22, 44, 0.95), rgba(6, 10, 18, 0.92));
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 16px;
+            text-align: center;
+            border: 1px solid rgba(0, 255, 255, 0.55);
+            box-shadow:
+                0 14px 35px rgba(0, 0, 0, 0.55),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ssr-broadcast-title {
+            margin: 10px 0 10px;
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            color: #fff;
+            text-shadow:
+                0 0 10px rgba(255, 215, 0, 0.35),
+                0 0 18px rgba(0, 255, 255, 0.18);
+        }
+
+        .ssr-broadcast-details {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.9), rgba(255, 215, 0, 0.7), transparent);
+            opacity: 0.9;
+        }
+
+        .header h1 {
+            font-size: 2.25rem;
+            background: linear-gradient(90deg, #7ffcff, #00ffff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 18px rgba(0, 255, 255, 0.25);
+            letter-spacing: 1px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: brightness(1); }
+            to { filter: brightness(1.2); }
+        }
+
+        .login-section {
+            background: linear-gradient(180deg, rgba(12, 22, 44, 0.92), rgba(6, 10, 18, 0.88));
+            border: 1px solid rgba(0, 255, 255, 0.55);
+            border-radius: 14px;
+            padding: 28px;
+            margin-bottom: 16px;
+            text-align: center;
+            box-shadow:
+                0 14px 35px rgba(0, 0, 0, 0.55),
+                inset 0 1px 0 rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(10px);
+        }
+
+        .login-section h2 {
+            color: #00ffff;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .login-form {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .login-input {
+            padding: 12px 20px;
+            border: 1px solid rgba(0, 255, 255, 0.65);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.25);
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .login-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .login-input:focus {
+            border-color: #a259ff;
+            box-shadow: 0 0 15px rgba(162, 89, 255, 0.5);
+        }
+
+        .login-button {
+            padding: 12px 30px;
+            background: linear-gradient(180deg, rgba(0, 255, 255, 0.95), rgba(0, 170, 170, 0.95));
+            color: #001018;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow:
+                0 10px 22px rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(180deg, rgba(12, 22, 44, 0.92), rgba(6, 10, 18, 0.88));
+            border: 1px solid rgba(0, 255, 255, 0.55);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow:
+                0 14px 35px rgba(0, 0, 0, 0.55),
+                inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            min-height: 500px;
+            width: 100%;
+        }
+
+        /* ?函??冽?”璅?? */
+        .online-users {
+            background: linear-gradient(180deg, rgba(12, 22, 44, 0.92), rgba(6, 10, 18, 0.88));
+            border: 1px solid rgba(0, 255, 255, 0.55);
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow:
+                0 14px 35px rgba(0, 0, 0, 0.55),
+                inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            width: 320px;
+            height: auto;
+            max-height: none;
+            overflow-y: auto;
+            position: fixed;
+            top: 110px;
+            right: 16px;
+            bottom: 16px;
+            z-index: 950;
+            transform: translateX(calc(100% + 20px));
+            transition: transform 0.22s ease;
+        }
+
+        .chat-main-area.drawer-open .online-users {
+            transform: translateX(0);
+        }
+
+        .users-drawer-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 960;
+            background: linear-gradient(180deg, rgba(0, 255, 255, 0.18), rgba(0, 0, 0, 0.25));
+            color: #eaffff;
+            border: 1px solid rgba(0, 255, 255, 0.55);
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55);
+        }
+
+        .users-drawer-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        /* ?芸?蝢拇遝?? */
+        .online-users::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .online-users::-webkit-scrollbar-track {
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .online-users::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #00ffff, #a259ff);
+            border-radius: 4px;
+        }
+
+        .online-users::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #a259ff, #00ffff);
+        }
+
+        .online-users h3 {
+            color: #00ffff;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            text-align: center;
+        }
+
+        .users-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .user-tag {
+            background: linear-gradient(45deg, #00ffff, #a259ff);
+            color: #000;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+            animation: userTagGlow 2s ease-in-out infinite alternate;
+        }
+
+        .user-tag.current-user {
+            background: linear-gradient(45deg, #ffd700, #ff6b6b);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .user-tag .user-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff88;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .user-tag.current-user .user-dot {
+            background: #ff6b6b;
+        }
+
+        @keyframes userTagGlow {
+            0% { box-shadow: 0 0 10px rgba(0, 255, 255, 0.3); }
+            100% { box-shadow: 0 0 15px rgba(0, 255, 255, 0.5); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .no-users {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
+            padding: 20px;
+        }
+
+        .loading-indicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #00ffff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            border: 2px solid #00ffff;
+            z-index: 9999;
+            display: none;
+        }
+
+        .loading-indicator.show {
+            display: block;
+        }
+
+        .chat-header {
+            background: linear-gradient(90deg, rgba(0, 255, 255, 0.12), rgba(255, 215, 0, 0.08));
+            padding: 14px 18px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.55);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .chat-header::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.55), transparent);
+            opacity: 0.75;
+        }
+
+        .chat-title {
+            font-size: 1.5rem;
+            color: #00ffff;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .connection-status {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-left: 10px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(0, 0, 0, 0.18);
+        }
+
+        .connection-status.online {
+            color: #00ff88;
+        }
+
+        .connection-status.offline {
+            color: #ff6b6b;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #00ffff, #a259ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .user-name {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background:
+                radial-gradient(circle at 50% 0%, rgba(0, 255, 255, 0.06), transparent 45%),
+                rgba(0, 0, 0, 0.22);
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 15px;
+            max-width: 80%;
+            word-wrap: break-word;
+            position: relative;
+            animation: messageSlide 0.2s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.system {
+            background: rgba(0, 255, 255, 0.2);
+            border-left: 4px solid #00ffff;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            color: #00ffff;
+            font-style: italic;
+        }
+
+        .message.system.ssr-broadcast {
+            background: linear-gradient(180deg, rgba(255, 215, 0, 0.14), rgba(0, 0, 0, 0.18));
+            border-left: 4px solid rgba(255, 215, 0, 0.95);
+            color: #ffd700;
+            font-style: normal;
+            text-align: left;
+            box-shadow:
+                0 16px 40px rgba(0, 0, 0, 0.55),
+                0 0 40px rgba(255, 215, 0, 0.18);
+        }
+
+        .ssr-broadcast-card {
+            position: relative;
+            border: 1px solid rgba(255, 215, 0, 0.55);
+            border-radius: 14px;
+            padding: 14px 14px 12px;
+            background:
+                radial-gradient(circle at 15% 0%, rgba(255, 215, 0, 0.20), transparent 45%),
+                linear-gradient(180deg, rgba(12, 22, 44, 0.92), rgba(6, 10, 18, 0.90));
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                0 12px 26px rgba(0, 0, 0, 0.55);
+            overflow: hidden;
+        }
+
+        .ssr-broadcast-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.95), rgba(0, 255, 255, 0.65), transparent);
+            opacity: 0.95;
+        }
+
+        .rarity-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 215, 0, 0.55);
+            background: rgba(0, 0, 0, 0.22);
+            color: #ffd700;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
+        }
+
+        .rarity-badge .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ffd700;
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.75);
+        }
+
+        .message.user {
+            background: linear-gradient(180deg, rgba(0, 255, 255, 0.22), rgba(0, 255, 255, 0.10));
+            border-left: 4px solid rgba(0, 255, 255, 0.95);
+            margin-left: auto;
+            color: #fff;
+        }
+
+        .message.other {
+            background: linear-gradient(180deg, rgba(162, 89, 255, 0.18), rgba(162, 89, 255, 0.10));
+            border-left: 4px solid rgba(162, 89, 255, 0.85);
+            margin-right: auto;
+            color: #fff;
+        }
+
+        .message-header {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .message-user {
+            font-weight: bold;
+            color: #00ffff;
+        }
+
+        .message-time {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .message-content {
+            font-size: 14px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            background: linear-gradient(180deg, rgba(6, 10, 18, 0.92), rgba(12, 22, 44, 0.90));
+            border-top: 1px solid rgba(0, 255, 255, 0.55);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        }
+
+        /* ?賢??璅?? */
+        .gacha-button {
+            background: linear-gradient(180deg, rgba(255, 215, 0, 0.95), rgba(210, 150, 0, 0.95));
+            color: #1a1200;
+            border: 1px solid rgba(255, 215, 0, 0.65);
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow:
+                0 10px 22px rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.35),
+                0 0 0 1px rgba(255, 215, 0, 0.25),
+                0 0 22px rgba(255, 215, 0, 0.25);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            letter-spacing: 0.5px;
+            min-width: 130px;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            animation: gachaCtaPulse 1.8s ease-in-out infinite;
+        }
+
+        .gacha-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -120%;
+            width: 120%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+            transform: skewX(-15deg);
+            transition: left 0.6s ease;
+            opacity: 0.65;
+        }
+
+        .gacha-button:hover::before {
+            left: 120%;
+        }
+
+        @keyframes gachaCtaPulse {
+            0%, 100% {
+                box-shadow:
+                    0 10px 22px rgba(0, 0, 0, 0.45),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+                    0 0 0 1px rgba(255, 215, 0, 0.25),
+                    0 0 22px rgba(255, 215, 0, 0.22);
+                transform: translateY(0);
+            }
+            50% {
+                box-shadow:
+                    0 14px 28px rgba(0, 0, 0, 0.55),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+                    0 0 0 1px rgba(255, 215, 0, 0.35),
+                    0 0 34px rgba(255, 215, 0, 0.35);
+                transform: translateY(-1px);
+            }
+        }
+
+        .gacha-button:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 16px 32px rgba(0, 0, 0, 0.55),
+                inset 0 1px 0 rgba(255, 255, 255, 0.35),
+                0 0 0 1px rgba(255, 215, 0, 0.35),
+                0 0 40px rgba(255, 215, 0, 0.55);
+        }
+
+        .gacha-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            animation: none;
+        }
+
+        /* ?賢蝯??∠?璅?? - 撌脩宏?歹??曉?湔頝唾??唳?⊿???*/
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 1px solid rgba(0, 255, 255, 0.65);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.25);
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .chat-input:focus {
+            border-color: #a259ff;
+            box-shadow: 0 0 15px rgba(162, 89, 255, 0.5);
+        }
+
+        .send-button {
+            padding: 12px 25px;
+            background: linear-gradient(180deg, rgba(0, 255, 255, 0.95), rgba(0, 170, 170, 0.95));
+            color: #001018;
+            border: 1px solid rgba(0, 255, 255, 0.45);
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow:
+                0 10px 22px rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
+        }
+
+        .send-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(180deg, rgba(0, 255, 255, 0.18), rgba(0, 0, 0, 0.25));
+            color: #eaffff;
+            border: 1px solid rgba(0, 255, 255, 0.55);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55);
+        }
+
+        .back-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .error-message {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #ff6b6b;
+            text-align: center;
+        }
+
+        .success-message {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #00ff88;
+            text-align: center;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #00ffff;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00ffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ?踵?撘身閮?*/
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .login-form {
+                flex-direction: column;
+            }
+
+            .chat-input-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+
+            .users-grid {
+                gap: 8px;
+            }
+
+            .user-tag {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+
+            .online-users h3 {
+                font-size: 1.1rem;
+            }
+
+            .chat-main-area {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .online-users {
+                width: 100%;
+                max-height: 200px;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ?單??批??璅?? */
+        .youtube-button, .sound-button {
+            background: linear-gradient(45deg, #00ffff, #a259ff);
+            color: #000;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        .youtube-button:hover, .sound-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+
+        .youtube-button.active, .sound-button.active {
+            background: linear-gradient(45deg, #ffd700, #ff6b6b);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .youtube-button.disabled, .sound-button.disabled {
+            background: linear-gradient(45deg, #666, #999);
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* YouTube ?剜?典捆??*/
+        .youtube-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #00ffff;
+            border-radius: 15px;
+            padding: 20px;
+            z-index: 10000;
+            display: none;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .youtube-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .youtube-control-btn {
+            background: linear-gradient(45deg, #00ffff, #a259ff);
+            color: #000;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .youtube-control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+
+        .youtube-container.show {
+            display: block;
+        }
+
+        .youtube-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .youtube-close:hover {
+            background: #ff4757;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="goHome()">
+        ??餈?擐?
+    </button>
+
+    <button class="users-drawer-toggle" id="usersDrawerToggle" onclick="toggleUsersDrawer()">
+        ? ?函?
+    </button>
+
+    <!-- 頛?內??-->
+    <div class="loading-indicator" id="loadingIndicator">
+        <div style="text-align: center;">
+            <div style="margin-bottom: 10px;">頛銝?..</div>
+            <div style="width: 30px; height: 30px; border: 3px solid #00ffff; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>? ?賢?予摰?/h1>
+            <div style="margin-top: 10px;">
+                <button id="youtubeToggle" class="youtube-button" onclick="toggleYouTube()" title="YouTube ?單?">
+                    ? YouTube
+                </button>
+                <button id="soundToggle" class="sound-button" onclick="toggleSound()" title="?單?">
+                    ?? ?單?
+                </button>
+            </div>
+            <div style="margin-top: 12px; color: rgba(255, 255, 255, 0.78); font-size: 13px; line-height: 1.5;">
+                ?ㄐ銝餉?憿舐內?賢撱?嚗?憒??SSR ?????銋隞亙銝???剖???～?
+            </div>
+        </div>
+
+        <!-- ?餃???-->
+        <div class="login-section" id="loginSection">
+            <h2>隢撓?交??摮?/h2>
+            <div class="login-form">
+                <input type="text" class="login-input" id="playerNameInput" placeholder="頛詨?函???..." maxlength="20">
+                <button class="login-button" onclick="login()">?脣?予摰?/button>
+            </div>
+        </div>
+
+        <!-- ?予摰支蜓???-->
+        <div class="chat-main-area hidden" id="chatMainArea">
+            <div class="drawer-overlay" id="drawerOverlay" onclick="closeUsersDrawer()"></div>
+            <!-- ?予摰文???-->
+            <div class="chat-container" id="chatContainer">
+                <div class="chat-header">
+                    <div class="chat-title">
+                        ? ?賢?予摰?
+                        <span class="connection-status" id="connectionStatus">?????銝?/span>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-avatar" id="userAvatar">?</div>
+                        <div class="user-name" id="userNameDisplay">?拙振</div>
+                    </div>
+                </div>
+                
+                <div class="chat-messages" id="chatMessages">
+                    <div class="loading">頛銝?..</div>
+                </div>
+                
+                            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="messageInput" placeholder="??嚗???砍/閮梢?嚗?.." maxlength="200">
+                <button class="gacha-button" id="gachaButton" onclick="drawCard()" title="???賢嚗閬?嚗?>? ???賢</button>
+                <button class="send-button" id="sendButton" onclick="sendMessage()">?潮?/button>
+            </div>
+            </div>
+
+            <!-- ?函??冽?” -->
+            <div class="online-users" id="onlineUsers">
+                <h3>? ?函??冽 (<span id="userCount">0</span>)</h3>
+                <div class="users-grid" id="usersGrid">
+                    <div class="loading">頛銝?..</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- YouTube ?剜?典捆?剁??梯?雿??單?嚗?-->
+    <div class="youtube-container" id="youtubeContainer" style="display: none;">
+        <div id="youtubePlayer"></div>
+    </div>
+
+    <script>
+        // ?蔭
+        const API_BASE_URL = 'https://script.google.com/macros/s/AKfycby6gzLGN6b1bwkdf7u2aM_nfjT8DM1JV4v_6QPD9ZWuqfCGRhfWH4NtL33W4rjV-gU8/exec';
+        
+        // ?典?霈
+        let currentUser = '';
+        let chatMessages = [];
+        let isConnected = false;
+        let onlineUsers = [];
+        let lastMessageCount = 0;
+        let isLoading = false;
+        let apiConnectionStatus = 'connecting'; // 'online', 'offline', 'connecting'
+        
+        // ?單?蝟餌絞霈
+        let messageSound = null;
+        let soundVolume = 0.5;
+        let youtubePlayer = null;
+        
+        // ?賢蝟餌絞霈
+        // 撌脩宏?歹??曉?湔頝唾??唳?⊿???
+
+        // ????
+        document.addEventListener('DOMContentLoaded', function() {
+            // 瑼Ｘ?臬撌脩??餃
+            const savedUser = localStorage.getItem('chatUser');
+            if (savedUser) {
+                currentUser = savedUser;
+                showChatRoom();
+                
+                // 憒?撌脩??餃嚗?閰西??亥?憭抵???
+                setTimeout(() => {
+                    loadChatMessages();
+                    loadOnlineUsers();
+                }, 500); // ?游翰??
+            }
+
+            // 閮剖?鈭辣????
+            setupEventListeners();
+            
+            // 頛?賢蝟餌絞
+            loadGachaSystem();
+            
+            // ????頂蝯?
+            initSoundSystem();
+            
+            // ?Ｗ儔?單?閮剖?
+            setTimeout(() => {
+                restoreSoundSettings();
+            }, 1000);
+        });
+
+        // 閮剖?鈭辣????
+        function setupEventListeners() {
+            const playerNameInput = document.getElementById('playerNameInput');
+            const messageInput = document.getElementById('messageInput');
+            const usersDrawerToggle = document.getElementById('usersDrawerToggle');
+
+            // ?餃頛詨獢?隞?
+            playerNameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
+
+            // ?予頛詨獢?隞?
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            if (usersDrawerToggle) {
+                usersDrawerToggle.addEventListener('click', function() {
+                    toggleUsersDrawer();
+                });
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeUsersDrawer();
+                }
+            });
+
+            // 蝘駁?芸??潮??踝??芸??Enter ???
+
+            // 頛詨獢暺???
+            playerNameInput.addEventListener('focus', function() {
+                this.style.borderColor = '#a259ff';
+            });
+
+            playerNameInput.addEventListener('blur', function() {
+                this.style.borderColor = '#00ffff';
+            });
+
+            messageInput.addEventListener('focus', function() {
+                this.style.borderColor = '#a259ff';
+            });
+
+            messageInput.addEventListener('blur', function() {
+                this.style.borderColor = '#00ffff';
+            });
+        }
+
+        function toggleUsersDrawer() {
+            const mainArea = document.getElementById('chatMainArea');
+            if (!mainArea) return;
+            mainArea.classList.toggle('drawer-open');
+        }
+
+        function closeUsersDrawer() {
+            const mainArea = document.getElementById('chatMainArea');
+            if (!mainArea) return;
+            mainArea.classList.remove('drawer-open');
+        }
+
+        // ?餃?
+        function login() {
+            const playerNameInput = document.getElementById('playerNameInput');
+            const playerName = playerNameInput.value.trim();
+
+            if (!playerName) {
+                showError('隢撓?交??摮?);
+                return;
+            }
+
+            if (playerName.length < 2) {
+                showError('???喳??閬?????);
+                return;
+            }
+
+            if (playerName.length > 20) {
+                showError('??銝頞?20????);
+                return;
+            }
+
+            // ?脣??冽??
+            currentUser = playerName;
+            localStorage.setItem('chatUser', currentUser);
+
+            // 憿舐內?予摰?
+            showChatRoom();
+
+            // 憿舐內頛?內??
+            showLoading();
+
+            // 銝西?頛?予閮?蝺??
+            Promise.allSettled([
+                loadChatMessages(),
+                loadOnlineUsers()
+            ]).finally(() => {
+                hideLoading();
+                // 蝣箔??函??冽?”?摰?
+                if (onlineUsers.length === 0) {
+                    simulateOnlineUsers();
+                }
+            });
+
+            // ?岫?潮頂蝯梯??荔?銝憛?
+            sendSystemMessage(`${playerName} ?鈭?憭拙恕嚗);
+        }
+
+        // 憿舐內?予摰?
+        function showChatRoom() {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('chatMainArea').classList.remove('hidden');
+            
+            // ?湔?冽鞈?
+            document.getElementById('userNameDisplay').textContent = currentUser;
+            document.getElementById('userAvatar').textContent = currentUser.charAt(0).toUpperCase();
+        }
+
+        // 餈?擐?
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        // 頛?予閮
+        async function loadChatMessages() {
+            // ?脫迫??頛
+            if (isLoading) return;
+            
+            try {
+                isLoading = true;
+                updateConnectionStatus('connecting');
+                
+                // 憓?頞?????5 蝘?
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5蝘???
+                
+                const response = await fetch(`${API_BASE_URL}?action=getChatMessages`, {
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                handleChatMessages(data);
+                updateConnectionStatus('online');
+            } catch (error) {
+                console.error('頛?予閮憭望?:', error);
+                if (error.name === 'AbortError') {
+                    console.log('API 頛頞?嚗蝙?冽?唳芋撘?);
+                    updateConnectionStatus('offline');
+                } else {
+                    console.log('API 頛憭望?嚗蝙?冽?唳芋撘?);
+                    updateConnectionStatus('offline');
+                }
+                // 霈?嗅隞交迤撣貉?憭抬?銝＊蝷粹隤?
+            } finally {
+                isLoading = false;
+            }
+        }
+
+        // 頛?函??冽
+        async function loadOnlineUsers() {
+            try {
+                // 憓?頞?????3 蝘?
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3000); // 3蝘???
+                
+                const response = await fetch(`${API_BASE_URL}?action=getUserList`, {
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                handleOnlineUsers(data);
+            } catch (error) {
+                console.error('頛?函??冽憭望?:', error);
+                // 憒?API憭望?嚗蝙?冽?唳芋??
+                simulateOnlineUsers();
+            }
+        }
+
+        // ???函??冽?豢?
+        function handleOnlineUsers(data) {
+            if (data.error) {
+                console.error('頛?函??冽憭望?:', data.error);
+                simulateOnlineUsers();
+                return;
+            }
+
+            onlineUsers = data;
+            displayOnlineUsers();
+        }
+
+        // 璅⊥?函??冽嚗API銝?冽?嚗?
+        function simulateOnlineUsers() {
+            // 憒?瘝??予閮嚗撠＊蝷箇???
+            if (chatMessages.length === 0) {
+                onlineUsers = [currentUser];
+            } else {
+                // 敺?憭抵??臭葉???冽
+                const users = [...new Set(chatMessages.map(msg => msg.user))];
+                onlineUsers = users.filter(user => user !== '蝟餌絞');
+                // 蝣箔??嗅??冽銋?”銝?
+                if (!onlineUsers.includes(currentUser)) {
+                    onlineUsers.push(currentUser);
+                }
+            }
+            displayOnlineUsers();
+        }
+
+        // 憿舐內?函??冽
+        function displayOnlineUsers() {
+            const usersGrid = document.getElementById('usersGrid');
+            const userCount = document.getElementById('userCount');
+            usersGrid.innerHTML = '';
+
+            // ?湔?冽閮
+            userCount.textContent = onlineUsers.length;
+
+            if (onlineUsers.length === 0) {
+                usersGrid.innerHTML = '<div class="no-users">?桀?瘝??嗡??冽?函?</div>';
+                return;
+            }
+
+            onlineUsers.forEach(user => {
+                const userTag = document.createElement('div');
+                userTag.className = `user-tag ${user === currentUser ? 'current-user' : ''}`;
+                
+                userTag.innerHTML = `
+                    <div class="user-dot"></div>
+                    <span>${user}</span>
+                `;
+                
+                usersGrid.appendChild(userTag);
+            });
+        }
+
+        // ???予閮?矽
+        function handleChatMessages(data) {
+            if (data.error) {
+                showError('頛?予閮憭望?: ' + data.error);
+                return;
+            }
+
+            // ?芸?閮???湔憿舐內
+            if (data.length !== lastMessageCount) {
+                chatMessages = data;
+                lastMessageCount = data.length;
+                displayChatMessages();
+            }
+        }
+
+        // 憿舐內?予閮
+        function displayChatMessages() {
+            const chatContainer = document.getElementById('chatMessages');
+            
+            // 憒?瘝?閮嚗＊蝷箇征?賜??予???
+            if (chatMessages.length === 0) {
+                chatContainer.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.5); padding: 20px;">???予?改?</div>';
+                return;
+            }
+
+            // 雿輻 DocumentFragment 靘??DOM ??
+            const fragment = document.createDocumentFragment();
+            
+            chatMessages.forEach(message => {
+                const isSystem = message.user === '蝟餌絞';
+                const rawText = String(message.message ?? '');
+                const isSsrBroadcast = isSystem && (rawText.includes('頞???) || rawText.toUpperCase().includes('SSR'));
+
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${isSystem ? 'system' : 
+                    message.user === currentUser ? 'user' : 'other'}${isSsrBroadcast ? ' ssr-broadcast' : ''}`;
+                
+                const messageTime = new Date(message.time).toLocaleTimeString('zh-TW', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                const escapeHtml = (text) => String(text)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+
+                const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+                const titleLine = isSsrBroadcast ? (lines.find(l => l.includes('??')) || '') : '';
+                const detailLines = isSsrBroadcast ? lines.filter(l => l !== titleLine) : lines;
+
+                const titleHtml = titleLine ? escapeHtml(titleLine.replace(/^??\s*/, '')) : '';
+                const detailsHtml = detailLines.map(l => escapeHtml(l)).join('<br>');
+
+                const contentHtml = isSsrBroadcast
+                    ? `<div class="ssr-broadcast-card">
+                           <div style="display:flex; align-items:center; justify-content:space-between; gap: 12px;">
+                               <span class="rarity-badge"><span class="dot"></span>SSR</span>
+                               <span style="color: rgba(255, 255, 255, 0.7); font-size: 12px;">?賢撱?</span>
+                           </div>
+                           ${titleHtml ? `<div class="ssr-broadcast-title">?? ${titleHtml}</div>` : ''}
+                           <div class="ssr-broadcast-details">${detailsHtml}</div>
+                       </div>`
+                    : `<div class="message-content">${escapeHtml(rawText).replace(/\r?\n/g, '<br>')}</div>`;
+                
+                messageDiv.innerHTML = `
+                    <div class="message-header">
+                        <span class="message-user">${message.user}</span>
+                        <span class="message-time">${messageTime}</span>
+                    </div>
+                    ${contentHtml}
+                `;
+                
+                fragment.appendChild(messageDiv);
+            });
+
+            // 銝甈⊥扳??DOM
+            chatContainer.innerHTML = '';
+            chatContainer.appendChild(fragment);
+
+            // 皛曉??啣???
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            // ???湔?函??冽?”
+            simulateOnlineUsers();
+        }
+
+        // ?潮???
+        async function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            const message = messageInput.value.trim();
+
+            if (!message) {
+                showError('隢撓?亥???);
+                return;
+            }
+
+            if (message.length > 200) {
+                showError('閮憭芷嚗?蝮桃??200 摮誑??);
+                return;
+            }
+
+            // 蝡憿舐內?砍閮嚗??撽?
+            const localMessage = {
+                user: currentUser,
+                message: message,
+                time: new Date().toISOString()
+            };
+            
+            // 蝡瘛餃??唳?啗??臬?銵?
+            chatMessages.push(localMessage);
+            lastMessageCount = chatMessages.length;
+            
+            // 蝡?湔憿舐內
+            displayChatMessages();
+            
+            // ?剜?潮??
+            playMessageSound();
+            
+            // 皜征頛詨獢?
+            messageInput.value = '';
+
+            // 蝳?潮???
+            sendButton.disabled = true;
+            sendButton.textContent = '?潮葉...';
+
+            try {
+                // ?潮隡箸??剁??憛?
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5蝘???
+                
+                const response = await fetch(`${API_BASE_URL}?action=sendChatMessage&user=${encodeURIComponent(currentUser)}&message=${encodeURIComponent(message)}`, {
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                const data = await response.json();
+                
+                if (data.error) {
+                    console.error('?潮??臬仃??', data.error);
+                    // 銝＊蝷粹隤歹???砍撌脩?憿舐內鈭?
+                } else {
+                    // ?潮???銝?閬?憭???
+                }
+            } catch (error) {
+                console.error('?潮??臬仃??', error);
+                // 銝＊蝷粹隤歹???砍撌脩?憿舐內鈭?
+            } finally {
+                sendButton.disabled = false;
+                sendButton.textContent = '?潮?;
+            }
+        }
+
+
+
+        // ?潮頂蝯梯???
+        async function sendSystemMessage(message) {
+            try {
+                const response = await fetch(`${API_BASE_URL}?action=sendChatMessage&user=蝟餌絞&message=${encodeURIComponent(message)}`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    console.error('?潮頂蝯梯??臬仃??', data.error);
+                }
+                // 蝘駁?芸??頛嚗??芸??湔璈??
+            } catch (error) {
+                console.error('?潮頂蝯梯??臬仃??', error);
+            }
+        }
+
+        // ???芸??湔
+        function startAutoRefresh() {
+            // 撱園???芸??湔嚗????頛銵?
+            setTimeout(() => {
+                // 瘥?3 蝘?唬?甈∟?憭抵??荔?皜??餌?嚗?
+                setInterval(() => {
+                    if (currentUser && !isLoading) {
+                        loadChatMessages();
+                    }
+                }, 3000);
+
+                // 瘥?5 蝘?唬?甈∪蝺?嗅?銵剁?皜??餌?嚗?
+                setInterval(() => {
+                    if (currentUser) {
+                        loadOnlineUsers();
+                    }
+                }, 5000);
+            }, 1000); // 撱園1蝘???
+        }
+
+        // 憿舐內?航炊閮
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            
+            // ??圈??ａ???
+            document.body.insertBefore(errorDiv, document.body.firstChild);
+            
+            // 3 蝘??芸?蝘駁
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 3000);
+        }
+
+        // 憿舐內??閮
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.textContent = message;
+            
+            // ??圈??ａ???
+            document.body.insertBefore(successDiv, document.body.firstChild);
+            
+            // 3 蝘??芸?蝘駁
+            setTimeout(() => {
+                successDiv.remove();
+            }, 3000);
+        }
+
+        // 憿舐內頛?內??
+        function showLoading() {
+            document.getElementById('loadingIndicator').classList.add('show');
+        }
+
+        // ?梯?頛?內??
+        function hideLoading() {
+            document.getElementById('loadingIndicator').classList.remove('show');
+        }
+
+        // ?湔??????
+        function updateConnectionStatus(status) {
+            const statusElement = document.getElementById('connectionStatus');
+            if (!statusElement) return;
+            
+            apiConnectionStatus = status;
+            
+            switch (status) {
+                case 'online':
+                    statusElement.textContent = '??撌脤??';
+                    statusElement.className = 'connection-status online';
+                    break;
+                case 'offline':
+                    statusElement.textContent = '???Ｙ?璅∪?';
+                    statusElement.className = 'connection-status offline';
+                    break;
+                case 'connecting':
+                    statusElement.textContent = '?????銝?;
+                    statusElement.className = 'connection-status';
+                    break;
+            }
+        }
+
+
+
+        // ???芸??湔
+        startAutoRefresh();
+
+        // ==================== ?單?蝟餌絞 ====================
+        
+        // ????頂蝯?
+        function initSoundSystem() {
+            try {
+                // ?萄遣閮?單?
+                messageSound = new Audio('sound/correct.mp3');
+                messageSound.volume = soundVolume;
+                
+                // 頛 YouTube API
+                loadYouTubeAPI();
+                
+                console.log('???單?蝟餌絞??????);
+            } catch (error) {
+                console.error('???單?蝟餌絞???仃??', error);
+                disableSoundButtons();
+            }
+        }
+
+        // 頛 YouTube API
+        function loadYouTubeAPI() {
+            const tag = document.createElement('script');
+            tag.src = 'https://www.youtube.com/iframe_api';
+            const firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        }
+
+        // YouTube API 皞?撠梁?
+        window.onYouTubeIframeAPIReady = function() {
+            console.log('??YouTube API 頛摰?');
+            initYouTubePlayer();
+        };
+
+        // ????YouTube ?剜?剁??梯?雿??單?嚗?
+        function initYouTubePlayer() {
+            youtubePlayer = new YT.Player('youtubePlayer', {
+                height: '1',
+                width: '1',
+                videoId: 'IbZLlSaOicg', // ?冽?靘? YouTube 敶梁? ID
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'rel': 0,
+                    'showinfo': 0,
+                    'modestbranding': 1,
+                    'loop': 1,
+                    'playlist': 'IbZLlSaOicg',
+                    'disablekb': 1,
+                    'fs': 0
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        // ?剜?冽??停蝺?
+        function onPlayerReady(event) {
+            console.log('??YouTube ?剜?冽??停蝺?);
+            const youtubeButton = document.getElementById('youtubeToggle');
+            if (youtubeButton) {
+                youtubeButton.disabled = false;
+                youtubeButton.classList.remove('disabled');
+            }
+        }
+
+        // ?剜?函??霈?
+        function onPlayerStateChange(event) {
+            const youtubeButton = document.getElementById('youtubeToggle');
+            
+            switch (event.data) {
+                case YT.PlayerState.PLAYING:
+                    youtubeButton.textContent = '? YouTube ON';
+                    youtubeButton.classList.add('active');
+                    localStorage.setItem('youtubeEnabled', 'true');
+                    break;
+                case YT.PlayerState.PAUSED:
+                case YT.PlayerState.ENDED:
+                    youtubeButton.textContent = '? YouTube';
+                    youtubeButton.classList.remove('active');
+                    localStorage.setItem('youtubeEnabled', 'false');
+                    break;
+                case YT.PlayerState.BUFFERING:
+                    // 蝺抵?銝哨?銝霈?????
+                    break;
+            }
+        }
+
+        // ?? YouTube ??單?
+        function toggleYouTube() {
+            const youtubeButton = document.getElementById('youtubeToggle');
+            
+            if (!youtubePlayer) {
+                showError('YouTube ?剜?冽????);
+                return;
+            }
+            
+            const isPlaying = youtubeButton.classList.contains('active');
+            
+            if (isPlaying) {
+                // ?怠???單?
+                youtubePlayer.pauseVideo();
+                youtubeButton.textContent = '? YouTube';
+                youtubeButton.classList.remove('active');
+                localStorage.setItem('youtubeEnabled', 'false');
+            } else {
+                // ?剜??單?嚗?憿舐內?剜?剁?
+                youtubePlayer.playVideo();
+                youtubeButton.textContent = '? YouTube ON';
+                youtubeButton.classList.add('active');
+                localStorage.setItem('youtubeEnabled', 'true');
+            }
+        }
+
+
+
+        // ???單?
+        function toggleSound() {
+            const soundButton = document.getElementById('soundToggle');
+            const soundEnabled = localStorage.getItem('soundEnabled') !== 'false';
+            
+            if (soundEnabled) {
+                // ???單?
+                localStorage.setItem('soundEnabled', 'false');
+                soundButton.textContent = '?? ?單?';
+                soundButton.classList.remove('active');
+            } else {
+                // ???單?
+                localStorage.setItem('soundEnabled', 'true');
+                soundButton.textContent = '?? ?單? ON';
+                soundButton.classList.add('active');
+            }
+        }
+
+        // ?剜閮?單?
+        function playMessageSound() {
+            const soundEnabled = localStorage.getItem('soundEnabled') !== 'false';
+            if (!soundEnabled || !messageSound) return;
+            
+            try {
+                messageSound.currentTime = 0;
+                messageSound.play().catch(error => {
+                    console.log('?剜閮?單?憭望?:', error);
+                });
+            } catch (error) {
+                console.log('?剜閮?單?憭望?:', error);
+            }
+        }
+
+        // 蝳?單???
+        function disableSoundButtons() {
+            const youtubeButton = document.getElementById('youtubeToggle');
+            const soundButton = document.getElementById('soundToggle');
+            
+            if (youtubeButton) {
+                youtubeButton.classList.add('disabled');
+                youtubeButton.disabled = true;
+            }
+            
+            if (soundButton) {
+                soundButton.classList.add('disabled');
+                soundButton.disabled = true;
+            }
+        }
+
+        // ?Ｗ儔?單?閮剖?
+        function restoreSoundSettings() {
+            const youtubeEnabled = localStorage.getItem('youtubeEnabled') === 'true';
+            const soundEnabled = localStorage.getItem('soundEnabled') !== 'false';
+            
+            const youtubeButton = document.getElementById('youtubeToggle');
+            const soundButton = document.getElementById('soundToggle');
+            
+            if (youtubeEnabled && youtubeButton) {
+                youtubeButton.textContent = '? YouTube ON';
+                youtubeButton.classList.add('active');
+            }
+            
+            if (soundEnabled && soundButton) {
+                soundButton.textContent = '?? ?單? ON';
+                soundButton.classList.add('active');
+            }
+        }
+
+        // ==================== ?賢蝟餌絞 ====================
+        
+        // 頛?賢蝟餌絞
+        async function loadGachaSystem() {
+            try {
+                console.log('?賢蝟餌絞頛摰?');
+            } catch (error) {
+                console.error('頛?賢蝟餌絞憭望?:', error);
+            }
+        }
+
+        // ?湔?賢?????
+        function updateGachaButton() {
+            const gachaButton = document.getElementById('gachaButton');
+            if (gachaButton) {
+                gachaButton.disabled = false;
+                gachaButton.textContent = '? ???賢';
+            }
+        }
+
+        // ?賢? - ?刻?憭拙恕?折???∟?蝒?
+        function drawCard() {
+            // ?脣??嗅??冽鞈???localStorage嚗??賢?雿輻
+            localStorage.setItem('chatUserForGacha', currentUser);
+            
+            // ???賢閬?
+            const gachaWindow = window.open('gacha.html', 'gachaWindow', 
+                'width=1200,height=800,scrollbars=yes,resizable=yes,menubar=no,toolbar=no,location=no,status=no');
+            
+            // 憒?敶閬?鋡恍??憿舐內?內
+            if (!gachaWindow) {
+                showError('敶閬?鋡恍??隢?閮勗??箄?蝒??岫');
+            }
+        }
+    </script>
+</body>
+</html> 

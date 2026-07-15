@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<title>憛怎征? - ?望?撠??/title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root{--gold:#ffd700;--cyan:#00ffff;--panel:rgba(30,30,40,.97);--glass:rgba(30,30,40,.92)}
+  *{box-sizing:border-box} html,body{margin:0;padding:0;overflow-x:hidden}
+  body{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;
+       font-family:'Segoe UI',Arial,sans-serif,'Orbitron',sans-serif;color:#fff;
+       background:linear-gradient(135deg,#232526 0%,#414345 100%)}
+  h1{margin:60px 0 20px;color:var(--gold);text-shadow:0 0 8px var(--gold);letter-spacing:2px;font:700 2.2rem Orbitron,Arial,sans-serif}
+  .top-btns{position:fixed;top:20px;right:20px;display:flex;gap:8px;z-index:11}
+  .top-btns button,button{cursor:pointer;border:0;border-radius:12px;box-shadow:0 2px 8px #0003;transition:.2s;background:var(--gold);color:#000}
+  .top-btns button{padding:6px 12px;font:1rem Orbitron,Arial,sans-serif}
+  button{padding:10px 26px;font:1rem Orbitron,Arial,sans-serif}
+  #submit-btn{background:var(--gold);color:#111} #skip-btn{background:#bbb;color:#222} #next-btn{background:#4caf50;color:#fff}
+  #speak-btn{background:#0ff;color:#111;margin-top:10px}
+  #submit-btn:disabled,#speak-btn:disabled{background:#555;color:#888;cursor:not-allowed}
+  #skip-btn:hover{background:#ccc} #next-btn:hover{background:#6fdc7f} .top-btns button:hover{background:#ffe54f}
+  #bgMusicControl{position:fixed;right:20px;bottom:20px;width:50px;height:50px;border-radius:50%;font-size:1.5rem;
+                  display:flex;align-items:center;justify-content:center;background:rgba(255,215,0,.9);box-shadow:0 0 12px rgba(255,215,0,.4);z-index:12}
+  #bgMusicControl:hover{transform:scale(1.1);box-shadow:0 0 20px rgba(255,215,0,.6)} #bgMusicControl.paused{background:rgba(255,255,255,.3);color:#fff}
+  #starsDisplay{position:fixed;top:20px;left:20px;background:rgba(10,20,40,.85);border:2px solid var(--cyan);box-shadow:0 0 12px var(--gold),0 0 32px var(--cyan);
+                color:var(--gold);padding:8px 14px;border-radius:10px;font-weight:bold;z-index:10}
+  #star-counter{display:flex;gap:18px;align-items:center;justify-content:center;background:var(--glass);border:1.5px solid #ffd70044;border-radius:18px;
+                padding:14px 32px;margin:0 0 18px;color:var(--gold);min-width:260px;font:1.18rem Orbitron,Arial,sans-serif}
+  #timer{font-size:1.1rem;margin-bottom:16px} .hidden{display:none}
+  #question-container{background:var(--panel);border:1.5px solid #ffd70044;border-radius:22px;box-shadow:0 8px 32px rgba(31,38,135,.37);
+                      padding:38px 30px 30px;max-width:440px;width:100%;margin:auto;display:flex;flex-direction:column;align-items:center}
+  .question-title{font-size:1.1rem;margin-bottom:8px;letter-spacing:1px}
+  .question-sentence{font-size:1.6rem;font-weight:700;margin:10px 0 20px;line-height:1.5;word-break:break-word}
+  .blank{color:#0ff;background:#fff2;border-radius:8px;padding:2px 16px;box-shadow:0 1px 4px #0ff2}
+  .question-zh{color:var(--gold);margin-bottom:16px;font-size:1.05rem}
+  input{width:92%;padding:14px;font-size:1.1rem;border:2px solid var(--gold);border-radius:14px;background:#222;color:#fff;margin-bottom:18px;outline:0}
+  input:focus{border-color:var(--cyan)} .btn-row{display:flex;gap:20px;justify-content:center;margin-bottom:10px;width:100%}
+  #feedback{min-height:28px;margin-top:10px;font-size:1.05rem}
+  .feedback-box{display:inline-block;padding:10px 22px;border-radius:16px;font-weight:700;box-shadow:0 2px 16px #0004;margin-top:8px;animation:pf .7s cubic-bezier(.68,-.55,.27,1.55)}
+  .feedback-correct{background:linear-gradient(90deg,#2ecc40,#bfff00);color:#222} .feedback-wrong{background:linear-gradient(90deg,#ff4f4f,#ffbaba);color:#fff}
+  .feedback-bonus{color:var(--gold);animation:bflash 1s infinite alternate;font-size:1.15em}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(4px)}
+  .modal-content{background:rgba(30,30,40,.95);border:2px solid var(--gold);border-radius:20px;padding:32px;text-align:center;max-width:500px;width:90%;
+                 box-shadow:0 0 32px #ffd70044,0 0 80px #00ffff22 inset;animation:mp .5s cubic-bezier(.68,-.55,.27,1.55)}
+  .end-icon{font-size:3.2rem;margin-bottom:14px;animation:tada 1.2s infinite}
+  .end-buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  @keyframes pf{0%{transform:scale(.7);opacity:0}60%{transform:scale(1.12);opacity:1}100%{transform:scale(1)}}
+  @keyframes mp{0%{transform:scale(.7);opacity:0}60%{transform:scale(1.1);opacity:1}100%{transform:scale(1)}}
+  @keyframes bflash{0%{text-shadow:0 0 8px var(--gold)}100%{text-shadow:0 0 24px #fff700}}
+  @keyframes tada{0%{transform:scale(1)}10%,20%{transform:scale(.9) rotate(-3deg)}30%,50%,70%,90%{transform:scale(1.1) rotate(3deg)}40%,60%,80%{transform:scale(1.1) rotate(-3deg)}100%{transform:scale(1)}}
+  @media (max-width:768px){.top-btns{top:10px;right:10px;flex-wrap:wrap}.top-btns button{font-size:.9rem;padding:4px 8px}
+    #starsDisplay{top:10px;left:10px;font-size:1rem;padding:6px 10px} h1{font-size:1.8rem;margin-top:60px}
+    #question-container{max-width:95vw;padding:20px 15px;margin:10px auto}.question-sentence{font-size:1.3rem}
+    .modal-content{max-width:95vw;padding:20px}}
+  @media (max-width:480px){h1{font-size:1.5rem;margin-top:10px}.btn-row{flex-direction:column}.btn-row button{width:100%}}
+</style>
+</head>
+<body>
+  <button id="bgMusicControl" title="??單??批">?</button>
+
+  <div id="starsDisplay">潃?span id="totalStarsCount">0</span></div>
+
+  <div class="top-btns">
+    <button onclick="location.href='atlas.html?tab=greek'">?? ????/button>
+    <button onclick="resetProgress()">?? ???</button>
+    <button onclick="showReviewModal()">?? 銴??桀?</button>
+  </div>
+
+  <h1>?? Rhea - 憛怎征?</h1>
+
+  <div id="sessionStarsDisplay" style="margin-bottom:10px;color:#ffd700;font-weight:bold;font-size:1.02rem;">?祆活撌脩敺?0 憿???/div>
+
+  <div id="star-counter">蝚?<span id="current-index">0</span> / <span id="total-questions">0</span> 憿?/div>
+
+  <div id="timer" class="hidden">???嚗?span id="time-left">0</span> 蝘?/div>
+
+  <div id="question-container"></div>
+
+  <!-- ?蝯? -->
+  <div id="gameEndModal" class="modal" style="display:none">
+    <div class="modal-content">
+      <div class="end-icon">??</div>
+      <h2 style="color:#ffd700;text-shadow:0 0 12px #ffd700">?摰?嚗?/h2>
+      <div class="end-stats">
+        <p>潃??祆活?脣???嚗?b id="endSessionStars">0</b></p>
+        <p>??蝑?憿嚗?b id="endCorrectCount">0</b></p>
+        <p>??蝑憿嚗?b id="endWrongCount">0</b></p>
+        <p>潃?蝝舐?蝮賣???<b id="endTotalStars">0</b></p>
+      </div>
+      <div class="end-buttons">
+        <button onclick="restartGame()">?? ???</button>
+        <button onclick="location.href='atlas.html?tab=greek'">?? 餈?擐?</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 銴??桀? -->
+  <div id="reviewModal" class="modal" style="display:none">
+    <div class="modal-content">
+      <div class="end-icon">??</div>
+      <h2 style="color:#ffd700">?桀?銴?</h2>
+      <div style="margin-bottom:12px">
+        <label for="categoryFilter" style="color:#ffd700;font-weight:700;margin-right:8px">?豢???嚗?/label>
+        <select id="categoryFilter" style="background:#222;color:#fff;border:2px solid #ffd700;border-radius:8px;padding:6px 10px">
+          <option value="all">?券?桀?</option>
+        </select>
+      </div>
+      <div id="vocabStats" style="background:rgba(255,215,0,.1);border:1px solid #ffd700;border-radius:8px;padding:8px;color:#ffd700;font-size:.9rem">
+        蝮賢 <span id="totalVocabCount">0</span> ?摮?
+        <button onclick="showVocabStats()" style="background:#0ff;color:#000;border:none;border-radius:6px;padding:4px 8px;font-size:.8rem;margin-left:8px">?? 閰喟敦蝯梯?</button>
+        <button onclick="exportVocabData()" style="background:#4caf50;color:#fff;border:none;border-radius:6px;padding:4px 8px;font-size:.8rem;margin-left:4px">? ?臬摮澈</button>
+      </div>
+      <div id="reviewWordsContainer" style="max-height:400px;overflow-y:auto;margin:14px 0"></div>
+      <div class="end-buttons"><button onclick="closeReviewModal()">??</button></div>
+    </div>
+  </div>
+
+  <audio id="backgroundMusic" loop>
+    <source src="sound/???暸???嚗??單?嚗?mp3" type="audio/mpeg">
+  </audio>
+
+<script>
+/* ===================== 閮剖? & 撠極??===================== */
+const $ = s => document.querySelector(s);
+const GAME = { QUESTIONS_COUNT: 20, TIME_LIMIT: 30, MAX_ATTEMPTS: 3 };
+const SOUNDS = { correct:new Audio('sound/correct.mp3'), wrong:new Audio('sound/wrong.mp3'), type:new Audio('sound/type.mp3') };
+const speakSys = { voice:null };
+const state = { data:[], i:0, tries:0, answered:false, timer:null, log:[], sessionStars:0 };
+const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+const safeBlank = (sent, ans) => { try{ return sent.replace(new RegExp(esc(ans),'i'),'___'); }catch{ const L=sent.toLowerCase(),t=ans.toLowerCase(),i=L.indexOf(t); return i>=0?sent.slice(0,i)+'___'+sent.slice(i+ans.length):sent; } };
+const say = (t,rate=1,cb)=>{ if(!speechSynthesis) return; const u=new SpeechSynthesisUtterance(t); u.lang='en-US'; u.rate=rate; u.pitch=1.12; if(speakSys.voice) u.voice=speakSys.voice; if(cb) u.onend=cb; speechSynthesis.cancel(); speechSynthesis.speak(u); };
+
+/* ===================== 憿澈嚗內靘?60 蝑??航銵??? ===================== */
+const VOCAB_DATA = [
+  {"word":"second","zh":"蝚砌?嚗?","en_sentence":"This is the second time I've met him.","zh_sentence":"??洵鈭活閬隞?,"category":"摨/??"},
+  {"word":"third","zh":"蝚砌?","en_sentence":"She won the third prize in the race.","zh_sentence":"憟孵瘥魚銝剛?敺?蝚砌???,"category":"摨"},
+  {"word":"money","zh":"?","en_sentence":"I need some money to buy a new book.","zh_sentence":"??閬?鈭鞎瑚??祆?詻?,"category":"??/?"},
+  {"word":"Mother's Day","zh":"瘥扛蝭","en_sentence":"We always give Mom flowers on Mother's Day.","zh_sentence":"?蜇?臬瘥扛蝭?蝯血直慦賬?,"category":"蝭??瘣餃?"},
+  {"word":"idea","zh":"銝餅?嚗瘜?,"en_sentence":"That's a great idea for a party theme.","zh_sentence":"??銝??璉?瘣曉?銝駁?暺???,"category":"?質情??"},
+  {"word":"because","zh":"?","en_sentence":"I'm happy because it's Friday.","zh_sentence":"????嚗??箔?憭拇??鈭?,"category":"??閰?},
+  {"word":"drawer","zh":"?賢?","en_sentence":"Keep your socks in the bottom drawer.","zh_sentence":"???左摮?冽?銝?撅ㄐ??,"category":"摰嗅?/?拙?"},
+  {"word":"bath","zh":"瘣鴃","en_sentence":"I like to take a warm bath before bed.","zh_sentence":"??甇∪?∪?瘣瘞湔鴃??,"category":"瘣餃?/??"},
+  {"word":"cow","zh":"瘥?","en_sentence":"The cow is grazing in the field.","zh_sentence":"瘥?甇??圈?鋆∪???,"category":"?/??"},
+  {"word":"market","zh":"撣","en_sentence":"She buys fresh vegetables at the morning market.","zh_sentence":"憟孵?拙?鞎瑟擙桃??祈???,"category":"?圈?/?湔?"},
+  {"word":"expensive","zh":"?眼??,"en_sentence":"That watch is too expensive for me.","zh_sentence":"???撠?靘牧憭芾眼鈭?,"category":"敶Ｗ捆閰?},
+  {"word":"cheap","zh":"靘踹???,"en_sentence":"We found a cheap hotel near the beach.","zh_sentence":"?瘚瑞????曉鈭?摰嗡噶摰??尹??,"category":"敶Ｗ捆閰?},
+  {"word":"enough","zh":"頞喳???,"en_sentence":"Do we have enough food for all the guests?","zh_sentence":"??頞喳????拍策??恥鈭箏?嚗?,"category":"??/敶Ｗ捆閰?},
+  {"word":"all","zh":"?券","en_sentence":"I ate all the cookies by myself.","zh_sentence":"?撌勗??????銋整?,"category":"??閰?隞??閰?},
+  {"word":"poor","zh":"鞎抒狙???舀???,"en_sentence":"The poor man lost his job yesterday.","zh_sentence":"??狙鈭箸憭拙仃璆凋???,"category":"敶Ｗ捆閰?},
+  {"word":"early","zh":"?拍?嚗???,"en_sentence":"We need to get up early tomorrow.","zh_sentence":"??憭拚?閬韏瑯?,"category":"敶Ｗ捆閰??航?"},
+  {"word":"dirty","zh":"擃?","en_sentence":"My shoes are dirty from walking in the mud.","zh_sentence":"?????冽野瞈葉銵粥撘?鈭?,"category":"敶Ｗ捆閰?},
+  {"word":"easy","zh":"摰寞???,"en_sentence":"The test was surprisingly easy.","zh_sentence":"?活?岫?箔????啣捆??,"category":"敶Ｗ捆閰?},
+  {"word":"hard","zh":"?圈???芸???,"en_sentence":"She works very hard to save money.","zh_sentence":"憟寥?撣詨?撌乩?靘??Ｕ?,"category":"敶Ｗ捆閰??航?"},
+  {"word":"busy","zh":"敹???,"en_sentence":"He is always busy with work and study.","zh_sentence":"隞蜇?臬??澆極雿?摮貊???,"category":"敶Ｗ捆閰?},
+  {"word":"free","zh":"?征???祥??,"en_sentence":"Are you free this afternoon to meet up?","zh_sentence":"雿?憭拐???蝛箄??Ｗ?嚗?,"category":"敶Ｗ捆閰?},
+  {"word":"need","zh":"?閬?,"en_sentence":"I need your help with this heavy box.","zh_sentence":"??閬?撟怠??祇?蝞勗???,"category":"??/??"},
+  {"word":"end","zh":"蝯?嚗蝡?,"en_sentence":"The movie will end in five minutes.","zh_sentence":"?餃蔣撠鈭??蝯???,"category":"??/??"},
+  {"word":"cost","zh":"?梯祥","en_sentence":"How much does it cost to fix the car?","zh_sentence":"靽桃?瘙質??閬?撠嚗?,"category":"??/??"},
+  {"word":"buy","zh":"鞈潸眺","en_sentence":"I want to buy a new pair of glasses.","zh_sentence":"?鞎瑚??舀?潮??,"category":"??"},
+  {"word":"put","zh":"?曄蔭","en_sentence":"Put the plate on the dining table.","zh_sentence":"?摮?券?獢???,"category":"??"},
+  {"word":"feed","zh":"擗菟?","en_sentence":"Don't forget to feed the cat this evening.","zh_sentence":"隞??亙?鈭今鞎?,"category":"??"},
+  {"word":"sell","zh":"鞎抵都","en_sentence":"They sell fresh bread at the bakery.","zh_sentence":"隞暻萄?摨痔鞈?擙桃?暻萄???,"category":"??"},
+  {"word":"also","zh":"銋?,"en_sentence":"She is a singer and also an actress.","zh_sentence":"憟寞甇?嚗??舀??～?,"category":"?航?"},
+  {"word":"once","zh":"銝甈?,"en_sentence":"I have only been to Taipei once.","zh_sentence":"??駁??啣?銝甈～?,"category":"?航?"},
+  {"word":"twice","zh":"?拇活","en_sentence":"He visits his grandmother twice a week.","zh_sentence":"隞??望????瘥甈～?,"category":"?航?"},
+  {"word":"place","zh":"?唳嚗蝵?,"en_sentence":"This is a lovely place for a picnic.","zh_sentence":"?銝???擗??舀??唳??,"category":"??/??"},
+  {"word":"road","zh":"?楝","en_sentence":"The road to the mountain is narrow.","zh_sentence":"??撅曹??楝敺蝒?,"category":"?圈?"},
+  {"word":"temple","zh":"撖箏?","en_sentence":"We visited an ancient temple in the town.","zh_sentence":"??閫鈭銝?銝摨批?笑撱?,"category":"?圈?"},
+  {"word":"museum","zh":"?擗?,"en_sentence":"The new art museum opened last week.","zh_sentence":"?啁????擗其??梢??曆???,"category":"?圈?"},
+  {"word":"hotel","zh":"?尹","en_sentence":"We stayed at a fancy hotel near the beach.","zh_sentence":"???冽絲??餈?銝摰園?蝝?擗具?,"category":"?圈?"},
+  {"word":"season","zh":"摮??","en_sentence":"Spring is my favorite season of the year.","zh_sentence":"?亙予?舀?銝撟港葉??迭?迤蝭??,"category":"??"},
+  {"word":"autumn","zh":"蝘予","en_sentence":"The leaves turn red and yellow in autumn.","zh_sentence":"璅寡??函?憭拇?霈?霈???,"category":"??"},
+  {"word":"snow","zh":"?迎?銝","en_sentence":"It is starting to snow outside.","zh_sentence":"憭??銝鈭?,"category":"?芰"},
+  {"word":"snowman","zh":"?芯犖","en_sentence":"The children built a big snowman in the yard.","zh_sentence":"摮拙???Ｗ?鋆∪?鈭??之?芯犖??,"category":"??"},
+  {"word":"plan","zh":"閮","en_sentence":"Do you have a plan for the weekend?","zh_sentence":"雿望??暻潸??怠?嚗?,"category":"?質情/??"},
+  {"word":"date","zh":"?交?嚗???,"en_sentence":"What is the date today?","zh_sentence":"隞予??隞暻潘?","category":"??"},
+  {"word":"USA","zh":"蝢?","en_sentence":"She plans to visit the USA next summer.","zh_sentence":"憟寡??急?撟游?憭拙蝢???,"category":"?振"},
+  {"word":"photo","zh":"?抒?","en_sentence":"I keep my favorite photos in an album.","zh_sentence":"????迭???函蝪輯ㄐ??,"category":"??"},
+  {"word":"mind","zh":"隞?嚗??,"en_sentence":"Do you mind closing the window?","zh_sentence":"雿???蝒??","category":"??/??"},
+  {"word":"exercise","zh":"??嚗毀蝧?,"en_sentence":"We should exercise every day to stay healthy.","zh_sentence":"??閰脫?憭拚??誑靽??亙熒??,"category":"??/??"},
+  {"word":"practice","zh":"蝺渡?","en_sentence":"She needs to practice the piano daily.","zh_sentence":"憟寥?閬?憭拍毀蝧?氬?,"category":"??/??"},
+  {"word":"team","zh":"??","en_sentence":"Our school baseball team won the championship.","zh_sentence":"?飛?∠?璉???鈭?頠?,"category":"??"},
+  {"word":"problem","zh":"??","en_sentence":"She needs help solving a math problem.","zh_sentence":"憟寥?閬鼠?抵圾瘙箸摮詨?憿?,"category":"?質情"},
+  {"word":"toe","zh":"?唾馮","en_sentence":"He stubbed his toe on the table edge.","zh_sentence":"隞??唾馮?獢???,"category":"頨恍?"},
+  {"word":"violin","zh":"撠???,"en_sentence":"He practices the violin every evening.","zh_sentence":"隞?憭拇?銝毀撠??氬?,"category":"璅"},
+  {"word":"flute","zh":"?瑞?","en_sentence":"The sound of the flute is sweet.","zh_sentence":"?瑞???喳?????,"category":"璅"},
+  {"word":"special","zh":"?孵??,"en_sentence":"Today is special because it's my birthday.","zh_sentence":"隞予敺?伐???舀????,"category":"敶Ｗ捆閰?},
+  {"word":"afraid","zh":"摰單?","en_sentence":"I am afraid of spiders.","zh_sentence":"?拿????,"category":"??"},
+  {"word":"same","zh":"?詨???,"en_sentence":"We chose the same color.","zh_sentence":"?鈭??憿??,"category":"敶Ｗ捆閰?},
+  {"word":"different","zh":"銝???,"en_sentence":"They have different ideas.","zh_sentence":"隞?銝??瘜?,"category":"敶Ｗ捆閰?},
+  {"word":"dry","zh":"銋曄??,"en_sentence":"Please keep the dishes dry.","zh_sentence":"隢Ⅱ靽摮嗾?乓?,"category":"敶Ｗ捆閰?},
+  {"word":"wet","zh":"瞈?","en_sentence":"The floor is wet; be careful.","zh_sentence":"?唳?舀???撠???,"category":"敶Ｗ捆閰?},
+  {"word":"popular","zh":"?迭餈?","en_sentence":"That coffee shop is popular.","zh_sentence":"??振?摨??迭餈?,"category":"敶Ｗ捆閰?},
+  {"word":"dark","zh":"暺???,"en_sentence":"It gets dark early in winter.","zh_sentence":"?砍予敺撠勗予暺???,"category":"敶Ｗ捆閰?},
+  {"word":"know","zh":"?仿?","en_sentence":"Do you know the way to the post office?","zh_sentence":"雿??萄??楝??","category":"敹?"},
+  {"word":"keep","zh":"靽?","en_sentence":"Please keep quiet during the meeting.","zh_sentence":"????靽?摰???,"category":"??"},
+  {"word":"join","zh":"?","en_sentence":"Would you like to join us for lunch?","zh_sentence":"閬?韏瑕?????","category":"??"},
+  {"word":"throw","zh":"銝?,"en_sentence":"Please throw the trash into the bin.","zh_sentence":"隢??銝脣??暹▲??,"category":"??"},
+  {"word":"hit","zh":"?葉","en_sentence":"He hit the ball hard.","zh_sentence":"隞????,"category":"??"},
+  {"word":"enjoy","zh":"鈭怠?","en_sentence":"We enjoy spending time in nature.","zh_sentence":"??甇∪??典之?芰??,"category":"??"}
+];
+
+/* ===================== ??????===================== */
+const pick = (arr,n)=>arr.slice().sort(()=>Math.random()-.5).slice(0,Math.min(n,arr.length));
+function initData(){
+  const list = pick(VOCAB_DATA,GAME.QUESTIONS_COUNT);
+  state.data = list.map(v=>({answer:v.word, zh:v.zh, sentence:safeBlank(v.en_sentence,v.word),
+                             original:v.en_sentence, zh_sentence:v.zh_sentence, category:v.category}));
+  $('#total-questions').textContent = state.data.length;
+}
+
+/* ===================== ?砍?脣? & ?? ===================== */
+const loadStars = ()=> parseInt(localStorage.getItem('totalStars')||'0',10);
+const saveStars = n => { localStorage.setItem('totalStars',n); updateStars(); };
+const addStars = n => saveStars(loadStars()+n);
+const updateStars = ()=> { $('#totalStarsCount').textContent = loadStars(); };
+function resetProgress(){ localStorage.removeItem('fillIndex'); location.reload(); }
+
+/* ===================== ??單? ===================== */
+let music = null, playing=false;
+function initMusic(){
+  music = $('#backgroundMusic'); music.volume = .3;
+  if(localStorage.getItem('bgMusicState')==='playing') playMusic();
+  $('#bgMusicControl').onclick = toggleMusic; updateMusicBtn();
+}
+function playMusic(){ if(!music) return; music.play().then(()=>{playing=true;localStorage.setItem('bgMusicState','playing');updateMusicBtn();}).catch(()=>{}); }
+function pauseMusic(){ if(!music) return; music.pause(); playing=false; localStorage.setItem('bgMusicState','paused'); updateMusicBtn(); }
+function toggleMusic(){ playing?pauseMusic():playMusic(); }
+function updateMusicBtn(){ const b=$('#bgMusicControl'); b.textContent = playing?'??':'??'; b.classList.toggle('paused',!playing); }
+
+/* ===================== 隤 ===================== */
+function pickVoice(){
+  const vs = speechSynthesis.getVoices();
+  const prefer = ['Google US English','Microsoft Aria Online','Microsoft Jenny Online','Samantha','Jenny','Aria','en-US'];
+  speakSys.voice = vs.find(v=>prefer.some(p=>v.name.includes(p))) || vs.find(v=>v.lang==='en-US') || vs[0];
+}
+if(typeof speechSynthesis!=='undefined'){ speechSynthesis.onvoiceschanged=pickVoice; pickVoice(); }
+
+/* ===================== 憿瘚? ===================== */
+function timerStart(){
+  clearInterval(state.timer); let t=GAME.TIME_LIMIT;
+  $('#time-left').textContent=t; $('#timer').classList.remove('hidden');
+  state.timer=setInterval(()=>{ t--; $('#time-left').textContent=t; if(t<=0){ clearInterval(state.timer); revealAnswer(true); } },1000);
+}
+function timerStop(){ clearInterval(state.timer); }
+
+function showQ(){
+  if(!state.data.length){ $('#question-container').innerHTML='<div style="color:#f66;font-size:1.2rem">?? 憿澈瘝?憿</div>'; return; }
+  if(state.i>=state.data.length){ endGame(); return; }
+
+  state.answered=false; state.tries=0;
+  const q = state.data[state.i];
+  $('#question-container').innerHTML =
+    `<div class="question-title">?望??亙?嚗?/div>
+     <div class="question-sentence">${q.sentence.replace('___','<span class="blank">___</span>')}</div>
+     <div class="question-zh">銝剜??內嚗?{q.zh_sentence||q.zh}</div>
+     <input id="user-input" placeholder="頛詨蝑??? autocomplete="off" />
+     <div class="btn-row">
+       <button id="submit-btn" onclick="checkAnswer()">?</button>
+       <button id="skip-btn" onclick="skipQ()">頝喲?</button>
+       <button id="next-btn" onclick="nextQ()">銝?憿?/button>
+     </div>
+     <div id="feedback"></div>
+     <button id="speak-btn">?? ??</button>`;
+
+  $('#speak-btn').onclick = ()=> { say(q.original,.97,()=> setTimeout(()=>{ say(safeBlank(q.original,q.answer).replace('___','...'),1.02,()=>setTimeout(()=>say(q.answer,1.08),350)); },350)); };
+  const input = $('#user-input'); input.focus();
+  input.onkeydown = e => { if(e.key==='Enter') checkAnswer(); else if(e.key.length===1){ try{ SOUNDS.type.currentTime=0; SOUNDS.type.play(); }catch(_){} } };
+  $('#current-index').textContent = state.i+1; timerStart(); setTimeout(()=>say(q.original,.97),400);
+  window.answerStartTime = Date.now();
+}
+
+function revealAnswer(autoNext=false){
+  state.tries = 999;
+  $('#feedback').innerHTML = `<span style="color:#f66">?????堆?甇?Ⅱ蝑?嚗?b>${state.data[state.i].answer}</b></span>`;
+  $('#submit-btn').disabled = true; $('#user-input').disabled = true;
+  log(false);
+  if(autoNext) setTimeout(()=>{ state.i++; showQ(); }, 500);
+}
+
+function log(correct,user=''){
+  const q = state.data[state.i];
+  state.log[state.i] = { word:q.answer, zh:q.zh_sentence||q.zh, en:q.original, user, correct, stars:0, category:q.category };
+}
+
+function checkAnswer(){
+  if(state.answered) return;
+  state.tries++;
+  const ans = state.data[state.i].answer.toLowerCase();
+  const val = $('#user-input').value.trim().toLowerCase();
+
+  if(val===ans){
+    state.answered=true; timerStop();
+    const sec = (Date.now()-(window.answerStartTime||Date.now()))/1000;
+    let bonus = sec<10 ? 2 : 0;
+    $('#feedback').innerHTML = `<div class="feedback-box feedback-correct">??蝑?鈭?憭芣?鈭? ${bonus?'<span class="feedback-bonus">BONUS! ?梧? +2</span>':''}</div>`;
+    $('#user-input').disabled=true; $('#submit-btn').disabled=true; say(ans,1.1);
+    log(true,$('#user-input').value.trim());
+    const add = 1+bonus; addStars(add); state.sessionStars+=add; $('#sessionStarsDisplay').textContent=`?祆活撌脩敺?${state.sessionStars} 憿??;
+    try{ SOUNDS.correct.currentTime=0; SOUNDS.correct.play(); }catch(_){}
+    setTimeout(()=>{ state.i++; showQ(); },1300);
+  }else{
+    if(state.tries<GAME.MAX_ATTEMPTS){
+      $('#feedback').innerHTML = `<div class="feedback-box feedback-wrong">???岫銝甈∴?雿隞亦?嚗?/div>`;
+      try{ SOUNDS.wrong.currentTime=0; SOUNDS.wrong.play(); }catch(_){}
+    }else{
+      $('#feedback').innerHTML = `<div class="feedback-box feedback-wrong">??甇?Ⅱ蝑?嚗?b>${state.data[state.i].answer}</b><br>?交除擗???嚗?/div>`;
+      $('#user-input').disabled=true; $('#submit-btn').disabled=true;
+      log(false,$('#user-input').value.trim());
+      try{ SOUNDS.wrong.currentTime=0; SOUNDS.wrong.play(); }catch(_){}
+      setTimeout(()=>{ state.i++; showQ(); },1300);
+    }
+  }
+}
+
+function skipQ(){ timerStop(); log(null,''); $('#feedback').innerHTML='<span style="color:#bbb">撌脰歲?憿?/span>'; setTimeout(()=>{ state.i++; showQ(); },400); }
+function nextQ(){ timerStop(); if(!state.log[state.i]){ log(false,$('#user-input')?.value||''); $('#feedback').innerHTML='<span style="color:#bbb">?芯?蝑?/span>'; } setTimeout(()=>{ state.i++; showQ(); },400); }
+
+/* ===================== 蝯??恍 ===================== */
+function endGame(){
+  const correct = state.log.filter(x=>x && x.correct===true).length;
+  const wrong   = state.log.filter(x=>x && x.correct===false).length;
+  $('#endSessionStars').textContent = state.sessionStars;
+  $('#endCorrectCount').textContent = correct;
+  $('#endWrongCount').textContent = wrong;
+  $('#endTotalStars').textContent = loadStars();
+  $('#gameEndModal').style.display='flex';
+  timerStop();
+  try{ SOUNDS.correct.currentTime=0; SOUNDS.correct.play(); }catch(_){}
+}
+function restartGame(){
+  $('#gameEndModal').style.display='none';
+  state.i=0; state.sessionStars=0; state.log=[];
+  initData(); $('#current-index').textContent=1; $('#sessionStarsDisplay').textContent='?祆活撌脩敺?0 憿???;
+  showQ();
+}
+
+/* ===================== 銴?/蝯梯?/?臬 ===================== */
+function showReviewModal(){ timerStop(); fillCategories(); showList('all'); $('#totalVocabCount').textContent=VOCAB_DATA.length; $('#reviewModal').style.display='flex'; }
+function closeReviewModal(){ $('#reviewModal').style.display='none'; if(state.i<state.data.length && !state.answered) timerStart(); }
+function speakWord(w){ say(w,.9); }
+
+function fillCategories(){
+  const sel = $('#categoryFilter'); sel.innerHTML = '<option value="all">?券?桀?</option>';
+  [...new Set(VOCAB_DATA.map(v=>v.category))].forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o); });
+  sel.onchange = e=> showList(e.target.value);
+}
+
+function showList(cat){
+  const box=$('#reviewWordsContainer'); box.innerHTML='';
+  const list = cat==='all'? VOCAB_DATA : VOCAB_DATA.filter(v=>v.category===cat);
+  $('#totalVocabCount').textContent=list.length;
+  if(cat!=='all'){
+    const t=document.createElement('div'); t.style.cssText='color:#0ff;font-size:1.1rem;font-weight:700;margin:8px 0;padding:8px;background:rgba(0,255,255,.1);border-radius:8px;text-align:center';
+    t.textContent=`?? ${cat} (${list.length}?摮?`; box.appendChild(t);
+  }
+  list.forEach((v,i)=>{
+    const d=document.createElement('div');
+    d.style.cssText='background:rgba(255,255,255,.1);border:1px solid #ffd700;border-radius:10px;padding:12px;margin:8px 0;text-align:left;cursor:pointer;transition:.2s';
+    d.innerHTML = `
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="flex:1;min-width:0">
+          <div style="color:#ffd700;font-weight:700;margin-bottom:6px;word-break:break-word">${i+1}. ${v.word}${cat==='all'?` <span style="color:#0ff;font-size:.8rem;background:rgba(0,255,255,.2);padding:2px 6px;border-radius:4px">${v.category}</span>`:''}</div>
+          <div style="color:#fff;margin-bottom:6px">${v.zh}</div>
+          <div style="color:#0ff;font-size:.95rem;font-style:italic">${v.en_sentence}</div>
+        </div>
+        <button onclick="event.stopPropagation();speakWord('${v.word.replace(/'/g,"\\'")}')" style="background:#0ff;color:#000;border:none;border-radius:50%;width:42px;height:42px;font-size:1.2rem;box-shadow:0 2px 8px rgba(0,255,255,.3)">??</button>
+      </div>`;
+    d.onmouseenter=()=>{ d.style.background='rgba(255,215,0,.2)'; d.style.transform='scale(1.02)'; };
+    d.onmouseleave=()=>{ d.style.background='rgba(255,255,255,.1)'; d.style.transform='scale(1)'; };
+    d.onclick=()=>speakWord(v.word);
+    box.appendChild(d);
+  });
+  if(!list.length){ const n=document.createElement('div'); n.style.cssText='text-align:center;color:#888;padding:30px;font-style:italic'; n.textContent='甇文?憿?∪摮?; box.appendChild(n); }
+}
+
+function showVocabStats(){
+  const stats = {}; VOCAB_DATA.forEach(v=> stats[v.category]=(stats[v.category]||0)+1 );
+  const modal=document.createElement('div'); modal.className='modal'; modal.style.display='flex';
+  modal.innerHTML = `<div class="modal-content" style="max-width:600px">
+    <div class="end-icon">??</div><h2 style="color:#ffd700">摮澈蝯梯?</h2>
+    <div style="text-align:left;margin:12px 0">${Object.entries(stats).map(([c,n])=>`
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,215,0,.3)">
+        <span style="color:#fff">${c}</span><span style="color:#0ff;font-weight:700">${n} ?摮?/span>
+      </div>`).join('')}
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-top:2px solid #ffd700;margin-top:8px;font-weight:700">
+        <span style="color:#ffd700">蝮質?</span><span style="color:#ffd700">${VOCAB_DATA.length} ?摮?/span>
+      </div>
+    </div>
+    <div class="end-buttons"><button onclick="this.closest('.modal').remove()">??</button></div></div>`;
+  modal.onclick=e=>{ if(e.target===modal) modal.remove(); };
+  document.body.appendChild(modal);
+}
+
+function exportVocabData(){
+  const csv = [
+    ['?桀?','銝剜?','?望?靘','銝剜?靘','??'],
+    ...VOCAB_DATA.map(v=>[v.word,v.zh,v.en_sentence,v.zh_sentence||'',v.category])
+  ].map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'}); const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=`zeus_vocabulary_${new Date().toISOString().slice(0,10)}.csv`; a.click();
+}
+
+/* ===================== 鈭辣 & ?? ===================== */
+function updateIndex(){ $('#current-index').textContent = state.i+1; }
+function addNotice(msg,type='info'){
+  const n=document.createElement('div'); n.style.cssText=`position:fixed;top:20px;left:50%;transform:translateX(-50%);
+    background:${type==='success'?'#4caf50':'#2196f3'};color:#fff;padding:10px 18px;border-radius:8px;font-weight:700;z-index:2000`;
+  n.textContent=msg; document.body.appendChild(n); setTimeout(()=>n.remove(),2200);
+}
+function addStarsAndToast(n){ addStars(n); addNotice('??摮澈撌脫???綽?','success'); }
+
+document.addEventListener('DOMContentLoaded',()=>{
+  updateStars(); $('#sessionStarsDisplay').textContent='?祆活撌脩敺?0 憿???;
+  initData(); state.i=0; updateIndex(); showQ(); localStorage.removeItem('fillIndex');
+  initMusic();
+  // 暺?蝒???
+  ['reviewModal','gameEndModal'].forEach(id=>{
+    const m=$('#'+id); if(m) m.addEventListener('click',e=>{ if(e.target===m) m.style.display='none'; });
+  });
+});
+
+</script>
+</body>
+</html>

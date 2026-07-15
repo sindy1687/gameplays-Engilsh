@@ -1,0 +1,3670 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?圈洛蝟餌絞</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+            <style>
+            /* ?餅???????*/
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }
+            
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-2px); }
+                75% { transform: translateX(2px); }
+            }
+            
+            /* ?餅?????∠?璅?? */
+            .enemy-card.attacking,
+            .player-card.attacking {
+                box-shadow: 0 0 15px #ff6b6b;
+                border: 2px solid #ff6b6b;
+                transform: scale(1.05);
+                transition: all 0.3s ease;
+            }
+            
+            /* ??????∠?璅?? */
+            .enemy-card.being-attacked,
+            .player-card.being-attacked {
+                box-shadow: 0 0 15px #ff0000;
+                border: 2px solid #ff0000;
+                animation: shake 0.3s infinite;
+            }
+        :root {
+            --glow-cyan: #00ffff;
+            --glow-magenta: #ff00ff;
+            --glow-yellow: #ffff00;
+            --dark-blue: #0a1428;
+            --medium-blue: #1a2a4a;
+            --light-blue: #2a4a8a;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(135deg, #0a1428 0%, #1a2a4a 50%, #0a1428 100%);
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* ?? */
+        @keyframes victoryPulse {
+            0% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes victoryBounce {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes victoryFadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 憭望?? */
+        @keyframes defeatPulse {
+            0% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes defeatShake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        @keyframes defeatFadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+
+
+
+
+
+
+
+
+        .player-card {
+            background: rgba(0, 255, 0, 0.2);
+            border-color: #44ff44;
+        }
+
+        .card-media {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        .card-media[is-video] {
+            pointer-events: none;
+        }
+
+
+
+
+
+
+
+
+
+
+
+        /* 蝺刻摩?? */
+        .team-panel {
+            background: rgba(10, 20, 40, 0.8);
+            border: 2px solid var(--glow-yellow);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 0 20px rgba(255, 255, 0, 0.2);
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow: visible;
+        }
+
+        .team-panel h3 {
+            margin: 0 0 20px 0;
+            color: var(--glow-yellow);
+            text-align: center;
+        }
+
+        .team-slots {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .team-slot {
+            width: 100px;
+            height: 140px;
+            background: rgba(255, 255, 0, 0.1);
+            border: 2px dashed var(--glow-yellow);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-slot:hover {
+            background: rgba(255, 255, 0, 0.2);
+            border-color: #ffff00;
+        }
+
+        .team-slot.filled {
+            border-style: solid;
+            background: rgba(255, 255, 0, 0.3);
+        }
+
+        .team-slot .card-media {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .team-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+            background: rgba(255,255,0,0.08);
+            border-radius: 8px;
+            padding: 8px 4px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 4px;
+            background: rgba(255, 255, 0, 0.13);
+            border-radius: 5px;
+            font-size: 0.92rem;
+            font-weight: bold;
+            color: #fffbe0;
+        }
+        .stat-label {
+            color: #ffe066;
+            font-size: 0.98em;
+            letter-spacing: 0.5px;
+        }
+        .stat-value {
+            color: #fff;
+            font-size: 1em;
+            font-weight: bold;
+            text-shadow: 0 0 3px #ffe06699;
+        }
+
+        /* ?∠??豢?? */
+        .card-library {
+            background: rgba(10, 20, 40, 0.8);
+            border: 2px solid var(--glow-cyan);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            overflow-y: auto;
+        }
+
+        .card-library h3 {
+            margin: 0 0 20px 0;
+            color: var(--glow-cyan);
+            text-align: center;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .card {
+            width: 80px;
+            height: 110px;
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid var(--glow-cyan);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card.ssr {
+            background: rgba(255, 215, 0, 0.15);
+            border-color: #ffd700; /* 暺 */
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+        }
+
+        .card.a {
+            background: rgba(78, 205, 255, 0.15);
+            border-color: #2196f3; /* ? */
+            box-shadow: 0 0 6px rgba(33, 150, 243, 0.3);
+        }
+
+        .card.r {
+            background: rgba(156, 39, 176, 0.15);
+            border-color: #9c27b0; /* 蝝怨 */
+            box-shadow: 0 0 4px rgba(156, 39, 176, 0.2);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.4);
+        }
+
+        .card.ssr:hover {
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.6);
+        }
+
+        .card.a:hover {
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.5);
+        }
+
+        .card.r:hover {
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+        }
+
+        .card.selected {
+            background: rgba(0, 255, 255, 0.3);
+            border-color: #ffff00;
+        }
+
+        .card.selected::after {
+            content: "撌脤?仿?隡?;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 0, 0.8);
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .card.used {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(1);
+        }
+
+        .card.used::after {
+            content: "撌脖蝙??;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+        }
+
+
+
+        /* ??內 */
+        .team-slot.drag-over {
+            outline: 2px dashed #00ffff;
+            background: rgba(0,255,255,0.2);
+        }
+        .card.dragging {
+            opacity: 0.6;
+            box-shadow: 0 0 16px #00ffff;
+        }
+        .player-card.ssr, .enemy-card.ssr {
+            border-color: #ffd700 !important;
+        }
+        .player-card.a, .enemy-card.a {
+            border-color: #2196f3 !important;
+        }
+        .player-card.r, .enemy-card.r {
+            border-color: #9c27b0 !important;
+        }
+
+        /* ?曉之?圈洛???獢踵見撘?*/
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            grid-template-rows: 1fr 320px;
+            width: 100vw;
+            height: 100vh;
+            gap: 20px;
+            padding: 20px;
+            overflow: auto;
+        }
+
+        /* ?圈洛??脖?甇交憭?*/
+        .battle-area {
+            grid-column: 1;
+            grid-row: 1;
+            background: rgba(10, 20, 40, 0.8);
+            border: 2px solid var(--glow-magenta);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(162, 89, 255, 0.3);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+            min-height: 600px;
+        }
+
+        .battle-field {
+            flex: 1;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(20, 40, 80, 0.3) 100%);
+            border-radius: 12px;
+            position: relative;
+            border: 1px solid rgba(162, 89, 255, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 60px 40px;
+            min-height: 500px;
+        }
+
+        .enemy-area, .player-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            min-height: 180px;
+        }
+
+        .enemy-card, .player-card {
+            width: 140px;
+            height: 190px;
+            background: rgba(255, 0, 0, 0.2);
+            border: 2px solid #ff4444;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .player-card {
+            background: rgba(0, 255, 0, 0.2);
+            border-color: #44ff44;
+        }
+
+        /* ?圈洛?亥??曉之 */
+        .battle-log {
+            grid-column: 2;
+            grid-row: 1;
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid var(--glow-cyan);
+            border-radius: 15px;
+            padding: 25px;
+            font-size: 1rem;
+            overflow-y: auto;
+            color: #fff;
+            box-shadow: 0 0 12px #00ffff33;
+            min-height: 600px;
+        }
+
+        /* 銝??典??矽??*/
+        .bottom-area {
+            grid-column: 1 / span 2;
+            grid-row: 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            min-height: 320px;
+        }
+
+        /* ?芸?蝢拇遝?? */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--glow-cyan);
+            border-radius: 6px;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00cccc;
+        }
+
+        /* ?圈洛?批?? */
+        .battle-controls {
+            margin-top: 15px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .battle-btn {
+            padding: 12px 24px;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+            min-width: 140px;
+            flex: 0 1 auto;
+        }
+
+        .battle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 255, 255, 0.4);
+        }
+
+        .battle-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ?亥?璇璅?? */
+        .log-entry {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .log-entry.system {
+            background: rgba(0, 255, 255, 0.1);
+            border-left: 4px solid #00ffff;
+        }
+
+        .log-entry.player {
+            background: rgba(0, 255, 0, 0.1);
+            border-left: 4px solid #00ff00;
+        }
+
+        .log-entry.enemy {
+            background: rgba(255, 0, 0, 0.1);
+            border-left: 4px solid #ff0000;
+        }
+
+        .log-entry.damage {
+            background: rgba(255, 165, 0, 0.1);
+            border-left: 4px solid #ffa500;
+        }
+
+        /* ?踵?撘身閮?*/
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr 300px;
+                grid-template-rows: 1fr 280px;
+            }
+            
+            .battle-area {
+                padding: 25px;
+                min-height: 550px;
+            }
+            
+            .battle-field {
+                padding: 50px 25px;
+                min-height: 450px;
+            }
+            
+            .enemy-card, .player-card {
+                width: 120px;
+                height: 160px;
+            }
+            
+            .team-panel, .card-library {
+                max-height: 280px;
+            }
+        }
+        
+        /* ?訾葉?∠?璅?? */
+        .card.selected {
+            border: 2px solid #ffd700 !important;
+            box-shadow: 0 0 10px #ffd700 !important;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr 280px;
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .battle-area {
+                min-height: 500px;
+            }
+            
+            .battle-field {
+                padding: 40px 20px;
+                min-height: 400px;
+            }
+            
+            .enemy-card, .player-card {
+                width: 100px;
+                height: 140px;
+            }
+            
+            .battle-log {
+                grid-column: 1;
+                grid-row: 2;
+                min-height: 350px;
+            }
+            
+            .bottom-area {
+                grid-column: 1;
+                grid-row: 3;
+                grid-template-columns: 1fr;
+                gap: 15px;
+                min-height: 280px;
+            }
+            
+            .team-panel, .card-library {
+                max-height: 250px;
+            }
+        }
+
+        /* ???Ｘ??澈璅?? */
+        .team-panel, .card-library {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--glow-magenta);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(162, 89, 255, 0.3);
+            backdrop-filter: blur(10px);
+            overflow-y: auto;
+            max-height: 320px;
+        }
+
+        .team-panel h3, .card-library h3 {
+            color: var(--glow-magenta);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            text-align: center;
+            text-shadow: 0 0 10px var(--glow-magenta);
+        }
+
+        .team-slots {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .team-slot {
+            height: 140px;
+            border: 2px dashed rgba(162, 89, 255, 0.5);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(162, 89, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 140px;
+        }
+
+        .team-slot.drag-over {
+            border-color: var(--glow-magenta);
+            background: rgba(162, 89, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .team-slot.filled {
+            border-style: solid;
+            border-color: var(--glow-magenta);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 15px;
+            max-height: 250px;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .card {
+            width: 110px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .card.selected {
+            border-color: var(--glow-cyan);
+            box-shadow: 0 0 10px var(--glow-cyan);
+        }
+
+        .card.used {
+            opacity: 0.5;
+            filter: grayscale(0.7);
+        }
+
+        .card-media {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .team-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 15px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .stat-label {
+            color: #ccc;
+        }
+
+        .stat-value {
+            color: var(--glow-cyan);
+            font-weight: bold;
+        }
+
+        /* ?圈洛??? */
+        @keyframes damageFloat {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            25% {
+                transform: translateY(-15px) scale(1.3);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-30px) scale(1.1);
+                opacity: 0.8;
+            }
+            75% {
+                transform: translateY(-45px) scale(0.9);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-60px) scale(0.7);
+                opacity: 0;
+            }
+        }
+
+        @keyframes attackGlow {
+            0% { box-shadow: 0 0 5px #ff6b6b; }
+            50% { box-shadow: 0 0 20px #ff6b6b, 0 0 30px #ff6b6b; }
+            100% { box-shadow: 0 0 5px #ff6b6b; }
+        }
+
+        @keyframes skillGlow {
+            0% { box-shadow: 0 0 5px #ffd700; }
+            50% { box-shadow: 0 0 25px #ffd700, 0 0 40px #ffd700; }
+            100% { box-shadow: 0 0 5px #ffd700; }
+        }
+
+        @keyframes defeatShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .battle-card {
+            transition: all 0.3s ease;
+        }
+
+        .battle-card.attacking {
+            animation: attackGlow 0.8s ease-in-out;
+        }
+
+        .battle-card.skill-attacking {
+            animation: skillGlow 1.2s ease-in-out;
+        }
+
+        .battle-card.defeated {
+            animation: defeatShake 0.5s ease-in-out;
+        }
+
+        .damage-number {
+            position: absolute;
+            font-weight: bold;
+            font-size: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 8px rgba(255,255,255,0.5);
+            z-index: 1000;
+            pointer-events: none;
+            background: rgba(0,0,0,0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .damage-number.normal {
+            color: #ff6b6b;
+            animation: damageFloat 1s ease-out forwards;
+        }
+
+        .damage-number.skill {
+            color: #ffd700;
+            animation: damageFloat 1.2s ease-out forwards;
+        }
+
+        .damage-number.critical {
+            color: #ff4757;
+            font-size: 1.4rem;
+            animation: damageFloat 1.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- ?∠??曉之?汗 Modal -->
+    <div id="card-preview-modal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.65); align-items:center; justify-content:center;">
+        <div id="card-preview-content" style="position:relative; background:rgba(20,30,40,0.98); border-radius:18px; box-shadow:0 0 32px #00ffff99; padding:24px; display:flex; flex-direction:column; align-items:center;">
+            <button id="close-card-preview" style="position:absolute; top:8px; right:12px; background:#222; color:#fff; border:none; border-radius:50%; width:32px; height:32px; font-size:1.3rem; cursor:pointer;">?</button>
+            <div id="card-preview-media"></div>
+            <div id="card-preview-title" style="margin-top:12px; font-size:1.3rem; color:#ffe066; font-weight:bold;"></div>
+            <div id="card-preview-stats" style="margin-top:8px; font-size:1.1rem; color:#fff;"></div>
+        </div>
+    </div>
+    
+
+    
+    <div class="main-container">
+        <!-- ??憿舐內? -->
+        <div style="position: fixed; top: 20px; right: 20px; z-index: 1000; background: rgba(0,0,0,0.8); padding: 10px 15px; border-radius: 10px; border: 2px solid #ffd700; box-shadow: 0 0 10px rgba(255,215,0,0.3);">
+            <div style="color: #ffd700; font-weight: bold; font-size: 1.2rem;">
+                潃?<span id="totalStarsCount">0</span>
+            </div>
+        </div>
+
+        <!-- 餈?擐??? -->
+        <div style="position: fixed; top: 20px; left: 20px; z-index: 1000;">
+            <button id="back-to-home" style="background: linear-gradient(45deg, #00ffff, #ff00ff); border: none; border-radius: 10px; padding: 12px 20px; color: #000; font-weight: bold; font-size: 1rem; cursor: pointer; box-shadow: 0 0 15px rgba(0,255,255,0.4); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 20px rgba(0,255,255,0.6)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 0 15px rgba(0,255,255,0.4)'">
+                ?? 餈?擐?
+            </button>
+        </div>
+
+        <!-- ?圈洛? -->
+        <div class="battle-area">
+            <div class="battle-field">
+                <div class="enemy-area" id="enemy-area">
+                    <!-- ?萎犖?∠???ㄐ憿舐內 -->
+                </div>
+                <div class="player-area" id="player-area">
+                    <!-- ?拙振?∠???ㄐ憿舐內 -->
+                </div>
+            </div>
+            <div class="battle-controls">
+                <button class="battle-btn" id="start-battle">???圈洛</button>
+                <button class="battle-btn" id="manual-battle" style="background: linear-gradient(45deg, #ffd700, #ff6b6b);">???圈洛</button>
+                <button class="battle-btn" id="reset-stage" style="background: linear-gradient(45deg, #ffd700, #ffed4e);">?蔭?</button>
+            </div>
+            <!-- ???圈洛?批? -->
+            <div id="manual-controls" style="display: none; margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 10px; border: 1px solid #00ffff;">
+                <div style="text-align: center; margin-bottom: 10px; color: #00ffff; font-weight: bold;">???圈洛?批</div>
+                <div id="current-turn-info" style="text-align: center; margin-bottom: 10px; color: #fff;"></div>
+                <div id="enemy-selection" style="display: none; margin-bottom: 15px; text-align: center;">
+                    <div style="color: #ffd700; font-weight: bold; margin-bottom: 8px;">?豢??餅??格?嚗?/div>
+                    <div id="enemy-targets" style="display: flex; justify-content: center; gap: 10px; flex-wrap;"></div>
+                </div>
+                <div id="action-buttons" style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+                    <button id="attack-btn" class="battle-btn" style="background: linear-gradient(45deg, #ff6b6b, #ff8e8e);">?餅?</button>
+                    <button id="skill-btn" class="battle-btn" style="background: linear-gradient(45deg, #4ecdc4, #6ee7df);">???/button>
+                    <button id="defend-btn" class="battle-btn" style="background: linear-gradient(45deg, #ffd700, #ffed4e);">?脩戌</button>
+                    <button id="skip-btn" class="battle-btn" style="background: linear-gradient(45deg, #95a5a6, #bdc3c7);">頝喲?</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ?圈洛?亥? -->
+        <div class="battle-log" id="battle-log">
+            <div class="log-entry system">?圈洛蝟餌絞撌脫??停蝺?</div>
+        </div>
+
+        <!-- 銝??典???-->
+        <div class="bottom-area">
+            <!-- 蝺刻摩?? -->
+            <div class="team-panel">
+                <h3>蝺刻摩??</h3>
+                <div class="team-slots">
+                    <div class="team-slot" data-slot="0">
+                        <span>??∠?</span>
+                    </div>
+                    <div class="team-slot" data-slot="1">
+                        <span>??∠?</span>
+                    </div>
+                    <div class="team-slot" data-slot="2">
+                        <span>??∠?</span>
+                    </div>
+                    <div class="team-slot" data-slot="3">
+                        <span>??∠?</span>
+                    </div>
+                </div>
+                
+                <div class="team-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">?嗅??:</span>
+                        <span class="stat-value" id="current-stage">蝚???/span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">蝮賣??:</span>
+                        <span class="stat-value" id="total-attack">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">蝮賡蝳血?:</span>
+                        <span class="stat-value" id="total-defense">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">蝮賜??賢?</span>
+                        <span class="stat-value" id="total-hp">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">?????</span>
+                        <span class="stat-value" id="team-skill">??/span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ?∠??豢?? -->
+            <div class="card-library">
+                <h3>?∠??豢??</h3>
+                <div style="margin-bottom: 10px; text-align: center;">
+    
+                                    <span style="color: #4ecdc4; font-size: 0.9rem;">?? ?芾???圈洛?脣?蝬??潸??蝝?/span>
+                </div>
+                <div class="card-grid" id="card-grid">
+                    <!-- ?∠???ㄐ???? -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/sound.js"></script>
+    <script src="js/soundSystem.js"></script>
+    <script src="js/userData.js"></script>
+    <script src="js/starRewardSystem.js"></script>
+    <script src="js/cardUtils.js"></script>
+    <script src="js/vocabData.js"></script>
+    <script src="js/cards.js"></script>
+    <script src="js/custom_cards.js"></script>
+    <script src="js/achievementSystem.js"></script>
+    
+    <!-- 憒?憭?∠??辣頛憭望?嚗蝙?券?閮剖??-->
+    <script>
+        // 蝣箔?baseCards摮
+        if (typeof baseCards === 'undefined') {
+            console.log('憭?∠??辣頛憭望?嚗蝙?券?閮剖??);
+            window.baseCards = [
+                {
+                    zh: "摰",
+                    en: "Zeus",
+                    image: "zeus.html",
+                    attack: 200,
+                    defense: 150,
+                    hp: 300,
+                    rarity: "頞???,
+                    skill: {
+                        name: "?琿??祇?",
+                        description: "撠??鈭粹?憭折??瑕拿",
+                        cooldown: 3
+                    }
+                },
+                {
+                    zh: "?踵郭蝢?,
+                    en: "Apollo",
+                    image: "apollo.html",
+                    attack: 180,
+                    defense: 120,
+                    hp: 250,
+                    rarity: "蝔??,
+                    skill: {
+                        name: "憭芷蟡悌",
+                        description: "撠銝?萎犖??擃摰?,
+                        cooldown: 2
+                    }
+                },
+                {
+                    zh: "?憡?,
+                    en: "Athena",
+                    image: "athena.html",
+                    attack: 160,
+                    defense: 180,
+                    hp: 280,
+                    rarity: "蝔??,
+                    skill: {
+                        name: "?箸霅瑞",
+                        description: "憭批????脩戌??,
+                        cooldown: 4
+                    }
+                },
+                {
+                    zh: "?輻???,
+                    en: "Ares",
+                    image: "ares.html",
+                    attack: 220,
+                    defense: 100,
+                    hp: 200,
+                    rarity: "蝔??,
+                    skill: {
+                        name: "?啁?",
+                        description: "???餅??蒂???瑕拿",
+                        cooldown: 3
+                    }
+                },
+                {
+                    zh: "瘜Ｗ???,
+                    en: "Poseidon",
+                    image: "poseidon.html",
+                    attack: 170,
+                    defense: 160,
+                    hp: 270,
+                    rarity: "蝔??,
+                    skill: {
+                        name: "瘚瑕銵?",
+                        description: "撠鈭粹?蝭??瑕拿",
+                        cooldown: 3
+                    }
+                }
+            ];
+        }
+    </script>
+    <script>
+        // ????        // ?脣??嗅????賊?
+        function getCurrentStars() {
+            console.log('getCurrentStars 鋡怨矽??);
+            if (typeof StarRewardSystem !== 'undefined') {
+                console.log('雿輻 StarRewardSystem');
+                return parseInt(localStorage.getItem('totalStars') || '0');
+            } else if (typeof LinkageSystem !== 'undefined' && LinkageSystem.stars) {
+                console.log('雿輻 LinkageSystem');
+                return LinkageSystem.stars.get();
+            } else {
+                console.log('雿輻 localStorage');
+                return parseInt(localStorage.getItem('totalStars') || '0');
+            }
+        }
+
+        // 憓???嚗擛亦頂蝯勗??剁?
+        function addStarsToBattle(amount) {
+            console.log('addStarsToBattle 鋡怨矽?剁??賊?:', amount);
+            
+            // 瑼Ｘ?臬撌脩?蝯虫???????            if (gameState.starsAdded) {
+                console.log('撌脩?蝯虫??????蛛?頝喲?');
+                return;
+            }
+            
+            let currentStars = 0;
+            
+            // ???????            if (typeof StarRewardSystem !== 'undefined') {
+                console.log('雿輻 StarRewardSystem');
+                currentStars = parseInt(localStorage.getItem('totalStars') || '0');
+            } else if (typeof LinkageSystem !== 'undefined' && LinkageSystem.stars) {
+                console.log('雿輻 LinkageSystem');
+                currentStars = LinkageSystem.stars.get();
+            } else {
+                console.log('雿輻 localStorage');
+                currentStars = parseInt(localStorage.getItem('totalStars') || '0');
+            }
+            
+            // 閮??啁????賊?
+            const newStars = currentStars + amount;
+            console.log(`??閮?: ${currentStars} + ${amount} = ${newStars}`);
+            
+            // ?湔???賊?
+            if (typeof StarRewardSystem !== 'undefined') {
+                localStorage.setItem('totalStars', newStars.toString());
+                // ?岫隤輻 StarRewardSystem ?瘜?                if (typeof StarRewardSystem.addStars === 'function') {
+                    StarRewardSystem.addStars(amount);
+                }
+            } else if (typeof LinkageSystem !== 'undefined' && LinkageSystem.stars) {
+                LinkageSystem.stars.set(newStars);
+            } else {
+                localStorage.setItem('totalStars', newStars.toString());
+            }
+            
+            // 璅?撌脩?蝯虫????
+            gameState.starsAdded = true;
+            
+            console.log('???湔摰?嚗????', getCurrentStars());
+            updateStarsDisplay();
+        }
+
+        // ?湔??憿舐內
+        function updateStarsDisplay() {
+            const starsElement = document.getElementById('totalStarsCount');
+            if (starsElement) {
+                const currentStars = getCurrentStars();
+                starsElement.textContent = currentStars;
+                console.log('??憿舐內撌脫??', currentStars);
+            } else {
+                console.log('?曆??唳??＊蝷箏?蝝?);
+            }
+        }
+
+        // ?????＊蝷?        function initStarsDisplay() {
+            updateStarsDisplay();
+            console.log('??憿舐內???????嗅???:', getCurrentStars());
+        }
+
+        const gameState = {
+            playerTeam: [],
+            enemyTeam: [],
+            isBattleActive: false,
+            currentTurn: 0,
+            hasAttacked: false, // 璅??臬撌脩??餅???            starsAdded: false, // 璅??臬撌脩?蝯虫????
+
+            selectedCards: new Set() // 閮?撌脤?仿?隡??芯蝙?函??∠?
+        };
+
+        // ?拙振???        const playerStatus = {
+            coins: 1000,
+            stars: 50,
+            exp: 0,
+            stage: 1
+        };
+
+        // ??????        function initGame() {
+            console.log('initGame ???瑁?');
+            console.log('baseCards ?臬摮:', typeof baseCards !== 'undefined');
+            console.log('baseCards ?瑕漲:', typeof baseCards !== 'undefined' ? baseCards.length : 'undefined');
+            
+            if (typeof baseCards === 'undefined') {
+                console.log('蝑??∠?鞈?頛...');
+                setTimeout(initGame, 100);
+                return;
+            }
+            console.log('?∠?鞈?撌脰??伐???, baseCards.length, '撘萄??);
+            
+            // 瑼Ｘ?∠?鞈??臬甇?Ⅱ
+            if (baseCards.length === 0) {
+                console.error('?∠?鞈??箇征嚗?);
+                addLogEntry('蝟餌絞', '???∠?鞈?頛憭望?嚗?);
+                return;
+            }
+            
+            // ?蕪?芷＊蝷箏歇閫?????            filterUnlockedCards();
+            
+            // ?箏????鞈芸惇??            enhanceCardsWithStats();
+            
+            // 頛?∠?蝑??豢?
+            loadCardLevels();
+            
+
+            createCardGrid();
+            setupEventListeners();
+            updateTeamStats();
+            initStarsDisplay();
+            console.log('???????);
+            addLogEntry('蝟餌絞', '???????');
+        }
+
+        // ?蕪?芷＊蝷箏歇閫?????        function filterUnlockedCards() {
+            console.log('???蕪撌脰圾???∠?...');
+            
+            // 瑼Ｘ LinkageSystem ?臬?舐
+            if (typeof LinkageSystem === 'undefined' || !LinkageSystem.cards) {
+                console.warn('LinkageSystem 銝?剁?憿舐內????);
+                return;
+            }
+            
+            // ?脣?撌脰圾???∠?
+            const ownedCards = LinkageSystem.cards.getOwnedCards();
+            console.log('撌脰圾????', Object.keys(ownedCards).length);
+            
+            // ?蕪 baseCards嚗靽?撌脰圾???∠?
+            const originalLength = baseCards.length;
+            const unlockedCards = baseCards.filter(card => {
+                const isUnlocked = LinkageSystem.cards.isCardOwned(card.word);
+                return isUnlocked;
+            });
+            
+            // ?湔 baseCards ?箏歇閫?????            baseCards.length = 0;
+            unlockedCards.forEach(card => baseCards.push(card));
+            
+            console.log(`?∠??蕪摰?嚗?{originalLength} -> ${baseCards.length} 撘萄歇閫???∠?`);
+            addLogEntry('蝟餌絞', `?? 撌脰???${baseCards.length} 撘萄歇閫???∠?`);
+            
+            if (baseCards.length === 0) {
+                console.warn('瘝?撌脰圾???∠?嚗?);
+                addLogEntry('蝟餌絞', '?? 瘝?撌脰圾???∠?嚗???∠??嗉??閫???∠?嚗?);
+            }
+        }
+
+        // 頛隞予鋡急????∠?
+
+
+        // 頛?∠?蝑???撽潭??        function loadCardLevels() {
+            const savedLevels = localStorage.getItem('cardLevels');
+            if (savedLevels) {
+                try {
+                    const levels = JSON.parse(savedLevels);
+                    console.log('頛??蝝??', levels);
+                    levels.forEach(levelData => {
+                        // ?岫憭車?寥??孵?
+                        let card = baseCards.find(c => c.zh === levelData.index);
+                        if (!card) {
+                            card = baseCards.find(c => c.id === levelData.index);
+                        }
+                        if (!card) {
+                            card = baseCards.find(c => (c.id || c.zh) === levelData.index);
+                        }
+                        if (card) {
+                            card.level = levelData.level;
+                            card.exp = levelData.exp || 0;
+                            console.log('??頛?∠?蝑?:', card.zh, '蝑?:', card.level, '蝬???', card.exp);
+                        } else {
+                            console.log('?曆??啣????∠?:', levelData.index);
+                        }
+                    });
+                    console.log('撌脰??亙??蝝?蝬??潭??);
+                } catch (error) {
+                    console.error('頛?∠?蝑??豢?憭望?:', error);
+                }
+            } else {
+                console.log('瘝??曉撌脖?摮??∠?蝑??豢?');
+            }
+        }
+
+        // 閮?????蝬???        function getExpForNextLevel(currentLevel) {
+            return Math.floor(100 * Math.pow(1.5, currentLevel - 1));
+        }
+
+        // 瑼Ｘ?臬?臭誑??
+        function canLevelUp(card) {
+            const currentLevel = card.level || 1;
+            const currentExp = card.exp || 0;
+            const requiredExp = getExpForNextLevel(currentLevel);
+            return currentExp >= requiredExp;
+        }
+
+        // ?芸????∠?
+        function autoLevelUp(card) {
+            const currentLevel = card.level || 1;
+            const currentExp = card.exp || 0;
+            const requiredExp = getExpForNextLevel(currentLevel);
+            
+            if (currentExp >= requiredExp) {
+                const newLevel = currentLevel + 1;
+                const remainingExp = currentExp - requiredExp;
+                
+                card.level = newLevel;
+                card.exp = remainingExp;
+                
+                // 閮???敺?蝝釭撠?
+                const currentLevelBonus = (currentLevel - 1) * 0.2;
+                const newLevelBonus = (newLevel - 1) * 0.2;
+                const baseAttack = card.attack || 50;
+                const baseDefense = card.defense || 30;
+                const baseHp = card.hp || 100;
+                
+                const currentAttack = Math.round(baseAttack * (1 + currentLevelBonus));
+                const currentDefense = Math.round(baseDefense * (1 + currentLevelBonus));
+                const currentHp = Math.round(baseHp * (1 + currentLevelBonus));
+                
+                const newAttack = Math.round(baseAttack * (1 + newLevelBonus));
+                const newDefense = Math.round(baseDefense * (1 + newLevelBonus));
+                const newHp = Math.round(baseHp * (1 + newLevelBonus));
+                
+                // 憿舐內??撠?Modal
+                showLevelUpModal(card, {
+                    oldLevel: currentLevel,
+                    newLevel: newLevel,
+                    oldAttack: currentAttack,
+                    newAttack: newAttack,
+                    oldDefense: currentDefense,
+                    newDefense: newDefense,
+                    oldHp: currentHp,
+                    newHp: newHp
+                });
+                
+                addLogEntry('system', `?? ${card.zh} ?芸???嚗?蝝?${currentLevel} ??${newLevel}`);
+                addLogEntry('system', `? ?餅???${currentAttack} ??${newAttack}`);
+                addLogEntry('system', `?儭??脩戌??${currentDefense} ??${newDefense}`);
+                addLogEntry('system', `?歹? 銵??${currentHp} ??${newHp}`);
+                
+                // 靽???敺??∠??豢?
+                const cardLevelsData = baseCards.map(c => ({ 
+                    index: c.id || c.zh, 
+                    level: c.level || 1,
+                    exp: c.exp || 0
+                }));
+                localStorage.setItem('cardLevels', JSON.stringify(cardLevelsData));
+                console.log('靽???敺??∠??豢?:', cardLevelsData);
+                
+                return true;
+            }
+            return false;
+        }
+
+        // ?箏?溶??撽潘??芾???圈洛?脣?嚗?        function addExpToCard(card, expAmount) {
+            console.log('addExpToCard 鋡怨矽??', card.zh, '蝬???', expAmount);
+            if (!card.exp) card.exp = 0;
+            const oldExp = card.exp;
+            card.exp += expAmount;
+            console.log('蝬??潭??', card.zh, oldExp, '->', card.exp);
+            
+            const currentLevel = card.level || 1;
+            const requiredExp = getExpForNextLevel(currentLevel);
+            const expProgress = Math.min(100, Math.round((card.exp / requiredExp) * 100));
+            
+            addLogEntry('system', `?? ${card.zh} ?脣? ${expAmount} ?圈洛蝬??潘?`);
+            addLogEntry('system', `?? 蝬??潮脣漲嚗?{card.exp}/${requiredExp} (${expProgress}%)`);
+            
+            // 瑼Ｘ?臬?臭誑??
+            if (autoLevelUp(card)) {
+                // 憒???鈭??活瑼Ｘ?臬?臭誑?????
+                while (autoLevelUp(card)) {
+                    // ?????
+                }
+            }
+            
+            // 靽?蝬??潭??            const cardLevelsData = baseCards.map(c => ({ 
+                index: c.id || c.zh, 
+                level: c.level || 1,
+                exp: c.exp || 0
+            }));
+            localStorage.setItem('cardLevels', JSON.stringify(cardLevelsData));
+            console.log('靽?蝬??潭??', cardLevelsData);
+        }
+
+        // ?箏????鞈芸惇??        function enhanceCardsWithStats() {
+            baseCards.forEach((card, index) => {
+                // 憒??∠?瘝?蝝釭嚗?揣撘??璈??箏???鞈?                if (!card.attack || !card.defense || !card.hp) {
+                    const seed = index * 7 + 13; // 蝪∪?璈車摮?                    // ?寞?蝔?漲閮剖?蝝釭蝭?
+                    const rarity = card.rarity || getRandomRarity(seed);
+                    card.rarity = rarity;
+                    let minStat, maxStat;
+                    if (rarity === '頞???) {
+                        minStat = 180; maxStat = 250; // 頞???180-250
+                    } else if (rarity === '蝔??) {
+                        minStat = 50; maxStat = 100;  // 蝔??50-100嚗?雿?
+                    } else {
+                        minStat = 100; maxStat = 160; // ?桅?100-160嚗葉蝑?
+                    }
+                    card.attack = card.attack || (minStat + (seed * 3 % (maxStat - minStat + 1)));
+                    card.defense = card.defense || (minStat + (seed * 5 % (maxStat - minStat + 1)));
+                    card.hp = card.hp || (minStat + (seed * 7 % (maxStat - minStat + 1)));
+                    // ?箏???交???                    if (!card.skill) {
+                        card.skill = generateSkill(card, seed);
+                    }
+                }
+            });
+            console.log('撌脩', baseCards.length, '撘萄????鞈?);
+        }
+
+        // ???∠????        function generateSkill(card, seed) {
+            const skills = [
+                { name: '?桅??, damage: 1.0, cooldown: 0, description: '?箇??餅?' },
+                { name: '撘瑕?銝??, damage: 1.5, cooldown: 2, description: '??1.5?摰? },
+                { name: '?脩戌憪踵?', damage: 0.5, cooldown: 1, description: '?餅?????憓??脩戌' },
+                { name: '?湔?', damage: 2.0, cooldown: 4, description: '???摰? }
+            ];
+            const skillIndex = seed % skills.length;
+            const baseSkill = skills[skillIndex];
+            
+            // ?寞?蝔?漲隤踵?瑕??
+            let adjustedCooldown = baseSkill.cooldown;
+            if (card.rarity === '頞???) {
+                // SSR?∠??瑕??皜?嚗??哨?
+                adjustedCooldown = Math.max(0, Math.floor(baseSkill.cooldown * 0.5));
+            } else if (card.rarity === '蝔??) {
+                // A?∠??瑕??蝔凝皜?
+                adjustedCooldown = Math.max(0, Math.floor(baseSkill.cooldown * 0.8));
+            } else {
+                // ?桅?????瑕??
+                adjustedCooldown = baseSkill.cooldown;
+            }
+            
+            return { 
+                ...baseSkill, 
+                cooldown: adjustedCooldown,
+                currentCooldown: 0 
+            };
+        }
+
+        // ?圈洛?批霈
+        let currentAttacker = 0; // 0=?拙振??, 1=?萎犖??
+        let currentPlayerIndex = 0;
+        let currentEnemyIndex = 0;
+        let isManualBattle = false;
+        let isAnimating = false; // ?脫迫?????暺?
+        let selectedEnemyIndex = -1; // ?豢??鈭箇揣撘?        let isSelectingTarget = false; // ?臬甇??豢??格?
+
+        // ?剜?航炊?單?
+        function playWrongSound() {
+            try {
+                // ?岫雿輻?暹???頂蝯?                if (typeof playSound === 'function') {
+                    playSound('wrong');
+                } else if (typeof SoundSystem !== 'undefined' && SoundSystem.play) {
+                    SoundSystem.play('wrong');
+                } else {
+                    // ?萄遣?單???
+                    const audio = new Audio('sound/wrong.mp3');
+                    audio.volume = 0.3;
+                    audio.play().catch(e => console.log('?單??剜憭望?:', e));
+                }
+            } catch (error) {
+                console.log('?單??剜?航炊:', error);
+            }
+        }
+
+        // ?剜?餅??單?
+        function playAttackSound() {
+            try {
+                if (typeof playSound === 'function') {
+                    playSound('click');
+                } else if (typeof SoundSystem !== 'undefined' && SoundSystem.play) {
+                    SoundSystem.play('click');
+                } else {
+                    const audio = new Audio('sound/click.mp3');
+                    audio.volume = 0.2;
+                    audio.play().catch(e => console.log('?單??剜憭望?:', e));
+                }
+            } catch (error) {
+                console.log('?單??剜?航炊:', error);
+            }
+        }
+
+        // ?剜??賡??        function playSkillSound() {
+            try {
+                if (typeof playSound === 'function') {
+                    playSound('correct');
+                } else if (typeof SoundSystem !== 'undefined' && SoundSystem.play) {
+                    SoundSystem.play('correct');
+                } else {
+                    const audio = new Audio('sound/correct.mp3');
+                    audio.volume = 0.3;
+                    audio.play().catch(e => console.log('?單??剜憭望?:', e));
+                }
+            } catch (error) {
+                console.log('?單??剜?航炊:', error);
+            }
+        }
+
+        // ?圈洛???
+        function animateAttack(attacker, target, damage, isSkill = false, isCritical = false) {
+            return new Promise((resolve) => {
+                isAnimating = true;
+                
+                // 閮剔蔭?餅????                attacker.isAttacking = true;
+                target.isBeingAttacked = true;
+                
+                // ?湔憿舐內
+                updateBattleDisplay();
+                
+                // ?曉?餅????格??OM??
+                const attackerElement = document.querySelector(`[data-card-id="${attacker.originalIndex || attacker.id}"]`);
+                const targetElement = document.querySelector(`[data-card-id="${target.originalIndex || target.id}"]`);
+                
+                // ?餅?????                if (attackerElement) {
+                    attackerElement.classList.add(isSkill ? 'skill-attacking' : 'attacking');
+                    attackerElement.style.transform = 'scale(1.1)';
+                    attackerElement.style.filter = 'brightness(1.3)';
+                    
+                    setTimeout(() => {
+                        attackerElement.style.transform = 'scale(1)';
+                        attackerElement.style.filter = 'brightness(1)';
+                        attackerElement.classList.remove('attacking', 'skill-attacking');
+                    }, isSkill ? 1200 : 800);
+                }
+                
+                // ?格??
+                if (targetElement) {
+                    setTimeout(() => {
+                        targetElement.style.transform = 'scale(0.9)';
+                        targetElement.style.filter = 'brightness(0.7)';
+                        
+                        // ?萄遣?瑕拿?詨?
+                        const damageText = document.createElement('div');
+                        damageText.textContent = `-${damage}`;
+                        
+                        // ?斗?瑕拿憿?
+                        let damageClass = 'normal';
+                        if (isSkill) damageClass = 'skill';
+                        if (isCritical) damageClass = 'critical';
+                        
+                        damageText.className = `damage-number ${damageClass}`;
+                        damageText.style.fontSize = isCritical ? '2rem' : '1.5rem';
+                        damageText.style.fontWeight = 'bold';
+                        
+                        // ?冽?雿蔭?宏
+                        const offsetX = (Math.random() - 0.5) * 30;
+                        const offsetY = (Math.random() - 0.5) * 20;
+                        damageText.style.left = `calc(50% + ${offsetX}px)`;
+                        damageText.style.top = `calc(50% + ${offsetY}px)`;
+                        
+                        targetElement.appendChild(damageText);
+                        
+                        setTimeout(() => {
+                            targetElement.style.transform = 'scale(1)';
+                            targetElement.style.filter = 'brightness(1)';
+                            damageText.remove();
+                        }, isSkill ? 1200 : 1000);
+                    }, isSkill ? 600 : 400);
+                }
+                
+                setTimeout(() => {
+                    // 皜?餅????                    attacker.isAttacking = false;
+                    target.isBeingAttacked = false;
+                    
+                    // ?湔憿舐內
+                    updateBattleDisplay();
+                    
+                    isAnimating = false;
+                    resolve();
+                }, isSkill ? 1200 : 800);
+            });
+        }
+
+        // ???
+        function animateDefeat(card, isPlayer) {
+            return new Promise((resolve) => {
+                const cardElement = document.querySelector(`[data-card-id="${card.originalIndex || card.id}"]`);
+                if (cardElement) {
+                    cardElement.classList.add('defeated');
+                    
+                    // ???寞?
+                    const defeatEffect = document.createElement('div');
+                    defeatEffect.style.cssText = `
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        font-size: 2rem;
+                        color: #ff4757;
+                        text-shadow: 0 0 10px #ff4757;
+                        z-index: 1001;
+                        animation: damageFloat 1s ease-out forwards;
+                    `;
+                    defeatEffect.textContent = '??';
+                    cardElement.appendChild(defeatEffect);
+                    
+                    cardElement.style.transition = 'all 0.5s ease-out';
+                    cardElement.style.transform = 'scale(0) rotate(180deg)';
+                    cardElement.style.opacity = '0';
+                    cardElement.style.filter = 'brightness(0)';
+                    
+                    setTimeout(() => {
+                        defeatEffect.remove();
+                        resolve();
+                    }, 500);
+                } else {
+                    resolve();
+                }
+            });
+        }
+
+        // ?寞?蝔桀???蝔?漲
+        function getRandomRarity(seed) {
+            const raritySeed = seed % 100;
+            if (raritySeed < 5) return 'SSR';      // 5% 璈?
+            else if (raritySeed < 25) return 'A';  // 20% 璈?
+            else return 'R';                        // 75% 璈?
+        }
+
+        // ???萎犖??踝???撘瑕漲嚗?        function generateEnemySkill(rarity, seed) {
+            const skillSeed = seed % 100;
+            const skills = [
+                { name: '?脩戌憪踵?', type: 'defense', effect: '憓??脩戌??0%', cooldown: 4 },
+                { name: '擳??餅?', type: 'magic', effect: '??1.2??瘜摰?, cooldown: 5 },
+                { name: '瘝餌?銵?, type: 'heal', effect: '?Ｗ儔20%銵??, cooldown: 7 },
+                { name: '??', type: 'counter', effect: '??餅?????, cooldown: 5 },
+                { name: '?', type: 'rage', effect: '銵????0%???1.5??, cooldown: 0 }
+            ];
+            
+            // ?寞?蝔?漲?豢????            let selectedSkill;
+            switch(rarity) {
+                case 'SSR':
+                    selectedSkill = skills[skillSeed % 3]; // ???撥????                    break;
+                case 'A':
+                    selectedSkill = skills[Math.floor(skillSeed / 20) + 1]; // 銝剔????                    break;
+                case 'R':
+                    selectedSkill = skills[Math.floor(skillSeed / 25) + 2]; // ?箇????                    break;
+            }
+            
+            return {
+                ...selectedSkill,
+                currentCooldown: 0
+            };
+        }
+
+        // 蝔?漲頧?嚗葉???望?璅惜嚗?        function getRarityLabel(rarity) {
+            if (rarity === '頞???) return 'SSR';
+            if (rarity === '蝔??) return 'A';
+            return 'R';
+        }
+        function getRarityColor(rarity) {
+            if (rarity === '頞???) return '#ffd700';
+            if (rarity === '蝔??) return '#2196f3';
+            return '#9c27b0';
+        }
+
+        // ?脣?蝔?漲???        function getRarityBgColor(rarity) {
+            switch(rarity) {
+                case 'SSR': return 'rgba(255, 215, 0, 0.2)';
+                case 'A': return 'rgba(255, 107, 107, 0.2)';
+                case 'R': return 'rgba(78, 205, 196, 0.2)';
+                default: return 'rgba(78, 205, 196, 0.2)';
+            }
+        }
+
+        // ?萄遣?∠?蝬脫
+        function createCardGrid() {
+            console.log('createCardGrid ???瑁?');
+            const cardGrid = document.getElementById('card-grid');
+            if (!cardGrid) {
+                console.error('?曆???card-grid ??嚗?);
+                return;
+            }
+            cardGrid.innerHTML = '';
+
+            if (typeof baseCards === 'undefined') {
+                console.log('baseCards ?芸?蝢抬?憿舐內頛銝?..');
+                cardGrid.innerHTML = '<p>頛銝?..</p>';
+                return;
+            }
+
+            console.log('???萄遣?∠?嚗蜇??', baseCards.length);
+            baseCards.forEach((card, index) => {
+                console.log(`?萄遣?∠? ${index}:`, card.zh || '?∪?蝔?);
+                const cardDiv = createCardElement(card, index);
+                cardGrid.appendChild(cardDiv);
+            });
+            console.log('?∠?蝬脫?萄遣摰?');
+        }
+
+        // ?萄遣?∠???
+        function createCardElement(card, index) {
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'card';
+            cardDiv.dataset.cardIndex = index;
+            
+            // 瑼Ｘ?∠?蝑?
+            const cardLevel = card.level || 1;
+            const levelBonus = (cardLevel - 1) * 0.2; // 瘥?憓?20%蝝釭
+            
+            // 閮???敺?蝝釭
+            const baseAttack = card.attack || 50;
+            const baseDefense = card.defense || 30;
+            const baseHp = card.hp || 100;
+            
+            const upgradedAttack = Math.round(baseAttack * (1 + levelBonus));
+            const upgradedDefense = Math.round(baseDefense * (1 + levelBonus));
+            const upgradedHp = Math.round(baseHp * (1 + levelBonus));
+            
+            const isSelected = gameState.selectedCards.has(index);
+            if (isSelected) {
+                cardDiv.classList.add('selected');
+            }
+
+            // 蝘駁?撅祆改??寧??瘛餃?
+            if (!isSelected) {
+                cardDiv.setAttribute('draggable', 'false');
+            }
+
+            const imageSrc = card.image || 'img/card_back.jpeg';
+            let mediaContent = '';
+            
+            if (card.image && card.image.endsWith('.mp4')) {
+                mediaContent = `<video class="card-media" is-video src="${card.image}" muted preload="metadata" playsinline loop></video>`;
+            } else {
+                mediaContent = `<img class="card-media" src="${imageSrc}" alt="${card.zh}" onerror="this.src='img/card_back.jpeg'">`;
+            }
+
+            // 蝔?漲璅惜
+            const rarityLabel = getRarityLabel(card.rarity);
+            const rarityColor = getRarityColor(card.rarity);
+            const rarityTag = `<div style="position:absolute;top:3px;right:3px;background:${rarityColor};color:#fff;font-size:0.7rem;font-weight:bold;padding:2px 7px;border-radius:6px;box-shadow:0 0 6px ${rarityColor}99;z-index:2;">${rarityLabel}</div>`;
+
+                                // 蝑?璅惜
+                    const levelTag = cardLevel > 1 ? `<div style="position:absolute;left:3px;top:3px;background:rgba(255,215,0,0.8);color:#000;font-size:0.6rem;font-weight:bold;padding:1px 4px;border-radius:4px;z-index:3;">Lv.${cardLevel}</div>` : '';
+                    
+                    // 蝬??潮脣漲璇?                    const currentExp = card.exp || 0;
+                    const requiredExp = getExpForNextLevel(cardLevel);
+                    const expProgress = Math.min(100, Math.round((currentExp / requiredExp) * 100));
+                    const remainingExp = requiredExp - currentExp;
+                    const expBar = `<div style="width: 100%; height: 4px; background: #333; border-radius: 2px; margin-top: 2px; position: relative;">
+                        <div style="width: ${expProgress}%; height: 100%; background: linear-gradient(90deg, #4ecdc4, #45b7d1); border-radius: 2px; box-shadow: 0 0 4px rgba(78, 205, 196, 0.6);"></div>
+                    </div>
+                    <div style="font-size: 0.4rem; color: #ffd700; margin-top: 1px; text-align: center;">
+                        ${currentExp}/${requiredExp} (?榆${remainingExp})
+                    </div>`;
+                    
+
+                    
+                    cardDiv.innerHTML = `
+                        ${rarityTag}
+                        ${levelTag}
+                        ${mediaContent}
+                        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.8); padding: 3px; font-size: 0.65rem; text-align: center;">
+                            <div style="font-weight: bold; margin-bottom: 2px;">${card.zh}</div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.5rem; opacity: 0.9;">
+                                <span style="color: #ff6b6b;">??${upgradedAttack}</span>
+                                <span style="color: #4ecdc4;">??${upgradedDefense}</span>
+                                <span style="color: #45b7d1;">銵:${upgradedHp}</span>
+                            </div>
+                            <div style="font-size: 0.45rem; color: #ffd700; margin-top: 2px;">${card.skill ? card.skill.name : '?⊥???}</div>
+                            ${expBar}
+                        </div>
+                    `;
+
+            // ??敶梁??剜
+            const video = cardDiv.querySelector('video');
+            if (video) {
+                cardDiv.addEventListener('mouseenter', () => {
+                    if (!isSelected) video.play();
+                });
+                cardDiv.addEventListener('mouseleave', () => {
+                    video.pause();
+                    video.currentTime = 0;
+                });
+                video.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (!isSelected) {
+                        if (video.paused) video.play();
+                        else video.pause();
+                    }
+                });
+            }
+
+            // ?格?憿舐內?∠?閰單?嚗??溶???
+            let clickTimer = null;
+            cardDiv.addEventListener('click', (e) => {
+                if (clickTimer) {
+                    clearTimeout(clickTimer);
+                    clickTimer = null;
+                    // ??瘛餃??圈?隡?                    if (!isSelected) {
+                        // 瑼Ｘ???臬撌脫遛
+                        if (gameState.playerTeam.length >= 4) {
+                            addLogEntry('蝟餌絞', '??撌脫遛嚗瘜溶?憭??');
+                            return;
+                        }
+                        
+                        // 瘛餃??圈?隡?                        const card = baseCards[index];
+                        const slotIndex = gameState.playerTeam.length;
+                        
+                        gameState.playerTeam.push({
+                            ...card,
+                            originalIndex: index
+                        });
+
+                        // 璅??箏歇?詨??嚗??芯蝙?剁?
+                        gameState.selectedCards.add(index);
+
+                        // ?湔UI
+                        updateTeamDisplay();
+                        updateCardGrid();
+                        updateTeamStats();
+                        
+                        addLogEntry('蝟餌絞', `??瘛餃??∠??圈?隡?${card.zh}`);
+                    }
+                } else {
+                    clickTimer = setTimeout(() => {
+                        // ?格?憿舐內?∠?閰單?
+                        showCardDetailModal(card);
+                        clickTimer = null;
+                    }, 250);
+                }
+            });
+
+            return cardDiv;
+        }
+
+        // ?豢??∠?
+        function selectCard(cardIndex) {
+            if (gameState.playerTeam.length >= 4) {
+                addLogEntry('蝟餌絞', '??撌脫遛嚗瘜溶?憭??');
+                return;
+            }
+
+            const card = baseCards[cardIndex];
+            const slotIndex = gameState.playerTeam.length;
+            
+            // 瘛餃??圈?隡?            gameState.playerTeam.push({
+                ...card,
+                originalIndex: cardIndex
+            });
+
+            // 璅??箏歇?詨??嚗??芯蝙?剁?
+            gameState.selectedCards.add(cardIndex);
+
+            // ?湔UI
+            updateTeamDisplay();
+            updateCardGrid();
+            updateTeamStats();
+            
+            addLogEntry('蝟餌絞', `撌脤???${card.zh}`);
+        }
+
+        // ?湔??憿舐內
+        function updateTeamDisplay() {
+            const teamSlots = document.querySelectorAll('.team-slot');
+            
+            teamSlots.forEach((slot, index) => {
+                slot.innerHTML = '';
+                slot.setAttribute('data-slot', index);
+                slot.classList.remove('drag-over');
+                
+                if (index < gameState.playerTeam.length) {
+                    const card = gameState.playerTeam[index];
+                    const imageSrc = card.image || 'img/card_back.jpeg';
+                    
+                    let mediaContent = '';
+                    if (card.image && card.image.endsWith('.mp4')) {
+                        mediaContent = `<video class="card-media" is-video src="${card.image}" muted preload="metadata" playsinline loop></video>`;
+                    } else {
+                        mediaContent = `<img class="card-media" src="${imageSrc}" alt="${card.zh}" onerror="this.src='img/card_back.jpeg'">`;
+                    }
+                    // 蝔?漲璅惜
+                    const rarityLabel = getRarityLabel(card.rarity);
+                    const rarityColor = getRarityColor(card.rarity);
+                    const rarityTag = `<div style="position:absolute;top:3px;right:3px;background:${rarityColor};color:#fff;font-size:0.7rem;font-weight:bold;padding:2px 7px;border-radius:6px;box-shadow:0 0 6px ${rarityColor}99;z-index:2;">${rarityLabel}</div>`;
+                    
+                    // ?斗?臬??嚗◤??嚗?                    const isLocked = false;
+                    let lockTag = '';
+                    if (isLocked) {
+                        lockTag = `<div style="position:absolute;left:3px;top:3px;background:rgba(0,0,0,0.7);color:#ffd700;font-size:0.8rem;font-weight:bold;padding:2px 6px;border-radius:6px;z-index:3;display:flex;align-items:center;"><span style='font-size:1.1em;margin-right:2px;'>??</span>??</div>`;
+                    }
+                    // 瑼Ｘ蝟餃???
+                    const seriesEffects = gameState.seriesEffects || {};
+                    const cardSeries = card.series || '?∠頂??;
+                    const hasSeriesBonus = seriesEffects[cardSeries];
+                    const seriesTag = hasSeriesBonus ? `<div style="position:absolute;left:3px;top:3px;background:rgba(255,215,0,0.8);color:#000;font-size:0.6rem;font-weight:bold;padding:1px 4px;border-radius:4px;z-index:3;">蝟餃?</div>` : '';
+                    
+                    // 瑼Ｘ?∠?蝑?
+                    const cardLevel = card.level || 1;
+                    const levelBonus = (cardLevel - 1) * 0.2;
+                    const baseAttack = card.attack || 50;
+                    const baseDefense = card.defense || 30;
+                    const baseHp = card.hp || 100;
+                    const upgradedAttack = Math.round(baseAttack * (1 + levelBonus));
+                    const upgradedDefense = Math.round(baseDefense * (1 + levelBonus));
+                    const upgradedHp = Math.round(baseHp * (1 + levelBonus));
+                    
+                    // 蝑?璅惜
+                    const levelTag = cardLevel > 1 ? `<div style="position:absolute;left:3px;top:3px;background:rgba(255,215,0,0.8);color:#000;font-size:0.6rem;font-weight:bold;padding:1px 4px;border-radius:4px;z-index:3;">Lv.${cardLevel}</div>` : '';
+                    
+                    // 蝬??潮脣漲璇?                    const currentExp = card.exp || 0;
+                    const requiredExp = getExpForNextLevel(cardLevel);
+                    const expProgress = Math.min(100, Math.round((currentExp / requiredExp) * 100));
+                    const remainingExp = requiredExp - currentExp;
+                    const expBar = `<div style="width: 100%; height: 4px; background: #333; border-radius: 2px; margin-top: 2px; position: relative;">
+                        <div style="width: ${expProgress}%; height: 100%; background: linear-gradient(90deg, #4ecdc4, #45b7d1); border-radius: 2px; box-shadow: 0 0 4px rgba(78, 205, 196, 0.6);"></div>
+                    </div>
+                    <div style="font-size: 0.4rem; color: #ffd700; margin-top: 1px; text-align: center;">
+                        ${currentExp}/${requiredExp} (?榆${remainingExp})
+                    </div>`;
+                    
+                    slot.innerHTML = `
+                        ${rarityTag}
+                        ${lockTag}
+                        ${seriesTag}
+                        ${levelTag}
+                        ${mediaContent}
+                        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.8); padding: 3px; font-size: 0.65rem; text-align: center;">
+                            <div style="font-weight: bold; margin-bottom: 2px;">${card.zh}</div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.5rem; opacity: 0.9;">
+                                <span style="color: #ff6b6b;">??${upgradedAttack}</span>
+                                <span style="color: #4ecdc4;">??${upgradedDefense}</span>
+                                <span style="color: #45b7d1;">銵:${upgradedHp}</span>
+                            </div>
+                            <div style="font-size: 0.45rem; color: #ffd700; margin-top: 2px;">${card.skill ? card.skill.name : '?⊥???}</div>
+                            ${expBar}
+                        </div>
+                    `;
+                    slot.classList.add('filled');
+                    if (isLocked) {
+                        slot.style.opacity = '0.5';
+                        slot.style.pointerEvents = 'none';
+                        slot.style.filter = 'grayscale(0.7) blur(1px)';
+                    } else {
+                        slot.style.opacity = '1';
+                        slot.style.pointerEvents = '';
+                        slot.style.filter = '';
+                        // 瘛餃???蝘駁?∠??
+                        let slotClickTimer = null;
+                        slot.addEventListener('click', () => {
+                            if (slotClickTimer) {
+                                clearTimeout(slotClickTimer);
+                                slotClickTimer = null;
+                                // ??蝘駁?∠?
+                                removeCardFromSlot(index);
+                            } else {
+                                slotClickTimer = setTimeout(() => {
+                                    // ?格?銝?隞颱???
+                                    slotClickTimer = null;
+                                }, 250);
+                            }
+                        });
+                    }
+                    // ??敶梁??剜
+                    const video = slot.querySelector('video');
+                    if (video) {
+                        slot.addEventListener('mouseenter', () => video.play());
+                        slot.addEventListener('mouseleave', () => {
+                            video.pause();
+                            video.currentTime = 0;
+                        });
+                    }
+                } else {
+                    slot.innerHTML = '<span>??∠?</span>';
+                    slot.classList.remove('filled');
+                }
+            });
+        }
+
+        // ??圈?隡?雿??摩
+        function dropCardToSlot(cardIndex, slotIndex) {
+            // ?炎?亥府?∠??臬撌脩??券?隡葉
+            const alreadyInTeam = gameState.playerTeam.some(c => c.originalIndex === cardIndex);
+            if (alreadyInTeam) return;
+            // 瑼Ｘ閰脣??血歇蝬◤雿輻嚗擛亙?嚗?
+            
+            // ???∠?鞈?
+            const card = baseCards[cardIndex];
+            const cardData = {
+                ...card,
+                hp: card.hp || 100,
+                attack: card.attack || 0,
+                defense: card.defense || 0,
+                originalIndex: cardIndex
+            };
+            // 憒?閰脫?雿歇蝬??∠?嚗???            if (slotIndex < gameState.playerTeam.length) {
+                gameState.playerTeam[slotIndex] = cardData;
+            } else {
+                // 憒?閰脫?雿蝛箇?嚗?交?脣
+                gameState.playerTeam.push(cardData);
+            }
+            // 璅??箏歇?詨??嚗??芯蝙?剁?
+            gameState.selectedCards.add(cardIndex);
+            updateTeamDisplay();
+            updateCardGrid();
+            updateTeamStats();
+            addLogEntry('蝟餌絞', `??∠?嚗?{card.zh}`);
+        }
+
+        // 蝘駁?∠?敺?隡?雿?        function removeCardFromSlot(slotIndex) {
+            if (slotIndex >= gameState.playerTeam.length) return;
+
+            const removedCard = gameState.playerTeam.splice(slotIndex, 1)[0];
+            gameState.selectedCards.delete(removedCard.originalIndex);
+            updateTeamDisplay();
+            updateCardGrid();
+            updateTeamStats();
+            addLogEntry('蝟餌絞', `蝘駁?∠?嚗?{removedCard.zh}`);
+        }
+
+        // ?湔?∠?蝬脫
+        function updateCardGrid() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((cardDiv, index) => {
+                const isSelected = gameState.selectedCards.has(index);
+                const isUsed = false;
+                cardDiv.classList.remove('used', 'selected', 'ssr', 'a', 'r');
+                if (isUsed) {
+                    cardDiv.classList.add('used');
+                } else if (isSelected) {
+                    cardDiv.classList.add('selected');
+                }
+                // ?寞?蝔?漲閮剖????獢???                if (baseCards[index] && baseCards[index].rarity) {
+                    cardDiv.classList.add(baseCards[index].rarity.toLowerCase());
+                }
+            });
+        }
+
+        // 瑼Ｘ??蝟餃??∠???
+        function checkSeriesBonus() {
+            const seriesCount = {};
+            const seriesEffects = {};
+            
+            // 蝯梯?瘥頂???∠??賊?
+            gameState.playerTeam.forEach(card => {
+                const series = card.series || '?∠頂??;
+                seriesCount[series] = (seriesCount[series] || 0) + 1;
+            });
+            
+            // 閮?蝟餃???
+            Object.keys(seriesCount).forEach(series => {
+                const count = seriesCount[series];
+                if (count >= 2) {
+                    // 2撘萄?蝟餃?嚗?0%?湔???                    if (count === 2) {
+                        seriesEffects[series] = { type: 'critical', bonus: 0.2, description: '20%?湔??? };
+                    }
+                    // 3撘萄?蝟餃?嚗?0%?湔???+ 10%?瑕拿??
+                    else if (count === 3) {
+                        seriesEffects[series] = { type: 'critical_damage', bonus: 0.3, damageBonus: 0.1, description: '30%?湔???+ 10%?瑕拿??' };
+                    }
+                    // 4撘萄?蝟餃?嚗?0%?湔???+ 20%?瑕拿?? + 15%?脩戌??
+                    else if (count >= 4) {
+                        seriesEffects[series] = { type: 'full_bonus', bonus: 0.5, damageBonus: 0.2, defenseBonus: 0.15, description: '50%?湔???+ 20%?瑕拿?? + 15%?脩戌??' };
+                    }
+                }
+            });
+            
+            return seriesEffects;
+        }
+
+        // ?湔??蝯梯?嚗??怎頂????蝑???嚗?        function updateTeamStats() {
+            let totalAttack = 0;
+            let totalDefense = 0;
+            let totalHp = 0;
+            
+            gameState.playerTeam.forEach(card => {
+                // 閮???敺?蝝釭
+                const cardLevel = card.level || 1;
+                const levelBonus = (cardLevel - 1) * 0.2;
+                const baseAttack = card.attack || 50;
+                const baseDefense = card.defense || 30;
+                const baseHp = card.hp || 100;
+                
+                const upgradedAttack = Math.round(baseAttack * (1 + levelBonus));
+                const upgradedDefense = Math.round(baseDefense * (1 + levelBonus));
+                const upgradedHp = Math.round(baseHp * (1 + levelBonus));
+                
+                totalAttack += upgradedAttack;
+                totalDefense += upgradedDefense;
+                totalHp += upgradedHp;
+            });
+
+            // 瑼Ｘ蝟餃???
+            const seriesEffects = checkSeriesBonus();
+            let seriesDescription = '??;
+            
+            if (Object.keys(seriesEffects).length > 0) {
+                const effects = Object.values(seriesEffects).map(effect => effect.description);
+                seriesDescription = effects.join('??);
+            }
+
+            document.getElementById('current-stage').textContent = `蝚?{currentStage}?;
+            document.getElementById('total-attack').textContent = totalAttack;
+            document.getElementById('total-defense').textContent = totalDefense;
+            document.getElementById('total-hp').textContent = totalHp;
+            document.getElementById('team-skill').textContent = seriesDescription;
+            
+            // ?脣?蝟餃???靘擛乩蝙??            gameState.seriesEffects = seriesEffects;
+        }
+
+        // ??脣漲餈質馱
+        let currentStage = parseInt(localStorage.getItem('battleStage') || '1');
+        let stageMultiplier = 1 + (currentStage - 1) * 0.15; // 瘥?憓?15%撘瑕漲嚗?雿摨佗?
+
+        // ???萎犖??嚗圾??死 + 頞?頞撥嚗?        function generateEnemyTeam() {
+            const enemyCount = Math.min(4, gameState.playerTeam.length); // ?萎犖?賊??摰園?隡??            gameState.enemyTeam = [];
+            
+            // 閮??拙振??蝮賣??            const playerTotalAttack = gameState.playerTeam.reduce((sum, card) => sum + (card.attack || 0), 0);
+            const playerTotalDefense = gameState.playerTeam.reduce((sum, card) => sum + (card.defense || 0), 0);
+            const playerTotalHp = gameState.playerTeam.reduce((sum, card) => sum + (card.hp || 0), 0);
+            const playerAvgLevel = (playerTotalAttack + playerTotalDefense + playerTotalHp) / (gameState.playerTeam.length * 3);
+            
+            // 敺aseCards銝剝?鈭箏??            const availableCards = baseCards.filter(card => card.zh && card.zh.trim() !== '');
+            
+            for (let i = 0; i < enemyCount; i++) {
+                const seed = Date.now() + i * 1000;
+                const rarity = getRandomRarity(seed);
+                
+                // ?冽??豢?銝撘萄???箸鈭箏蝷?                const randomCard = availableCards[Math.floor(Math.random() * availableCards.length)];
+                
+                // ?寞?蝔?漲隤踵?萎犖撘瑕漲嚗?雿??漲敶梢嚗?                let rarityMultiplier = 1;
+                switch(rarity) {
+                    case 'SSR': rarityMultiplier = 1.2; break; // ??SSR撘瑕漲
+                    case 'A': rarityMultiplier = 1.1; break;   // ??A蝝撥摨?                    case 'R': rarityMultiplier = 1.0; break;   // 靽?R蝝?霈?                }
+                
+                // ??撟唾﹛?鈭綽???撘瑕漲嚗?                const enemy = {
+                    zh: `${randomCard.zh}`, // 雿輻?∠???
+                    attack: Math.round(playerAvgLevel * 1.8 * rarityMultiplier * stageMultiplier * (0.9 + Math.random() * 0.2)),
+                    defense: Math.round(playerAvgLevel * 1.8 * rarityMultiplier * stageMultiplier * (0.9 + Math.random() * 0.2)),
+                    hp: Math.round(playerAvgLevel * 2.2 * rarityMultiplier * stageMultiplier * (0.9 + Math.random() * 0.2)),
+                    maxHp: Math.round(playerAvgLevel * 2.2 * rarityMultiplier * stageMultiplier * (0.9 + Math.random() * 0.2)),
+                    rarity: rarity,
+                    skill: generateEnemySkill(rarity, seed),
+                    level: i + 1, // ?蝑?
+                    stage: currentStage, // ?嗅??
+                    image: randomCard.image, // 雿輻?∠???
+                    series: randomCard.series // 雿輻?∠?蝟餃?
+                };
+                
+                gameState.enemyTeam.push(enemy);
+            }
+            
+            console.log(`??蝚?{currentStage}?鈭粹?隡?`, gameState.enemyTeam.length, '?鈭綽?撟喳?蝑?嚗?, playerAvgLevel, '???嚗?, stageMultiplier);
+        }
+
+        // ?湔?圈洛憿舐內
+        function updateBattleDisplay() {
+            const enemyArea = document.getElementById('enemy-area');
+            const playerArea = document.getElementById('player-area');
+            
+            if (!enemyArea || !playerArea) return;
+            
+            // 皜征???            enemyArea.innerHTML = '';
+            playerArea.innerHTML = '';
+            
+            // 憿舐內?萎犖?∠?
+            gameState.enemyTeam.forEach((enemy, index) => {
+                const enemyCard = createBattleCardElement(enemy, 'enemy', index);
+                enemyArea.appendChild(enemyCard);
+            });
+            
+            // 憿舐內?拙振?∠?
+            gameState.playerTeam.forEach((card, index) => {
+                const playerCard = createBattleCardElement(card, 'player', index);
+                playerArea.appendChild(playerCard);
+            });
+            
+            console.log('?湔?圈洛憿舐內嚗?, gameState.enemyTeam.length, '?鈭綽?', gameState.playerTeam.length, '?摰?);
+        }
+
+        // ?萄遣?圈洛?∠???
+        function createBattleCardElement(card, type, index) {
+            const cardDiv = document.createElement('div');
+            cardDiv.className = type === 'enemy' ? 'enemy-card' : 'player-card';
+            cardDiv.dataset.index = index;
+            cardDiv.dataset.cardId = card.originalIndex || card.id || `battle-${type}-${index}`;
+            // ?啣?蝔?漲 class
+            if (card.rarity) {
+                cardDiv.classList.add(card.rarity.toLowerCase());
+            }
+            
+            // 瑼Ｘ?餅????            const isAttacking = card.isAttacking || false;
+            const isBeingAttacked = card.isBeingAttacked || false;
+            
+            // ?寞??餅???溶?SS憿?            if (isAttacking) {
+                cardDiv.classList.add('attacking');
+            }
+            if (isBeingAttacked) {
+                cardDiv.classList.add('being-attacked');
+            }
+            
+            const imageSrc = card.image || 'img/card_back.jpeg';
+            let mediaContent = '';
+            
+            if (card.image && card.image.endsWith('.mp4')) {
+                mediaContent = `<video class="card-media" is-video src="${card.image}" muted preload="metadata" playsinline loop></video>`;
+            } else {
+                mediaContent = `<img class="card-media" src="${imageSrc}" alt="${card.zh}" onerror="this.src='img/card_back.jpeg'">`;
+            }
+            // 蝔?漲璅惜
+            const rarityLabel = getRarityLabel(card.rarity);
+            const rarityColor = getRarityColor(card.rarity);
+            const rarityTag = `<div style="position:absolute;top:3px;right:3px;background:${rarityColor};color:#fff;font-size:0.7rem;font-weight:bold;padding:2px 7px;border-radius:6px;box-shadow:0 0 6px ${rarityColor}99;z-index:2;">${rarityLabel}</div>`;
+
+            // 閮???敺?蝝釭
+            const cardLevel = card.level || 1;
+            const levelBonus = (cardLevel - 1) * 0.2;
+            const baseAttack = card.attack || 50;
+            const baseDefense = card.defense || 30;
+            const baseHp = card.hp || 100;
+            
+            const upgradedAttack = Math.round(baseAttack * (1 + levelBonus));
+            const upgradedDefense = Math.round(baseDefense * (1 + levelBonus));
+            const upgradedHp = Math.round(baseHp * (1 + levelBonus));
+            
+            // 銵璇?雿輻??敺?蝝釭嚗?            const hp = Math.round(card.hp || upgradedHp);
+            const maxHp = Math.round(card.maxHp || upgradedHp);
+            const hpPercent = Math.max(0, Math.min(100, Math.round((hp / maxHp) * 100)));
+            const hpBar = `<div style="width: 90%; height: 10px; background: #222; border-radius: 5px; margin: 2px auto 0 auto; position: relative;">
+                <div style="width: ${hpPercent}%; height: 100%; background: linear-gradient(90deg, #ff6b6b, #ffe066); border-radius: 5px;"></div>
+                <span style="position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); font-size: 0.65em; color: #fff; text-shadow: 0 0 2px #000;">${hp}/${maxHp}</span>
+            </div>`;
+
+            // 蝑?璅惜
+            const levelTag = cardLevel > 1 ? `<div style="position:absolute;left:3px;top:3px;background:rgba(255,215,0,0.8);color:#000;font-size:0.6rem;font-weight:bold;padding:1px 4px;border-radius:4px;z-index:3;">Lv.${cardLevel}</div>` : '';
+            
+            // 瑼Ｘ?臬??脩戌???            const isDefending = card.isDefending || false;
+            const defendStatus = isDefending ? '<div style="position:absolute;left:3px;top:3px;background:rgba(255,215,0,0.8);color:#000;font-size:0.7rem;font-weight:bold;padding:2px 6px;border-radius:6px;z-index:3;">?儭蝳?/div>' : '';
+            
+            // ?餅????蝐?            const attackStatus = isAttacking ? '<div style="position:absolute;left:3px;top:3px;background:rgba(255,107,107,0.9);color:#fff;font-size:0.7rem;font-weight:bold;padding:2px 6px;border-radius:6px;z-index:3;animation:pulse 0.5s infinite;">???餅?</div>' : '';
+            const beingAttackedStatus = isBeingAttacked ? '<div style="position:absolute;left:3px;top:3px;background:rgba(255,0,0,0.9);color:#fff;font-size:0.7rem;font-weight:bold;padding:2px 6px;border-radius:6px;z-index:3;animation:shake 0.3s infinite;">???</div>' : '';
+            
+            // 蝝釭憿舐內嚗???蝳血?嚗?            const attackDisplay = `<div style="font-size: 0.55rem; color: #ff6b6b; margin-top: 1px;">??${upgradedAttack}</div>`;
+            const defenseDisplay = `<div style="font-size: 0.55rem; color: #4ecdc4; margin-top: 1px;">?儭?{upgradedDefense}</div>`;
+            
+            cardDiv.innerHTML = `
+                ${rarityTag}
+                ${levelTag}
+                ${defendStatus}
+                ${attackStatus}
+                ${beingAttackedStatus}
+                ${mediaContent}
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.8); padding: 3px; font-size: 0.8rem; text-align: center;">
+                    <div>${card.zh}</div>
+                    ${hpBar}
+                    ${attackDisplay}
+                    ${defenseDisplay}
+                    <div style="font-size: 0.55rem; color: #ffd700; margin-top: 1px;">${card.skill ? card.skill.name : '?⊥???}</div>
+                </div>
+            `;
+
+            // ??敶梁??剜
+            const video = cardDiv.querySelector('video');
+            if (video) {
+                cardDiv.addEventListener('mouseenter', () => video.play());
+                cardDiv.addEventListener('mouseleave', () => {
+                    video.pause();
+                    video.currentTime = 0;
+                });
+                video.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (video.paused) video.play();
+                    else video.pause();
+                });
+            }
+
+            // ?箸鈭箏?溶???????            if (type === 'enemy') {
+                cardDiv.style.cursor = 'pointer';
+                cardDiv.addEventListener('click', () => {
+                    if (currentAttacker === 0 && !isAnimating) { // ?拙振??銝??典??思葉
+                        attackEnemy(index);
+                    }
+                });
+            }
+
+            return cardDiv;
+        }
+
+        // ???圈洛
+        async function startBattle() {
+            if (gameState.playerTeam.length === 0) {
+                addLogEntry('蝟餌絞', '隢??豢??∠?蝯???嚗?);
+                return;
+            }
+
+            if (gameState.isBattleActive) {
+                addLogEntry('蝟餌絞', '?圈洛甇??脰?銝哨?');
+                return;
+            }
+
+            // 瑼Ｘ???賊?
+            const currentStars = getCurrentStars();
+            console.log('?嗅????賊?:', currentStars);
+            if (currentStars < 10) {
+                addLogEntry('蝟餌絞', '??銝雲嚗?閬?0憿????賡?憪擛乓?);
+                return;
+            }
+            // ??10憿???            addStarsToBattle(-10);
+            console.log('撌脫??0憿????嗅???:', getCurrentStars());
+            addLogEntry('蝟餌絞', '?? 瘨?0憿???憪擛伐?');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            addLogEntry('蝟餌絞', '?? ?圈洛?喳???...');
+            await new Promise(resolve => setTimeout(resolve, 600));
+            addLogEntry('蝟餌絞', '? ?萎犖甇??潸?嚗?);
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            // ?圈洛????銝?閮?撌脖蝙?剁??芰宏??selected 璅?
+            gameState.playerTeam.forEach(card => {
+                if (card.originalIndex !== undefined) {
+                    gameState.selectedCards.delete(card.originalIndex);
+                }
+            });
+            
+            // 靽???????穿??冽蝬??潛?蝞?            gameState.originalTeam = [...gameState.playerTeam];
+            
+            // 閮???敺?蝝釭銝行??典?圈洛??
+            gameState.playerTeam = gameState.playerTeam.map(card => {
+                const cardLevel = card.level || 1;
+                const levelBonus = (cardLevel - 1) * 0.2;
+                const baseAttack = card.attack || 50;
+                const baseDefense = card.defense || 30;
+                const baseHp = card.hp || 100;
+                
+                const upgradedAttack = Math.round(baseAttack * (1 + levelBonus));
+                const upgradedDefense = Math.round(baseDefense * (1 + levelBonus));
+                const upgradedHp = Math.round(baseHp * (1 + levelBonus));
+                
+                return {
+                    ...card,
+                    attack: upgradedAttack,
+                    defense: upgradedDefense,
+                    hp: upgradedHp,
+                    maxHp: upgradedHp
+                };
+            });
+            
+            updateCardGrid();
+
+            gameState.isBattleActive = true;
+            gameState.currentTurn = 0;
+            gameState.hasAttacked = false; // ?????閮?            gameState.starsAdded = false; // ?蔭???璅?
+            
+            generateEnemyTeam();
+            updateBattleDisplay();
+            
+            // 憿舐內?靽⊥
+            addLogEntry('蝟餌絞', `?? 蝚?{currentStage}?擛仿?憪?`);
+            await new Promise(resolve => setTimeout(resolve, 400));
+            addLogEntry('蝟餌絞', `? ?萎犖撘瑕漲??嚗?{stageMultiplier.toFixed(1)}x嚗歇撟唾﹛嚗);
+            await new Promise(resolve => setTimeout(resolve, 400));
+            addLogEntry('蝟餌絞', `? ?萎犖?賊?嚗?{gameState.enemyTeam.length}嚗摰園?隡?${gameState.playerTeam.length}鈭槁);
+            await new Promise(resolve => setTimeout(resolve, 400));
+            
+            // 憿舐內?萎犖?∠???
+            const enemyNames = gameState.enemyTeam.map(enemy => enemy.zh).join('??);
+            addLogEntry('蝟餌絞', `? ?萎犖?∠?嚗?{enemyNames}`);
+            await new Promise(resolve => setTimeout(resolve, 400));
+            
+            // 瑼Ｘ蝟餃???
+            const seriesEffects = checkSeriesBonus();
+            if (Object.keys(seriesEffects).length > 0) {
+                addLogEntry('蝟餌絞', '?? 瑼Ｘ葫?啣?蝟餃??∠???嚗?);
+                Object.values(seriesEffects).forEach(effect => {
+                    addLogEntry('蝟餌絞', `??${effect.description}`);
+                });
+            }
+            
+            addLogEntry('蝟餌絞', '? 皞?憟質??交??唬???');
+            addLogEntry('蝟餌絞', '?? ?圈洛?敺?????擛亦??∠??賣??脣?蝬??潘?');
+            
+            // ?????圈洛
+            startManualBattle();
+        }
+
+        // ?????圈洛
+        function startManualBattle() {
+            // ?脣??斗嚗????鈭粹?隡?銝?閮梢?憪??擛?            if (!gameState.enemyTeam || gameState.enemyTeam.length === 0) {
+                addLogEntry('蝟餌絞', '?? 隢????圈洛嚗?);
+                return;
+            }
+            
+            // ?脣??斗嚗??擛仿?瘝?憪?銝?閮梢?憪??擛?            if (!gameState.isBattleActive) {
+                addLogEntry('蝟餌絞', '?? 隢????圈洛嚗?);
+                return;
+            }
+            
+            isManualBattle = true;
+            currentAttacker = 0; // ?拙振??
+            currentPlayerIndex = 0;
+            currentEnemyIndex = 0;
+            selectedEnemyIndex = -1;
+            // ?蔭?餅?璅?
+            gameState.hasAttacked = false;
+            // ?蔭???璅?
+            gameState.starsAdded = false;
+            document.getElementById('manual-controls').style.display = 'block';
+            addLogEntry('system', '? ???圈洛??嚗摰嗅???);
+            updateManualControls();
+        }
+
+        // ?湔???圈洛?批?
+        function updateManualControls() {
+            // 皜???摰嗅????賢??            gameState.playerTeam.forEach(card => {
+                if (card.skill && card.skill.currentCooldown > 0) {
+                    card.skill.currentCooldown--;
+                }
+            });
+
+            const turnInfo = document.getElementById('current-turn-info');
+            const attackBtn = document.getElementById('attack-btn');
+            const skillBtn = document.getElementById('skill-btn');
+            const defendBtn = document.getElementById('defend-btn');
+            const enemySelection = document.getElementById('enemy-selection');
+            const enemyTargets = document.getElementById('enemy-targets');
+            
+            if (!turnInfo || !attackBtn || !skillBtn || !defendBtn) return;
+            
+            // 瑼Ｘ?圈洛蝯?
+            if (gameState.enemyTeam.length === 0 || gameState.playerTeam.length === 0) {
+                checkBattleResult().catch(error => {
+                    console.error('瑼Ｘ?圈洛蝯???隤?', error);
+                });
+                return;
+            }
+            
+            if (currentAttacker === 0) {
+                // ?拙振??
+                const player = gameState.playerTeam[currentPlayerIndex];
+                turnInfo.textContent = `?拙振??嚗?{player.zh} (銵?? ${Math.round(player.hp)})`;
+                
+                // 瑼Ｘ?臬?鈭箏?餅?
+                if (gameState.enemyTeam.length > 0) {
+                    attackBtn.disabled = true; // ?梯??餅???嚗?箇?仿??鈭?                    
+                    // 瑼Ｘ??賣?血??                    const isOnCooldown = player.skill.currentCooldown > 0;
+                    const attackRequirement = player.skill.attackRequirement || 0;
+                    const cardLevel = player.level || 1;
+                    const levelBonus = (cardLevel - 1) * 0.2;
+                    const baseAttack = player.attack || 50;
+                    const upgradedAttack = Math.round(baseAttack * (1 + levelBonus));
+                    const hasEnoughAttack = upgradedAttack >= attackRequirement;
+                    
+                    skillBtn.disabled = isOnCooldown || !hasEnoughAttack;
+                    defendBtn.disabled = false; // ?脩戌??憪??舐
+                    
+                    // ?湔??賣???摮?                    if (isOnCooldown) {
+                        skillBtn.textContent = `??賢?颱葉 (${player.skill.currentCooldown}??)`;
+                        skillBtn.title = `??賬?{player.skill.name}??颱葉嚗??閬?{player.skill.currentCooldown}??`;
+                    } else if (!hasEnoughAttack) {
+                        skillBtn.textContent = `??賡?閬??${attackRequirement} (?嗅?${upgradedAttack})`;
+                        skillBtn.title = `??賬?{player.skill.name}??閬??${attackRequirement}嚗???${upgradedAttack}嚗??閬?{attackRequirement - upgradedAttack}暺??`;
+                        
+                        // ??賜瘜蝙?冽?嚗摰嗡??臭蝙?冽???銝?歲????                        addLogEntry('system', `? ${player.zh} ?餅???頞喉??⊥?雿輻??踝?雿隞乩蝙?冽???`);
+                    } else {
+                        skillBtn.textContent = `???(${player.skill.name})`;
+                        skillBtn.title = `雿輻??賬?{player.skill.name}?;
+                    }
+                    
+                    console.log('?拙振??嚗?仿??鈭箏?脰??餅?');
+                    // 憿舐內?萎犖?豢??
+                    showEnemyTargets();
+                } else {
+                    attackBtn.disabled = true;
+                    skillBtn.disabled = true;
+                    defendBtn.disabled = true;
+                    if (enemySelection) enemySelection.style.display = 'none';
+                }
+            } else {
+                // ?萎犖??
+                const enemy = gameState.enemyTeam[currentEnemyIndex];
+                turnInfo.textContent = `?萎犖??嚗?{enemy.zh} (銵?? ${Math.round(enemy.hp)})`;
+                attackBtn.disabled = true;
+                skillBtn.disabled = true;
+                defendBtn.disabled = true;
+                if (enemySelection) enemySelection.style.display = 'none';
+                // ?萎犖?芸??餅?
+                setTimeout(() => {
+                    performEnemyAttack();
+                }, 1000);
+            }
+        }
+
+        // 憿舐內?萎犖?格??豢?嚗?仿??鈭箏???
+        function showEnemyTargets() {
+            const enemySelection = document.getElementById('enemy-selection');
+            const enemyTargets = document.getElementById('enemy-targets');
+            
+            if (!enemySelection || !enemyTargets) return;
+            
+            console.log('showEnemyTargets 鋡怨矽?剁??萎犖?賊?:', gameState.enemyTeam.length);
+            
+            // ?梯??豢??嚗?箇?仿??鈭箏??            enemySelection.style.display = 'none';
+            
+            addLogEntry('system', '? ?湔暺??萎犖?∠??脰??餅?嚗?);
+        }
+
+        // ?湔?餅??萎犖
+        async function attackEnemy(enemyIndex) {
+            if (isAnimating) return; // ?脫迫?????暺?
+            
+            if (currentAttacker !== 0) return; // 銝?拙振??
+            
+            // 瑼Ｘ?臬撌脩??餅???            if (gameState.hasAttacked) {
+                addLogEntry('system', '?? ?砍??歇蝬??鈭?隢?敺?銝??嚗?);
+                return;
+            }
+            
+            // 蝡閮剔蔭?餅?璅?嚗甇ａ?銴???            gameState.hasAttacked = true;
+            
+            const player = gameState.playerTeam[currentPlayerIndex];
+            const enemy = gameState.enemyTeam[enemyIndex];
+            
+            if (!player || !enemy) return;
+            
+            // 瑼Ｘ?萎犖?臬??脩戌???            const isEnemyDefending = enemy.isDefending || false;
+            
+            // 瑼Ｘ蝟餃???
+            const seriesEffects = gameState.seriesEffects || {};
+            let criticalRate = 0.15; // ?箇?15%?湔???            let damageBonus = 0; // ?瑕拿??
+            let defenseBonus = 0; // ?脩戌??
+            
+            // 閮?蝟餃?????
+            Object.values(seriesEffects).forEach(effect => {
+                criticalRate += effect.bonus || 0;
+                damageBonus += effect.damageBonus || 0;
+                defenseBonus += effect.defenseBonus || 0;
+            });
+            
+            // 閮???敺??餅???            const cardLevel = player.level || 1;
+            const levelBonus = (cardLevel - 1) * 0.2;
+            const baseAttack = player.attack || 50;
+            const upgradedAttack = Math.round(baseAttack * (1 + levelBonus));
+            
+            // 閮??桅?摰喉??箸?餅???
+            let damage = Math.floor(upgradedAttack * 1.0);
+            
+            // ??瑕拿??
+            damage = Math.floor(damage * (1 + damageBonus));
+            
+            // 瑼Ｘ?臬?湔?嚗?-5?摰喉?
+            const isCritical = Math.random() < criticalRate;
+            if (isCritical) {
+                // ?冽??湔???嚗?-5??                const criticalMultiplier = 2 + Math.random() * 3; // 2.0 ??5.0
+                damage = Math.floor(damage * criticalMultiplier);
+                addLogEntry('player', `? ?湔???嚗?{criticalMultiplier.toFixed(1)}x`);
+            }
+            
+            // 憒??萎犖??脩戌????瑕拿皜?
+            if (isEnemyDefending) {
+                damage = Math.floor(damage * 0.5);
+                addLogEntry('enemy', `?儭?${enemy.zh} ??脩戌????瑕拿皜?嚗);
+                await new Promise(resolve => setTimeout(resolve, 600));
+            }
+            
+            // ?餅??膩
+            addLogEntry('player', `?? ${player.zh} ?餅? ${enemy.zh}嚗);
+            await new Promise(resolve => setTimeout(resolve, 400));
+            
+            // 憿舐內蝟餃?????
+            if (damageBonus > 0) {
+                addLogEntry('player', `???頂?????瑕拿+${Math.round(damageBonus * 100)}%`);
+                await new Promise(resolve => setTimeout(resolve, 400));
+            }
+            
+            if (isCritical) {
+                addLogEntry('player', `? ?湔?嚗);
+                await new Promise(resolve => setTimeout(resolve, 400));
+            }
+            
+            // ?瑁??餅??
+            await animateAttack(player, enemy, damage, false, isCritical);
+            
+            enemy.hp -= damage;
+            
+            addLogEntry('player', `? ?? ${damage} 暺摰喉?`);
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // 瑼Ｘ?萎犖?臬鋡急???            if (enemy.hp <= 0) {
+                addLogEntry('enemy', `?? ${enemy.zh} 鋡急???嚗);
+                await animateDefeat(enemy, false);
+                gameState.enemyTeam.splice(enemyIndex, 1);
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+            
+            updateBattleDisplay();
+            
+            addLogEntry('system', '???砍??????蝑?銝???嚗?);
+            
+            // ???唳鈭箏???            await switchToEnemyTurn();
+        }
+
+        // ?豢??萎犖?格?嚗??????賭誑?嚗?        function selectEnemyTarget(index) {
+            console.log('?豢??萎犖?格?:', index, '?萎犖?迂:', gameState.enemyTeam[index]?.zh);
+            selectedEnemyIndex = index;
+            showEnemyTargets(); // ?憿舐內隞交?圈?鈭?        }
+
+        // ???唳鈭箏???        async function switchToEnemyTurn() {
+            currentAttacker = 1;
+            selectedEnemyIndex = -1;
+            document.getElementById('enemy-selection').style.display = 'none';
+            
+            addLogEntry('system', '?? ???唳鈭箏???);
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            updateManualControls();
+        }
+
+        // ???啁摰嗅???        async function switchToPlayerTurn() {
+            currentAttacker = 0;
+            // 瘥??閬??圈??            selectedEnemyIndex = -1;
+            // ?蔭?餅?璅?
+            gameState.hasAttacked = false;
+            // 蝘餃??唬?銝?摰嗅??            currentPlayerIndex = (currentPlayerIndex + 1) % gameState.playerTeam.length;
+            // 蝘餃??唬?銝?鈭箏??            currentEnemyIndex = (currentEnemyIndex + 1) % gameState.enemyTeam.length;
+            addLogEntry('system', '?? ???啁摰嗅???);
+            await new Promise(resolve => setTimeout(resolve, 500));
+            updateManualControls();
+        }
+
+        // ?瑁??萎犖?餅?嚗??交??賢??脩戌璈嚗?        async function performEnemyAttack() {
+            if (gameState.enemyTeam.length > 0 && gameState.playerTeam.length > 0) {
+                const enemy = gameState.enemyTeam[currentEnemyIndex];
+                const targetIndex = Math.floor(Math.random() * gameState.playerTeam.length);
+                const player = gameState.playerTeam[targetIndex];
+                
+                // 瑼Ｘ?拙振?臬??脩戌???                const isPlayerDefending = player.isDefending || false;
+                
+                // 瘙箏??萎犖銵?嚗???賬蝳佗?
+                const actionType = Math.random();
+                let damage = 0;
+                let actionDesc = '';
+                
+                if (actionType < 0.6) {
+                    // 60% 璈??桅???箸?餅???
+                    damage = Math.floor((enemy.attack || 40) * 1.0); // ?萎犖?餅???                    actionDesc = `?? ${enemy.zh} ??${player.zh} ?澆??餅?嚗;
+                } else if (actionType < 0.8 && enemy.skill && enemy.skill.currentCooldown === 0) {
+                    // 20% 璈?雿輻??踝??箸?餅???
+                    damage = Math.floor((enemy.attack || 40) * 1.5); // ?萎犖??賣??.5?摰?                    actionDesc = `??${enemy.zh} ?澆???賬?{enemy.skill.name}??`;
+                    enemy.skill.currentCooldown = enemy.skill.cooldown;
+                } else {
+                    // 20% 璈??脩戌嚗?雿蝳行???
+                    enemy.isDefending = true;
+                    actionDesc = `?儭?${enemy.zh} ?脣?脩戌憪踵?嚗;
+                    addLogEntry('enemy', actionDesc);
+                    await new Promise(resolve => setTimeout(resolve, 600));
+                    
+                    // ?脩戌???蝥???
+                    setTimeout(() => {
+                        enemy.isDefending = false;
+                    }, 2000);
+                    
+                    // ???啁摰嗅???                    await switchToPlayerTurn();
+                    return;
+                }
+                
+                // ?萎犖?湔?瑼Ｘ嚗?0%璈?嚗?-4?摰喉?
+                const enemyCriticalRate = 0.10; // ?萎犖10%?湔???                const isEnemyCritical = Math.random() < enemyCriticalRate;
+                if (isEnemyCritical) {
+                    const enemyCriticalMultiplier = 2 + Math.random() * 2; // 2.0 ??4.0
+                    damage = Math.floor(damage * enemyCriticalMultiplier);
+                    actionDesc += ` ? ?湔?嚗;
+                    addLogEntry('enemy', `? ?萎犖?湔???嚗?{enemyCriticalMultiplier.toFixed(1)}x`);
+                }
+                
+                // 憒??拙振??脩戌????瑕拿皜?
+                if (isPlayerDefending) {
+                    damage = Math.floor(damage * 0.5);
+                    addLogEntry('player', `?儭?${player.zh} ??脩戌????瑕拿皜?嚗);
+                    await new Promise(resolve => setTimeout(resolve, 600));
+                }
+                
+                // ?萎犖銵??膩
+                addLogEntry('enemy', `? ${enemy.zh} ?澆憡????殷?`);
+                await new Promise(resolve => setTimeout(resolve, 600));
+                
+                addLogEntry('enemy', actionDesc);
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // ?瑁??餅??
+                await animateAttack(enemy, player, damage, false, isEnemyCritical);
+                
+                player.hp -= damage;
+                addLogEntry('enemy', `? ${enemy.zh} 撠?${player.zh} ?? ${damage} 暺摰喉?`);
+                // ?剜鋡急???                playWrongSound();
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // 瑼Ｘ?拙振?臬鋡急???                if (player.hp <= 0) {
+                    addLogEntry('player', `?? ${player.zh} 鋡急???嚗);
+                    await animateDefeat(player, true);
+                    handleDefeatedCard(player, true);
+                    gameState.playerTeam.splice(targetIndex, 1);
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+                
+                updateBattleDisplay();
+                
+                // ???啁摰嗅???                await switchToPlayerTurn();
+            }
+        }
+
+        // ?拙振?餅?嚗??仿蝳行??塚?
+        async function performPlayerAttack() {
+            if (isAnimating) return; // ?脫迫?????暺?
+            if (currentPlayerIndex < gameState.playerTeam.length && gameState.enemyTeam.length > 0) {
+                // ?芸銝?鈭箄?
+                if (selectedEnemyIndex < 0 && gameState.enemyTeam.length === 1) {
+                    selectedEnemyIndex = 0;
+                }
+                if (selectedEnemyIndex < 0) {
+                    addLogEntry('system', '?? 隢??豢??餅??格?嚗?);
+                    return;
+                }
+                console.log('?拙振?餅?瑼Ｘ - ?豢??鈭箇揣撘?', selectedEnemyIndex, '?萎犖?賊?:', gameState.enemyTeam.length);
+                
+                // 憒?瘝??豢??格?雿?拐??鈭綽??芸??豢?
+                if (selectedEnemyIndex < 0 && gameState.enemyTeam.length === 1) {
+                    selectedEnemyIndex = 0;
+                    console.log('?芸??豢??敺??鈭?);
+                }
+                
+                if (selectedEnemyIndex >= 0) {
+                    console.log('???餅??萎犖:', gameState.enemyTeam[selectedEnemyIndex]?.zh);
+                    const player = gameState.playerTeam[currentPlayerIndex];
+                    const enemy = gameState.enemyTeam[selectedEnemyIndex];
+                    
+                    // 瑼Ｘ?萎犖?臬??脩戌???                    const isEnemyDefending = enemy.isDefending || false;
+                    
+                    // 瑼Ｘ蝟餃???
+                    const seriesEffects = gameState.seriesEffects || {};
+                    let criticalRate = 0.15; // ?箇?15%?湔???                    let damageBonus = 0; // ?瑕拿??
+                    let defenseBonus = 0; // ?脩戌??
+                    
+                    // 閮?蝟餃?????
+                    Object.values(seriesEffects).forEach(effect => {
+                        criticalRate += effect.bonus || 0;
+                        damageBonus += effect.damageBonus || 0;
+                        defenseBonus += effect.defenseBonus || 0;
+                    });
+                    
+                    // 閮???敺??餅???                    const cardLevel = player.level || 1;
+                    const levelBonus = (cardLevel - 1) * 0.2;
+                    const baseAttack = player.attack || 50;
+                    const upgradedAttack = Math.round(baseAttack * (1 + levelBonus));
+                    
+                    // 閮??箇??瑕拿嚗?潭??嚗?                    let damage = upgradedAttack;
+                    
+                    // ??瑕拿??
+                    damage = Math.floor(damage * (1 + damageBonus));
+                    
+                    // 瑼Ｘ?臬?湔?嚗?-5?摰喉?
+                    const isCritical = Math.random() < criticalRate;
+                    if (isCritical) {
+                        // ?冽??湔???嚗?-5??                        const criticalMultiplier = 2 + Math.random() * 3; // 2.0 ??5.0
+                        damage = Math.floor(damage * criticalMultiplier);
+                        addLogEntry('player', `? ?湔???嚗?{criticalMultiplier.toFixed(1)}x`);
+                    }
+                    
+                    // 憒??萎犖??脩戌????瑕拿皜?
+                    if (isEnemyDefending) {
+                        damage = Math.floor(damage * 0.5);
+                        addLogEntry('enemy', `?儭?${enemy.zh} ??脩戌????瑕拿皜?嚗);
+                        await new Promise(resolve => setTimeout(resolve, 600));
+                    }
+                    
+                    // ?圈洛?膩
+                    let battleDesc = '';
+                    if (isCritical) {
+                        battleDesc = `? ${player.zh} ?澆??湔??餅?嚗;
+                        addLogEntry('player', battleDesc);
+                        await new Promise(resolve => setTimeout(resolve, 800));
+                    }
+                    
+                    // 憿舐內蝟餃?????
+                    if (damageBonus > 0) {
+                        addLogEntry('player', `???頂?????瑕拿+${Math.round(damageBonus * 100)}%`);
+                        await new Promise(resolve => setTimeout(resolve, 400));
+                    }
+                    
+                    battleDesc = `?? ${player.zh} ?株?甇血?餅? ${enemy.zh}`;
+                    addLogEntry('player', battleDesc);
+                    await new Promise(resolve => setTimeout(resolve, 600));
+                    
+                    // ?瑁??餅??
+                    await animateAttack(player, enemy, damage, false);
+                    // ?剜?餅??單?
+                    playAttackSound();
+                    
+                    enemy.hp -= damage;
+                    
+                    // ?瑕拿?膩
+                    const damageDesc = isCritical ? 
+                        `? ?湔?嚗? ${damage} 暺楊憭批摰喉?` : 
+                        `? ?? ${damage} 暺摰喉?`;
+                    addLogEntry('player', damageDesc);
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    
+                    // 瑼Ｘ?萎犖?臬鋡急???                    if (enemy.hp <= 0) {
+                        addLogEntry('enemy', `?? ${enemy.zh} 鋡急???嚗);
+                        await animateDefeat(enemy, false);
+                        gameState.enemyTeam.splice(selectedEnemyIndex, 1);
+                        await new Promise(resolve => setTimeout(resolve, 300));
+                    }
+                    
+                    updateBattleDisplay();
+                    selectedEnemyIndex = -1; // ?蔭?豢?
+                    
+                    // ???唳鈭箏???                    await switchToEnemyTurn();
+                } else {
+                    addLogEntry('system', '?? 隢??豢??餅??格?嚗?);
+                }
+            } else if (selectedEnemyIndex < 0) {
+                addLogEntry('system', '?? 隢??豢??餅??格?嚗?);
+            }
+        }
+
+        // ???撌脩宏?歹??芾???圈洛?脣?蝬??澆?蝝?
+        // ?脣??訾葉??揣撘?        function getSelectedCardIndex() {
+            const selectedCard = document.querySelector('.card.selected');
+            if (selectedCard) {
+                return parseInt(selectedCard.dataset.cardIndex);
+            }
+            return -1;
+        }
+
+        // 憿舐內?∠?閰喟敦靽⊥嚗??祉?撽澆?蝝釭撠?嚗?        function showCardDetailInfo(card) {
+            const cardLevel = card.level || 1;
+            const currentExp = card.exp || 0;
+            const requiredExp = getExpForNextLevel(cardLevel);
+            const expProgress = Math.min(100, Math.round((currentExp / requiredExp) * 100));
+            
+            // 閮??箇?蝝釭??蝝?蝝釭
+            const baseAttack = card.attack || 50;
+            const baseDefense = card.defense || 30;
+            const baseHp = card.hp || 100;
+            
+            const levelBonus = (cardLevel - 1) * 0.2;
+            const upgradedAttack = Math.round(baseAttack * (1 + levelBonus));
+            const upgradedDefense = Math.round(baseDefense * (1 + levelBonus));
+            const upgradedHp = Math.round(baseHp * (1 + levelBonus));
+            
+            const detailInfo = `
+?∠?閰喟敦靽⊥嚗?${card.zh}
+蝑?嚗?{cardLevel}
+蝬??潘?${currentExp}/${requiredExp} (${expProgress}%)
+蝔?漲嚗?{card.rarity || '?桅?}
+
+蝝釭撠?嚗??餅???${baseAttack} ??${upgradedAttack}
+?脩戌??${baseDefense} ??${upgradedDefense}
+銵??${baseHp} ??${upgradedHp}
+
+???孵?嚗??芾???圈洛?脣?蝬??潸??蝝?
+?嗅?????蝬??潘?${requiredExp}
+`;
+            
+            alert(detailInfo);
+        }
+
+        // ?蔭?
+        function resetStage() {
+            if (confirm('蝣箏?閬?蝵桅??∪?嚗??蝚???雿????隡?)) {
+                currentStage = 1;
+                stageMultiplier = 1;
+                localStorage.setItem('battleStage', '1');
+                
+                addLogEntry('system', '?? ?撌脤?蝵桀蝚???');
+                addLogEntry('system', '? 皞???嚗?);
+                
+                // ?蔭?圈洛???                gameState.isBattleActive = false;
+                gameState.enemyTeam = [];
+                document.getElementById('manual-controls').style.display = 'none';
+                updateBattleDisplay();
+            }
+        }
+
+        // ?拙振?脩戌
+        async function performPlayerDefend() {
+            if (isAnimating) return; // ?脫迫?????暺?
+            
+            if (currentPlayerIndex < gameState.playerTeam.length) {
+                const player = gameState.playerTeam[currentPlayerIndex];
+                
+                // ?脣?脩戌???                player.isDefending = true;
+                
+                addLogEntry('player', `?儭?${player.zh} ?脣?脩戌憪踵?嚗);
+                await new Promise(resolve => setTimeout(resolve, 600));
+                
+                addLogEntry('player', `? ${player.zh} 皞??踹?銝?甈⊥??`);
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // ?脩戌???蝥???
+                setTimeout(() => {
+                    player.isDefending = false;
+                    addLogEntry('player', `?? ${player.zh} ?蝳衣?????`);
+                }, 2000);
+                
+                // ???唳鈭箏???                await switchToEnemyTurn();
+            }
+        }
+
+        // ?拙振雿輻??踝?擳??餅?瘥??撥嚗?        async function performPlayerSkill() {
+            if (isAnimating) return; // ?脫迫?????暺?
+            
+            // 瑼Ｘ?臬撌脩??餅???            if (gameState.hasAttacked) {
+                addLogEntry('system', '?? ?砍??歇蝬??鈭?隢?敺?銝??嚗?);
+                return;
+            }
+            
+            // 蝡閮剔蔭?餅?璅?嚗甇ａ?銴???            gameState.hasAttacked = true;
+
+            if (currentPlayerIndex < gameState.playerTeam.length && gameState.enemyTeam.length > 0) {
+                // 憒?瘝??豢??格?雿?拐??鈭綽??芸??豢?
+                if (selectedEnemyIndex < 0 && gameState.enemyTeam.length === 1) {
+                    selectedEnemyIndex = 0;
+                }
+                
+                if (selectedEnemyIndex >= 0) {
+                    const player = gameState.playerTeam[currentPlayerIndex];
+                    const enemy = gameState.enemyTeam[selectedEnemyIndex];
+                    
+                    // 瑼Ｘ?萎犖?臬??脩戌???                    const isEnemyDefending = enemy.isDefending || false;
+                    
+                    // 瑼Ｘ蝟餃???
+                    const seriesEffects = gameState.seriesEffects || {};
+                    let criticalRate = 0.15; // ?箇?15%?湔???                    let damageBonus = 0; // ?瑕拿??
+                    let defenseBonus = 0; // ?脩戌??
+                    
+                    // 閮?蝟餃?????
+                    Object.values(seriesEffects).forEach(effect => {
+                        criticalRate += effect.bonus || 0;
+                        damageBonus += effect.damageBonus || 0;
+                        defenseBonus += effect.defenseBonus || 0;
+                    });
+                    
+                    // 閮???敺??餅???                    const cardLevel = player.level || 1;
+                    const levelBonus = (cardLevel - 1) * 0.2;
+                    const baseAttack = player.attack || 50;
+                    const upgradedAttack = Math.round(baseAttack * (1 + levelBonus));
+                    
+                    // 閮???賢摰喉??箸?餅???
+                    let skillDamage = Math.floor(upgradedAttack * 1.8); // ??賣??.8?摰?                    
+                    // ??瑕拿??
+                    skillDamage = Math.floor(skillDamage * (1 + damageBonus));
+                    
+                    // 瑼Ｘ?臬?湔?嚗?-5?摰喉?
+                    const isCritical = Math.random() < criticalRate;
+                    if (isCritical) {
+                        // ?冽??湔???嚗?-5??                        const criticalMultiplier = 2 + Math.random() * 3; // 2.0 ??5.0
+                        skillDamage = Math.floor(skillDamage * criticalMultiplier);
+                        addLogEntry('player', `? ??賣??嚗?{criticalMultiplier.toFixed(1)}x`);
+                    }
+                    
+                    // 憒??萎犖??脩戌????瑕拿皜?
+                    if (isEnemyDefending) {
+                        skillDamage = Math.floor(skillDamage * 0.5);
+                        addLogEntry('enemy', `?儭?${enemy.zh} ??脩戌???擳??瑕拿皜?嚗);
+                        await new Promise(resolve => setTimeout(resolve, 600));
+                    }
+                    
+                    // ??賜??餈?                    addLogEntry('player', `?? ${player.zh} ????擳???...`);
+                    await new Promise(resolve => setTimeout(resolve, 800));
+                    
+                    addLogEntry('player', `???澆???賬?{player.skill.name}??`);
+                    await new Promise(resolve => setTimeout(resolve, 600));
+                    
+                    // 憿舐內蝟餃?????
+                    if (damageBonus > 0) {
+                        addLogEntry('player', `???頂?????瑕拿+${Math.round(damageBonus * 100)}%`);
+                        await new Promise(resolve => setTimeout(resolve, 400));
+                    }
+                    
+                    if (isCritical) {
+                        addLogEntry('player', `? ??賣??`);
+                        await new Promise(resolve => setTimeout(resolve, 400));
+                    }
+                    
+                    // ?瑁???賢???                    await animateAttack(player, enemy, skillDamage, true, isCritical);
+                    // ?剜??賡??                    playSkillSound();
+                    
+                    enemy.hp -= skillDamage;
+                    
+                    addLogEntry('player', `? ??賬?{player.skill.name}?? ${skillDamage} 暺摰喉?`);
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    
+                    // 閮剔蔭??賢??                    player.skill.currentCooldown = player.skill.cooldown;
+                    addLogEntry('system', `??${player.zh} ???賡脣?瑕?);
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                    
+                    // 瑼Ｘ?萎犖?臬鋡急???                    if (enemy.hp <= 0) {
+                        addLogEntry('enemy', `?? ${enemy.zh} 鋡急??賣???嚗);
+                        await animateDefeat(enemy, false);
+                        gameState.enemyTeam.splice(selectedEnemyIndex, 1);
+                        await new Promise(resolve => setTimeout(resolve, 300));
+                    }
+                    
+                    updateBattleDisplay();
+                    selectedEnemyIndex = -1; // ?蔭?豢?
+                    
+                    addLogEntry('system', '???砍????賣????蝑?銝???嚗?);
+                    
+                    // ???唳鈭箏???                    await switchToEnemyTurn();
+                } else {
+                    addLogEntry('system', '?? 隢??豢??餅??格?嚗?);
+                }
+            } else if (selectedEnemyIndex < 0) {
+                addLogEntry('system', '?? 隢??豢??餅??格?嚗?);
+            }
+        }
+
+        // 瑼Ｘ?圈洛蝯?
+        async function checkBattleResult() {
+            if (gameState.enemyTeam.length === 0) {
+                // ?剜??
+                await playVictoryAnimation();
+                
+                addLogEntry('system', '?? ?圈洛?嚗??鈭粹鋡急???嚗?);
+                await new Promise(resolve => setTimeout(resolve, 800));
+                addLogEntry('system', '?? 雿???撅鈭?急??祕??');
+                await new Promise(resolve => setTimeout(resolve, 600));
+                
+                // ??脣漲?嚗????蛛?
+                const stageReward = 25 + (currentStage - 1) * 8; // 憓??箇????????                console.log(`蝚?{currentStage}???抬?皞?蝯虫?${stageReward}憿????琛);
+                console.log('蝯虫??????賊?:', getCurrentStars());
+                addStarsToBattle(stageReward);
+                console.log('蝯虫???敺??賊?:', getCurrentStars());
+                addLogEntry('system', `?? ?脣????嚗?{stageReward}憿?`);
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // 蝯??∠?蝬???                await settleCardExperience(true);
+                
+                // ?脣銝???                currentStage++;
+                localStorage.setItem('battleStage', currentStage.toString());
+                stageMultiplier = 1 + (currentStage - 1) * 0.3;
+                
+                addLogEntry('system', `?? ?剖???蝚?{currentStage - 1}???脣蝚?{currentStage}??`);
+                await new Promise(resolve => setTimeout(resolve, 800));
+                addLogEntry('system', `?? ?萎犖撠?敺撘瘀??嗅????嚗?{stageMultiplier.toFixed(1)}x`);
+                await new Promise(resolve => setTimeout(resolve, 600));
+                
+                addLogEntry('system', '?? 皞?餈?湔????嚗?);
+                clearBattleArea();
+                endBattle();
+                return;
+            }
+            
+            if (gameState.playerTeam.length === 0) {
+                console.log('瑼Ｘ葫?唳擛亙仃????摰嗅?鋡急???);
+                // ?剜憭望??
+                await playDefeatAnimation();
+                
+                addLogEntry('system', '?? ?圈洛憭望?嚗??摰園鋡急???嚗?);
+                await new Promise(resolve => setTimeout(resolve, 800));
+                addLogEntry('system', `?? 蝚?{currentStage}???萎犖憭芸撥憭找?嚗?甈∪?靘??啣嚗);
+                await new Promise(resolve => setTimeout(resolve, 600));
+                
+                // 蝯??∠?蝬??潘?憭望???
+                console.log('??蝯?憭望???蝬???..');
+                await settleCardExperience(false);
+                
+                addLogEntry('system', '? 銝?瘞??嚗撥????隡??嚗?);
+                clearBattleArea();
+                endBattle();
+                return;
+            }
+        }
+
+        // ?剜??
+        async function playVictoryAnimation() {
+            const battleArea = document.getElementById('battle-area');
+            if (!battleArea) return;
+            
+            // ?萄遣????
+            const victoryOverlay = document.createElement('div');
+            victoryOverlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+                z-index: 9999;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                animation: victoryPulse 2s ease-in-out;
+            `;
+            
+            const victoryText = document.createElement('div');
+            victoryText.innerHTML = `
+                <div style="text-align: center; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
+                    <h1 style="font-size: 4rem; margin: 0; animation: victoryBounce 1s ease-in-out;">?? ?嚗?/h1>
+                    <p style="font-size: 1.5rem; margin: 10px 0; animation: victoryFadeIn 1.5s ease-in-out;">?圈洛?嚗?/p>
+                </div>
+            `;
+            
+            victoryOverlay.appendChild(victoryText);
+            document.body.appendChild(victoryOverlay);
+            
+            // ?剜??單?
+            try {
+                const victorySound = new Audio('sound/???暸???嚗??單?嚗?mp3');
+                victorySound.volume = 0.6;
+                victorySound.play();
+            } catch (e) {
+                console.log('?⊥??剜??單?');
+            }
+            
+            // 蝑??摰?
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            
+            // 蝘駁???
+            if (victoryOverlay.parentNode) {
+                victoryOverlay.remove();
+            }
+        }
+
+        // ?剜憭望??
+        async function playDefeatAnimation() {
+            const battleArea = document.getElementById('battle-area');
+            if (!battleArea) return;
+            
+            // ?萄遣憭望????
+            const defeatOverlay = document.createElement('div');
+            defeatOverlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, #ff6b6b, #ff8e8e, #ff6b6b);
+                z-index: 9999;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                animation: defeatPulse 2s ease-in-out;
+            `;
+            
+            const defeatText = document.createElement('div');
+            defeatText.innerHTML = `
+                <div style="text-align: center; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
+                    <h1 style="font-size: 4rem; margin: 0; animation: defeatShake 1s ease-in-out;">?? 憭望?</h1>
+                    <p style="font-size: 1.5rem; margin: 10px 0; animation: defeatFadeIn 1.5s ease-in-out;">?圈洛憭望?嚗?/p>
+                </div>
+            `;
+            
+            defeatOverlay.appendChild(defeatText);
+            document.body.appendChild(defeatOverlay);
+            
+            // ?剜憭望??單?
+            try {
+                const defeatSound = new Audio('sound/8-bit-video-game-lose-sound-version-1-145828.mp3');
+                defeatSound.volume = 0.6;
+                defeatSound.play();
+            } catch (e) {
+                console.log('?⊥??剜憭望??單?');
+            }
+            
+            // 蝑??摰?
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            
+            // 蝘駁???
+            if (defeatOverlay.parentNode) {
+                defeatOverlay.remove();
+            }
+        }
+
+        // 蝯??∠?蝬???        async function settleCardExperience(isVictory) {
+            console.log('settleCardExperience 鋡怨矽?剁?isVictory:', isVictory);
+            console.log('?嗅??拙振???賊?:', gameState.playerTeam.length);
+            console.log('?????賊?:', gameState.originalTeam ? gameState.originalTeam.length : 'undefined');
+            
+            // 雿輻?????脰?蝬??潛?蝞?蝣箔?????擛亦??∠??質?脣?蝬???            const teamForExp = gameState.originalTeam || gameState.playerTeam;
+            console.log('?冽蝬??潛?蝞????賊?:', teamForExp.length);
+            
+            if (isVictory) {
+                const baseExpReward = 50 + (currentStage - 1) * 10; // ?箇?蝬??潛???                addLogEntry('system', `?? ?圈洛?嚗????擛亦??∠??脣?蝬??潘?`);
+                await new Promise(resolve => setTimeout(resolve, 300));
+                
+                teamForExp.forEach((originalCard, index) => {
+                    console.log(`??蝚?{index + 1}撘萄?憪??`, originalCard.zh);
+                    // ?曉撠??aseCard
+                    let baseCard = baseCards.find(c => c.zh === originalCard.zh);
+                    if (!baseCard) {
+                        baseCard = baseCards.find(c => c.id === originalCard.id);
+                    }
+                    if (!baseCard) {
+                        baseCard = baseCards.find(c => c.word === originalCard.word);
+                    }
+                    console.log('????曉??', originalCard.zh, '?曉:', baseCard ? '?? : '??);
+                    if (baseCard) {
+                        // ?曉撠??擛亙??瑼Ｘ?嗅?瘣餌???                        const battleCard = gameState.playerTeam.find(c => c.zh === originalCard.zh);
+                        const survivalBonus = battleCard && battleCard.hp > 0 ? 20 : 10; // 摮暑??游?嚗香鈭∩?????                        const totalExp = baseExpReward + survivalBonus;
+                        console.log('???∠?', originalCard.zh, '瘛餃?蝬???', totalExp);
+                        addExpToCard(baseCard, totalExp);
+                    } else {
+                        console.log('??銝撠??aseCard:', originalCard.zh);
+                    }
+                });
+            } else {
+                // 憭望??????啣??賜敺?撽?                const baseExpReward = 25 + (currentStage - 1) * 5; // ??憭望????箇?蝬???                addLogEntry('system', `?? ?圈洛憭望?嚗???啣?敺?撽潘?`);
+                await new Promise(resolve => setTimeout(resolve, 300));
+                
+                console.log('憭望????摰園?隡????賊?:', teamForExp.length);
+                if (teamForExp.length === 0) {
+                    console.log('霅血?嚗仃??瘝??曉????嚗蝙?函??隡?);
+                    // 憒?瘝?????嚗蝙?函??隡?                    const currentTeam = gameState.playerTeam;
+                    currentTeam.forEach((card, index) => {
+                        console.log(`??蝚?{index + 1}撘萇???`, card.zh);
+                        // ?曉撠??aseCard
+                        let baseCard = baseCards.find(c => c.zh === card.zh);
+                        if (!baseCard) {
+                            baseCard = baseCards.find(c => c.id === card.id);
+                        }
+                        if (!baseCard) {
+                            baseCard = baseCards.find(c => c.word === card.word);
+                        }
+                        console.log('憭望????曉??', card.zh, '?曉:', baseCard ? '?? : '??);
+                        if (baseCard) {
+                            const survivalBonus = card.hp > 0 ? 15 : 8; // 摮暑??游?嚗香鈭∩?????                            const totalExp = baseExpReward + survivalBonus;
+                            console.log('憭望???∠?', card.zh, '瘛餃?蝬???', totalExp);
+                            addExpToCard(baseCard, totalExp);
+                        } else {
+                            console.log('憭望??銝撠??aseCard:', card.zh);
+                        }
+                    });
+                } else {
+                    teamForExp.forEach((originalCard, index) => {
+                        console.log(`??蝚?{index + 1}撘萄?憪??`, originalCard.zh);
+                        // ?曉撠??aseCard
+                        let baseCard = baseCards.find(c => c.zh === originalCard.zh);
+                        if (!baseCard) {
+                            baseCard = baseCards.find(c => c.id === originalCard.id);
+                        }
+                        if (!baseCard) {
+                            baseCard = baseCards.find(c => c.word === originalCard.word);
+                        }
+                        console.log('憭望????曉??', originalCard.zh, '?曉:', baseCard ? '?? : '??);
+                        if (baseCard) {
+                            // ?曉撠??擛亙??瑼Ｘ?嗅?瘣餌???                            const battleCard = gameState.playerTeam.find(c => c.zh === originalCard.zh);
+                            const survivalBonus = battleCard && battleCard.hp > 0 ? 15 : 8; // 摮暑??游?嚗香鈭∩?????                            const totalExp = baseExpReward + survivalBonus;
+                            console.log('憭望???∠?', originalCard.zh, '瘛餃?蝬???', totalExp);
+                            addExpToCard(baseCard, totalExp);
+                        } else {
+                            console.log('憭望??銝撠??aseCard:', originalCard.zh);
+                        }
+                    });
+                }
+            }
+            
+            await new Promise(resolve => setTimeout(resolve, 500));
+        }
+
+        // 皜?圈洛??∠?
+        function clearBattleArea() {
+            // 皜?拙振??
+            gameState.playerTeam = [];
+            gameState.selectedCards.clear();
+            
+            // 皜?萎犖??
+            gameState.enemyTeam = [];
+            
+            // 皜?????舀
+            gameState.originalTeam = null;
+            
+            // ?湔憿舐內
+            updateTeamDisplay();
+            updateCardGrid();
+            updateBattleDisplay();
+            
+            addLogEntry('system', '?完 ?圈洛?撌脫?蝛綽?皞?銝??湔擛伐?');
+        }
+
+        // 蝯??圈洛
+        function endBattle() {
+            gameState.isBattleActive = false;
+            isManualBattle = false;
+            document.getElementById('manual-controls').style.display = 'none';
+            updateCardGrid();
+        }
+
+        // ??鋡急????∠?
+        async function handleDefeatedCard(card, isPlayer) {
+            if (isPlayer) {
+                await animateDefeat(card, isPlayer); // 瘛餃????
+                // 撠◤???????銝剔宏??                const index = gameState.playerTeam.indexOf(card);
+                if (index > -1) {
+                    gameState.playerTeam.splice(index, 1);
+                    console.log('撌脣?鋡急????∠?敺?隡葉蝘駁:', card.zh);
+                    console.log('?嗅??拙振???賊?:', gameState.playerTeam.length);
+                    addLogEntry('system', `?? ${card.zh} 鋡急??蒂敺?隡葉蝘駁嚗);
+                    
+                    // 瑼Ｘ?臬??摰園鋡急???                    if (gameState.playerTeam.length === 0) {
+                        console.log('??摰嗅?鋡急???閫貊憭望?瑼Ｘ葫');
+                        addLogEntry('system', '?? ??摰嗅?鋡急???');
+                    }
+                }
+            }
+        }
+
+        // ?蔭?圈洛
+        function resetBattle() {
+            gameState.isBattleActive = false;
+            isManualBattle = false;
+            gameState.enemyTeam = [];
+            gameState.currentTurn = 0;
+            document.getElementById('manual-controls').style.display = 'none';
+            selectedEnemyIndex = -1;
+            document.getElementById('enemy-selection').style.display = 'none';
+            
+            // ?Ｗ儔?拙振??銵??            gameState.playerTeam.forEach(card => {
+                card.hp = card.hp || 100;
+                // ?蔭??賢??                if (card.skill) {
+                    card.skill.currentCooldown = 0;
+                }
+            });
+            
+            updateBattleDisplay();
+            addLogEntry('蝟餌絞', '?圈洛撌脤?蝵?);
+        }
+
+        // 瘛餃??亥?璇
+        function addLogEntry(type, message) {
+            const battleLog = document.getElementById('battle-log');
+            if (!battleLog) return;
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${type}`;
+            logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            battleLog.appendChild(logEntry);
+            battleLog.scrollTop = battleLog.scrollHeight;
+        }
+
+        // 閮剔蔭鈭辣????        function setupEventListeners() {
+            document.getElementById('start-battle').addEventListener('click', startBattle);
+            document.getElementById('manual-battle').addEventListener('click', startManualBattle);
+            document.getElementById('reset-stage').addEventListener('click', resetStage);
+    
+            document.getElementById('attack-btn').addEventListener('click', performPlayerAttack);
+            document.getElementById('skill-btn').addEventListener('click', performPlayerSkill);
+            document.getElementById('defend-btn').addEventListener('click', performPlayerDefend);
+            document.getElementById('skip-btn').addEventListener('click', () => {
+                currentPlayerIndex++;
+                updateManualControls();
+            });
+            document.getElementById('back-to-home').addEventListener('click', () => {
+                window.location.href = 'index.html'; // 頝唾??圈???            });
+        }
+
+
+
+        // ?頛摰?敺?憪?
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('?頛摰?嚗?憪?憪?...');
+            initGame();
+        });
+
+        // ?敶????賣
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.remove();
+            }
+        }
+        
+        // 憿舐內?∠?閰單?Modal
+        function showCardDetailModal(card) {
+            // 閮???敺?蝝釭
+            const cardLevel = card.level || 1;
+            const levelBonus = (cardLevel - 1) * 0.2;
+            const baseAttack = card.attack || 50;
+            const baseDefense = card.defense || 30;
+            const baseHp = card.hp || 100;
+            
+            const upgradedAttack = Math.round(baseAttack * (1 + levelBonus));
+            const upgradedDefense = Math.round(baseDefense * (1 + levelBonus));
+            const upgradedHp = Math.round(baseHp * (1 + levelBonus));
+            
+            // 蝬??潔縑??            const currentExp = card.exp || 0;
+            const requiredExp = getExpForNextLevel(cardLevel);
+            const remainingExp = requiredExp - currentExp;
+            const expProgress = Math.min(100, Math.round((currentExp / requiredExp) * 100));
+            
+            // 蝔?漲靽⊥
+            const rarityLabel = getRarityLabel(card.rarity);
+            const rarityColor = getRarityColor(card.rarity);
+            
+            // ??賭縑??            const skillInfo = card.skill ? `
+                <div style="margin: 15px 0; padding: 10px; background: rgba(255,215,0,0.1); border-radius: 8px; border: 1px solid rgba(255,215,0,0.3);">
+                    <div style="color: #ffd700; font-weight: bold; margin-bottom: 5px;">? ??踝?${card.skill.name}</div>
+                    <div style="color: #fff; font-size: 0.9rem; opacity: 0.9;">${card.skill.description || '?⊥??賣?餈?}</div>
+                    <div style="color: #4ecdc4; font-size: 0.8rem; margin-top: 5px;">?瑕??嚗?{card.skill.cooldown || 0} ??</div>
+                </div>
+            ` : `
+                <div style="margin: 15px 0; padding: 10px; background: rgba(150,150,150,0.1); border-radius: 8px; border: 1px solid rgba(150,150,150,0.3);">
+                    <div style="color: #ccc; font-weight: bold;">???⊥???/div>
+                </div>
+            `;
+            
+            // ?萄遣Modal?批捆
+            const modalContent = `
+                <div id="card-detail-modal" style="position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center;">
+                    <div style="position:relative; background:rgba(20,30,40,0.98); border-radius:18px; box-shadow:0 0 32px #00ffff99; padding:30px; max-width:500px; width:90%; max-height:80vh; overflow-y:auto;">
+                        <button id="close-card-detail" style="position:absolute; top:10px; right:15px; background:#222; color:#fff; border:none; border-radius:50%; width:35px; height:35px; font-size:1.5rem; cursor:pointer; z-index:10;">?</button>
+                        
+                        <!-- ?∠??? -->
+                        <div style="text-align:center; margin-bottom:20px;">
+                            ${card.image && card.image.endsWith('.mp4') ? 
+                                `<video src="${card.image}" style="width:200px;height:280px;object-fit:cover;border-radius:12px;box-shadow:0 0 20px #00ffff99;" muted autoplay loop playsinline></video>` :
+                                `<img src="${card.image || 'img/card_back.jpeg'}" alt="${card.zh}" style="width:200px;height:280px;object-fit:cover;border-radius:12px;box-shadow:0 0 20px #00ffff99;">`
+                            }
+                        </div>
+                        
+                        <!-- ?∠??迂???漲 -->
+                        <div style="text-align:center; margin-bottom:20px;">
+                            <div style="font-size:1.5rem; color:#ffe066; font-weight:bold; margin-bottom:10px;">${card.zh}</div>
+                            <div style="display:inline-block; background:${rarityColor}; color:#fff; font-size:0.9rem; font-weight:bold; padding:5px 12px; border-radius:8px; box-shadow:0 0 8px ${rarityColor}99;">
+                                ${rarityLabel}
+                            </div>
+                            ${cardLevel > 1 ? `<div style="display:inline-block; background:rgba(255,215,0,0.8); color:#000; font-size:0.8rem; font-weight:bold; padding:3px 8px; border-radius:6px; margin-left:10px;">Lv.${cardLevel}</div>` : ''}
+                        </div>
+                        
+                        <!-- 蝝釭靽⊥ -->
+                        <div style="margin:20px 0; padding:15px; background:rgba(255,107,107,0.1); border-radius:10px; border:1px solid rgba(255,107,107,0.3);">
+                            <div style="color:#ff6b6b; font-weight:bold; margin-bottom:10px; font-size:1.1rem;">? ?圈洛蝝釭</div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; text-align:center;">
+                                <div>
+                                    <div style="color:#ff6b6b; font-weight:bold; font-size:1.2rem;">${upgradedAttack}</div>
+                                    <div style="color:#fff; font-size:0.8rem;">?餅???/div>
+                                </div>
+                                <div>
+                                    <div style="color:#4ecdc4; font-weight:bold; font-size:1.2rem;">${upgradedDefense}</div>
+                                    <div style="color:#fff; font-size:0.8rem;">?脩戌??/div>
+                                </div>
+                                <div>
+                                    <div style="color:#45b7d1; font-weight:bold; font-size:1.2rem;">${upgradedHp}</div>
+                                    <div style="color:#fff; font-size:0.8rem;">???/div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 蝑???靽⊥ -->
+                        ${cardLevel > 1 ? `
+                            <div style="margin:20px 0; padding:15px; background:rgba(255,215,0,0.1); border-radius:10px; border:1px solid rgba(255,215,0,0.3);">
+                                <div style="color:#ffd700; font-weight:bold; margin-bottom:10px; font-size:1.1rem;">潃?蝑???</div>
+                                <div style="color:#fff; font-size:0.9rem;">
+                                    ?嗅?蝑?嚗?{cardLevel} (瘥?憓?20%蝝釭)<br>
+                                    蝮賢???${Math.round(levelBonus * 100)}%
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        <!-- 蝬??潔縑??-->
+                        <div style="margin:20px 0; padding:15px; background:rgba(78,205,196,0.1); border-radius:10px; border:1px solid rgba(78,205,196,0.3);">
+                            <div style="color:#4ecdc4; font-weight:bold; margin-bottom:10px; font-size:1.1rem;">?? 蝬??潮脣漲</div>
+                            <div style="margin-bottom:10px;">
+                                <div style="display:flex; justify-content:space-between; color:#fff; font-size:0.9rem; margin-bottom:5px;">
+                                    <span>?嗅?蝬??潘?${currentExp}</span>
+                                    <span>??蝬??潘?${requiredExp}</span>
+                                </div>
+                                <div style="width:100%; height:8px; background:#333; border-radius:4px; overflow:hidden;">
+                                    <div style="width:${expProgress}%; height:100%; background:linear-gradient(90deg, #4ecdc4, #45b7d1); border-radius:4px; box-shadow:0 0 6px rgba(78,205,196,0.6);"></div>
+                                </div>
+                            </div>
+                            <div style="color:#ff6b6b; font-weight:bold; font-size:1rem;">
+                                ?榆 ${remainingExp} 蝬??澆?蝝?                            </div>
+                        </div>
+                        
+                        <!-- ??賭縑??-->
+                        ${skillInfo}
+                    </div>
+                </div>
+            `;
+            
+            // 瘛餃??圈???            document.body.insertAdjacentHTML('beforeend', modalContent);
+            
+            // 瘛餃???鈭辣
+            setTimeout(() => {
+                const closeBtn = document.getElementById('close-card-detail');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => {
+                        closeModal('card-detail-modal');
+                    });
+                }
+                
+                // 暺????
+                const modal = document.getElementById('card-detail-modal');
+                if (modal) {
+                    modal.addEventListener('click', (e) => {
+                        if (e.target.id === 'card-detail-modal') {
+                            closeModal('card-detail-modal');
+                        }
+                    });
+                }
+            }, 100);
+        }
+
+        // 憿舐內?∠??曉之?汗
+        function showCardPreview(card) {
+            const modal = document.getElementById('card-preview-modal');
+            const mediaDiv = document.getElementById('card-preview-media');
+            const titleDiv = document.getElementById('card-preview-title');
+            const statsDiv = document.getElementById('card-preview-stats');
+            // 皜征
+            mediaDiv.innerHTML = '';
+            titleDiv.textContent = card.zh || '';
+            // 閮???敺?蝝釭
+            const cardLevel = card.level || 1;
+            const levelBonus = (cardLevel - 1) * 0.2;
+            const baseAttack = card.attack || 50;
+            const baseDefense = card.defense || 30;
+            const baseHp = card.hp || 100;
+            
+            const upgradedAttack = Math.round(baseAttack * (1 + levelBonus));
+            const upgradedDefense = Math.round(baseDefense * (1 + levelBonus));
+            const upgradedHp = Math.round(baseHp * (1 + levelBonus));
+            
+            // 蝬??潔縑??            const currentExp = card.exp || 0;
+            const requiredExp = getExpForNextLevel(cardLevel);
+            const remainingExp = requiredExp - currentExp;
+            
+            statsDiv.innerHTML = `
+                <div style='margin-bottom: 8px;'>
+                    <span style='color:#ff6b6b;'>??${upgradedAttack}</span>?
+                    <span style='color:#4ecdc4;'>??${upgradedDefense}</span>?
+                    <span style='color:#45b7d1;'>銵:${upgradedHp}</span>
+                </div>
+                <div style='margin-bottom: 8px;'>
+                    <span style='color:#ffd700;'>蝑?: ${cardLevel}</span>
+                </div>
+                <div style='margin-bottom: 8px;'>
+                    <span style='color:#4ecdc4;'>蝬??? ${currentExp}/${requiredExp}</span>
+                </div>
+                <div style='color:#ff6b6b; font-size: 0.9rem;'>
+                    ?榆 ${remainingExp} 蝬??澆?蝝?                </div>
+            `;
+            // ?曉之?批捆
+            if (card.image && card.image.endsWith('.mp4')) {
+                mediaDiv.innerHTML = `<video src="${card.image}" style="width:160px;height:220px;object-fit:cover;border-radius:12px;box-shadow:0 0 12px #00ffff99;" muted autoplay loop playsinline></video>`;
+            } else {
+                const imgSrc = card.image || 'img/card_back.jpeg';
+                mediaDiv.innerHTML = `<img src="${imgSrc}" alt="${card.zh}" style="width:160px;height:220px;object-fit:cover;border-radius:12px;box-shadow:0 0 12px #00ffff99;">`;
+            }
+            modal.style.display = 'flex';
+        }
+
+        // ???汗
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('close-card-preview').onclick = () => {
+                document.getElementById('card-preview-modal').style.display = 'none';
+            };
+            document.getElementById('card-preview-modal').onclick = (e) => {
+                if (e.target === document.getElementById('card-preview-modal')) {
+                    document.getElementById('card-preview-modal').style.display = 'none';
+                }
+            };
+        });
+
+        // 憿舐內??撠?Modal
+        function showLevelUpModal(card, upgradeData) {
+            const { oldLevel, newLevel, oldAttack, newAttack, oldDefense, newDefense, oldHp, newHp } = upgradeData;
+            
+            // 閮????詨?            const attackIncrease = newAttack - oldAttack;
+            const defenseIncrease = newDefense - oldDefense;
+            const hpIncrease = newHp - oldHp;
+            
+            // 蝔?漲靽⊥
+            const rarityLabel = getRarityLabel(card.rarity);
+            const rarityColor = getRarityColor(card.rarity);
+            
+            // ?萄遣Modal?批捆
+            const modalContent = `
+                <div id="levelup-modal" style="position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.9); display:flex; align-items:center; justify-content:center;">
+                    <div style="position:relative; background:rgba(20,30,40,0.98); border-radius:18px; box-shadow:0 0 32px #ffd70099; padding:30px; max-width:600px; width:90%; max-height:80vh; overflow-y:auto;">
+                        <button id="close-levelup-modal" style="position:absolute; top:10px; right:15px; background:#222; color:#fff; border:none; border-radius:50%; width:35px; height:35px; font-size:1.5rem; cursor:pointer; z-index:10;">?</button>
+                        
+                        <!-- ??璅? -->
+                        <div style="text-align:center; margin-bottom:25px;">
+                            <div style="font-size:2rem; color:#ffd700; font-weight:bold; margin-bottom:10px;">?? ????嚗?/div>
+                            <div style="font-size:1.3rem; color:#ffe066; font-weight:bold;">${card.zh}</div>
+                            <div style="display:inline-block; background:${rarityColor}; color:#fff; font-size:0.9rem; font-weight:bold; padding:5px 12px; border-radius:8px; box-shadow:0 0 8px ${rarityColor}99; margin-top:10px;">
+                                ${rarityLabel}
+                            </div>
+                        </div>
+                        
+                        <!-- 蝑??? -->
+                        <div style="text-align:center; margin-bottom:25px; padding:15px; background:rgba(255,215,0,0.1); border-radius:10px; border:1px solid rgba(255,215,0,0.3);">
+                            <div style="color:#ffd700; font-weight:bold; font-size:1.2rem; margin-bottom:10px;">潃?蝑???</div>
+                            <div style="display:flex; justify-content:center; align-items:center; gap:20px;">
+                                <div style="text-align:center;">
+                                    <div style="color:#fff; font-size:0.9rem; margin-bottom:5px;">????/div>
+                                    <div style="color:#ffd700; font-weight:bold; font-size:1.5rem;">Lv.${oldLevel}</div>
+                                </div>
+                                <div style="color:#ffd700; font-size:2rem;">??/div>
+                                <div style="text-align:center;">
+                                    <div style="color:#fff; font-size:0.9rem; margin-bottom:5px;">??敺?/div>
+                                    <div style="color:#ffd700; font-weight:bold; font-size:1.5rem;">Lv.${newLevel}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 蝝釭撠? -->
+                        <div style="margin:25px 0;">
+                            <div style="color:#ffd700; font-weight:bold; font-size:1.2rem; margin-bottom:15px; text-align:center;">? 蝝釭??撠?</div>
+                            
+                            <!-- ?餅???瘥?-->
+                            <div style="margin:15px 0; padding:15px; background:rgba(255,107,107,0.1); border-radius:10px; border:1px solid rgba(255,107,107,0.3);">
+                                <div style="color:#ff6b6b; font-weight:bold; margin-bottom:10px;">?? ?餅???/div>
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <div style="text-align:center; flex:1;">
+                                        <div style="color:#fff; font-size:0.9rem; margin-bottom:5px;">????/div>
+                                        <div style="color:#ff6b6b; font-weight:bold; font-size:1.3rem;">${oldAttack}</div>
+                                    </div>
+                                    <div style="color:#ff6b6b; font-size:1.5rem; margin:0 15px;">??/div>
+                                    <div style="text-align:center; flex:1;">
+                                        <div style="color:#fff; font-size:0.9rem; margin-bottom:5px;">??敺?/div>
+                                        <div style="color:#ff6b6b; font-weight:bold; font-size:1.3rem;">${newAttack}</div>
+                                    </div>
+                                    <div style="text-align:center; flex:1;">
+                                        <div style="color:#fff; font-size:0.9rem; margin-bottom:5px;">??</div>
+                                        <div style="color:#4ecdc4; font-weight:bold; font-size:1.1rem;">+${attackIncrease}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- ?脩戌??瘥?-->
+                            <div style="margin:15px 0; padding:15px; background:rgba(78,205,196,0.1); border-radius:10px; border:1px solid rgba(78,205,196,0.3);">
+                                <div style="color:#4ecdc4; font-weight:bold; margin-bottom:10px;">?儭??脩戌??/div>
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <div style="text-align:center; flex:1;">
+                                        <div style="color:#fff; font-size:0.9rem; margin-bottom:5px;">????/div>
+                                        <div style="color:#4ecdc4; font-weight:bold; font-size:1.3rem;">${oldDefense}</div>
+                                    </div>
+                                    <div style="color:#4ecdc4; font-size:1.5rem; margin:0 15px;">??/div>
+                                    <div style="text-align:center; flex:1;">
+                                        <div style="color:#fff; font-size:0.9rem; margin-bottom:5px;">??敺?/div>
+                                        <div style="color:#4ecdc4; font-weight:bold; font-size:1.3rem;">${newDefense}</div>
+                                    </div>
+                                    <div style="text-align:center; flex:1;">
+                                        <div style="color:#fff; font-size:0.9rem; margin-bottom:5px;">??</div>
+                                        <div style="color:#4ecdc4; font-weight:bold; font-size:1.1rem;">+${defenseIncrease}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- ??澆?瘥?-->
+                            <div style="margin:15px 0; padding:15px; background:rgba(69,183,209,0.1); border-radius:10px; border:1px solid rgba(69,183,209,0.3);">
+                                <div style="color:#45b7d1; font-weight:bold; margin-bottom:10px;">?歹? ???/div>
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <div style="text-align:center; flex:1;">
+                                        <div style="color:#fff; font-size:0.9rem; margin-bottom:5px;">????/div>
+                                        <div style="color:#45b7d1; font-weight:bold; font-size:1.3rem;">${oldHp}</div>
+                                    </div>
+                                    <div style="color:#45b7d1; font-size:1.5rem; margin:0 15px;">??/div>
+                                    <div style="text-align:center; flex:1;">
+                                        <div style="color:#fff; font-size:0.9rem; margin-bottom:5px;">??敺?/div>
+                                        <div style="color:#45b7d1; font-weight:bold; font-size:1.3rem;">${newHp}</div>
+                                    </div>
+                                    <div style="text-align:center; flex:1;">
+                                        <div style="color:#fff; font-size:0.9rem; margin-bottom:5px;">??</div>
+                                        <div style="color:#4ecdc4; font-weight:bold; font-size:1.1rem;">+${hpIncrease}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 蝮賣??絞閮?-->
+                        <div style="margin:25px 0; padding:15px; background:rgba(78,205,196,0.1); border-radius:10px; border:1px solid rgba(78,205,196,0.3);">
+                            <div style="color:#4ecdc4; font-weight:bold; margin-bottom:10px; font-size:1.1rem;">?? 蝮賣??絞閮?/div>
+                            <div style="color:#fff; font-size:0.9rem; line-height:1.5;">
+                                <div>? ?餅?????<span style="color:#ff6b6b; font-weight:bold;">+${attackIncrease}</span></div>
+                                <div>?儭??脩戌????<span style="color:#4ecdc4; font-weight:bold;">+${defenseIncrease}</span></div>
+                                <div>?歹? ??潭???<span style="color:#45b7d1; font-weight:bold;">+${hpIncrease}</span></div>
+                                <div style="margin-top:10px; color:#ffd700; font-weight:bold;">
+                                    蝮賣????<span style="color:#4ecdc4;">+${attackIncrease + defenseIncrease + hpIncrease}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 蝣箄??? -->
+                        <div style="text-align:center; margin-top:25px;">
+                            <button id="confirm-levelup" style="background:linear-gradient(45deg, #ffd700, #ffed4e); border:none; border-radius:10px; padding:12px 30px; color:#000; font-weight:bold; font-size:1.1rem; cursor:pointer; box-shadow:0 0 15px rgba(255,215,0,0.4);">
+                                ?? 蝣箄???
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // 瘛餃??圈???            document.body.insertAdjacentHTML('beforeend', modalContent);
+            
+            // 瘛餃???鈭辣
+            setTimeout(() => {
+                const closeLevelupBtn = document.getElementById('close-levelup-modal');
+                if (closeLevelupBtn) {
+                    closeLevelupBtn.addEventListener('click', () => {
+                        closeModal('levelup-modal');
+                    });
+                }
+                
+                // 蝣箄???鈭辣
+                const confirmBtn = document.getElementById('confirm-levelup');
+                if (confirmBtn) {
+                    confirmBtn.addEventListener('click', () => {
+                        closeModal('levelup-modal');
+                    });
+                }
+                
+                // 暺????
+                const levelupModal = document.getElementById('levelup-modal');
+                if (levelupModal) {
+                    levelupModal.addEventListener('click', (e) => {
+                        if (e.target.id === 'levelup-modal') {
+                            closeModal('levelup-modal');
+                        }
+                    });
+                }
+            }, 100);
+        }
+    </script>
+</body>
+</html>

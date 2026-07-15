@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>?踵?撘身閮葫閰?- ?望?撠??/title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="responsive_enhanced.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans TC', 'Microsoft JhengHei', Arial, 'Orbitron', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      color: #f3f6fa;
+      min-height: 100vh;
+      text-align: center;
+    }
+
+    .test-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .device-info {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .device-info h2 {
+      color: #00ffff;
+      text-shadow: 0 0 10px #00ffff;
+      margin-bottom: 15px;
+    }
+
+    .device-info p {
+      margin: 5px 0;
+      font-size: 1.1rem;
+    }
+
+    .responsive-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .test-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .test-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .test-card h3 {
+      color: #ffd700;
+      text-shadow: 0 0 10px #ffd700;
+      margin-bottom: 15px;
+    }
+
+    .test-button {
+      background: linear-gradient(135deg, #00ffff 0%, #a259ff 100%);
+      color: #000;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .test-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0, 255, 255, 0.5);
+    }
+
+    .responsive-text {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      margin: 15px 0;
+    }
+
+    .breakpoint-indicator {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.8);
+      color: #00ffff;
+      padding: 10px;
+      border-radius: 5px;
+      font-family: monospace;
+      z-index: 1000;
+    }
+
+    /* ?踵?撘葫閰行見撘?*/
+    @media (max-width: 1024px) {
+      .responsive-text {
+        font-size: 1.1rem;
+      }
+      
+      .test-container {
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .responsive-text {
+        font-size: 1rem;
+      }
+      
+      .responsive-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+      
+      .test-container {
+        padding: 10px;
+      }
+      
+      .device-info h2 {
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .responsive-text {
+        font-size: 0.9rem;
+      }
+      
+      .test-button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+      }
+      
+      .device-info h2 {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="breakpoint-indicator" id="breakpointIndicator">
+    ?Ｗ?撖砍漲: <span id="screenWidth">0</span>px
+  </div>
+
+  <div class="test-container">
+    <h1>?? ?踵?撘身閮葫閰阡???/h1>
+    <p class="responsive-text">皜祈岫銝?閮剖??＊蝷箸???/p>
+
+    <div class="device-info">
+      <h2>? 閮剖?鞈?</h2>
+      <p><strong>?Ｗ?撖砍漲:</strong> <span id="widthInfo">頛銝?..</span></p>
+      <p><strong>?Ｗ?擃漲:</strong> <span id="heightInfo">頛銝?..</span></p>
+      <p><strong>閮剖?憿?:</strong> <span id="deviceType">頛銝?..</span></p>
+      <p><strong>?嗅??琿?:</strong> <span id="currentBreakpoint">頛銝?..</span></p>
+    </div>
+
+    <div class="responsive-grid">
+      <div class="test-card">
+        <h3>?儭?獢??(1024px+)</h3>
+        <p>?拙??餉?之?像?選???摰???脤?撽?/p>
+        <button class="test-button" onclick="testNavigation('desktop')">皜祈岫獢??/button>
+      </div>
+
+      <div class="test-card">
+        <h3>? 撟單??(768px-1024px)</h3>
+        <p>?拙?銝剖?撟單嚗??ａ摨西矽??/p>
+        <button class="test-button" onclick="testNavigation('tablet')">皜祈岫撟單??/button>
+      </div>
+
+      <div class="test-card">
+        <h3>? ????(480px-768px)</h3>
+        <p>?拙???嚗??Ｗ之撟陛??/p>
+        <button class="test-button" onclick="testNavigation('mobile')">皜祈岫????/button>
+      </div>
+
+      <div class="test-card">
+        <h3>? 撠??? (480px隞乩?)</h3>
+        <p>?拙?撠???嚗?蝪∪?隞</p>
+        <button class="test-button" onclick="testNavigation('small-mobile')">皜祈岫撠???</button>
+      </div>
+    </div>
+
+    <div class="device-info">
+      <h2>? ??皜祈岫</h2>
+      <p>暺?銝??皜祈岫銝????????</p>
+      <button class="test-button" onclick="location.href='index.html'">?? 擐?</button>
+      <button class="test-button" onclick="location.href='atlas.html'">?? ???</button>
+      <button class="test-button" onclick="location.href='cards.html'">?? ?∠??嗉?</button>
+      <button class="test-button" onclick="location.href='achievement.html'">?? ?停?喟?</button>
+      <button class="test-button" onclick="location.href='gacha.html'">? ?賢</button>
+      <button class="test-button" onclick="location.href='shop.html'">?? ??</button>
+    </div>
+
+    <div class="device-info">
+      <h2>?? ?踵?撘絞閮?/h2>
+      <p><strong>撌脤????</strong> 25+ ?蜓閬???/p>
+      <p><strong>?舀閮剖?:</strong> 獢?像?踴?璈?/p>
+      <p><strong>?琿?閮剖?:</strong> 1024px, 900px, 768px, 600px, 480px</p>
+      <p><strong>閫豢?芸?:</strong> 撌脣???/p>
+    </div>
+  </div>
+
+  <script>
+    // ?湔閮剖?鞈?
+    function updateDeviceInfo() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      
+      document.getElementById('screenWidth').textContent = width;
+      document.getElementById('widthInfo').textContent = width + 'px';
+      document.getElementById('heightInfo').textContent = height + 'px';
+      
+      // ?斗閮剖?憿?
+      let deviceType = '獢??;
+      let breakpoint = '1024px+';
+      
+      if (width <= 480) {
+        deviceType = '撠???';
+        breakpoint = '480px隞乩?';
+      } else if (width <= 768) {
+        deviceType = '????;
+        breakpoint = '480px-768px';
+      } else if (width <= 1024) {
+        deviceType = '撟單??;
+        breakpoint = '768px-1024px';
+      }
+      
+      document.getElementById('deviceType').textContent = deviceType;
+      document.getElementById('currentBreakpoint').textContent = breakpoint;
+    }
+
+    // 皜祈岫撠
+    function testNavigation(type) {
+      const messages = {
+        'desktop': '皜祈岫獢???閮剛?',
+        'tablet': '皜祈岫撟單???閮剛?',
+        'mobile': '皜祈岫?????閮剛?',
+        'small-mobile': '皜祈岫撠????踵?撘身閮?
+      };
+      
+      alert(messages[type] + '\n\n隢矽?渡汗?刻?蝒之撠?皜祈岫銝??琿?????');
+    }
+
+    // ?頛??啗?閮?
+    window.addEventListener('load', updateDeviceInfo);
+    window.addEventListener('resize', updateDeviceInfo);
+
+    // 摰??湔嚗誑?脰銝嚗?
+    setInterval(updateDeviceInfo, 1000);
+  </script>
+</body>
+</html> 

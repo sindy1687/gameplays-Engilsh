@@ -1,0 +1,2198 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?桀?瑼?銝?銝剖?</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ?扯?芸? */
+        body {
+            font-family: 'Microsoft JhengHei', 'PingFang TC', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ??????? */
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .star:nth-child(odd) {
+            background: #00ffff;
+            box-shadow: 0 0 4px #00ffff;
+        }
+
+        .star:nth-child(even) {
+            background: #ff00ff;
+            box-shadow: 0 0 4px #ff00ff;
+        }
+
+        .star:nth-child(3n) {
+            background: #ffff00;
+            box-shadow: 0 0 4px #ffff00;
+        }
+
+        .star:nth-child(4n) {
+            background: #00ff00;
+            box-shadow: 0 0 4px #00ff00;
+        }
+
+        .star:nth-child(5n) {
+            background: #ff8000;
+            box-shadow: 0 0 4px #ff8000;
+        }
+
+        /* ???詨??? */
+        .star:hover {
+            transform: scale(2);
+            opacity: 1;
+        }
+
+        /* 蝣箔????典捆?其?銝?銝?撟脫鈭? */
+        .interactive-stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* 蝘駁銴????臬???*/
+        body::before,
+        body::after {
+            display: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ffff, #ff00ff, transparent);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0,255,255,0.5);
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00, #00ff00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .header h1::after {
+            content: '??';
+            position: absolute;
+            right: -40px;
+            top: 0;
+            font-size: 1.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            color: #b0b0b0;
+        }
+
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .download-card {
+            background: rgba(20, 20, 40, 0.8);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 
+                0 10px 30px rgba(0,0,0,0.3),
+                0 0 0 1px rgba(0,255,255,0.1);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0,255,255,0.2);
+        }
+
+        .download-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 15px 35px rgba(0,0,0,0.4),
+                0 0 0 1px rgba(0,255,255,0.3);
+        }
+
+        .download-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00ffff, #ff00ff, #ffff00);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .download-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-size: 24px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            background: linear-gradient(135deg, #00ffff, #ff00ff);
+            box-shadow: 0 0 20px rgba(0,255,255,0.3);
+        }
+
+        .card-icon:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(0,255,255,0.5);
+        }
+
+        .card-icon::after {
+            display: none;
+        }
+
+        .basic-icon {
+            background: linear-gradient(135deg, #00ffff, #0080ff);
+        }
+
+        .ielts-icon {
+            background: linear-gradient(135deg, #ff00ff, #ff0080);
+        }
+
+        .auto-icon {
+            background: linear-gradient(135deg, #ffff00, #ff8000);
+        }
+
+        .daily-icon {
+            background: linear-gradient(135deg, #00ff00, #00ff80);
+        }
+
+        .toeic-icon {
+            background: linear-gradient(135deg, #ff8000, #ff4000);
+        }
+
+        .toefl-icon {
+            background: linear-gradient(135deg, #8000ff, #4000ff);
+        }
+
+        .business-icon {
+            background: linear-gradient(135deg, #ff0080, #ff0040);
+        }
+
+        .sports-icon {
+            background: linear-gradient(135deg, #00ff80, #00ff40);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(0,255,255,0.3);
+        }
+
+        .card-subtitle {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .card-stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(0,255,255,0.2);
+        }
+
+        .stat-item {
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .stat-item:hover {
+            transform: scale(1.02);
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0,255,255,0.5);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #b0b0b0;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .card-description {
+            color: #d0d0d0;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        /* ?芸???? */
+        .download-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #00ffff, #ff00ff);
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,255,255,0.3);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 25px rgba(0,255,255,0.5);
+            background: linear-gradient(135deg, #00e6e6, #e600e6);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+        }
+
+        .download-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .preview-section {
+            background: rgba(20, 20, 40, 0.8);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 
+                0 10px 30px rgba(0,0,0,0.3),
+                0 0 0 1px rgba(0,255,255,0.2);
+            border: 1px solid rgba(0,255,255,0.2);
+        }
+
+        .preview-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .preview-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00ffff, #ff00ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            box-shadow: 0 0 15px rgba(0,255,255,0.4);
+        }
+
+        .preview-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(0,255,255,0.3);
+        }
+
+        .preview-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(0,255,255,0.2);
+        }
+
+        .preview-table th {
+            background: linear-gradient(135deg, #00ffff, #ff00ff);
+            color: white;
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: bold;
+            position: relative;
+            text-shadow: 0 0 10px rgba(0,255,255,0.5);
+        }
+
+        .preview-table th::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+        }
+
+        .preview-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(0,255,255,0.1);
+            transition: all 0.2s ease;
+            color: #e0e0e0;
+        }
+
+        .preview-table tr:nth-child(even) {
+            background: rgba(0,255,255,0.05);
+        }
+
+        .preview-table tr:hover {
+            background: rgba(0,255,255,0.1);
+        }
+
+        .preview-table tr:hover td {
+            color: #00ffff;
+            font-weight: 500;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #00ffff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, rgba(0,255,0,0.2), rgba(0,200,0,0.1));
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border: 1px solid rgba(0,255,0,0.3);
+            box-shadow: 0 5px 15px rgba(0,255,0,0.2);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .success-message::before {
+            display: none;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, rgba(255,0,0,0.2), rgba(200,0,0,0.1));
+            color: #ff0000;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border: 1px solid rgba(255,0,0,0.3);
+            box-shadow: 0 5px 15px rgba(255,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #b0b0b0;
+            opacity: 0.8;
+        }
+
+        /* 蝪∪?蝯梯??豢? */
+        .card-stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(0,255,255,0.2);
+        }
+
+        .stat-item {
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .stat-item:hover {
+            transform: scale(1.02);
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0,255,255,0.5);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #b0b0b0;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .card-description {
+            color: #d0d0d0;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        /* 瘛餃??踵?撘??*/
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .download-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .card-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .preview-table {
+                font-size: 0.9rem;
+            }
+            
+            .preview-table th,
+            .preview-table td {
+                padding: 12px 10px;
+            }
+
+            .download-card {
+                padding: 25px;
+            }
+
+            .card-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            /* 蝘餃?閮剖?銝?撠???*/
+            .download-card:hover {
+                transform: translateY(-2px) scale(1.005);
+            }
+
+            .card-icon:hover {
+                transform: scale(1.02);
+            }
+
+            .download-btn:hover {
+                transform: translateY(-1px);
+            }
+
+            /* 皜??? */
+            body::before {
+                animation: twinkle 8s ease-in-out infinite;
+            }
+
+            body::after {
+                animation: meteor 16s linear infinite;
+            }
+        }
+
+        /* ?扯?芸? - 皜???其??扯閮剖?銝?*/
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .download-card:hover {
+                transform: none;
+            }
+
+            .card-icon:hover {
+                transform: none;
+            }
+
+            .download-btn:hover {
+                transform: none;
+            }
+        }
+
+        /* 瘛餃?瘛梯璅∪??舀? */
+        @media (prefers-color-scheme: dark) {
+            .download-card {
+                background: rgba(30, 30, 30, 0.95);
+                color: #fff;
+            }
+
+            .preview-section {
+                background: rgba(30, 30, 30, 0.95);
+                color: #fff;
+            }
+
+            .preview-table {
+                background: rgba(40, 40, 40, 0.9);
+            }
+
+            .preview-table tr:nth-child(even) {
+                background: rgba(50, 50, 50, 0.8);
+            }
+
+            .card-stats {
+                background: rgba(40, 40, 40, 0.8);
+            }
+        }
+
+        /* ??憿舐內? */
+        @keyframes starGlow {
+            0% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
+            100% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.4); }
+        }
+
+        /* ???? */
+        @keyframes starRewardPop {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+
+        /* ???單?? */
+        @keyframes starSound {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- ?????摰孵 -->
+    <div class="interactive-stars" id="interactiveStars"></div>
+    
+    <div id="app">
+        <div class="container">
+            <!-- 瘛餃???憿舐內???-->
+            <div class="stars-display" style="
+                background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 170, 0, 0.1));
+                border: 2px solid rgba(255, 215, 0, 0.3);
+                border-radius: 15px;
+                padding: 15px 25px;
+                margin-bottom: 30px;
+                text-align: center;
+                backdrop-filter: blur(10px);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+                animation: starGlow 2s ease-in-out infinite alternate;
+            ">
+                <div style="
+                    font-size: 1.5rem;
+                    font-weight: bold;
+                    color: #ffd700;
+                    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                ">
+                    <span id="totalStarsCount">潃?0</span>
+                    <span style="font-size: 1rem; color: #b0b0b0;">| 雿輻??閫??瑼?銝?</span>
+                </div>
+            </div>
+
+            <div class="header">
+                <h1>?? ?桀?瑼?銝?銝剖? ??</h1>
+                <p>??蝎暸擃?鞈芸摮?獢??拇???梯??賢? ??/p>
+                <div style="
+                    background: rgba(0,255,255,0.1);
+                    border: 1px solid rgba(0,255,255,0.3);
+                    border-radius: 10px;
+                    padding: 10px;
+                    margin-top: 15px;
+                    font-size: 0.9rem;
+                    color: #00ffff;
+                ">
+                    ? 雿輻?內嚗????圾??銝?瑼?
+                </div>
+            </div>
+
+            <!-- 瘛餃????祟?詨???-->
+            <div class="search-section" style="background: rgba(0,0,0,0.3); backdrop-filter: blur(15px); border-radius: 15px; padding: 20px; margin-bottom: 30px; border: 1px solid rgba(0,255,255,0.2); box-shadow: 0 0 20px rgba(0,255,255,0.1);">
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                    <input 
+                        v-model="searchQuery" 
+                        type="text" 
+                        placeholder="???桀?瑼?..." 
+                        style="flex: 1; min-width: 200px; padding: 12px 15px; border: none; border-radius: 10px; background: rgba(0,0,0,0.6); color: #ffffff; font-size: 1rem; border: 1px solid rgba(0,255,255,0.3); transition: all 0.3s ease;"
+                        @focus="$event.target.style.boxShadow='0 0 15px rgba(0,255,255,0.4)'"
+                        @blur="$event.target.style.boxShadow='none'"
+                    >
+                    <select 
+                        v-model="selectedLevel" 
+                        style="padding: 12px 15px; border: none; border-radius: 10px; background: rgba(0,0,0,0.6); color: #ffffff; font-size: 1rem; min-width: 120px; border: 1px solid rgba(0,255,255,0.3); transition: all 0.3s ease;"
+                        @focus="$event.target.style.boxShadow='0 0 15px rgba(0,255,255,0.4)'"
+                        @blur="$event.target.style.boxShadow='none'"
+                    >
+                        <option value="">???蝝?/option>
+                        <option value="??">??</option>
+                        <option value="銝剔?">銝剔?</option>
+                        <option value="銝剝?蝝?>銝剝?蝝?/option>
+                        <option value="擃?">擃?</option>
+                    </select>
+                    <button 
+                        @click="resetFilters" 
+                        style="padding: 12px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, #00ffff, #ff00ff); color: white; font-weight: bold; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0 15px rgba(0,255,255,0.3);"
+                        @mouseover="$event.target.style.transform='translateY(-2px)'; $event.target.style.boxShadow='0 0 25px rgba(0,255,255,0.5)'"
+                        @mouseout="$event.target.style.transform='translateY(0)'; $event.target.style.boxShadow='0 0 15px rgba(0,255,255,0.3)'"
+                    >
+                        ?? ?蔭蝭拚
+                    </button>
+
+
+                </div>
+                <div style="margin-top: 15px; color: #00ffff; font-size: 0.9rem; text-shadow: 0 0 5px rgba(0,255,255,0.5);">
+                    ???曉 {{ filteredFiles.length }} ??獢?
+                </div>
+            </div>
+
+            <div class="download-grid">
+                <div class="download-card" v-for="file in filteredFiles" :key="file.id" @click="selectFile(file)">
+                    <div class="card-header">
+                        <div class="card-icon" :class="file.iconClass">
+                            {{ file.icon }}
+                        </div>
+                        <div>
+                            <div class="card-title">{{ file.title }}</div>
+                            <div class="card-subtitle">{{ file.subtitle }}</div>
+                        </div>
+                    </div>
+
+                    <div class="card-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">{{ file.wordCount }}</div>
+                            <div class="stat-label">?桀??賊?</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{{ file.fileSize }}</div>
+                            <div class="stat-label">瑼?憭批?</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" style="color: #ffd700;">{{ file.unlockCost || 10 }}</div>
+                            <div class="stat-label">閫??鞎餌</div>
+                        </div>
+                    </div>
+
+                    <div class="card-description">
+                        {{ file.description }}
+                    </div>
+
+                    <button 
+                        class="download-btn" 
+                        @click.stop="isUnlocked(file.id) ? downloadFile(file) : unlockFile(file)"
+                        :disabled="downloading === file.id || (!isUnlocked(file.id) && !canUnlock(file))"
+                        :style="getUnlockButtonStyle(file)"
+                        :title="isUnlocked(file.id) ? '暺?銝?瑼?' : '暺?閫??瑼?'"
+                    >
+                        <span v-if="downloading === file.id" class="loading"></span>
+                        <span v-else-if="isUnlocked(file.id)">
+                            ? 銝?瑼?
+                        </span>
+                        <span v-else>
+                            ?? 閫??瑼? ({{ file.unlockCost || 10 }} 潃?
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="preview-section" v-if="selectedFile">
+                <div class="preview-header">
+                    <div class="preview-icon">??儭?/div>
+                    <div class="preview-title">{{ selectedFile.title }} - 瑼??汗</div>
+                    <button 
+                        @click="selectedFile = null" 
+                        style="margin-left: auto; background: none; border: none; color: #667eea; font-size: 1.5rem; cursor: pointer; padding: 5px; border-radius: 50%; transition: all 0.3s ease;"
+                        title="???汗"
+                    >
+                        ??
+                    </button>
+                </div>
+                
+                <table class="preview-table">
+                    <thead>
+                        <tr>
+                            <th>?望??桀?</th>
+                            <th>銝剜?蝧餉陌</th>
+                            <th>?望?靘</th>
+                            <th>銝剜?靘</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="word in selectedFile.preview" :key="word.english">
+                            <td><strong>{{ word.english }}</strong></td>
+                            <td>{{ word.chinese }}</td>
+                            <td>{{ word.example_en }}</td>
+                            <td>{{ word.example_ch }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div v-if="message" :class="messageClass">
+                {{ message }}
+            </div>
+
+            <!-- ???甇瑕???-->
+            <div v-if="starRewardHistory.length > 0" class="star-history-section" style="
+                background: rgba(20, 20, 40, 0.8);
+                backdrop-filter: blur(15px);
+                border-radius: 20px;
+                padding: 30px;
+                margin-top: 40px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                border: 1px solid rgba(255, 215, 0, 0.2);
+            ">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <div style="
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        background: linear-gradient(135deg, #ffd700, #ffaa00);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        margin-right: 15px;
+                        color: #000;
+                        font-weight: bold;
+                        box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+                    ">??</div>
+                    <div style="font-size: 1.3rem; font-weight: bold; color: #ffffff;">
+                        閫??甇瑕閮?
+                    </div>
+                </div>
+                
+                <div style="max-height: 200px; overflow-y: auto;">
+                    <div v-for="(record, index) in starRewardHistory.slice(-5)" :key="index" style="
+                        background: rgba(0,0,0,0.3);
+                        border-radius: 10px;
+                        padding: 15px;
+                        margin-bottom: 10px;
+                        border: 1px solid rgba(255, 215, 0, 0.2);
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    ">
+                        <div>
+                            <div style="color: #ffd700; font-weight: bold;">{{ record.file }}</div>
+                            <div style="color: #b0b0b0; font-size: 0.9rem;">
+                                {{ new Date(record.timestamp).toLocaleString() }}
+                            </div>
+                        </div>
+                        <div style="
+                            background: linear-gradient(135deg, #ff0000, #ff4000);
+                            color: #ffffff;
+                            padding: 8px 15px;
+                            border-radius: 20px;
+                            font-weight: bold;
+                            font-size: 1.1rem;
+                        ">
+                            -{{ record.stars }} 潃?
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>?? 穢 2024 摰??桀?摮貊?撟喳 - 霈隤飛蝧??????</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ???????
+        function createInteractiveStars() {
+            const starsContainer = document.getElementById('interactiveStars');
+            const starCount = 40; // 憓????賊?
+            
+            // ?萄遣??
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
+            }
+            
+            // 皛?蝘餃?鈭辣 - ?芸??????
+            let mouseX = 0;
+            let mouseY = 0;
+            let isMouseMoving = false;
+            let animationFrame;
+            
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                isMouseMoving = true;
+                
+                if (!animationFrame) {
+                    animationFrame = requestAnimationFrame(updateAllStars);
+                }
+            });
+            
+            function updateAllStars() {
+                if (!isMouseMoving) {
+                    animationFrame = null;
+                    return;
+                }
+                
+                const stars = document.querySelectorAll('.star');
+                const centerX = window.innerWidth / 2;
+                const centerY = window.innerHeight / 2;
+                
+                stars.forEach((star, index) => {
+                    const rect = star.getBoundingClientRect();
+                    const starX = rect.left + rect.width / 2;
+                    const starY = rect.top + rect.height / 2;
+                    
+                    // 閮??唳?曌?頝
+                    const distanceToMouse = Math.sqrt(
+                        Math.pow(mouseX - starX, 2) + Math.pow(mouseY - starY, 2)
+                    );
+                    
+                    // 閮??唬葉敹?頝
+                    const distanceToCenter = Math.sqrt(
+                        Math.pow(centerX - starX, 2) + Math.pow(centerY - starY, 2)
+                    );
+                    
+                    // 皛?敶梢??
+                    let mouseEffect = 0;
+                    if (distanceToMouse < 150) {
+                        mouseEffect = 1 - (distanceToMouse / 150);
+                    }
+                    
+                    // 銝剖?撘???
+                    let centerEffect = 0;
+                    if (distanceToCenter < 200) {
+                        centerEffect = 1 - (distanceToCenter / 200);
+                    }
+                    
+                    // 蝯???
+                    const totalEffect = Math.max(mouseEffect, centerEffect * 0.3);
+                    
+                    // ?霈?
+                    const scale = 1 + totalEffect * 0.4;
+                    const opacity = 0.6 + totalEffect * 0.4;
+                    const glow = 4 + totalEffect * 8;
+                    
+                    star.style.transform = `scale(${scale})`;
+                    star.style.opacity = opacity;
+                    star.style.boxShadow = `0 0 ${glow}px currentColor`;
+                    
+                    // 瘛餃?頛凝?宏????
+                    if (totalEffect > 0.1) {
+                        const moveX = (mouseX - starX) * 0.01 * totalEffect;
+                        const moveY = (mouseY - starY) * 0.01 * totalEffect;
+                        star.style.transform += ` translate(${moveX}px, ${moveY}px)`;
+                    }
+                });
+                
+                isMouseMoving = false;
+                animationFrame = requestAnimationFrame(updateAllStars);
+            }
+            
+            // 瘜Ｘ答撘????
+            let waveTime = 0;
+            function createWaveEffect() {
+                waveTime += 0.02;
+                const stars = document.querySelectorAll('.star');
+                
+                stars.forEach((star, index) => {
+                    const waveOffset = index * 0.3;
+                    const wave = Math.sin(waveTime + waveOffset) * 0.1;
+                    const currentTransform = star.style.transform || '';
+                    
+                    // 靽???????瘛餃?瘜Ｘ答??
+                    if (currentTransform.includes('scale')) {
+                        const scaleMatch = currentTransform.match(/scale\(([^)]+)\)/);
+                        if (scaleMatch) {
+                            const currentScale = parseFloat(scaleMatch[1]);
+                            const newScale = currentScale + wave;
+                            star.style.transform = currentTransform.replace(
+                                /scale\([^)]+\)/,
+                                `scale(${Math.max(0.8, newScale)})`
+                            );
+                        }
+                    }
+                });
+                
+                requestAnimationFrame(createWaveEffect);
+            }
+            
+            // ??瘜Ｘ答??
+            createWaveEffect();
+            
+            // ?冽?????
+            setInterval(() => {
+                const stars = document.querySelectorAll('.star');
+                const randomStar = stars[Math.floor(Math.random() * stars.length)];
+                const originalOpacity = randomStar.style.opacity;
+                const originalTransform = randomStar.style.transform;
+                
+                randomStar.style.opacity = '1';
+                randomStar.style.transform = originalTransform.replace(/scale\([^)]+\)/, 'scale(1.5)');
+                
+                setTimeout(() => {
+                    randomStar.style.opacity = originalOpacity;
+                    randomStar.style.transform = originalTransform;
+                }, 400);
+            }, 1500);
+        }
+        
+        // ?頛摰?敺?憪???
+        document.addEventListener('DOMContentLoaded', createInteractiveStars);
+
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    downloading: null,
+                    message: '',
+                    messageClass: '',
+                    selectedFile: null,
+                    searchQuery: '',
+                    selectedLevel: '',
+                    // 瘛餃???蝟餌絞?豢?
+                    totalStars: 0,
+                    starRewardHistory: [],
+                    vocabularyFiles: [
+                        {
+                            id: 'basic400',
+                            title: '?? 摰??仿??桀???,
+                            subtitle: '400?蝷?摮?- ?Ｙ揣?梯??絲暺?,
+                            icon: '潃?,
+                            iconClass: 'basic-icon',
+                            wordCount: '400',
+                            fileSize: '26KB',
+                            level: '??',
+                            unlockCost: 5,
+                            description: '蝎暸??箇???00??摮??拙??梯??飛????亙虜?暑?撣貊??敶?蝪∪靘??,
+                            filename: '400??csv',
+                            preview: [
+                                {
+                                    english: 'I',
+                                    chinese: '??,
+                                    example_en: 'I am a student.',
+                                    example_ch: '?銝?飛??
+                                },
+                                {
+                                    english: 'you',
+                                    chinese: '雿?雿?,
+                                    example_en: 'You are my friend.',
+                                    example_ch: '雿??????
+                                },
+                                {
+                                    english: 'he',
+                                    chinese: '隞?,
+                                    example_en: 'He has a dog.',
+                                    example_ch: '隞?銝?餌???
+                                },
+                                {
+                                    english: 'she',
+                                    chinese: '憟?,
+                                    example_en: 'She is my sister.',
+                                    example_ch: '憟寞??憪?
+                                },
+                                {
+                                    english: 'it',
+                                    chinese: '??摰?,
+                                    example_en: 'It is a cat.',
+                                    example_ch: '?銝?餉???
+                                }
+                            ]
+                        },
+                        {
+                            id: 'ielts',
+                            title: '?? ???岫?桀???,
+                            subtitle: '1000?ELTS敹??桀? - 敺??梯??岫',
+                            icon: '??',
+                            iconClass: 'ielts-icon',
+                            wordCount: '1000+',
+                            fileSize: '75KB',
+                            level: '銝剔?',
+                            unlockCost: 15,
+                            description: '蝎暸 IELTS ?岫銝剜?撣詨?曄? 1000 ?摮??閰喟敦?葉?望?蝧餉陌?祕?其??伐?撟怠?典翰????敶???,
+                            filename: '1000?望炎?桀?.csv',
+                            preview: [
+                                {
+                                    english: 'abandon',
+                                    chinese: '??',
+                                    example_en: 'He decided to abandon the car on the roadside.',
+                                    example_ch: '隞捱摰?頠????刻楝??
+                                },
+                                {
+                                    english: 'ability',
+                                    chinese: '?賢?',
+                                    example_en: 'She has the ability to solve complex problems.',
+                                    example_ch: '憟寞??賢?閫?捱銴???憿?
+                                },
+                                {
+                                    english: 'accept',
+                                    chinese: '?亙?',
+                                    example_en: 'He accepted the job offer.',
+                                    example_ch: '隞????遢撌乩?璈???
+                                },
+                                {
+                                    english: 'active',
+                                    chinese: '瘣餉???,
+                                    example_en: 'He is very active in school activities.',
+                                    example_ch: '隞摮豢瘣餃?銝剝?撣豢暑頨?
+                                },
+                                {
+                                    english: 'advice',
+                                    chinese: '撱箄降',
+                                    example_en: 'She gave me good advice.',
+                                    example_ch: '憟寧策鈭?憟賜?撱箄降??
+                                }
+                            ]
+                        },
+                        {
+                            id: 'daily',
+                            title: '?? ?啁??暑?桀???,
+                            subtitle: '150?撣貊?瘣餃摮?- ?啁?鈭箇??亙虜',
+                            icon: '??',
+                            iconClass: 'daily-icon',
+                            wordCount: '150+',
+                            fileSize: '15KB',
+                            level: '??',
+                            unlockCost: 8,
+                            description: '蝎暸?亙虜?暑銝剜?撣貊??摮??憌?振摨准極雿予瘞??撖衣閰?嚗?撣訾漱瘚蝙?具?,
+                            filename: '?箇??暑?桀?.csv',
+                            preview: [
+                                {
+                                    english: 'breakfast',
+                                    chinese: '?拚?',
+                                    example_en: 'I eat breakfast at 7 AM every morning.',
+                                    example_ch: '??憭拇銝?暺??拚???
+                                },
+                                {
+                                    english: 'lunch',
+                                    chinese: '??',
+                                    example_en: 'Let\'s have lunch together today.',
+                                    example_ch: '隞予??韏瑕????扼?
+                                },
+                                {
+                                    english: 'dinner',
+                                    chinese: '??',
+                                    example_en: 'We usually have dinner at 6 PM.',
+                                    example_ch: '?虜??6暺?????
+                                },
+                                {
+                                    english: 'coffee',
+                                    chinese: '?',
+                                    example_en: 'I drink coffee every morning.',
+                                    example_ch: '??憭拇銝???～?
+                                },
+                                {
+                                    english: 'water',
+                                    chinese: '瘞?,
+                                    example_en: 'Please drink more water.',
+                                    example_ch: '隢??偌??
+                                }
+                            ]
+                        },
+                        {
+                            id: 'toeic',
+                            title: '?儭?憭芰征?瑕?桀???,
+                            subtitle: '100?OEIC?詨??桀? - 敺??瑕?梯?',
+                            icon: '?儭?,
+                            iconClass: 'toeic-icon',
+                            wordCount: '100',
+                            fileSize: '10KB',
+                            level: '銝剔?',
+                            unlockCost: 12,
+                            description: '撠 TOEIC ?岫閮剛???00?敹摮???平??游虜?刻?敶??拙?皞??瑕?梯??岫??,
+                            filename: 'TOEIC___100.csv',
+                            preview: [
+                                {
+                                    english: 'accommodate',
+                                    chinese: '摰寧?嚗?靘摰?,
+                                    example_en: 'The hotel can accommodate up to 200 guests.',
+                                    example_ch: '?振憌臬??憭摰寧?200雿恥鈭箝?
+                                },
+                                {
+                                    english: 'accomplish',
+                                    chinese: '摰?嚗???,
+                                    example_en: 'She accomplished all her tasks before the deadline.',
+                                    example_ch: '憟孵?芣迫?交???????遙??
+                                },
+                                {
+                                    english: 'agenda',
+                                    chinese: '霅啁?',
+                                    example_en: 'The meeting agenda includes budget review and planning.',
+                                    example_ch: '?降霅啁????撖拇????
+                                },
+                                {
+                                    english: 'allocate',
+                                    chinese: '??嚗蝯?,
+                                    example_en: 'They allocated funds for the new project.',
+                                    example_ch: '隞?啣?獢甈整?
+                                },
+                                {
+                                    english: 'annual',
+                                    chinese: '撟游漲??,
+                                    example_en: 'The annual report was published in March.',
+                                    example_ch: '撟游漲?勗??其??雿?
+                                }
+                            ]
+                        },
+                        {
+                            id: 'toefl',
+                            title: '? 摮貉??弦?桀???,
+                            subtitle: '600?OEFL擃??桀? - 摮貉??梯?憭批葦',
+                            icon: '?',
+                            iconClass: 'toefl-icon',
+                            wordCount: '600+',
+                            fileSize: '78KB',
+                            level: '擃?',
+                            unlockCost: 25,
+                            description: '撠 TOEFL ?岫閮剛???蝝摮?嚗??怠飛銵扯?敶?銴?銵券?嚗????摮貉岫?飛蝧?,
+                            filename: '???桀?.csv',
+                            preview: [
+                                {
+                                    english: 'equivocal',
+                                    chinese: '璅∠??拙??,
+                                    example_en: 'Her answer was equivocal, leaving us more confused.',
+                                    example_ch: '憟寧???璅∠??拙嚗?????唳???
+                                },
+                                {
+                                    english: 'eradicate',
+                                    chinese: '?寥嚗?皛?,
+                                    example_en: 'The goal is to eradicate poverty within a generation.',
+                                    example_ch: '?格??臬銝隞?犖銋?寥鞎批??
+                                },
+                                {
+                                    english: 'eschew',
+                                    chinese: '?輸?嚗?蝯?,
+                                    example_en: 'He decided to eschew all forms of processed sugar.',
+                                    example_ch: '隞捱摰?蝯???撌亦???
+                                },
+                                {
+                                    english: 'euphemism',
+                                    chinese: '憪?隤芣?',
+                                    example_en: '"Passed away" is a common euphemism for "died."',
+                                    example_ch: '"??"??甇颱滿"?虜閬?憍牧瘜?
+                                },
+                                {
+                                    english: 'exacerbate',
+                                    chinese: '??嚗蝙?∪?',
+                                    example_en: 'His comments only served to exacerbate the tension.',
+                                    example_ch: '隞?閮隢????撘菜除瘞?
+                                }
+                            ]
+                        },
+                        {
+                            id: 'business',
+                            title: '??? 憭芰征???桀???,
+                            subtitle: '200???隤摮?- ???平蝎曇',
+                            icon: '???',
+                            iconClass: 'business-icon',
+                            wordCount: '200+',
+                            fileSize: '25KB',
+                            level: '銝剝?蝝?,
+                            unlockCost: 18,
+                            description: '蝎暸?平??湔?撣貊??摮???降???扎恣?瓷??撠平閰?嚗??渲隤飛蝧?,
+                            filename: '???梯??桀?.csv',
+                            preview: [
+                                {
+                                    english: 'meeting',
+                                    chinese: '?降',
+                                    example_en: 'We have a meeting at 2 PM today.',
+                                    example_ch: '??憭拐???暺??降??
+                                },
+                                {
+                                    english: 'presentation',
+                                    chinese: '蝪∪',
+                                    example_en: 'She gave an excellent presentation.',
+                                    example_ch: '憟孵?鈭???脩?蝪∪??
+                                },
+                                {
+                                    english: 'deadline',
+                                    chinese: '?芣迫?交?',
+                                    example_en: 'The project deadline is next Friday.',
+                                    example_ch: '撠??芣迫?交??臭??曹???
+                                },
+                                {
+                                    english: 'budget',
+                                    chinese: '??',
+                                    example_en: 'We need to stay within the budget.',
+                                    example_ch: '??閬?????扼?
+                                },
+                                {
+                                    english: 'negotiation',
+                                    chinese: '隢',
+                                    example_en: 'The negotiation lasted for three hours.',
+                                    example_ch: '隢??鈭?????
+                                }
+                            ]
+                        },
+                        {
+                            id: 'sports',
+                            title: '???????桀???,
+                            subtitle: '22????瘣餃摮?- 瘣餃??????',
+                            icon: '??,
+                            iconClass: 'sports-icon',
+                            wordCount: '22',
+                            fileSize: '2KB',
+                            level: '??',
+                            unlockCost: 3,
+                            description: '蝎暸???撣貊?瘣餌???望??桀?嚗??怠?蝔桅????柴???敹萄??亙虜?刻?嚗??摮貉飛蝧?,
+                            filename: '???暑?桀?.csv',
+                            preview: [
+                                {
+                                    english: 'something',
+                                    chinese: '??嚗???,
+                                    example_en: 'I have something to tell you.',
+                                    example_ch: '??鈭??迄雿?
+                                },
+                                {
+                                    english: 'everything',
+                                    chinese: '瘥辣鈭?,
+                                    example_en: 'Everything is ready for the trip.',
+                                    example_ch: '?????歇蝬??末鈭?
+                                },
+                                {
+                                    english: 'tennis',
+                                    chinese: '蝬脩?',
+                                    example_en: 'She plays tennis every Saturday.',
+                                    example_ch: '憟寞????剜?蝬脩???
+                                },
+                                {
+                                    english: 'badminton',
+                                    chinese: '蝢賜?',
+                                    example_en: 'They play badminton after school.',
+                                    example_ch: '隞摮詨??噬??
+                                },
+                                {
+                                    english: 'sport',
+                                    chinese: '??',
+                                    example_en: 'Soccer is a popular sport.',
+                                    example_ch: '頞喟??臭???甇∟?????
+                                }
+                            ]
+                        },
+                        {
+                            id: '800words',
+                            title: '?? ?瘝喳蝷摮?',
+                            subtitle: '800?蝷?摮?- ?瘝喟頂敹?閰?',
+                            icon: '??',
+                            iconClass: 'basic-icon',
+                            wordCount: '800',
+                            fileSize: '45KB',
+                            level: '??',
+                            unlockCost: 10,
+                            description: '蝎暸800?蝷?摮???亙虜?暑??????撣貊閰?嚗?隤?摮貉飛蝧?,
+                            filename: '800?桀?.csv',
+                            preview: [
+                                {
+                                    english: 'something',
+                                    chinese: '??嚗???,
+                                    example_en: 'I have something to tell you.',
+                                    example_ch: '??鈭??迄雿?
+                                },
+                                {
+                                    english: 'everything',
+                                    chinese: '瘥辣鈭?,
+                                    example_en: 'Everything is ready for the trip.',
+                                    example_ch: '?????歇蝬??末鈭?
+                                },
+                                {
+                                    english: 'tennis',
+                                    chinese: '蝬脩?',
+                                    example_en: 'She plays tennis every Saturday.',
+                                    example_ch: '憟寞????剜?蝬脩???
+                                },
+                                {
+                                    english: 'badminton',
+                                    chinese: '蝢賜?',
+                                    example_en: 'They play badminton after school.',
+                                    example_ch: '隞摮詨??噬??
+                                },
+                                {
+                                    english: 'sport',
+                                    chinese: '??',
+                                    example_en: 'Soccer is a popular sport.',
+                                    example_ch: '頞喟??臭???甇∟?????
+                                }
+                            ]
+                        },
+                        {
+                            id: 'newvocab1',
+                            title: '?? ?唳??Ｙ揣?桀???,
+                            subtitle: '50?移?詨祕?典摮?- ?Ｙ揣?啁?隤???',
+                            icon: '??',
+                            iconClass: 'basic-icon',
+                            wordCount: '50',
+                            fileSize: '8KB',
+                            level: '??',
+                            unlockCost: 6,
+                            description: '蝎暸50?祕?刻?摮???亙虜?暑???”??嗥憓?閰?嚗?隤飛蝧蝙?具?,
+                            filename: '?啣??桀???.csv',
+                            preview: [
+                                {
+                                    english: 'difficult',
+                                    chinese: '?圈??,
+                                    example_en: 'This math problem is difficult.',
+                                    example_ch: '???詨飛憿??圈??
+                                },
+                                {
+                                    english: 'as',
+                                    chinese: '雿嚗???,
+                                    example_en: 'She works as a volunteer on weekends.',
+                                    example_ch: '憟寥望雿敹極撌乩???
+                                },
+                                {
+                                    english: 'own',
+                                    chinese: '?芸楛??,
+                                    example_en: 'I have my own desk at home.',
+                                    example_ch: '?摰嗉ㄐ?撌梁??豢???
+                                },
+                                {
+                                    english: 'true',
+                                    chinese: '?祕??,
+                                    example_en: 'Is this story true?',
+                                    example_ch: '??鈭????'
+                                },
+                                {
+                                    english: 'sea',
+                                    chinese: '瘚?,
+                                    example_en: 'We swim in the sea during summer vacation.',
+                                    example_ch: '???瘚瑁ㄐ皜豢陶??
+                                }
+                            ]
+                        },
+                        {
+                            id: 'newvocab2',
+                            title: '?? 瘚??脤??桀???,
+                            subtitle: '50?脤?撖衣?桀? - 瘚???批???,
+                            icon: '??',
+                            iconClass: 'ielts-icon',
+                            wordCount: '50',
+                            fileSize: '8KB',
+                            level: '銝剔?',
+                            unlockCost: 8,
+                            description: '蝎暸50?脤??望??桀?嚗??急鞊⊥?敹萸??”?冗????閰?嚗???隤”???,
+                            filename: '?啣??桀???.csv',
+                            preview: [
+                                {
+                                    english: 'basket',
+                                    chinese: '蝐?',
+                                    example_en: 'I carry apples in a basket to the picnic.',
+                                    example_ch: '?蝐????葆?圈?擗?
+                                },
+                                {
+                                    english: 'church',
+                                    chinese: '??',
+                                    example_en: 'We go to church on Sunday morning.',
+                                    example_ch: '???予?拐??餅???
+                                },
+                                {
+                                    english: 'hunt',
+                                    chinese: '?',
+                                    example_en: 'My grandfather used to hunt in the forest.',
+                                    example_ch: '??箔誑?璉格?鋆⊥??萸?
+                                },
+                                {
+                                    english: 'roll',
+                                    chinese: '皛曉?嚗???,
+                                    example_en: 'The ball will roll down the hill.',
+                                    example_ch: '??敺?撅望遝銝???
+                                },
+                                {
+                                    english: 'hang',
+                                    chinese: '???詨?',
+                                    example_en: 'Please hang your coat on that hook.',
+                                    example_ch: '隢?憭??????曆???
+                                }
+                            ]
+                        },
+                        {
+                            id: 'newvocab3',
+                            title: '?? ?啁??啣??桀???,
+                            subtitle: '50??嗥憓摮?- ?Ｙ揣?啁???暻?,
+                            icon: '??',
+                            iconClass: 'daily-icon',
+                            wordCount: '50',
+                            fileSize: '8KB',
+                            level: '??',
+                            unlockCost: 7,
+                            description: '蝎暸50??嗥憓??摮???芰?曇情??憓予瘞????閰?嚗?飛蝧?嗥?摮貉隤?,
+                            filename: '?啣??桀???.csv',
+                            preview: [
+                                {
+                                    english: 'cut',
+                                    chinese: '???瑕',
+                                    example_en: 'Be careful not to cut your finger when you slice the bread.',
+                                    example_ch: '?嗡??熊??嚗?敹?脣????
+                                },
+                                {
+                                    english: 'fill',
+                                    chinese: '鋆遛',
+                                    example_en: 'Please fill the water bottle before the hike.',
+                                    example_ch: '隢?亥???瘞渡鋆遛??
+                                },
+                                {
+                                    english: 'pack',
+                                    chinese: '??鋆拳',
+                                    example_en: 'I need to pack my clothes for the weekend trip.',
+                                    example_ch: '??閬?望???﹝????
+                                },
+                                {
+                                    english: 'package',
+                                    chinese: '?ㄨ嚗?鋆?,
+                                    example_en: 'The delivery man dropped off a package at our door.',
+                                    example_ch: '?疏?⊥?銝??鋆寞?冽??振????
+                                },
+                                {
+                                    english: 'air',
+                                    chinese: '蝛箸除',
+                                    example_en: 'Open the window to let fresh air into the room.',
+                                    example_ch: '??蝒霈擙桃征瘞?脣?輸???
+                                }
+                            ]
+                        },
+                        {
+                            id: 'newvocab4',
+                            title: '? ??憌?桀???,
+                            subtitle: '50???刻????桀? - ????摰銵?,
+                            icon: '?',
+                            iconClass: 'business-icon',
+                            wordCount: '50',
+                            fileSize: '8KB',
+                            level: '銝剔?',
+                            unlockCost: 9,
+                            description: '蝎暸50???刻????賊??望??桀?嚗??怠??冽?敹萸??”?犖??靽?閰?嚗?飛蝧??”?隤?,
+                            filename: '?啣??桀???.csv',
+                            preview: [
+                                {
+                                    english: 'safe',
+                                    chinese: '摰??,
+                                    example_en: 'Always wear a helmet to stay safe when you ride a bike.',
+                                    example_ch: '擉頦???摰??游??典蜇?靽?摰??
+                                },
+                                {
+                                    english: 'sharp',
+                                    chinese: '???????,
+                                    example_en: 'Be careful with that knife; it is very sharp.',
+                                    example_ch: '閬?敹??嚗??虜???
+                                },
+                                {
+                                    english: 'lazy',
+                                    chinese: '?嗆??,
+                                    example_en: 'The lazy cat sleeps on the sofa all day.',
+                                    example_ch: '???嗆???游予頨箏瘝銝閬箝?
+                                },
+                                {
+                                    english: 'glad',
+                                    chinese: '擃???,
+                                    example_en: 'I am glad we won the game today.',
+                                    example_ch: '??擃???憭抵?敺?瘥魚??
+                                },
+                                {
+                                    english: 'excellent',
+                                    chinese: '?芰???,
+                                    example_en: 'She did an excellent job on her science project.',
+                                    example_ch: '憟孵蝘飛撠?銝?敺??芰???
+                                }
+                            ]
+                        },
+                        {
+                            id: 'newvocab5',
+                            title: '?? ?????桀???,
+                            subtitle: '50???亥????桀? - ???蝯望???,
+                            icon: '??',
+                            iconClass: 'sports-icon',
+                            wordCount: '50',
+                            fileSize: '8KB',
+                            level: '??',
+                            unlockCost: 6,
+                            description: '蝎暸50???亥????賊??望??桀?嚗??怎??交蟡??暑?蝯梁?靽?閰?嚗?飛蝧??隤?,
+                            filename: '?啣??桀???.csv',
+                            preview: [
+                                {
+                                    english: 'row',
+                                    chinese: '????,
+                                    example_en: 'Please sit in a row during assembly.',
+                                    example_ch: '隢????????
+                                },
+                                {
+                                    english: 'million',
+                                    chinese: '?曇',
+                                    example_en: 'The population of the city is over one million.',
+                                    example_ch: '??撣?鈭箏頞?銝?曇??
+                                },
+                                {
+                                    english: 'goose',
+                                    chinese: '曀?,
+                                    example_en: 'A goose swam across the pond.',
+                                    example_ch: '銝?駁?皜賊?瘙???
+                                },
+                                {
+                                    english: 'bug',
+                                    chinese: '?脣?',
+                                    example_en: 'I found a bug crawling on the window.',
+                                    example_ch: '??曆??餉摮蝒銝銵?
+                                },
+                                {
+                                    english: 'hen',
+                                    chinese: '瘥?',
+                                    example_en: 'The hen laid five eggs this morning.',
+                                    example_ch: '?瘥?隞予?拐?銝?鈭???
+                                }
+                            ]
+                        },
+                        {
+                            id: 'newvocab6',
+                            title: '??儭?撱箇?蟡挪?桀???,
+                            subtitle: '50?遣蝭?蝛粹??桀? - 摰?撱箇???銵?,
+                            icon: '??儭?,
+                            iconClass: 'toeic-icon',
+                            wordCount: '50',
+                            fileSize: '8KB',
+                            level: '銝剔?',
+                            unlockCost: 8,
+                            description: '蝎暸50?遣蝭?蝛粹??賊??望??桀?嚗??怠遣蝭?瑽征??敹萸恕?扯身閮?閰?嚗?飛蝧遣蝭隤?,
+                            filename: '?啣??桀???.csv',
+                            preview: [
+                                {
+                                    english: 'paint',
+                                    chinese: '???瘝寞?',
+                                    example_en: 'Please paint the wall blue.',
+                                    example_ch: '隢???瞍????
+                                },
+                                {
+                                    english: 'bridge',
+                                    chinese: '璈?',
+                                    example_en: 'We walked across the bridge to get to the park.',
+                                    example_ch: '?粥??璅???
+                                },
+                                {
+                                    english: 'airport',
+                                    chinese: '璈',
+                                    example_en: 'They arrived at the airport early in the morning.',
+                                    example_ch: '隞?憭扳撠勗???氬?
+                                },
+                                {
+                                    english: 'postcard',
+                                    chinese: '?縑??,
+                                    example_en: 'She sent a postcard from her vacation in Japan.',
+                                    example_ch: '憟孵??交摨血???鈭?撘菜?靽∠???
+                                },
+                                {
+                                    english: 'stair',
+                                    chinese: '璅０',
+                                    example_en: 'He climbed the stair to reach his room.',
+                                    example_ch: '隞璅０?唬????
+                                }
+                            ]
+                        },
+                        {
+                            id: 'newvocab7',
+                            title: '??? ?瑟平憭芰征?桀???,
+                            subtitle: '50?璆剛?撌乩??桀? - 憭芰征鈭箇??瑟平?雄',
+                            icon: '?',
+                            iconClass: 'business-icon',
+                            wordCount: '50',
+                            fileSize: '8KB',
+                            level: '銝剔?',
+                            unlockCost: 9,
+                            description: '蝎暸50?璆剛?撌乩??賊??望??桀?嚗??怨璆剝??極雿憓?湔??賜?閰?嚗?飛蝧?渲隤?,
+                            filename: '?啣??桀???.csv',
+                            preview: [
+                                {
+                                    english: 'set',
+                                    chinese: '?萇?嚗閮?,
+                                    example_en: 'Please set the table before dinner.',
+                                    example_ch: '隢???憟賣?摮?
+                                },
+                                {
+                                    english: 'bite',
+                                    chinese: '??,
+                                    example_en: 'Be careful, the dog might bite.',
+                                    example_ch: '撠?嚗?餌??航?鈭箝?
+                                },
+                                {
+                                    english: 'die',
+                                    chinese: '甇颱滿',
+                                    example_en: 'The flowers will die without water.',
+                                    example_ch: '?梯瘝偌撠望??舀香??
+                                },
+                                {
+                                    english: 'somewhere',
+                                    chinese: '??',
+                                    example_en: 'I left my book somewhere in the classroom.',
+                                    example_ch: '???豢?冽?摰斤?????
+                                },
+                                {
+                                    english: 'abroad',
+                                    chinese: '?啣?憭??典?憭?,
+                                    example_en: 'She studies abroad next year.',
+                                    example_ch: '憟寞?撟游??敹菜??
+                                }
+                            ]
+                        },
+                        {
+                            id: 'newvocab8',
+                            title: '?儭?蝘?銵??桀???,
+                            subtitle: '50????隞??瘣餃摮?- ?芯?蝘???閮',
+                            icon: '?儭?,
+                            iconClass: 'toefl-icon',
+                            wordCount: '50',
+                            fileSize: '8KB',
+                            level: '銝剔?',
+                            unlockCost: 10,
+                            description: '蝎暸50????隞??瘣餌??摮??蝘??Ｗ??雯頝舀?敹萸隞??瘣餅撘?閰?嚗?飛蝧???梯???,
+                            filename: '?啣??桀???.csv',
+                            preview: [
+                                {
+                                    english: 'screen',
+                                    chinese: '?Ｗ?',
+                                    example_en: 'The teacher shows the video on the screen.',
+                                    example_ch: '?葦?刻撟??剜敶梁???
+                                },
+                                {
+                                    english: 'puppy',
+                                    chinese: '撟潛',
+                                    example_en: 'The puppy plays with a ball in the yard.',
+                                    example_ch: '撟潛?券摮ㄐ?拍???
+                                },
+                                {
+                                    english: 'lid',
+                                    chinese: '??',
+                                    example_en: 'Put the lid on the jar after you finish.',
+                                    example_ch: '?典?敺?????蝵???
+                                },
+                                {
+                                    english: 'cage',
+                                    chinese: '蝐?',
+                                    example_en: 'The bird sings in its cage every morning.',
+                                    example_ch: '??曈交?憭拇銝蝐?鋆∪甇?
+                                },
+                                {
+                                    english: 'sight',
+                                    chinese: '閬?嚗鞊?,
+                                    example_en: 'The mountain view is a beautiful sight.',
+                                    example_ch: '??漣撅梁??航情?虜蝢???
+                                }
+                            ]
+                        },
+                        {
+                            id: 'toeic_vocab',
+                            title: '?? 憭??瑕?桀???,
+                            subtitle: '3000+???敹摮?- 敺??瑕?梯?',
+                            icon: '??',
+                            iconClass: 'toeic-icon',
+                            wordCount: '3000+',
+                            fileSize: '180KB',
+                            level: '銝剝?蝝?,
+                            unlockCost: 30,
+                            description: '蝎暸憭??岫銝剜?撣詨?曄?3000+?敹摮???平??氬撣貊?瘣餌?撖衣閰?嚗??摮??銝剛?蕃霅臬?撖衣靘嚗皞?憭??岫????皞?,
+                            filename: '憭??桀?.csv',
+                            preview: [
+                                {
+                                    english: 'abandon',
+                                    chinese: '?暹?',
+                                    example_en: 'He decided to abandon the project due to lack of funds.',
+                                    example_ch: '隞捱摰??箇撩銋??璉?獢?
+                                },
+                                {
+                                    english: 'ability',
+                                    chinese: '?賢?',
+                                    example_en: 'Communication skills are an essential ability in business.',
+                                    example_ch: '皞?撌扳?平銝剖????賢???
+                                },
+                                {
+                                    english: 'accommodate',
+                                    chinese: '摰寧????,
+                                    example_en: 'The hotel can accommodate up to 500 guests.',
+                                    example_ch: '?振憌臬??臬捆蝝???00雿恥鈭箝?
+                                },
+                                {
+                                    english: 'accomplish',
+                                    chinese: '摰?',
+                                    example_en: 'He accomplished all the tasks on time.',
+                                    example_ch: '隞???????遙??
+                                },
+                                {
+                                    english: 'agenda',
+                                    chinese: '霅啁?',
+                                    example_en: 'The first item on the agenda is the budget.',
+                                    example_ch: '霅啁??洵銝?????
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            methods: {
+                // ??蝟餌絞?寞?
+                getStars() {
+                    return parseInt(localStorage.getItem('totalStars') || '0');
+                },
+                
+                addStars(amount) {
+                    const currentStars = this.getStars();
+                    const newStars = currentStars + amount;
+                    localStorage.setItem('totalStars', newStars);
+                    this.totalStars = newStars;
+                    this.updateStarsDisplay();
+                    this.playStarSound();
+                    this.showStarReward(amount);
+                    return newStars;
+                },
+                
+                updateStarsDisplay() {
+                    const starsCount = document.getElementById('totalStarsCount');
+                    if (starsCount) {
+                        starsCount.textContent = `潃?${this.totalStars}`;
+                    }
+                },
+                
+                playStarSound() {
+                    try {
+                        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        
+                        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                        oscillator.frequency.setValueAtTime(1000, audioContext.currentTime + 0.1);
+                        oscillator.frequency.setValueAtTime(1200, audioContext.currentTime + 0.2);
+                        
+                        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                        
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + 0.3);
+                    } catch (e) {
+                        // 憒??單?API銝?剁?????
+                    }
+                },
+                
+                showStarReward(amount) {
+                    const rewardDiv = document.createElement('div');
+                    rewardDiv.style.cssText = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 170, 0, 0.9));
+                        color: #000;
+                        padding: 20px 30px;
+                        border-radius: 15px;
+                        font-size: 1.5rem;
+                        font-weight: bold;
+                        z-index: 1000;
+                        box-shadow: 0 0 30px #ffd700;
+                        animation: starRewardPop 3s cubic-bezier(.4,2,.6,1) forwards;
+                        font-family: 'Orbitron', sans-serif;
+                    `;
+                    rewardDiv.innerHTML = `潃?+${amount} ?? 潃;
+                    
+                    document.body.appendChild(rewardDiv);
+                    
+                    setTimeout(() => {
+                        if (document.body.contains(rewardDiv)) {
+                            document.body.removeChild(rewardDiv);
+                        }
+                    }, 3000);
+                },
+                
+                calculateStarReward(file) {
+                    let baseReward = 5; // ?箇?銝??
+                    
+                    // ?寞?瑼?憭批?蝯虫??
+                    const fileSize = parseInt(file.fileSize.replace('KB', ''));
+                    if (fileSize >= 50) {
+                        baseReward += 3; // 憭扳?獢?憭???
+                    } else if (fileSize >= 20) {
+                        baseReward += 2; // 銝剔?瑼??
+                    } else {
+                        baseReward += 1; // 撠?獢???
+                    }
+                    
+                    // ?寞??桀??賊?蝯虫??
+                    const wordCount = parseInt(file.wordCount.replace('+', ''));
+                    if (wordCount >= 1000) {
+                        baseReward += 5; // 1000+?桀?憿??
+                    } else if (wordCount >= 500) {
+                        baseReward += 3; // 500+?桀??
+                    } else if (wordCount >= 100) {
+                        baseReward += 2; // 100+?桀??
+                    } else {
+                        baseReward += 1; // ?嗡??
+                    }
+                    
+                    // ?寞???漲蝑?蝯虫??
+                    if (file.level === '擃?') {
+                        baseReward += 3;
+                    } else if (file.level === '銝剝?蝝?) {
+                        baseReward += 2;
+                    } else if (file.level === '銝剔?') {
+                        baseReward += 1;
+                    }
+                    
+                    return baseReward;
+                },
+
+                unlockFile(file) {
+                    // 瑼Ｘ?臬撌脩?閫??
+                    if (this.isUnlocked(file.id)) {
+                        this.message = `??${file.title} 撌脩?閫??嚗隞亦?乩?頛?`;
+                        return;
+                    }
+                    
+                    const unlockCost = file.unlockCost || 10;
+                    const currentStars = this.getStars();
+                    
+                    if (currentStars < unlockCost) {
+                        this.message = `????銝雲嚗?閬?${unlockCost} 憿????嗅??芣? ${currentStars} 憿??;
+                        this.messageClass = 'error-message';
+                        setTimeout(() => {
+                            this.message = '';
+                        }, 3000);
+                        return;
+                    }
+                    
+                    // ????
+                    const newStars = currentStars - unlockCost;
+                    localStorage.setItem('totalStars', newStars);
+                    this.totalStars = newStars;
+                    this.updateStarsDisplay();
+                    
+                    // 閮?撌脰圾??瑼?
+                    let unlockedFiles = JSON.parse(localStorage.getItem('unlockedFiles') || '[]');
+                    if (!unlockedFiles.includes(file.id)) {
+                        unlockedFiles.push(file.id);
+                        localStorage.setItem('unlockedFiles', JSON.stringify(unlockedFiles));
+                    }
+                    
+                    // 閮?閫??甇瑕
+                    this.starRewardHistory.push({
+                        file: file.title,
+                        stars: unlockCost,
+                        timestamp: new Date().toISOString()
+                    });
+                    
+                    // ?剜閫???單?
+                    this.playUnlockSound();
+                    
+                    // 憿舐內閫????閮
+                    this.message = `?? ${file.title} 閫????嚗??${unlockCost} 憿??;
+                    this.messageClass = 'success-message';
+                    
+                    // 3蝘?皜閮
+                    setTimeout(() => {
+                        this.message = '';
+                    }, 3000);
+                    
+                    console.log(`?? 瑼?閫????: ${file.title}, ?? ${unlockCost} 憿??);
+                },
+                
+                downloadFile(file) {
+                    if (!this.isUnlocked(file.id)) {
+                        this.message = `??隢?閫??瑼??銝?嚗;
+                        this.messageClass = 'error-message';
+                        setTimeout(() => {
+                            this.message = '';
+                        }, 3000);
+                        return;
+                    }
+                    
+                    this.downloading = file.id;
+                    this.message = '';
+                    
+                    // 瑼Ｘ?臬??HTTP???刻赤??
+                    if (window.location.protocol === 'file:') {
+                        this.message = `??隢?HTTP???刻赤?迨??銝?瑼?嚗n隢?銵? python -m http.server 8000\n?嗅?閮芸?: http://localhost:8000/vocabulary_download.html`;
+                        this.messageClass = 'error-message';
+                        this.downloading = null;
+                        setTimeout(() => {
+                            this.message = '';
+                        }, 5000);
+                        return;
+                    }
+                    
+                    // 雿輻 encodeURIComponent ??銝剜?頝臬?
+                    const fileUrl = `?桀?銝??/${encodeURIComponent(file.filename)}`;
+                    
+                    // ?炎?交?獢?血???
+                    fetch(fileUrl, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'text/csv,application/octet-stream,*/*'
+                        }
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                return response.blob();
+                            } else {
+                                throw new Error(`瑼?銝???(HTTP ${response.status})`);
+                            }
+                        })
+                        .then(blob => {
+                            // ?萄遣銝????
+                            const url = window.URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = file.filename;
+                            link.style.display = 'none';
+                            
+                            document.body.appendChild(link);
+                            link.click();
+                            
+                            // 皜?
+                            setTimeout(() => {
+                                if (document.body.contains(link)) {
+                                    document.body.removeChild(link);
+                                }
+                                window.URL.revokeObjectURL(url);
+                            }, 1000);
+                            
+                            this.message = `??${file.title} 銝???嚗;
+                            this.messageClass = 'success-message';
+                            this.selectedFile = file;
+                            this.downloading = null;
+                            
+                            setTimeout(() => {
+                                this.message = '';
+                            }, 3000);
+                        })
+                        .catch(error => {
+                            console.error('銝??航炊:', error);
+                            
+                            let errorMessage = '銝?憭望?';
+                            if (error.message.includes('Failed to fetch')) {
+                                errorMessage = `??蝬脰楝?航炊嚗瘜??唳?獢n\n?航????\n1. ???冽??\n2. 瑼?頝臬??航炊\n3. 蝬脰楝????\n\n隢炎?伐?\n- ???冽?阡?銵 http://localhost:8000\n- 瑼??臬摮???桀?銝??/${file.filename}`;
+                            } else if (error.message.includes('瑼?銝???)) {
+                                errorMessage = `??瑼?銝??剁?${file.filename}\n\n隢炎?交?獢楝敺??桀?銝??/${file.filename}`;
+                            } else {
+                                errorMessage = `??銝?憭望?嚗?{error.message}`;
+                            }
+                            
+                            this.message = errorMessage;
+                            this.messageClass = 'error-message';
+                            this.downloading = null;
+                            
+                            setTimeout(() => {
+                                this.message = '';
+                            }, 5000);
+                        });
+                },
+                
+                canUnlock(file) {
+                    const unlockCost = file.unlockCost || 10;
+                    return this.getStars() >= unlockCost;
+                },
+                
+                isUnlocked(fileId) {
+                    const unlockedFiles = JSON.parse(localStorage.getItem('unlockedFiles') || '[]');
+                    return unlockedFiles.includes(fileId);
+                },
+                
+                playUnlockSound() {
+                    try {
+                        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        
+                        // 閫???單?嚗??隤?
+                        oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+                        oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.1);
+                        oscillator.frequency.setValueAtTime(800, audioContext.currentTime + 0.2);
+                        oscillator.frequency.setValueAtTime(1000, audioContext.currentTime + 0.3);
+                        
+                        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+                        
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + 0.4);
+                    } catch (e) {
+                        // 憒??單?API銝?剁?????
+                    }
+                },
+                
+
+                
+
+                
+                selectFile(file) {
+                    this.selectedFile = file;
+                },
+                resetFilters() {
+                    this.searchQuery = '';
+                    this.selectedLevel = '';
+                    this.selectedFile = null; // ???汗
+                },
+
+                getUnlockButtonStyle(file) {
+                    if (this.isUnlocked(file.id)) {
+                        return {
+                            background: 'linear-gradient(135deg, #00ffff, #ff00ff)',
+                            color: '#ffffff',
+                            boxShadow: '0 0 20px rgba(0,255,255,0.3)'
+                        };
+                    } else if (this.canUnlock(file)) {
+                        return {
+                            background: 'linear-gradient(135deg, #ffd700, #ffaa00)',
+                            color: '#000000',
+                            boxShadow: '0 0 20px rgba(255,215,0,0.3)'
+                        };
+                    } else {
+                        return {
+                            background: 'linear-gradient(135deg, #666666, #444444)',
+                            color: '#cccccc',
+                            boxShadow: 'none',
+                            cursor: 'not-allowed'
+                        };
+                    }
+                },
+
+            },
+            computed: {
+                filteredFiles() {
+                    let files = this.vocabularyFiles;
+
+                    if (this.searchQuery) {
+                        const query = this.searchQuery.toLowerCase();
+                        files = files.filter(file => 
+                            file.title.toLowerCase().includes(query) ||
+                            file.subtitle.toLowerCase().includes(query) ||
+                            file.description.toLowerCase().includes(query)
+                        );
+                    }
+
+                    if (this.selectedLevel) {
+                        files = files.filter(file => file.level === this.selectedLevel);
+                    }
+
+                    return files;
+                }
+            },
+            mounted() {
+                // ?????頂蝯?
+                this.totalStars = this.getStars();
+                this.updateStarsDisplay();
+                
+                // 瑼Ｘ?臬??HTTP???刻赤??
+                if (window.location.protocol === 'file:') {
+                    this.message = `?? 瑼Ｘ葫?唳?湔??鈭TML瑼?嚗n\n?箔?甇?虜銝?瑼?嚗?嚗n1. ?函?蝡舀???嚗ython -m http.server 8000\n2. 閮芸?嚗ttp://localhost:8000/vocabulary_download.html\n\n?見?臭誑?踹?CORS?航炊?;
+                    this.messageClass = 'error-message';
+                    setTimeout(() => {
+                        this.message = '';
+                    }, 8000);
+                }
+                
+                // ?身憿舐內蝚砌???獢??汗
+                this.selectedFile = this.vocabularyFiles[0];
+                
+                console.log('?? ?桀?銝?銝剖???蝟餌絞撌脣?憪?嚗????', this.totalStars);
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html> 

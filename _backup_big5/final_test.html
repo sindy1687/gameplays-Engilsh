@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>?蝯?葫閰?/title>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      margin: 20px; 
+      background: #1a1a1a; 
+      color: #fff; 
+      line-height: 1.6;
+    }
+    .card { 
+      border: 2px solid #00ffff; 
+      border-radius: 10px;
+      padding: 15px; 
+      margin: 10px; 
+      display: inline-block; 
+      width: 200px; 
+      background: rgba(0, 255, 255, 0.1);
+      vertical-align: top;
+    }
+    .card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+    .status { 
+      padding: 10px; 
+      margin: 10px 0; 
+      border-radius: 5px; 
+      font-weight: bold;
+    }
+    .success { background: #4CAF50; }
+    .error { background: #f44336; }
+    .info { background: #2196F3; }
+    .warning { background: #ff9800; }
+    
+    .test-section {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #333;
+      border-radius: 8px;
+    }
+    
+    button {
+      background: #00ffff;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+      font-weight: bold;
+    }
+    
+    button:hover {
+      background: #00cccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>? ?蝯???交葫閰?/h1>
+  
+  <div id="status"></div>
+  
+  <div class="test-section">
+    <h2>?妒 皜祈岫?批</h2>
+    <button onclick="testCardsJs()">皜祈岫 cards.js 頛</button>
+    <button onclick="testCardsPage()">???∠??</button>
+    <button onclick="clearStatus()">皜???/button>
+  </div>
+  
+  <div class="test-section">
+    <h2>?? 頛???/h2>
+    <div id="loadStatus"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>? ?∠??汗</h2>
+    <div id="cardPreview"></div>
+  </div>
+
+  <script src="js/cards.js"></script>
+  <script>
+    function log(message, type = 'info') {
+      const statusDiv = document.getElementById('status');
+      const div = document.createElement('div');
+      div.className = `status ${type}`;
+      div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      statusDiv.appendChild(div);
+      console.log(message);
+    }
+
+    function updateLoadStatus() {
+      const loadStatusDiv = document.getElementById('loadStatus');
+      const hasAllCards = typeof window.allCards !== 'undefined';
+      const allCardsLength = hasAllCards ? window.allCards.length : 0;
+      
+      loadStatusDiv.innerHTML = `
+        <div class="status ${hasAllCards && allCardsLength > 0 ? 'success' : 'error'}">
+          allCards ??? ${hasAllCards ? '撌脰??? : '?芾???}
+        </div>
+        <div class="status ${hasAllCards && allCardsLength > 0 ? 'success' : 'error'}">
+          ?∠??賊?: ${allCardsLength} 撘?
+        </div>
+        <div class="status info">
+          瑼Ｘ??: ${new Date().toLocaleTimeString()}
+        </div>
+      `;
+    }
+
+    function testCardsJs() {
+      log('?妒 ??皜祈岫 cards.js 頛...', 'info');
+      
+      if (typeof window.allCards !== 'undefined') {
+        log(`??allCards 撌脰??伐???${window.allCards.length} 撘萄?, 'success');
+        
+        if (window.allCards.length > 0) {
+          log(`?? 蝚砌?撘萄?? ${window.allCards[0].word} (${window.allCards[0].zh})`, 'success');
+          showCardPreview();
+        } else {
+          log('??allCards ?箇征???', 'error');
+        }
+      } else {
+        log('??allCards ?芸?蝢?, 'error');
+      }
+      
+      updateLoadStatus();
+    }
+
+    function showCardPreview() {
+      const previewDiv = document.getElementById('cardPreview');
+      previewDiv.innerHTML = '<h3>??6 撘萄??閬踝?</h3>';
+      
+      window.allCards.slice(0, 6).forEach((card, index) => {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'card';
+        cardDiv.innerHTML = `
+          <img src="${card.image}" alt="${card.word}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIEVycm9yPC90ZXh0Pjwvc3ZnPg=='">
+          <h4>${index + 1}. ${card.word}</h4>
+          <p><strong>銝剜?:</strong> ${card.zh}</p>
+          <p><strong>蝔?漲:</strong> ${card.rarity}</p>
+          <p><strong>憿:</strong> ${card.category}</p>
+        `;
+        previewDiv.appendChild(cardDiv);
+      });
+      
+      log(`??撌脤＊蝷?${Math.min(6, window.allCards.length)} 撘萄??閬窯, 'success');
+    }
+
+    function testCardsPage() {
+      log('?? 皞????∠??...', 'info');
+      setTimeout(() => {
+        window.location.href = 'cards.html';
+      }, 1000);
+    }
+
+    function clearStatus() {
+      document.getElementById('status').innerHTML = '';
+      document.getElementById('cardPreview').innerHTML = '';
+      log('?完 ??歇皜', 'info');
+    }
+
+    // ?頛摰?敺?葫閰?
+    document.addEventListener('DOMContentLoaded', function() {
+      log('?? ?頛摰?', 'info');
+      
+      // 撱園銝暺??Ⅱ靽?cards.js 頛
+      setTimeout(() => {
+        testCardsJs();
+      }, 500);
+    });
+
+    // 摰??湔頛???
+    setInterval(updateLoadStatus, 2000);
+  </script>
+</body>
+</html> 

@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>?銝剖? - 銝之?</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    :root {
+      --glow-cyan: #00ffff;
+      --glow-magenta: #a259ff;
+      --glow-gold: #ffd700;
+      --glow-red: #ff6b6b;
+      --glow-green: #00ff88;
+      --bg-dark: rgba(10, 20, 40, 0.85);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Orbitron', 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
+      background: linear-gradient(135deg, #0a1428 0%, #1a2a4a 50%, #0a1428 100%);
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ???? */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(162, 89, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(255, 215, 0, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .header {
+      background: rgba(10, 20, 40, 0.95);
+      padding: 20px;
+      text-align: center;
+      border-bottom: 3px solid var(--glow-cyan);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      background: linear-gradient(45deg, var(--glow-cyan), var(--glow-magenta), var(--glow-gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { filter: brightness(1); }
+      to { filter: brightness(1.2); }
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .stats-panel {
+      background: rgba(10, 20, 40, 0.9);
+      border: 2px solid var(--glow-gold);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 15px;
+      background: rgba(0, 255, 255, 0.1);
+      border-radius: 8px;
+      border: 1px solid var(--glow-cyan);
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--glow-gold);
+    }
+
+    .stat-label {
+      color: #ccc;
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    .game-card {
+      background: rgba(10, 20, 40, 0.8);
+      border: 3px solid var(--glow-cyan);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .game-card:hover::before {
+      left: 100%;
+    }
+
+    .game-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 0 40px rgba(0, 255, 255, 0.4);
+      border-color: var(--glow-magenta);
+    }
+
+    .game-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .game-title {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--glow-cyan);
+      margin-bottom: 15px;
+    }
+
+    .game-subtitle {
+      font-size: 1.1rem;
+      color: var(--glow-gold);
+      margin-bottom: 20px;
+    }
+
+    .game-description {
+      color: #ccc;
+      line-height: 1.6;
+      margin-bottom: 25px;
+      font-size: 1rem;
+    }
+
+    .game-features {
+      text-align: left;
+      margin-bottom: 25px;
+      padding: 0 20px;
+    }
+
+    .feature-item {
+      color: #ccc;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .feature-item::before {
+      content: '??;
+      color: var(--glow-green);
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .game-button {
+      background: linear-gradient(45deg, var(--glow-cyan), var(--glow-magenta));
+      color: #000;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .game-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
+    }
+
+    /* ????見撘?*/
+    .game-card.locked {
+      opacity: 0.6;
+      cursor: not-allowed;
+      border-color: var(--glow-red);
+      box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+    }
+
+    .game-card.locked:hover {
+      transform: none;
+      box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+      border-color: var(--glow-red);
+    }
+
+    .game-card.locked::before {
+      display: none;
+    }
+
+    .game-button.locked {
+      background: linear-gradient(45deg, #666, #999);
+      color: #ccc;
+      cursor: not-allowed;
+      opacity: 0.8;
+    }
+
+    .game-button.locked:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .game-button[disabled] {
+      cursor: not-allowed;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    .game-button.locked {
+      background: linear-gradient(45deg, #666, #999);
+      color: #ccc;
+      cursor: not-allowed;
+      opacity: 0.8;
+    }
+
+    .game-button.locked:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* 撋撘??脣捆?冽見撘?*/
+    .embedded-game-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 20, 40, 0.95);
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .embedded-game-header {
+      background: rgba(10, 20, 40, 0.98);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--glow-cyan);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    }
+
+    .embedded-game-header h2 {
+      margin: 0;
+      color: var(--glow-cyan);
+      font-size: 1.5rem;
+    }
+
+    .close-game-btn {
+      background: linear-gradient(45deg, var(--glow-red), var(--glow-magenta));
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .close-game-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
+    }
+
+    .embedded-game-frame {
+      flex: 1;
+      width: 100%;
+      background: #000;
+    }
+
+    .embedded-game-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: linear-gradient(45deg, var(--glow-cyan), var(--glow-magenta));
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    .back-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+
+    .welcome-message {
+      background: rgba(10, 20, 40, 0.9);
+      border: 2px solid var(--glow-cyan);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    }
+
+    .welcome-title {
+      font-size: 1.5rem;
+      color: var(--glow-cyan);
+      margin-bottom: 10px;
+    }
+
+    .welcome-text {
+      color: #ccc;
+      line-height: 1.6;
+    }
+
+    /* ??憿舐內???*/
+    .stars-display {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+      border: 2px solid var(--glow-gold);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stars-display::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+      animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+      0% { left: -100%; }
+      50% { left: 100%; }
+      100% { left: 100%; }
+    }
+
+    .stars-title {
+      font-size: 1.8rem;
+      color: var(--glow-gold);
+      margin-bottom: 10px;
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    .stars-count {
+      font-size: 3rem;
+      font-weight: bold;
+      color: var(--glow-gold);
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+      margin-bottom: 10px;
+    }
+
+    .stars-icon {
+      font-size: 2rem;
+      margin: 0 10px;
+      animation: twinkle 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes twinkle {
+      from { transform: scale(1); opacity: 1; }
+      to { transform: scale(1.2); opacity: 0.8; }
+    }
+
+    .stars-subtitle {
+      color: #ccc;
+      font-size: 1rem;
+      margin-top: 10px;
+    }
+
+    /* ???湔? */
+    .stars-update {
+      animation: starsUpdate 0.5s ease-in-out;
+    }
+
+    @keyframes starsUpdate {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); box-shadow: 0 0 50px rgba(255, 215, 0, 0.6); }
+      100% { transform: scale(1); }
+    }
+
+    /* ?單??批 */
+    #audioControls {
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+      display: flex;
+      gap: 8px;
+    }
+
+    #audioControls button {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      border: 2px solid var(--glow-cyan);
+      background: rgba(10, 20, 40, 0.6);
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 16px var(--glow-cyan);
+      backdrop-filter: blur(1px);
+    }
+
+    #audioControls button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 32px var(--glow-cyan);
+    }
+
+    @media (max-width: 768px) {
+      .games-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .container {
+        padding: 10px;
+      }
+
+      .game-card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <button class="back-button" @click="goHome">
+      <i class="material-icons">home</i> 餈?擐?
+    </button>
+
+         <div class="header">
+                     <h1>? ?怠之?銝剖?</h1>
+     </div>
+
+    <div class="container">
+      <!-- 甇∟?閮 -->
+      <div class="welcome-message">
+        <div class="welcome-title">甇∟?靘?銝剖?嚗?/div>
+                               <div class="welcome-text">
+            ?ㄐ???移敹身閮??怠移敶拚??莎?瘥??脤??寧??拇????啜?
+            ?豢?雿?甇∠??????改?
+              </div>
+      </div>
+
+             <!-- ??憿舐內???-->
+       <div class="stars-display" :class="{ 'stars-update': starsAnimation }">
+         <div class="stars-title">雿???</div>
+         <div class="stars-count">{{ totalStars }}</div>
+         <div class="stars-icon">潃?/div>
+         <div class="stars-subtitle">?園???嚗圾?憭??莎?</div>
+         
+         <!-- ??閰喟敦鞈? -->
+         <div style="margin-top: 15px; padding: 10px; background: rgba(255, 215, 0, 0.1); border-radius: 8px;">
+           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem;">
+             <div>
+               <div style="color: var(--glow-green);">?脣?: {{ totalStarsEarned }}</div>
+               <div style="color: var(--glow-red);">?梯祥: {{ starsSpent }}</div>
+             </div>
+             <div>
+               <div style="color: var(--glow-cyan);">蝑?: {{ playerLevel }}</div>
+               <div style="color: var(--glow-gold);">?脣漲: {{ levelProgressPercentage }}%</div>
+             </div>
+           </div>
+         </div>
+         
+                   <div style="color: #999; font-size: 0.8rem; margin-top: 5px;">? ?內嚗??拙隞??脣隞亦敺???/div>
+          <div style="color: var(--glow-cyan); font-size: 0.8rem; margin-top: 3px;">?? ??蝟餌絞撌脰?擐??郊</div>
+       </div>
+
+      <!-- 蝯梯??Ｘ -->
+      <div class="stats-panel">
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-value">{{ availableGames }}/{{ totalGames }}</div>
+            <div class="stat-label">?舐?</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">{{ completedGames }}</div>
+            <div class="stat-label">撌脣???/div>
+          </div>
+          <div class="stat-item" style="background: rgba(255, 215, 0, 0.15); border-color: var(--glow-gold);">
+            <div class="stat-value" style="color: var(--glow-gold); text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">潃?{{ totalStars }}</div>
+            <div class="stat-label" style="color: var(--glow-gold);">蝮賣???/div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">{{ playerLevel }}</div>
+            <div class="stat-label">?拙振蝑?</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">{{ completionRate }}%</div>
+            <div class="stat-label">摰???/div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ??∠? -->
+      <div class="games-grid">
+                 <!-- ?璈???-->
+         <div class="game-card" :class="{ locked: !canPlaySlotMachine }" @click="toggleSlotMachine">
+           <div class="game-icon">?</div>
+           <div class="game-title">?璈???/div>
+           <div class="game-subtitle">蝬銝???</div>
+           <div class="game-description">
+             蝬???豢??嚗????豢??脣?銝??獢?舐??
+             ???舫???閬箸????嚗??券?撽?甇???璈?頞??
+           </div>
+           <div class="game-features">
+             <div class="feature-item">蝬?璈瘜?/div>
+             <div class="feature-item">銝???脣?璈</div>
+             <div class="feature-item">?舫?閬死??</div>
+             <div class="feature-item">?????</div>
+             <div class="feature-item">?蝯梯?蝟餌絞</div>
+             <div class="feature-item" style="color: var(--glow-gold); font-weight: bold;">潃??閬?{{ slotMachineCost }} 憿???/div>
+           </div>
+           <button class="game-button" :class="{ locked: !canPlaySlotMachine }" @click.stop="toggleSlotMachine" :disabled="!canPlaySlotMachine">
+             {{ canPlaySlotMachine ? '???璈??? : `?閬?${slotMachineCost} 憿?? }}
+           </button>
+         </div>
+
+        <!-- ??∠? -->
+        <div class="game-card" @click="openGame('advanced-animal-card-game.html')">
+          <div class="game-icon">??</div>
+          <div class="game-title">??∠??詨?</div>
+          <div class="game-subtitle">蝑?批??拙???/div>
+          <div class="game-description">
+            ?箸??詨??????亙???莎?瘥車??賣??函????詨?????
+            ?蝑蝯?雿??∠?嚗????敺??抬?
+          </div>
+          <div class="game-features">
+            <div class="feature-item">憭車??∠?</div>
+            <div class="feature-item">?詨?蝟餌絞閮剛?</div>
+            <div class="feature-item">蝑?抒瘜?/div>
+            <div class="feature-item">蝎曄????</div>
+            <div class="feature-item">?脤?AI撠?</div>
+          </div>
+          <button class="game-button">????∠?</button>
+        </div>
+
+        <!-- ?∠?撠 -->
+        <div class="game-card" @click="openGame('battle_system.html')">
+          <div class="game-icon">??</div>
+          <div class="game-title">?∠?撠蝟餌絞</div>
+          <div class="game-subtitle">?脰帘蝝?擛?/div>
+          <div class="game-description">
+            摰????啁頂蝯梧???餅??蝳艾畾??賜?憭車?圈洛璈??
+            ?園?撘瑕之?∠?嚗?撱箔???蝯??冽???撠銝剛????祕??
+          </div>
+          <div class="game-features">
+            <div class="feature-item">摰?圈洛蝟餌絞</div>
+            <div class="feature-item">憭車?∠?憿?</div>
+            <div class="feature-item">?寞???賣???/div>
+            <div class="feature-item">???圈洛?</div>
+            <div class="feature-item">??蝞∠?蝟餌絞</div>
+          </div>
+          <button class="game-button">???∠?撠</button>
+        </div>
+
+         <!-- Tetris ? -->
+        <div class="game-card" :class="{ locked: !canPlayTetris }" @click="toggleTetris">
+          <div class="game-icon">?妝</div>
+          <div class="game-title">Tetris</div>
+          <div class="game-subtitle">蝬靽??舀憛?/div>
+          <div class="game-description">
+            蝬??蝢?孵??嚗????宏???耦??憛?瘨摰?帖銵?
+            ??憭車??漲蝑????Ｙ???擃?嚗?雿?蝛粹??雁???漲嚗?
+          </div>
+          <div class="game-features">
+            <div class="feature-item">蝬?孵??拇?</div>
+            <div class="feature-item">憭車?孵?敶Ｙ?</div>
+            <div class="feature-item">蝛粹??雁?</div>
+            <div class="feature-item">瘚??擃?</div>
+            <div class="feature-item">?蝯梯?蝟餌絞</div>
+            <div class="feature-item">憭車??漲蝑?</div>
+            <div class="feature-item" style="color: var(--glow-gold); font-weight: bold;">潃??閬?{{ tetrisCost }} 憿???/div>
+          </div>
+          <button class="game-button" :class="{ locked: !canPlayTetris }" @click.stop="toggleTetris" :disabled="!canPlayTetris">
+            {{ canPlayTetris ? '?? Tetris' : `?閬?${tetrisCost} 憿?? }}
+          </button>
+        </div>
+
+         <!-- Classic Uno ? -->
+        <div class="game-card" :class="{ locked: !canPlayClassicUno }" @click="toggleClassicUno">
+          <div class="game-icon">??</div>
+          <div class="game-title">Classic Uno</div>
+          <div class="game-subtitle">蝬?∠??</div>
+          <div class="game-description">
+            蝬??Uno ?∠??嚗??箇??畾????皜征????
+            ??憭車?璅∪????亦瘜???雿??∠??撌批?蝑?雁嚗?
+          </div>
+          <div class="game-features">
+            <div class="feature-item">蝬 Uno ?拇?</div>
+            <div class="feature-item">憭車?寞??∠?</div>
+            <div class="feature-item">蝑?雁?</div>
+            <div class="feature-item">瘚?擃?</div>
+            <div class="feature-item">憭犖?璅∪?</div>
+            <div class="feature-item">?蝯梯?蝟餌絞</div>
+            <div class="feature-item" style="color: var(--glow-gold); font-weight: bold;">潃??閬?{{ classicUnoCost }} 憿???/div>
+          </div>
+          <button class="game-button" :class="{ locked: !canPlayClassicUno }" @click.stop="toggleClassicUno" :disabled="!canPlayClassicUno">
+            {{ canPlayClassicUno ? '?? Classic Uno' : `?閬?${classicUnoCost} 憿?? }}
+          </button>
+        </div>
+
+         <!-- Little Wheel ? -->
+        <div class="game-card" :class="{ locked: !canPlayLittleWheel }" @click="toggleLittleWheel">
+          <div class="game-icon">?</div>
+          <div class="game-title">Little Wheel</div>
+          <div class="game-subtitle">撠憚摮??芷???/div>
+          <div class="game-description">
+            ?閎??頛芸???嚗?嗅?頛芸??典?蝔桀敶Ｖ?皛曉??歲頨?
+            ??鞊????∟身閮??拍???嚗?雿????賢???雿?撌改?
+          </div>
+          <div class="game-features">
+            <div class="feature-item">?拍?撘??</div>
+            <div class="feature-item">鞊??閮剛?</div>
+            <div class="feature-item">???賢??</div>
+            <div class="feature-item">瘚??擃?</div>
+            <div class="feature-item">憭車?啣耦霈?</div>
+            <div class="feature-item">?園?閬?蝟餌絞</div>
+            <div class="feature-item" style="color: var(--glow-gold); font-weight: bold;">潃??閬?{{ littleWheelCost }} 憿???/div>
+          </div>
+          <button class="game-button" :class="{ locked: !canPlayLittleWheel }" @click.stop="toggleLittleWheel" :disabled="!canPlayLittleWheel">
+            {{ canPlayLittleWheel ? '?? Little Wheel' : `?閬?${littleWheelCost} 憿?? }}
+          </button>
+        </div>
+
+         <!-- Plants vs Zombies Demo ? -->
+        <div class="game-card" :class="{ locked: !canPlayPlantsVsZombies }" @click="togglePlantsVsZombies">
+          <div class="game-icon">?</div>
+          <div class="game-title">Plants vs Zombies Demo</div>
+          <div class="game-subtitle">璊憭扳畾剖?閰衣??/div>
+          <div class="game-description">
+            蝬???脤??莎?蝔格??車璊靘蝳行悌撅??脫??
+            ??鞊????拍車憿?蝑?拇?嚗?雿??啁?雁?賢?嚗?
+          </div>
+          <div class="game-features">
+            <div class="feature-item">蝬憛?拇?</div>
+            <div class="feature-item">鞊?璊蝔桅?</div>
+            <div class="feature-item">蝑?雁?</div>
+            <div class="feature-item">憭見?悌撅?/div>
+            <div class="feature-item">??脤?閮剛?</div>
+            <div class="feature-item">?賢??園?蝟餌絞</div>
+            <div class="feature-item" style="color: var(--glow-gold); font-weight: bold;">潃??閬?{{ plantsVsZombiesCost }} 憿???/div>
+          </div>
+          <button class="game-button" :class="{ locked: !canPlayPlantsVsZombies }" @click.stop="togglePlantsVsZombies" :disabled="!canPlayPlantsVsZombies">
+            {{ canPlayPlantsVsZombies ? '?? Plants vs Zombies Demo' : `?閬?${plantsVsZombiesCost} 憿?? }}
+          </button>
+        </div>
+
+         <!-- Cut the Rope 2 -->
+        <div class="game-card" :class="{ locked: !canPlayCutTheRope }" @click="toggleCutTheRope">
+          <div class="game-icon">?</div>
+          <div class="game-title">Cut the Rope 2</div>
+          <div class="game-subtitle">蝬?拍???</div>
+          <div class="game-description">
+            蝬????粹??莎????蝜拙?霈???亙??芰?銝准?
+            ??鞊????∟身閮??閎???????雿??摩?雁?賢?嚗?
+          </div>
+          <div class="game-features">
+            <div class="feature-item">蝬?拍??拇?</div>
+            <div class="feature-item">鞊??閮剛?</div>
+            <div class="feature-item">?摩?雁?</div>
+            <div class="feature-item">?舀??閫</div>
+            <div class="feature-item">瘚?擃?</div>
+            <div class="feature-item" style="color: var(--glow-gold); font-weight: bold;">潃??閬?{{ cutTheRopeCost }} 憿???/div>
+          </div>
+          <button class="game-button" :class="{ locked: !canPlayCutTheRope }" @click.stop="toggleCutTheRope" :disabled="!canPlayCutTheRope">
+            {{ canPlayCutTheRope ? '??Cut the Rope 2' : `?閬?${cutTheRopeCost} 憿?? }}
+          </button>
+        </div>
+
+         <!-- Motherload ? -->
+        <div class="game-card" :class="{ locked: !canPlayMotherload }" @click="toggleMotherload">
+          <div class="game-icon">??</div>
+          <div class="game-title">Motherload</div>
+          <div class="game-subtitle">?急??∠丹?</div>
+          <div class="game-description">
+            撘犖?亙???潛汗?函??∠丹??嚗?雿葆?亦???啗”銋???
+            雿銝摰嗆靘晷?砍???Ｙ丹撌伐?雿??格??舀楛?亙?憯扎痔?喳?蝷衣撅歹??園?撖嗉眼鞈?嚗?
+          </div>
+          <div class="game-features">
+            <div class="feature-item">?急??∠丹?</div>
+            <div class="feature-item">鞈?蝞∠?蝟餌絞</div>
+            <div class="feature-item">閮剖???蝟餌絞</div>
+            <div class="feature-item">瘛勗漲?Ｙ揣?拇?</div>
+            <div class="feature-item">??蝞∠?璈</div>
+            <div class="feature-item">蝔?窄???/div>
+            <div class="feature-item" style="color: var(--glow-gold); font-weight: bold;">潃??閬?{{ motherloadCost }} 憿???/div>
+          </div>
+          <button class="game-button" :class="{ locked: !canPlayMotherload }" @click.stop="toggleMotherload" :disabled="!canPlayMotherload">
+            {{ canPlayMotherload ? '?? Motherload' : `?閬?${motherloadCost} 憿?? }}
+          </button>
+        </div>
+
+         <!-- Keeper of the Grove ? -->
+        <div class="game-card" :class="{ locked: !canPlayKeeperOfTheGrove }" @click="toggleKeeperOfTheGrove">
+          <div class="game-icon">?</div>
+          <div class="game-title">Keeper of the Grove</div>
+          <div class="game-subtitle">蟡?璅孵摰風??/div>
+          <div class="game-description">
+            ?箸?銝?鈭箏??憛?嚗撠?頨怎靽風蟡?璅孵??霅瑁??萇戌?梢?靘菔?
+            ?拍擳???撱粹???憛?嚗??函??邦?Ｙ?鞎游窄?喟??芰瞏殷?
+          </div>
+          <div class="game-features">
+            <div class="feature-item">憟劂憛?</div>
+            <div class="feature-item">??憛?蝟餌絞</div>
+            <div class="feature-item">蝑?折蝳?/div>
+            <div class="feature-item">撖嗥靽風璈</div>
+            <div class="feature-item">憭郭?萎犖?</div>
+            <div class="feature-item">憛???蝟餌絞</div>
+            <div class="feature-item" style="color: var(--glow-gold); font-weight: bold;">潃??閬?{{ keeperOfTheGroveCost }} 憿???/div>
+          </div>
+          <button class="game-button" :class="{ locked: !canPlayKeeperOfTheGrove }" @click.stop="toggleKeeperOfTheGrove" :disabled="!canPlayKeeperOfTheGrove">
+            {{ canPlayKeeperOfTheGrove ? '?? Keeper of the Grove' : `?閬?${keeperOfTheGroveCost} 憿?? }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Cut the Rope 2 撋撘??脣捆??-->
+      <div v-if="showCutTheRope" class="embedded-game-container">
+        <div class="embedded-game-header">
+          <h2>? Cut the Rope 2</h2>
+          <button class="close-game-btn" @click="closeCutTheRope">
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+        <div class="embedded-game-frame">
+          <iframe 
+            src="https://nutwg.com/cut-the-rope-2/"
+            frameborder="0"
+            allowfullscreen
+            title="Cut the Rope 2">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ?單??批 -->
+  <div id="audioControls">
+    <button id="toggleMusic" title="??單?">
+      <span class="material-icons">music_note</span>
+    </button>
+  </div>
+
+  <!-- ?單??? -->
+  <audio id="typingSound" preload="auto">
+    <source src="sound/type.mp3" type="audio/mpeg">
+  </audio>
+
+  <audio id="backgroundMusic" loop>
+    <source src="sound/???暸???嚗??單?嚗?mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          totalGames: 10,
+          availableGames: 10,
+          completedGames: 0,
+          totalStars: 0,
+          playerLevel: 1,
+                     showCutTheRope: false,
+                     cutTheRopeCost: 100, // Cut the Rope 2 ??
+          slotMachineCost: 50, // ?璈??脫???
+          tetrisCost: 100, // Tetris ??
+          classicUnoCost: 100, // Classic Uno ??
+          littleWheelCost: 100, // Little Wheel ??
+          plantsVsZombiesCost: 200, // Plants vs Zombies Demo ??
+          motherloadCost: 300, // Motherload ??
+          keeperOfTheGroveCost: 500, // Keeper of the Grove ??
+          starsAnimation: false, // ??????
+          // ?啣???蝟餌絞?賊??豢?
+          starsEarned: 0, // ?砍??脣?????
+          totalStarsEarned: 0, // 蝮賢?脣?????
+          starsSpent: 0, // ?梯祥????
+          achievements: [], // ?停?”
+          levelProgress: 0, // 蝑??脣漲
+          nextLevelStars: 100 // 銝?蝑??閬???
+        }
+      },
+      computed: {
+        completionRate() {
+          return Math.round((this.completedGames / this.totalGames) * 100);
+        },
+                 canPlayCutTheRope() {
+           return this.totalStars >= this.cutTheRopeCost;
+         },
+         canPlaySlotMachine() {
+           return this.totalStars >= this.slotMachineCost;
+         },
+         canPlayTetris() {
+           return this.totalStars >= this.tetrisCost;
+         },
+         canPlayClassicUno() {
+           return this.totalStars >= this.classicUnoCost;
+         },
+         canPlayLittleWheel() {
+           return this.totalStars >= this.littleWheelCost;
+         },
+         canPlayPlantsVsZombies() {
+           return this.totalStars >= this.plantsVsZombiesCost;
+         },
+         canPlayMotherload() {
+           return this.totalStars >= this.motherloadCost;
+         },
+         canPlayKeeperOfTheGrove() {
+           return this.totalStars >= this.keeperOfTheGroveCost;
+         },
+        // ?啣???蝟餌絞閮?撅祆?
+        levelProgressPercentage() {
+          return Math.round((this.totalStars % this.nextLevelStars) / this.nextLevelStars * 100);
+        },
+        canLevelUp() {
+          return this.totalStars >= this.nextLevelStars;
+        },
+        starsEfficiency() {
+          return this.totalStarsEarned > 0 ? Math.round((this.totalStars / this.totalStarsEarned) * 100) : 0;
+        }
+      },
+      methods: {
+                 openGame(gamePath) {
+           // ?冽閬?銝剜?????
+           window.open(gamePath, '_blank');
+           
+           // 璅⊥?摰??脣???嚗ㄐ?臭誑?寞?撖阡??蝯?隤踵嚗?
+           setTimeout(() => {
+             const gameNames = {
+               'advanced-animal-card-game.html': '??∠??詨?',
+               'battle_system.html': '?∠?撠蝟餌絞',
+               'https://tw.pigame.cc/game/tetris': 'Tetris'
+             };
+             
+             const gameName = gameNames[gamePath] || '?';
+             this.simulateGameCompletion(gameName);
+           }, 2000); // 2蝘?璅⊥?摰?
+         },
+         openTetris() {
+           // ?冽閬?銝剜???Tetris ?
+           window.open('https://tw.pigame.cc/game/tetris', '_blank');
+           
+           // 璅⊥?摰??脣???
+           setTimeout(() => {
+             this.simulateGameCompletion('Tetris');
+           }, 2000); // 2蝘?璅⊥?摰?
+         },
+         toggleTetris() {
+           // 雿輻?啁????梯祥蝟餌絞
+           if (!this.spendStars(this.tetrisCost)) {
+             alert(`????銝雲嚗?閬?${this.tetrisCost} 憿????賡???Tetris?n\n?桀???嚗?{this.totalStars} 憿n?閬???${this.tetrisCost} 憿);
+             return;
+           }
+           
+           // 憿舐內??閮
+           alert(`?妝 ??? Tetris嚗n\n????嚗?{this.tetrisCost} 憿n?拚???嚗?{this.totalStars} 憿);
+           
+           // ???
+           window.open('https://tw.pigame.cc/game/tetris', '_blank');
+           
+           // 璅⊥?摰??脣???
+           setTimeout(() => {
+             this.simulateGameCompletion('Tetris');
+           }, 2000); // 2蝘?璅⊥?摰?
+         },
+         toggleClassicUno() {
+           // 雿輻?啁????梯祥蝟餌絞
+           if (!this.spendStars(this.classicUnoCost)) {
+             alert(`????銝雲嚗?閬?${this.classicUnoCost} 憿????賡???Classic Uno?n\n?桀???嚗?{this.totalStars} 憿n?閬???${this.classicUnoCost} 憿);
+             return;
+           }
+           
+           // 憿舐內??閮
+           alert(`?? ??? Classic Uno嚗n\n????嚗?{this.classicUnoCost} 憿n?拚???嚗?{this.totalStars} 憿);
+           
+           // ???
+           window.open('https://tw.pigame.cc/game/classic-uno', '_blank');
+           
+           // 璅⊥?摰??脣???
+           setTimeout(() => {
+             this.simulateGameCompletion('Classic Uno');
+           }, 2000); // 2蝘?璅⊥?摰?
+         },
+         toggleLittleWheel() {
+           // 雿輻?啁????梯祥蝟餌絞
+           if (!this.spendStars(this.littleWheelCost)) {
+             alert(`????銝雲嚗?閬?${this.littleWheelCost} 憿????賡???Little Wheel?n\n?桀???嚗?{this.totalStars} 憿n?閬???${this.littleWheelCost} 憿);
+             return;
+           }
+           
+           // 憿舐內??閮
+           alert(`? ??? Little Wheel嚗n\n????嚗?{this.littleWheelCost} 憿n?拚???嚗?{this.totalStars} 憿);
+           
+           // ???
+           window.open('https://omiplay.com/zh/games/little-wheel/', '_blank');
+           
+           // 璅⊥?摰??脣???
+           setTimeout(() => {
+             this.simulateGameCompletion('Little Wheel');
+           }, 2000); // 2蝘?璅⊥?摰?
+         },
+         togglePlantsVsZombies() {
+           // 雿輻?啁????梯祥蝟餌絞
+           if (!this.spendStars(this.plantsVsZombiesCost)) {
+             alert(`????銝雲嚗?閬?${this.plantsVsZombiesCost} 憿????賡???Plants vs Zombies Demo?n\n?桀???嚗?{this.totalStars} 憿n?閬???${this.plantsVsZombiesCost} 憿);
+             return;
+           }
+           
+           // 憿舐內??閮
+           alert(`? ??? Plants vs Zombies Demo嚗n\n????嚗?{this.plantsVsZombiesCost} 憿n?拚???嚗?{this.totalStars} 憿);
+           
+           // ???
+           window.open('https://omiplay.com/zh/games/plants-vs-zombies-demo/', '_blank');
+           
+           // 璅⊥?摰??脣???
+           setTimeout(() => {
+             this.simulateGameCompletion('Plants vs Zombies Demo');
+           }, 2000); // 2蝘?璅⊥?摰?
+         },
+         toggleMotherload() {
+           // 雿輻?啁????梯祥蝟餌絞
+           if (!this.spendStars(this.motherloadCost)) {
+             alert(`????銝雲嚗?閬?${this.motherloadCost} 憿????賡???Motherload?n\n?桀???嚗?{this.totalStars} 憿n?閬???${this.motherloadCost} 憿);
+             return;
+           }
+           
+           // 憿舐內??閮
+           alert(`?? ??? Motherload嚗n\n????嚗?{this.motherloadCost} 憿n?拚???嚗?{this.totalStars} 憿);
+           
+           // ???
+           window.open('https://omiplay.com/zh/games/motherload/', '_blank');
+           
+           // 璅⊥?摰??脣???
+           setTimeout(() => {
+             this.simulateGameCompletion('Motherload');
+           }, 2000); // 2蝘?璅⊥?摰?
+         },
+         toggleKeeperOfTheGrove() {
+           // 雿輻?啁????梯祥蝟餌絞
+           if (!this.spendStars(this.keeperOfTheGroveCost)) {
+             alert(`????銝雲嚗?閬?${this.keeperOfTheGroveCost} 憿????賡???Keeper of the Grove?n\n?桀???嚗?{this.totalStars} 憿n?閬???${this.keeperOfTheGroveCost} 憿);
+             return;
+           }
+           
+           // 憿舐內??閮
+           alert(`? ??? Keeper of the Grove嚗n\n????嚗?{this.keeperOfTheGroveCost} 憿n?拚???嚗?{this.totalStars} 憿);
+           
+           // ???
+           window.open('https://omiplay.com/zh/games/keeper-of-the-grove/', '_blank');
+           
+           // 璅⊥?摰??脣???
+           setTimeout(() => {
+             this.simulateGameCompletion('Keeper of the Grove');
+           }, 2000); // 2蝘?璅⊥?摰?
+         },
+        goHome() {
+          // 餈?擐?
+          window.location.href = 'index.html';
+        },
+        loadPlayerData() {
+          // 敺ocalStorage霈?摰嗆??????????
+          const totalStars = parseInt(localStorage.getItem('totalStars') || '0');
+          this.totalStars = totalStars;
+          
+          // 霈?隞摰嗆??
+          const playerData = localStorage.getItem('playerData');
+          if (playerData) {
+            const data = JSON.parse(playerData);
+            this.playerLevel = data.level || 1;
+            this.totalStarsEarned = data.totalStarsEarned || 0;
+            this.starsSpent = data.starsSpent || 0;
+            this.nextLevelStars = data.nextLevelStars || 100;
+          } else {
+            // 憒?瘝? playerData嚗?憪??箸?豢?
+            this.playerLevel = 1;
+            this.totalStarsEarned = totalStars; // ?身?????舐敺?
+            this.starsSpent = 0;
+            this.nextLevelStars = 100;
+          }
+          
+          // 霈???脣?????
+          const gameProgress = localStorage.getItem('gameProgress');
+          if (gameProgress) {
+            const progress = JSON.parse(gameProgress);
+            this.completedGames = progress.completedGames || 0;
+          }
+        },
+        saveGameProgress() {
+          // 靽???脣漲
+          const progress = {
+            completedGames: this.completedGames,
+            lastPlayed: new Date().toISOString()
+          };
+          localStorage.setItem('gameProgress', JSON.stringify(progress));
+        },
+                 toggleCutTheRope() {
+           // 雿輻?啁????梯祥蝟餌絞
+           if (!this.spendStars(this.cutTheRopeCost)) {
+             alert(`????銝雲嚗?閬?${this.cutTheRopeCost} 憿????賡???Cut the Rope 2?n\n?桀???嚗?{this.totalStars} 憿n?閬???${this.cutTheRopeCost} 憿);
+             return;
+           }
+           
+           // 憿舐內??閮
+           alert(`? ??? Cut the Rope 2嚗n\n????嚗?{this.cutTheRopeCost} 憿n?拚???嚗?{this.totalStars} 憿);
+           
+           // ???
+           this.showCutTheRope = true;
+         },
+         toggleSlotMachine() {
+           // 雿輻?啁????梯祥蝟餌絞
+           if (!this.spendStars(this.slotMachineCost)) {
+             alert(`????銝雲嚗?閬?${this.slotMachineCost} 憿????賡??拇??豢???n\n?桀???嚗?{this.totalStars} 憿n?閬???${this.slotMachineCost} 憿);
+             return;
+           }
+           
+           // 憿舐內??閮
+           alert(`? ????璈??莎?\n\n????嚗?{this.slotMachineCost} 憿n?拚???嚗?{this.totalStars} 憿);
+           
+           // ???
+           window.open('word_spin_game.html', '_blank');
+           
+           // 璅⊥?摰??脣???
+           setTimeout(() => {
+             this.simulateGameCompletion('?璈???);
+           }, 2000); // 2蝘?璅⊥?摰?
+         },
+        closeCutTheRope() {
+          this.showCutTheRope = false;
+        },
+        savePlayerData() {
+          // 靽????追ocalStorage嚗?擐?靽?銝??
+          localStorage.setItem('totalStars', this.totalStars.toString());
+          
+          // 靽??嗡??拙振?豢??追ocalStorage
+          const playerData = {
+            level: this.playerLevel,
+            totalStarsEarned: this.totalStarsEarned,
+            starsSpent: this.starsSpent,
+            nextLevelStars: this.nextLevelStars,
+            lastUpdated: new Date().toISOString()
+          };
+          localStorage.setItem('playerData', JSON.stringify(playerData));
+        },
+        triggerStarsAnimation() {
+          // 閫貊???湔?
+          this.starsAnimation = true;
+          setTimeout(() => {
+            this.starsAnimation = false;
+          }, 500);
+        },
+        // ?啣???蝟餌絞?寞?
+        earnStars(amount) {
+          // ?脣???嚗?擐?靽?銝??
+          const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
+          const newStars = currentStars + amount;
+          
+          // ?湔?砍?豢?
+          this.totalStars = newStars;
+          this.totalStarsEarned += amount;
+          this.starsEarned = amount;
+          
+          // 瑼Ｘ?臬?臭誑??
+          this.checkLevelUp();
+          
+          // 閫貊?
+          this.triggerStarsAnimation();
+          
+          // 靽??豢?
+          this.savePlayerData();
+          
+          // 憿舐內?脣?閮
+          this.showStarsEarnedMessage(amount);
+        },
+        spendStars(amount) {
+          // ?梯祥??嚗?擐?靽?銝??
+          const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
+          
+          if (currentStars >= amount) {
+            const newStars = currentStars - amount;
+            
+            // ?湔?砍?豢?
+            this.totalStars = newStars;
+            this.starsSpent += amount;
+            
+            // 閫貊?
+            this.triggerStarsAnimation();
+            
+            // 靽??豢?
+            this.savePlayerData();
+            
+            return true;
+          }
+          return false;
+        },
+        checkLevelUp() {
+          // 瑼Ｘ?臬?臭誑??
+          if (this.canLevelUp) {
+            this.playerLevel++;
+            this.nextLevelStars = this.playerLevel * 100;
+            
+            // 憿舐內??閮
+            this.showLevelUpMessage();
+          }
+        },
+        showStarsEarnedMessage(amount) {
+          // 憿舐內?脣???閮
+          const message = `?? ?剖??脣? ${amount} 憿???\n\n?嗅???嚗?{this.totalStars} 憿;
+          setTimeout(() => {
+            alert(message);
+          }, 100);
+        },
+        showLevelUpMessage() {
+          // 憿舐內??閮
+          const message = `?? ?剖???嚗n\n?啁?蝝?${this.playerLevel}\n\n蝜潛??芸??脣??游???嚗;
+          setTimeout(() => {
+            alert(message);
+          }, 200);
+        },
+        // 璅⊥?摰??脣???
+        simulateGameCompletion(gameName) {
+          const starsReward = Math.floor(Math.random() * 50) + 10; // 10-60 憿???
+          this.earnStars(starsReward);
+          
+          // 憿舐內?摰?閮
+          setTimeout(() => {
+            alert(`? ${gameName} ?摰?嚗n\n?脣???嚗?{starsReward} 憿n蝮賣???${this.totalStars} 憿);
+          }, 300);
+        },
+        
+        // ?郊??憿舐內嚗?擐?靽?銝??
+        syncStarsDisplay() {
+          // 敺?localStorage ?霈?????
+          const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
+          this.totalStars = currentStars;
+          
+          // 閫貊?
+          this.triggerStarsAnimation();
+        },
+        
+        // 瑼Ｘ??蝟餌絞???
+        checkStarsSystem() {
+          const localStorageStars = parseInt(localStorage.getItem('totalStars') || '0');
+          const localStars = this.totalStars;
+          
+          console.log('?? ??蝟餌絞瑼Ｘ:');
+          console.log('  localStorage ??:', localStorageStars);
+          console.log('  ?砍??:', localStars);
+          console.log('  ?臬?郊:', localStorageStars === localStars);
+          
+          if (localStorageStars !== localStars) {
+            console.log('?? ??銝?甇伐?甇?靽格迤...');
+            this.totalStars = localStorageStars;
+            this.triggerStarsAnimation();
+          }
+        }
+      },
+      mounted() {
+        // 敺ocalStorage霈?摰嗆??
+        this.loadPlayerData();
+        
+        // ?????舫璅頂蝯?
+        initBackgroundMusic();
+        
+        // 瑼Ｘ??蝟餌絞???
+        this.checkStarsSystem();
+        
+        // 摰??郊??憿舐內嚗Ⅱ靽?擐?靽?銝??
+        setInterval(() => {
+          this.syncStarsDisplay();
+        }, 5000); // 瘥?蝘?甇乩?甈?
+        
+        // 摰?瑼Ｘ??蝟餌絞???
+        setInterval(() => {
+          this.checkStarsSystem();
+        }, 10000); // 瘥?0蝘炎?乩?甈?
+      }
+    }).mount('#app');
+
+    // ??單??批蝟餌絞
+    let backgroundMusic = null;
+    let toggleMusicBtn = null;
+    let isMusicPlaying = false;
+
+    // ?剜??單?
+    function playBackgroundMusic() {
+      if (!backgroundMusic) return;
+      
+      // 瑼Ｘ?臬撌脩??冽??
+      if (!backgroundMusic.paused) {
+        console.log('? ?單?撌脣?剜銝?);
+        return;
+      }
+      
+      backgroundMusic.play().then(() => {
+        isMusicPlaying = true;
+        updateMusicButtonState();
+        localStorage.setItem('bgMusicState', 'playing');
+        console.log('? ??單????剜');
+      }).catch(err => {
+        console.error('????單??剜憭望?:', err);
+        isMusicPlaying = false;
+        updateMusicButtonState();
+      });
+    }
+
+    // ?怠???單?
+    function pauseBackgroundMusic() {
+      if (!backgroundMusic) return;
+      
+      backgroundMusic.pause();
+      isMusicPlaying = false;
+      updateMusicButtonState();
+      localStorage.setItem('bgMusicState', 'paused');
+      console.log('?? ??單?撌脫??);
+    }
+
+    // ????單?
+    function toggleBackgroundMusic() {
+      if (isMusicPlaying) {
+        pauseBackgroundMusic();
+      } else {
+        playBackgroundMusic();
+      }
+    }
+
+    // ?湔?單??????
+    function updateMusicButtonState() {
+      if (!toggleMusicBtn) return;
+      
+      if (isMusicPlaying) {
+        toggleMusicBtn.style.background = 'rgba(0, 255, 255, 0.2)';
+        toggleMusicBtn.innerHTML = '<span class="material-icons">??</span>';
+      } else {
+        toggleMusicBtn.style.background = 'rgba(10, 20, 40, 0.85)';
+        toggleMusicBtn.innerHTML = '<span class="material-icons">??</span>';
+      }
+    }
+
+    // ?????舫璅頂蝯?
+    function initBackgroundMusic() {
+      console.log('? ?????脖葉敹??舫璅頂蝯?..');
+      
+      backgroundMusic = document.getElementById('backgroundMusic');
+      toggleMusicBtn = document.getElementById('toggleMusic');
+      
+      if (!backgroundMusic) {
+        console.error('???曆??啗??舫璅?蝝?);
+        return;
+      }
+      
+      if (!toggleMusicBtn) {
+        console.error('???曆??圈璅?嗆???);
+        return;
+      }
+      
+      // 閮剖??單?撅祆?
+      backgroundMusic.volume = 0.3;
+      backgroundMusic.loop = true;
+      
+      // ???仿璅?獢?
+      backgroundMusic.load();
+      
+      // 瑼Ｘ銝駁??Ｙ??單????
+      const musicState = localStorage.getItem('bgMusicState');
+      isMusicPlaying = musicState === 'playing';
+      console.log('?? 銝駁??ａ璅???', isMusicPlaying);
+      
+      // ?湔?????
+      updateMusicButtonState();
+      
+      // 憒??單??府?剜嚗?閰行??
+      if (isMusicPlaying) {
+        playBackgroundMusic();
+      }
+      
+      console.log('???銝剖???單?蝟餌絞??????);
+    }
+
+    // ???單??批??暺?
+    document.addEventListener('DOMContentLoaded', function() {
+      // 撱園????蝣箔????蝝撌脰???
+      setTimeout(() => {
+        // 蝬???鈭辣
+        const musicBtn = document.getElementById('toggleMusic');
+        if (musicBtn) {
+          musicBtn.addEventListener('click', toggleBackgroundMusic);
+          console.log('? ?單??批??鈭辣撌脩?摰?);
+        }
+        
+        // 瘛餃??冽鈭?閫貊?單??剜
+        let hasUserInteracted = false;
+        
+        function handleUserInteraction() {
+          if (!hasUserInteracted) {
+            hasUserInteracted = true;
+            console.log('?? ?冽擐活鈭?嚗?閰行?暸璅?);
+            
+            // 憒??單??府?剜雿?瘝?憪??曉?岫?剜
+            if (isMusicPlaying && backgroundMusic && backgroundMusic.paused) {
+              playBackgroundMusic();
+            }
+            
+            // 蝘駁鈭辣????
+            document.removeEventListener('click', handleUserInteraction);
+            document.removeEventListener('keydown', handleUserInteraction);
+            document.removeEventListener('touchstart', handleUserInteraction);
+          }
+        }
+        
+        // ???冽鈭?鈭辣
+        document.addEventListener('click', handleUserInteraction);
+        document.addEventListener('keydown', handleUserInteraction);
+        document.addEventListener('touchstart', handleUserInteraction);
+        
+      }, 500);
+    });
+
+    // ????航??扯??????單??怠?/?Ｗ儔
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        // ??梯???璅?
+        if (isMusicPlaying && backgroundMusic) {
+          backgroundMusic.pause();
+        }
+      } else {
+        // ?憿舐內?敺拚璅?
+        if (isMusicPlaying && backgroundMusic && backgroundMusic.paused) {
+          backgroundMusic.play().catch(err => {
+            console.log('??Ｗ儔?璅?曉仃??', err);
+          });
+        }
+      }
+    });
+  </script>
+</body>
+</html> 

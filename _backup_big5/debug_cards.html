@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>?∠?隤輯岫 - Typing Hero</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #1a1a1a;
+      color: #fff;
+    }
+    .debug-info {
+      background: #2a2a2a;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #444;
+    }
+    .error { border-color: #ff4444; background: #3a2a2a; }
+    .success { border-color: #44ff44; background: #2a3a2a; }
+    .warning { border-color: #ffff44; background: #3a3a2a; }
+    button {
+      background: #4a6a7c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover { background: #5a7a8c; }
+    .log {
+      background: #000;
+      color: #0f0;
+      padding: 10px;
+      border-radius: 4px;
+      font-family: monospace;
+      max-height: 300px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>?? ?∠?隤輯岫撌亙</h1>
+  
+  <div class="debug-info">
+    <h3>?? ?單????/h3>
+    <div id="status"></div>
+    <button onclick="checkStatus()">?? 瑼Ｘ???/button>
+  </div>
+  
+  <div class="debug-info">
+    <h3>? ?砍?脣?</h3>
+    <div id="storage"></div>
+    <button onclick="checkStorage()">?? 瑼Ｘ?脣?</button>
+  </div>
+  
+  <div class="debug-info">
+    <h3>? ?∠?鞈?</h3>
+    <div id="cards"></div>
+    <button onclick="checkCards()">?? 瑼Ｘ?∠?</button>
+  </div>
+  
+  <div class="debug-info">
+    <h3>?? ???亥?</h3>
+    <div id="log" class="log"></div>
+    <button onclick="clearLog()">??儭?皜?亥?</button>
+  </div>
+  
+  <div class="debug-info">
+    <h3>? 皜祈岫撌亙</h3>
+    <button onclick="addTestCard()">??瘛餃?皜祈岫?∠?</button>
+    <button onclick="clearAllCards()">??儭?皜????/button>
+    <button onclick="backupData()">? ?遢鞈?</button>
+    <button onclick="restoreData()">? ?Ｗ儔鞈?</button>
+  </div>
+
+  <!-- 頛敹???JavaScript -->
+  <script src="js/sound.js"></script>
+  <script src="js/userData.js"></script>
+  <script src="js/autoSaveSystem.js"></script>
+  <script src="js/starRewardSystem.js"></script>
+  <script src="js/cardUtils.js"></script>
+  <script src="js/cardStorage.js"></script>
+  <script src="js/cards.js"></script>
+  <script src="js/achievementSystem.js"></script>
+  <script src="js/contextMenuSystem.js"></script>
+  <script src="js/enhancedSaveReminder.js"></script>
+
+  <script>
+    let logMessages = [];
+    
+    function log(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      const logEntry = `[${timestamp}] ${message}`;
+      logMessages.push(logEntry);
+      
+      const logElement = document.getElementById('log');
+      if (logElement) {
+        logElement.textContent = logMessages.join('\n');
+        logElement.scrollTop = logElement.scrollHeight;
+      }
+      
+      console.log(logEntry);
+    }
+    
+    function clearLog() {
+      logMessages = [];
+      document.getElementById('log').textContent = '';
+    }
+    
+    function checkStatus() {
+      const statusDiv = document.getElementById('status');
+      let html = '';
+      
+      // 瑼Ｘ allCards
+      if (window.allCards && window.allCards.length > 0) {
+        html += '<div class="success">??allCards 撌脰??? ' + window.allCards.length + ' 撘萄??/div>';
+        log('allCards 撌脰??? ' + window.allCards.length + ' 撘萄??);
+      } else {
+        html += '<div class="error">??allCards ?芾??交??箇征</div>';
+        log('allCards ?芾??交??箇征', 'error');
+      }
+      
+      // 瑼Ｘ LinkageSystem
+      if (window.LinkageSystem) {
+        html += '<div class="success">??LinkageSystem 撌脰???/div>';
+        log('LinkageSystem 撌脰???);
+      } else {
+        html += '<div class="error">??LinkageSystem ?芾???/div>';
+        log('LinkageSystem ?芾???, 'error');
+      }
+      
+      statusDiv.innerHTML = html;
+    }
+    
+    function checkStorage() {
+      const storageDiv = document.getElementById('storage');
+      let html = '';
+      
+      const keys = ['ownedCards', 'cardShards', 'totalStars'];
+      
+      keys.forEach(key => {
+        try {
+          const value = localStorage.getItem(key);
+          if (value !== null) {
+            const data = JSON.parse(value);
+            if (typeof data === 'object') {
+              const count = Object.keys(data).length;
+              html += `<div class="success">??${key}: ${count} ????/div>`;
+              log(`${key}: ${count} ???);
+            } else {
+              html += `<div class="success">??${key}: ${data}</div>`;
+              log(`${key}: ${data}`);
+            }
+          } else {
+            html += `<div class="warning">?? ${key}: 銝???/div>`;
+            log(`${key}: 銝??灼, 'warning');
+          }
+        } catch (error) {
+          html += `<div class="error">??${key}: 閫???航炊</div>`;
+          log(`${key}: 閫???航炊 - ${error.message}`, 'error');
+        }
+      });
+      
+      storageDiv.innerHTML = html;
+    }
+    
+    function checkCards() {
+      const cardsDiv = document.getElementById('cards');
+      let html = '';
+      
+      if (!window.LinkageSystem) {
+        html += '<div class="error">??LinkageSystem ?芾???/div>';
+        cardsDiv.innerHTML = html;
+        return;
+      }
+      
+      try {
+        const ownedCards = window.LinkageSystem.cards.getOwnedCards();
+        const shards = window.LinkageSystem.cards.getShards();
+        const totalStars = window.LinkageSystem.stars.get();
+        
+        const ownedCount = Object.keys(ownedCards).length;
+        const shardCount = Object.keys(shards).length;
+        const totalShards = Object.values(shards).reduce((sum, count) => sum + count, 0);
+        
+        html += `<div class="success">?? 撌脫???? ${ownedCount} 撘?/div>`;
+        html += `<div class="success">?? 蝣?蝔桅?: ${shardCount} 蝔?/div>`;
+        html += `<div class="success">?? 蝮賜??: ${totalShards} ??/div>`;
+        html += `<div class="success">潃?蝮賣??: ${totalStars} 憿?/div>`;
+        
+        log(`?∠?蝯梯?: 撌脫???${ownedCount} 撘蛛?蝣?蝔桅? ${shardCount} 蝔殷?蝮賜???${totalShards} ???? ${totalStars} 憿);
+        
+      } catch (error) {
+        html += `<div class="error">??瑼Ｘ?∠?鞈???隤? ${error.message}</div>`;
+        log(`瑼Ｘ?∠?鞈???隤? ${error.message}`, 'error');
+      }
+      
+      cardsDiv.innerHTML = html;
+    }
+    
+    function addTestCard() {
+      if (!window.allCards || window.allCards.length === 0) {
+        log('?⊥?瘛餃?皜祈岫?∠?嚗llCards ?芾???, 'error');
+        return;
+      }
+      
+      if (!window.LinkageSystem) {
+        log('?⊥?瘛餃?皜祈岫?∠?嚗inkageSystem ?芾???, 'error');
+        return;
+      }
+      
+      try {
+        const testCard = window.allCards[0];
+        window.LinkageSystem.cards.addCard(testCard.word);
+        window.LinkageSystem.cards.addShard(testCard.word, 3);
+        
+        log(`撌脫溶?葫閰血?? ${testCard.word}`);
+        checkCards();
+        
+      } catch (error) {
+        log(`瘛餃?皜祈岫?∠?憭望?: ${error.message}`, 'error');
+      }
+    }
+    
+    function clearAllCards() {
+      if (!confirm('蝣箏?閬??斗????嚗?)) {
+        return;
+      }
+      
+      if (!window.LinkageSystem) {
+        log('?⊥?皜?∠?嚗inkageSystem ?芾???, 'error');
+        return;
+      }
+      
+      try {
+        window.LinkageSystem.cards.setOwnedCards({});
+        window.LinkageSystem.cards.setShards({});
+        window.LinkageSystem.stars.set(0);
+        
+        log('撌脫??斗????);
+        checkCards();
+        
+      } catch (error) {
+        log(`皜?∠?憭望?: ${error.message}`, 'error');
+      }
+    }
+    
+    function backupData() {
+      if (!window.LinkageSystem) {
+        log('?⊥??遢鞈?嚗inkageSystem ?芾???, 'error');
+        return;
+      }
+      
+      try {
+        const backup = {
+          ownedCards: window.LinkageSystem.cards.getOwnedCards(),
+          shards: window.LinkageSystem.cards.getShards(),
+          totalStars: window.LinkageSystem.stars.get(),
+          timestamp: new Date().toISOString()
+        };
+        
+        localStorage.setItem('cardBackup', JSON.stringify(backup));
+        log('鞈??遢摰?');
+        
+      } catch (error) {
+        log(`?遢憭望?: ${error.message}`, 'error');
+      }
+    }
+    
+    function restoreData() {
+      try {
+        const backupStr = localStorage.getItem('cardBackup');
+        if (!backupStr) {
+          log('瘝??曉?遢鞈?', 'warning');
+          return;
+        }
+        
+        const backup = JSON.parse(backupStr);
+        
+        if (window.LinkageSystem) {
+          window.LinkageSystem.cards.setOwnedCards(backup.ownedCards);
+          window.LinkageSystem.cards.setShards(backup.shards);
+          window.LinkageSystem.stars.set(backup.totalStars);
+        }
+        
+        log('鞈??Ｗ儔摰?');
+        checkCards();
+        
+      } catch (error) {
+        log(`?Ｗ儔憭望?: ${error.message}`, 'error');
+      }
+    }
+    
+    // ?? localStorage 霈?
+    window.addEventListener('storage', function(e) {
+      log(`localStorage 霈?: ${e.key} = ${e.newValue}`);
+    });
+    
+    // ?頛??炎??
+    window.addEventListener('load', function() {
+      log('隤輯岫撌亙撌脰???);
+      
+      setTimeout(() => {
+        checkStatus();
+        checkStorage();
+        checkCards();
+      }, 2000);
+    });
+  </script>
+</body>
+</html> 

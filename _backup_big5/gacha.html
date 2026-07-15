@@ -1,0 +1,3488 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>?劓蟡? - Typing Hero</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="responsive.css">
+  <link rel="stylesheet" href="responsive_enhanced.css">
+  <style>
+    /* ?脫迫瘞游像皛曉? */
+    html {
+      overflow-x: hidden;
+    }
+    
+    /* 蝣箔????蝝?刻?蝒?? */
+    * {
+      box-sizing: border-box;
+      max-width: 100%;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', 'Noto Sans TC', 'Microsoft JhengHei', '敺株?甇??擃?, 'PingFang TC', 'Helvetica Neue', Arial, sans-serif;
+      background: url('https://cdn-prd.ggac.com/ggac/work/image/2024/6/3/695158cd-1871-4803-88ab-beb43f6e11e5-2048x.jpg') no-repeat center center fixed;
+      background-size: cover;
+      background-repeat: no-repeat;
+      color: #fff;
+      text-align: center;
+      min-height: 100vh;
+      width: 100%;
+      overflow-x: hidden;
+      font-size: 16px;
+      line-height: 1.6;
+      font-weight: 400;
+      letter-spacing: 0.3px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 35px;
+      box-shadow: 0 0 35px 15px #00ffff88, 0 0 50px 0 #a0a0ff33 inset;
+      border-bottom: 3px solid #00ffff;
+      backdrop-filter: blur(12px);
+      position: relative;
+      z-index: 10;
+      background: rgba(10, 20, 40, 0.95);
+    }
+    header h1 {
+      font-size: 2.8rem;
+      color: #00ffff;
+      margin: 0;
+      letter-spacing: 4px;
+      text-shadow: 0 0 20px #00ffff, 0 0 40px #a259ff, 0 0 8px #000;
+      font-weight: 900;
+      font-family: 'Orbitron', 'Inter', sans-serif;
+    }
+    .btn {
+      padding: 14px 28px;
+      margin: 0 10px;
+      border: none;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      backdrop-filter: blur(10px);
+      border: 2px solid transparent;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.6s;
+    }
+    .btn:hover::before {
+      left: 100%;
+    }
+    .home-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .home-btn:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+    .cards-btn {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .cards-btn:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 12px 30px rgba(245, 87, 108, 0.5);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+    .draw-btn {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+      font-size: 20px;
+      padding: 18px 36px;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
+      border-color: rgba(255, 255, 255, 0.3);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    .draw-btn:hover {
+      transform: translateY(-5px) scale(1.08);
+      box-shadow: 0 15px 35px rgba(79, 172, 254, 0.6);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+    .draw-btn:active {
+      transform: translateY(-2px) scale(1.02);
+    }
+    .draw-btn:disabled {
+      background: linear-gradient(135deg, #bdc3c7 0%, #95a5a6 100%);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-color: transparent;
+    }
+    .wish-btn {
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+      color: #8b4513;
+      font-weight: 700;
+      border-color: rgba(139, 69, 19, 0.3);
+    }
+    .wish-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 10px 25px rgba(252, 182, 159, 0.5);
+      border-color: rgba(139, 69, 19, 0.5);
+    }
+    .wish-btn.active {
+      background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
+      color: #8b4513;
+      box-shadow: 0 8px 20px rgba(255, 215, 0, 0.5);
+      border-color: rgba(139, 69, 19, 0.6);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 8px 20px rgba(255, 215, 0, 0.5); }
+      50% { box-shadow: 0 8px 20px rgba(255, 215, 0, 0.8); }
+      100% { box-shadow: 0 8px 20px rgba(255, 215, 0, 0.5); }
+    }
+    .filter-btn {
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+      color: #2c3e50;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: 12px;
+      margin: 6px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      border-color: rgba(44, 62, 80, 0.2);
+    }
+    .filter-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      border-color: rgba(44, 62, 80, 0.4);
+    }
+    .filter-btn.active {
+      background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+      color: white;
+      box-shadow: 0 6px 18px rgba(116, 185, 255, 0.5);
+      border-color: rgba(255, 255, 255, 0.3);
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+    @keyframes glow {
+      from { box-shadow: 0 6px 18px rgba(116, 185, 255, 0.5); }
+      to { box-shadow: 0 6px 18px rgba(116, 185, 255, 0.8); }
+    }
+    .close-btn {
+      background: linear-gradient(135deg, #ff7675 0%, #d63031 100%);
+      color: white;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    .close-btn:hover {
+      transform: scale(1.15) rotate(90deg);
+      box-shadow: 0 8px 20px rgba(214, 48, 49, 0.5);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+    main {
+      border-radius: 20px;
+      margin: 35px auto 0 auto;
+      max-width: 1200px;
+      width: 95%;
+      box-shadow: none;
+      padding-bottom: 40px;
+      position: relative;
+    }
+    main:before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url('https://png.pngtree.com/thumb_back/fw800/background/20230613/pngtree-cosmic-starry-sky-background-image_2890957.jpg') repeat center center;
+      opacity: 0.2;
+      border-radius: 20px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    main > * { position: relative; z-index: 1; }
+    h2 {
+      color: #a0a0ff;
+      text-shadow: 0 0 20px #00ffff, 0 0 40px #a259ff, 0 0 8px #000;
+      font-size: 1.8rem;
+      margin-top: 30px;
+      margin-bottom: 25px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    #cardGrid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 18px;
+      padding: 28px 20px 10px 20px;
+      justify-content: center;
+      overflow-x: auto;
+      box-sizing: border-box;
+      background: rgba(10, 20, 40, 0.7);
+      border-radius: 14px;
+      box-shadow: 0 0 32px #00ffff33, 0 0 80px #a259ff22 inset;
+      position: relative;
+      max-width: 1000px;
+      width: 95%;
+      margin: 0 auto;
+      border: 2px solid #00ffff;
+    }
+    #cardGrid:before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url('https://png.pngtree.com/thumb_back/fw800/background/20230613/pngtree-cosmic-starry-sky-background-image_2890957.jpg') repeat center center,
+                  linear-gradient(to bottom, rgba(10, 20, 40, 0.5) 0%, rgba(10, 20, 40, 0.9) 100%);
+      background-blend-mode: overlay;
+      opacity: 0.2;
+      border-radius: 14px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    #cardGrid > * { position: relative; z-index: 1; }
+    .card {
+      width: 170px;
+      height: 260px;
+      position: relative;
+      background: rgba(10, 20, 40, 0.85);
+      border-radius: 16px;
+      padding: 10px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+      animation: float 3s ease-in-out infinite;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      box-shadow: 0 0 16px #00ffff55, 0 0 32px #a259ff33;
+      border: 2.5px solid #00ffff;
+      backdrop-filter: blur(8px);
+      font-size: 1.1rem;
+    }
+    .card:hover {
+      transform: translateY(-10px) scale(1.06) rotate(-2deg);
+      box-shadow: 0 15px 32px rgba(0,0,0,0.3), 0 0 32px #00ffff, 0 0 48px #a259ffcc;
+    }
+    .card.enlarged {
+      z-index: 100;
+      transform: scale(2.5) !important;
+      box-shadow: 0 0 80px #fff, 0 0 120px #a259ffcc, 0 0 40px #00ffff;
+      transition: all 0.4s ease;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .card img, .card video, .wish-card-style .card-media {
+      width: 95%;
+      height: 150px;
+      max-height: 150px;
+      display: block;
+      margin: 0 auto 8px auto;
+      border-radius: 10px;
+      object-fit: cover;
+      background: #000;
+    }
+    .stars {
+      margin-top: 4px;
+      font-size: 1.1rem;
+      color: #ffd700;
+      line-height: 1;
+      letter-spacing: 2px;
+      text-shadow: 0 0 8px #fff, 0 0 16px #00ffff;
+    }
+    .card .label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 6px;
+      margin-bottom: 0;
+      padding: 0;
+      line-height: 1.1;
+    }
+    .chinese-text {
+      font-size: 1.08em;
+      font-weight: bold;
+      margin-bottom: 2px;
+      letter-spacing: 1px;
+    }
+    .english-text {
+      font-size: 0.98em;
+      color: #ffd700cc;
+      margin-top: 0;
+      letter-spacing: 0.5px;
+    }
+    .card .category-tag {
+      margin-top: 4px;
+      font-size: 0.85em;
+      color: #ffd700;
+      text-shadow: 0 0 6px #fff, 0 0 12px #00ffff;
+    }
+    .rank-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      z-index: 10;
+      background: linear-gradient(90deg, #00ffff 0%, #a259ff 100%);
+      color: #000;
+      box-shadow: 0 0 8px #00ffff, 0 0 16px #a259ff;
+    }
+    .card.common .rank-badge {
+      background: #00ffff;
+      border: 2px solid #00ffff;
+      color: #000;
+    }
+    .card.rare .rank-badge {
+      background: #a259ff;
+      border: 2px solid #a259ff;
+      color: #fff;
+    }
+    .card.epic .rank-badge {
+      background: #ffd700;
+      border: 2px solid #ffd700;
+      color: #000;
+    }
+    .shard-count {
+      position: absolute;
+      bottom: 6px;
+      left: 6px;
+      background: rgba(0, 255, 255, 0.85);
+      color: #000;
+      padding: 3px 7px;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      box-shadow: 0 0 8px #00ffff;
+      font-weight: bold;
+    }
+    .card.unlocked .shard-count {
+      background: rgba(120, 255, 180, 0.85);
+      color: #003c00;
+    }
+    .common { border: 2.5px solid #00ffff; }
+    .rare   { border: 2.5px solid #a259ff; }
+    .epic   { border: 2.5px solid #ffd700; box-shadow: 0 0 16px #ffd700; }
+
+    #starCount {
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+      background: rgba(10, 20, 40, 0.95);
+      padding: 12px 18px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #ffd700, 0 0 40px #00ffff;
+      border: 3px solid #00ffff;
+      color: #ffd700;
+      font-size: 1.4rem;
+      font-weight: bold;
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      font-family: 'JetBrains Mono', 'Inter', monospace;
+    }
+
+    #overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      z-index: 1400;
+    }
+    #modal {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: rgba(10, 20, 40, 0.98);
+      padding: 25px;
+      border-radius: 18px;
+      box-shadow: 0 0 40px #00ffff99, 0 0 100px #a259ff44 inset;
+      z-index: 1500;
+      transition: all 0.4s ease;
+      color: #fff;
+      max-width: 90%;
+      width: 450px;
+      box-sizing: border-box;
+      border: 3px solid #00ffff;
+      backdrop-filter: blur(12px);
+    }
+    #modal.show {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    #modal .modal-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #modal img {
+      width: 100%;
+      max-width: 250px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      box-shadow: 0 0 20px #00ffff88;
+      background: #000;
+      border: 2px solid #00ffff;
+    }
+    #modal h2 {
+      margin: 15px 0;
+      color: #00ffff;
+      font-size: 1.4rem;
+      text-shadow: 0 0 15px #00ffff, 0 0 35px #a259ff;
+      font-weight: 700;
+      font-family: 'Inter', 'Noto Sans TC', sans-serif;
+    }
+    #modal .description {
+      margin: 15px 0;
+      text-align: left;
+      line-height: 1.6;
+      font-size: 1rem;
+      max-height: 200px;
+      overflow-y: auto;
+      color: #e0e0e0;
+      text-shadow: 0 0 8px #000a;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      font-family: 'Inter', 'Noto Sans TC', sans-serif;
+    }
+    .sound-btn-modal {
+      background: linear-gradient(135deg, #00ffff 0%, #a259ff 100%);
+      color: #000;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      margin-top: 15px;
+      box-shadow: 0 0 15px #00ffff88;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      font-family: 'Inter', 'Noto Sans TC', sans-serif;
+    }
+    .sound-btn-modal:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #00ffffcc;
+    }
+
+    .gacha-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.95);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 15000;
+      padding: 0;
+      box-sizing: border-box;
+      backdrop-filter: blur(8px);
+      pointer-events: auto;
+    }
+
+    .gacha-content {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-width: 100%;
+      max-height: 100%;
+      overflow: hidden;
+    }
+
+    .gacha-circle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(50vw, 50vh);
+      height: min(50vw, 50vh);
+      max-width: 500px;
+      max-height: 500px;
+      border: 5px solid #00ffff;
+      border-radius: 50%;
+      animation: circlePulse 2s infinite;
+      box-shadow: 0 0 30px #00ffff, 0 0 60px #a259ff;
+    }
+
+    .gacha-rays {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(60vw, 60vh);
+      height: min(60vw, 60vh);
+      max-width: 600px;
+      max-height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #00ffff88 0%, #a259ff44 40%, transparent 70%);
+      opacity: 0.8;
+      animation: raysPulse 2s infinite;
+    }
+
+    .gacha-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: min(40vw, 40vh);
+      height: min(60vw, 60vh);
+      max-width: 400px;
+      max-height: 600px;
+      animation: cardAppear 2s forwards;
+      perspective: 1500px;
+      background: transparent;
+      z-index: 10;
+    }
+    
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+      transform-style: preserve-3d;
+      transform-origin: center center;
+    }
+
+    .card-inner.is-flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      border-radius: 15px;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      box-sizing: border-box;
+    }
+
+    .card-back {
+      background-image: url('https://i.pinimg.com/736x/7e/ef/2b/7eef2bb3dd1bb8ed15e9dbd9529a2dc8.jpg');
+      border: 3px solid #555;
+      background-size: contain;
+      background-position: center;
+      transform: rotateY(0deg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-front {
+      transform: rotateY(180deg);
+      background-color: #000;
+      border: 3px solid #fff;
+      position: relative;
+      overflow: hidden;
+      background-image: url('https://i.pinimg.com/736x/7e/ef/2b/7eef2bb3dd1bb8ed15e9dbd9529a2dc8.jpg');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .card-front-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: space-between;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+      padding: 15px;
+      box-sizing: border-box;
+    }
+
+    /* ?賢?銝剔?敶梁?璅?? */
+    .card-front-video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 10px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      filter: drop-shadow(0 0 12px #00ffffcc);
+    }
+
+    .card-front-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+      z-index: 3;
+      position: relative;
+    }
+
+    .card-front-info {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      z-index: 3;
+      position: relative;
+    }
+
+    @keyframes cardAppear {
+      0% { 
+        transform: translate(-50%, -50%) scale(0); 
+        opacity: 0;
+      }
+      50% { 
+        transform: translate(-50%, -50%) scale(1.3); 
+        opacity: 1;
+      }
+      100% { 
+        transform: translate(-50%, -50%) scale(1); 
+        opacity: 1;
+      }
+    }
+
+    @keyframes circlePulse {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.6; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+
+    @keyframes raysPulse {
+      0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+      50% { transform: translate(-50%, -50%) scale(1.4); opacity: 0.4; }
+      100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+    }
+
+    .gacha-animation.rare .gacha-circle,
+    .gacha-animation.rare .gacha-rays {
+      border-color: #a259ff;
+      background: radial-gradient(circle, transparent 30%, #a259ff 70%);
+      box-shadow: 0 0 30px #a259ff, 0 0 60px #ff6bff;
+    }
+
+    .gacha-animation.common .card-front, .gacha-animation.common .card-back { border-color: #00ffff; }
+    .gacha-animation.rare .card-front, .gacha-animation.rare .card-back { border-color: #a259ff; }
+    .gacha-animation.epic .card-front, .gacha-animation.epic .card-back { border-color: #ffd700; }
+
+    .gacha-animation.epic .gacha-circle,
+    .gacha-animation.epic .gacha-rays {
+      border-color: #ffd700;
+      background: radial-gradient(circle, transparent 30%, #ffd700 70%);
+      box-shadow: 0 0 30px #ffd700, 0 0 60px #ffaa00;
+    }
+
+    @media (max-aspect-ratio: 1/1) {
+      .gacha-card {
+        width: min(50vw, 50vh);
+        height: min(80vw, 80vh);
+      }
+      .gacha-circle {
+        width: min(65vw, 65vh);
+        height: min(65vw, 65vh);
+      }
+      .gacha-rays {
+        width: min(75vw, 75vh);
+        height: min(75vw, 75vh);
+      }
+    }
+
+    /* 蝢?皛曉?璇?*/
+    body::-webkit-scrollbar, #cardGrid::-webkit-scrollbar {
+      height: 10px;
+      width: 10px;
+      background: rgba(0,0,0,0.08);
+      border-radius: 8px;
+    }
+    body::-webkit-scrollbar-thumb, #cardGrid::-webkit-scrollbar-thumb {
+      background: linear-gradient(90deg, #00ffff88, #a259ff88);
+      border-radius: 8px;
+      box-shadow: 0 0 4px #00ffff88;
+    }
+    body::-webkit-scrollbar-thumb:hover, #cardGrid::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(90deg, #00ffffcc, #a259ffcc);
+    }
+    body, #cardGrid {
+      scrollbar-width: thin;
+      scrollbar-color: #00ffff88 #00000011;
+    }
+
+    /* ?啣?嚗迂憿?璅?? */
+    .wish-section {
+      background: linear-gradient(135deg, rgba(20, 40, 80, 0.95) 0%, rgba(40, 20, 60, 0.95) 100%);
+      border: 3px solid transparent;
+      border-radius: 20px;
+      padding: 25px;
+      margin: 25px auto;
+      max-width: 900px;
+      box-shadow: 
+        0 0 30px rgba(255, 215, 0, 0.3),
+        0 0 60px rgba(255, 215, 0, 0.1),
+        inset 0 0 20px rgba(255, 215, 0, 0.1);
+      backdrop-filter: blur(12px);
+      animation: wishSectionGlow 4s ease-in-out infinite;
+      position: relative;
+      overflow: hidden;
+      border-image: linear-gradient(45deg, #ffd700, #ffaa00, #ffd700) 1;
+    }
+
+    .wish-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.15), transparent);
+      animation: wishShimmer 6s linear infinite;
+      pointer-events: none;
+      opacity: 0.8;
+    }
+
+    @keyframes wishSectionGlow {
+      0%, 100% { 
+        box-shadow: 
+          0 0 30px rgba(255, 215, 0, 0.3),
+          0 0 60px rgba(255, 215, 0, 0.1),
+          inset 0 0 20px rgba(255, 215, 0, 0.1);
+        border-image: linear-gradient(45deg, #ffd700, #ffaa00, #ffd700) 1;
+      }
+      50% { 
+        box-shadow: 
+          0 0 40px rgba(255, 215, 0, 0.5),
+          0 0 80px rgba(255, 215, 0, 0.2),
+          inset 0 0 30px rgba(255, 215, 0, 0.2);
+        border-image: linear-gradient(45deg, #ffaa00, #ffd700, #ffaa00) 1;
+      }
+    }
+
+    @keyframes wishShimmer {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    .wish-section h3 {
+      color: #ffd700;
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-shadow: 
+        0 0 15px #ffd700, 
+        0 0 30px #ffaa00,
+        0 0 45px #ffd700;
+      letter-spacing: 3px;
+      text-align: center;
+      animation: wishTitlePulse 3s ease-in-out infinite;
+      position: relative;
+      z-index: 1;
+      font-family: 'Orbitron', 'Inter', sans-serif;
+      background: linear-gradient(45deg, #ffd700, #ffaa00, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    @keyframes wishTitlePulse {
+      0%, 100% { 
+        transform: scale(1);
+        text-shadow: 
+          0 0 15px #ffd700, 
+          0 0 30px #ffaa00,
+          0 0 45px #ffd700;
+      }
+      50% { 
+        transform: scale(1.08);
+        text-shadow: 
+          0 0 25px #ffd700, 
+          0 0 50px #ffaa00, 
+          0 0 75px #ffd700,
+          0 0 100px #ffaa00;
+      }
+    }
+
+    .wish-controls {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .wish-select {
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(20, 40, 80, 0.8) 100%);
+      border: 2px solid #00ffff;
+      border-radius: 15px;
+      padding: 14px 20px;
+      color: #fff;
+      font-size: 1.1rem;
+      font-family: 'Inter', 'Noto Sans TC', sans-serif;
+      min-width: 220px;
+      cursor: pointer;
+      box-shadow: 
+        0 0 20px rgba(0, 255, 255, 0.3),
+        inset 0 0 10px rgba(0, 255, 255, 0.1);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+
+    .wish-select::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .wish-select:hover::before {
+      left: 100%;
+    }
+
+    .wish-select:focus {
+      outline: none;
+      box-shadow: 0 0 30px #00ffff66, 0 0 50px #00ffff33;
+      border-color: #00ffff;
+      transform: scale(1.02);
+    }
+
+    .wish-select option {
+      background: rgba(10, 20, 40, 0.95);
+      color: #fff;
+      padding: 10px;
+      font-size: 1rem;
+      font-family: 'Inter', 'Noto Sans TC', sans-serif;
+    }
+
+    .wish-btn {
+      background: linear-gradient(135deg, #ffd700 0%, #ffaa00 50%, #ffd700 100%);
+      color: #000;
+      border: 2px solid rgba(255, 215, 0, 0.5);
+      padding: 14px 28px;
+      border-radius: 15px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 
+        0 0 25px rgba(255, 215, 0, 0.4),
+        inset 0 0 15px rgba(255, 215, 0, 0.2);
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      font-family: 'Inter', 'Noto Sans TC', sans-serif;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .wish-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s ease, height 0.3s ease;
+    }
+
+    .wish-btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .wish-btn:hover {
+      transform: scale(1.08) translateY(-2px);
+      box-shadow: 0 0 30px #ffd70099, 0 0 50px #ffd70066;
+    }
+
+    .wish-btn:active {
+      transform: scale(0.95);
+    }
+
+    .current-wish {
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(20, 40, 80, 0.6) 100%);
+      border: 3px solid transparent;
+      border-radius: 18px;
+      padding: 25px;
+      text-align: center;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffd700;
+      font-weight: bold;
+      text-shadow: 0 0 15px #ffd700;
+      position: relative;
+      z-index: 1;
+      animation: wishCardGlow 3s ease-in-out infinite;
+      backdrop-filter: blur(10px);
+      border-image: linear-gradient(45deg, #ffd700, #ffaa00, #ffd700) 1;
+      box-shadow: 
+        0 0 20px rgba(255, 215, 0, 0.3),
+        inset 0 0 15px rgba(255, 215, 0, 0.1);
+    }
+
+    @keyframes wishCardGlow {
+      0%, 100% { 
+        box-shadow: 
+          0 0 20px rgba(255, 215, 0, 0.3),
+          inset 0 0 15px rgba(255, 215, 0, 0.1);
+        border-image: linear-gradient(45deg, #ffd700, #ffaa00, #ffd700) 1;
+      }
+      50% { 
+        box-shadow: 
+          0 0 30px rgba(255, 215, 0, 0.5),
+          0 0 50px rgba(255, 215, 0, 0.2),
+          inset 0 0 25px rgba(255, 215, 0, 0.2);
+        border-image: linear-gradient(45deg, #ffaa00, #ffd700, #ffaa00) 1;
+      }
+    }
+
+    .wish-card {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      background: rgba(255, 215, 0, 0.15);
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 0 20px #ffd70033;
+      animation: wishCardFloat 3s ease-in-out infinite;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+
+    @keyframes wishCardFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .wish-card img {
+      width: 55px;
+      height: 55px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 2px solid #ffd700;
+      box-shadow: 0 0 15px #ffd70066;
+      animation: wishImageGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes wishImageGlow {
+      0%, 100% { 
+        box-shadow: 0 0 15px #ffd70066;
+        border-color: #ffd700;
+      }
+      50% { 
+        box-shadow: 0 0 25px #ffd70099, 0 0 35px #ffd70066;
+        border-color: #ffaa00;
+      }
+    }
+
+    .wish-card-info {
+      text-align: left;
+    }
+
+    .wish-card-name {
+      font-size: 1.2rem;
+      margin-bottom: 6px;
+      color: #ffd700;
+      text-shadow: 0 0 8px #ffd700;
+      font-weight: bold;
+      font-family: 'Inter', 'Noto Sans TC', sans-serif;
+    }
+
+    .wish-card-rarity {
+      font-size: 1rem;
+      opacity: 0.9;
+      color: #e0e0e0;
+      margin-bottom: 5px;
+      font-family: 'Inter', 'Noto Sans TC', sans-serif;
+    }
+
+    .wish-bonus {
+      color: #00ff00;
+      font-size: 1rem;
+      margin-top: 5px;
+      font-weight: bold;
+      text-shadow: 0 0 8px #00ff00;
+      animation: wishBonusPulse 1.5s ease-in-out infinite;
+      font-family: 'JetBrains Mono', 'Inter', monospace;
+    }
+
+    @keyframes wishBonusPulse {
+      0%, 100% { 
+        opacity: 1;
+        text-shadow: 0 0 8px #00ff00;
+      }
+      50% { 
+        opacity: 0.8;
+        text-shadow: 0 0 12px #00ff00, 0 0 20px #00ff00;
+      }
+    }
+    #music-toggle-btn {
+      background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+      color: white;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      padding: 0;
+      font-size: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      margin-right: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #music-toggle-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 15px rgba(46, 204, 113, 0.4);
+    }
+
+    /* ?啣?漁????*/
+    @keyframes newCardGlow {
+      0% {
+        box-shadow: 0 0 0px 0px #fff, 0 0 20px 8px #ffd700, 0 0 40px 16px #a259ff;
+        border-color: #fff;
+      }
+      50% {
+        box-shadow: 0 0 20px 8px #fff, 0 0 40px 16px #ffd700, 0 0 80px 32px #a259ff;
+        border-color: #ffd700;
+      }
+      100% {
+        box-shadow: 0 0 0px 0px #fff, 0 0 20px 8px #ffd700, 0 0 40px 16px #a259ff;
+        border-color: #fff;
+      }
+    }
+    .new-card-glow {
+      animation: newCardGlow 1.2s ease-in-out 0s 2 alternate;
+      border-width: 4px !important;
+      border-color: #ffd700 !important;
+      box-shadow: 0 0 20px 8px #ffd700, 0 0 40px 16px #a259ff;
+    }
+
+    /* ?踵?撘身閮?*/
+    /* 憭扯撟??*/
+    @media (min-width: 1200px) {
+      main {
+        max-width: 1400px;
+        padding-bottom: 50px;
+      }
+      
+      #cardGrid {
+        max-width: 1200px;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 22px;
+        padding: 35px 25px 15px 25px;
+      }
+      
+      header h1 {
+        font-size: 3.2rem;
+      }
+      
+      .wish-section {
+        max-width: 1000px;
+        padding: 25px;
+      }
+    }
+
+    /* 撟單璈怠? */
+    @media (max-width: 1024px) {
+      main {
+        width: 98%;
+        margin: 25px auto 0 auto;
+      }
+      
+      #cardGrid {
+        width: 98%;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        padding: 25px 15px 8px 15px;
+      }
+      
+      header {
+        padding: 18px 25px;
+      }
+      
+      header h1 {
+        font-size: 2.4rem;
+      }
+      
+      .wish-section {
+        width: 98%;
+        padding: 18px;
+        margin: 18px auto;
+      }
+      
+      .wish-controls {
+        flex-direction: column;
+        gap: 12px;
+      }
+      
+      .wish-select {
+        min-width: 280px;
+      }
+    }
+
+    /* 撟單?游? */
+    @media (max-width: 768px) {
+      main {
+        width: 100%;
+        margin: 20px auto 0 auto;
+      }
+      
+      #cardGrid {
+        width: 100%;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        padding: 20px 10px 5px 10px;
+      }
+      
+      .card {
+        width: 130px;
+        height: 200px;
+        padding: 8px;
+        font-size: 1rem;
+      }
+      
+      header {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      header h1 {
+        font-size: 2rem;
+        margin-bottom: 10px;
+      }
+      
+      .wish-section {
+        width: 100%;
+        padding: 15px;
+        margin: 15px auto;
+      }
+      
+      .wish-section h3 {
+        font-size: 1.4rem;
+      }
+      
+      .wish-select {
+        min-width: 250px;
+        font-size: 1rem;
+        padding: 10px 15px;
+      }
+      
+      .btn {
+        padding: 12px 20px;
+        font-size: 14px;
+      }
+      
+      #starCount {
+        bottom: 12px;
+        right: 12px;
+        padding: 10px 15px;
+        font-size: 1.2rem;
+      }
+      
+      #music-toggle-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
+    }
+
+    /* ??璈怠? */
+    @media (max-width: 600px) {
+      #cardGrid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        padding: 18px 8px 5px 8px;
+      }
+      
+      .card {
+        width: 110px;
+        height: 160px;
+        padding: 6px;
+        font-size: 0.95rem;
+      }
+      
+      .card img {
+        height: 45%;
+      }
+      
+      .card .label {
+        font-size: 0.8rem;
+        min-height: 2rem;
+      }
+      
+      header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .wish-section {
+        padding: 12px;
+        margin: 12px auto;
+      }
+      
+      .wish-section h3 {
+        font-size: 1.2rem;
+      }
+      
+      .wish-select {
+        min-width: 200px;
+        font-size: 0.9rem;
+        padding: 8px 12px;
+      }
+      
+      .btn {
+        padding: 10px 16px;
+        font-size: 13px;
+      }
+    }
+
+    /* 撠撟?璈?*/
+    @media (max-width: 480px) {
+      main {
+        margin: 15px auto 0 auto;
+      }
+      
+      #cardGrid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 15px 5px 5px 5px;
+      }
+      
+      .card {
+        width: 110px;
+        height: 160px;
+        padding: 5px;
+        font-size: 0.95rem;
+      }
+      
+      .card img {
+        height: 40%;
+        margin-bottom: 5px;
+      }
+      
+      .card .label {
+        font-size: 0.75rem;
+        min-height: 1.8rem;
+        margin-top: 3px;
+      }
+      
+      .card .category-tag {
+        font-size: 0.7rem;
+        margin-top: 2px;
+      }
+      
+      header {
+        padding: 12px 15px;
+      }
+      
+      header h1 {
+        font-size: 1.6rem;
+      }
+      
+      .wish-section {
+        padding: 10px;
+        margin: 10px auto;
+      }
+      
+      .wish-section h3 {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+      }
+      
+      .wish-select {
+        min-width: 180px;
+        font-size: 0.85rem;
+        padding: 8px 10px;
+      }
+      
+      .btn {
+        padding: 8px 14px;
+        font-size: 12px;
+      }
+      
+      #starCount {
+        bottom: 10px;
+        right: 10px;
+        padding: 8px 12px;
+        font-size: 1rem;
+      }
+      
+      #music-toggle-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+      }
+      
+      .rank-badge {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+      }
+      
+      .shard-count {
+        font-size: 0.7rem;
+        padding: 2px 5px;
+      }
+    }
+
+    /* 璆萄??Ｗ? */
+    @media (max-width: 360px) {
+      #cardGrid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        padding: 12px 3px 3px 3px;
+      }
+      
+      .card {
+        width: 100px;
+        height: 150px;
+        padding: 4px;
+      }
+      
+      .card img {
+        height: 35%;
+        margin-bottom: 3px;
+      }
+      
+      .card .label {
+        font-size: 0.7rem;
+        min-height: 1.5rem;
+        margin-top: 2px;
+      }
+      
+      header h1 {
+        font-size: 1.4rem;
+      }
+      
+      .wish-section {
+        padding: 8px;
+        margin: 8px auto;
+      }
+      
+      .wish-select {
+        min-width: 160px;
+        font-size: 0.8rem;
+        padding: 6px 8px;
+      }
+      
+      .btn {
+        padding: 6px 12px;
+        font-size: 11px;
+      }
+    }
+
+    /* ?啣? wish-card-outer, wish-card-inner, wish-card-style, wish-bonus-block, wish-bonus-icon, wish-bonus-text 璅?? */
+    .wish-card-outer {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      width: 100%;
+      margin: 0 auto;
+      padding: 12px 0 8px 0;
+    }
+    .wish-card-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      max-width: 260px;
+      width: 100%;
+    }
+    .wish-card-style {
+      width: 240px;
+      min-width: 160px;
+      max-width: 90vw;
+      height: 320px;
+      min-height: 160px;
+      padding: 16px 10px 16px 10px;
+      border: 2px solid #ffd700;
+      background: rgba(255,255,255,0.92);
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: box-shadow 0.2s, transform 0.2s;
+      position: relative;
+      font-size: 0.85em; /* ?啣????矽撠??祉?摮? */
+    }
+    .wish-card-style:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      transform: scale(1.03);
+      border-color: #ffcc33;
+    }
+    .wish-card-style .card-media {
+      width: 90%;
+      height: 70%;
+      max-height: none;
+      min-height: 70%;
+      border-radius: 12px;
+      object-fit: cover;
+      margin-bottom: 8px;
+      background: #eee;
+      box-shadow: 0 2px 8px #ffd70022;
+    }
+    .wish-card-style .label {
+      margin-top: 4px;
+      margin-bottom: 0;
+      padding: 0;
+      line-height: 1.08;
+      color: #111 !important;
+      font-weight: 600;
+      font-size: 1.08em; /* ??0.85rem 閬死銝?敺株矽 */
+    }
+    .wish-card-style .chinese-text {
+      font-size: 1.12em;
+      margin-bottom: 2px;
+      color: #0055aa !important;
+      text-shadow: 0 1px 4px #fff, 0 0 2px #0055aa44;
+    }
+    .wish-card-style .english-text {
+      font-size: 1em;
+      color: #333 !important;
+      text-shadow: 0 1px 4px #fff, 0 0 2px #3333;
+    }
+    .wish-card-style .category-tag {
+      margin-top: 6px;
+      font-size: 0.95em; /* ??0.65rem 閬死銝?敺株矽 */
+      color: #b8860b !important;
+      text-shadow: none;
+      font-weight: bold;
+    }
+    .wish-card-style .stars {
+      margin-top: 8px;
+      font-size: 1.1em; /* ??0.75rem 閬死銝?敺株矽 */
+      color: #ffd700 !important;
+      text-shadow: 0 0 8px #fff, 0 0 12px #ffd700;
+      font-weight: bold;
+    }
+    .wish-card-style .rank-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-size: 1.05rem;
+      background: #fffbe6;
+      color: #ffd700;
+      border: 1.5px solid #ffd700;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px #ffd70022;
+      z-index: 2;
+    }
+    .wish-bonus-block {
+      margin-top: 12px;
+      background: linear-gradient(90deg, #ffd70022 0%, #00ffff22 100%);
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 1.05rem;
+      color: #ffd700;
+      font-weight: bold;
+      box-shadow: 0 0 12px #ffd70033;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      letter-spacing: 1px;
+    }
+    .wish-bonus-icon {
+      font-size: 1.2em;
+      margin-right: 4px;
+    }
+    .wish-bonus-text {
+      color: #ffd700;
+      font-weight: bold;
+      text-shadow: 0 0 8px #ffd70088;
+    }
+    @media (max-width: 600px) {
+      .wish-card-inner { max-width: 98vw; }
+      .wish-card-style { width: 98vw; min-width: 0; height: 180px; min-height: 100px; font-size: 1rem; }
+      .wish-card-style .label { font-size: 0.85rem; }
+      .wish-card-style .category-tag { font-size: 0.65rem; }
+      .wish-card-style .stars { font-size: 0.75rem; }
+    }
+    .unlock-status-icon {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      font-size: 1.3em;
+      opacity: 0.85;
+      z-index: 2;
+      pointer-events: none;
+      text-shadow: 0 0 6px #000, 0 0 2px #fff;
+    }
+    .card.unlocked .unlock-status-icon { color: #00ff99; }
+    .card.locked .unlock-status-icon { color: #ff6666; }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display: flex; align-items: center; gap: 18px;">
+      <a href="NEWCARDS.HTML" class="btn" style="background:linear-gradient(135deg,#00ffff 0%,#a259ff 100%);color:#222;font-weight:bold;box-shadow:0 0 12px #00ffff99;letter-spacing:1.2px;">
+        ?? ?啣鈭桃
+      </a>
+      <h1 style="margin:0 0 0 8px;">?? ?劓蟡?</h1>
+    </div>
+    <div style="display: flex; align-items: center;">
+      <button id="music-toggle-btn" class="btn">??</button>
+      <button class="btn home-btn" onclick="location.href='index.html'">?? ????/button>
+      <button class="btn cards-btn" onclick="location.href='cards.html'">?? ?∠??澈</button>
+    </div>
+  </header>
+
+  <!-- ?啣?嚗迂憿??豢????-->
+  <div class="wish-section">
+    <h3>?? ?劓蟡?</h3>
+    <div class="wish-controls" style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+      <input id="wishSearchGlobal" class="wish-select" style="margin-bottom:8px;max-width:400px;" placeholder="???∠?/憿/?迂...">
+      <div style="display:flex;gap:15px;flex-wrap:nowrap;justify-content:center;align-items:center;width:100%;">
+        <div style="display:flex;flex-direction:column;align-items:center;min-width:150px;">
+          <div style="font-weight:bold;color:#ffd700;margin-bottom:6px;font-size:0.9rem;text-shadow:0 0 8px #ffd700;">SSR 閮梢?</div>
+          <select id="wishPoolSSR" class="wish-select" style="min-width:150px;"></select>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;min-width:150px;">
+          <div style="font-weight:bold;color:#a259ff;margin-bottom:6px;font-size:0.9rem;text-shadow:0 0 8px #a259ff;">R 閮梢?</div>
+          <select id="wishPoolR" class="wish-select" style="min-width:150px;"></select>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;min-width:150px;">
+          <div style="font-weight:bold;color:#00ffff;margin-bottom:6px;font-size:0.9rem;text-shadow:0 0 8px #00ffff;">A 閮梢?</div>
+          <select id="wishPoolA" class="wish-select" style="min-width:150px;"></select>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;margin-left:10px;">
+          <div style="font-weight:bold;color:#ffd700;margin-bottom:6px;font-size:0.9rem;text-shadow:0 0 8px #ffd700;opacity:0;">??</div>
+          <button id="setWishBtn" class="wish-btn" style="height:48px;font-size:1rem;min-width:100px;font-weight:bold;letter-spacing:1px;padding:14px 20px;">閮梢?</button>
+        </div>
+      </div>
+    </div>
+    <div id="currentWish" class="current-wish"></div>
+  </div>
+
+  <!-- 蝘駁???? -->
+  <main>
+    <h2 id="drawCardHint" style="
+      font-size:2.2rem;
+      font-weight:900;
+      background: linear-gradient(90deg,#ff2d55 0%,#111 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+      text-shadow: 0 0 18px #ff2d55, 0 0 32px #111, 0 0 8px #fff;
+      letter-spacing:3px;
+      animation: hintGlow 2.5s infinite alternate;
+      margin-bottom: 30px;
+    ">暺??????賢嚗?/h2>
+    <style>
+    @keyframes hintGlow {
+      0% { text-shadow: 0 0 18px #ff2d55, 0 0 32px #111, 0 0 8px #fff; }
+      50% { text-shadow: 0 0 32px #111, 0 0 48px #ff2d55, 0 0 18px #fff; }
+      100% { text-shadow: 0 0 18px #ff2d55, 0 0 32px #111, 0 0 8px #fff; }
+    }
+    </style>
+    <!-- ?啣?嚗?憿?????憛?-->
+    <div id="categoryTabs" style="margin-bottom: 18px;"></div>
+    <div style="margin-bottom: 32px;">
+      <button class="btn" onclick="drawCard()">? ?賭?撘蛛?? 20 ??</button>
+      <button class="btn" onclick="drawTen()">?? ??嚗? 200 ??</button>
+    </div>
+    <div id="cardGrid"></div>
+    <div id="starCount">潃?span id="stars">0</span></div>
+  </main>
+
+  <div id="overlay"></div>
+  <div id="modal">
+    <div class="modal-content">
+      <div class="close-btn" onclick="closeModal()">??/div>
+      <img id="modalImg" src="" alt="?∠???">
+      <h2 id="modalTitle">?∠?璅?</h2>
+      <div class="description" id="modalDesc">?∠??膩</div>
+      <button class="sound-btn-modal" onclick="playModalAudio()">?? ?剜</button>
+    </div>
+  </div>
+
+  <!-- ?啣??刻撟?∪???-->
+  <div id="gachaAnimation" class="gacha-animation">
+    <div class="gacha-content">
+      <div class="gacha-circle"></div>
+      <div class="gacha-rays"></div>
+      <div class="gacha-card">
+                  <div class="card-inner">
+            <div class="card-front"></div>
+            <div class="card-back"></div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ??單? -->
+  <audio id="bgm" src="sound/???暸???嚗??單?嚗?mp3" loop></audio>
+  <!-- ?賢??單? -->
+  <audio id="gachaBg" src="sound/gacha_bg.mp3" loop></audio>
+  <!-- ?賢?單? -->
+  <audio id="drawSoundA" src="sound/TAK.mp3" preload="auto"></audio> <!-- ?桅?A)?⊿??-->
+  <audio id="drawSoundR" src="sound/TAK.mp3" preload="auto"></audio> <!-- 蝔??R)?⊿??-->
+  <audio id="ssrSound" src="sound/shine.mp3" preload="auto"></audio> <!-- 頞???SSR)?⊿??-->
+
+  <script src="js/cards.js"></script>
+  <script src="js/userData.js"></script>
+  <script src="js/starRewardSystem.js"></script>
+  <script src="js/autoSaveSystem.js"></script>
+  <script src="js/contextMenuSystem.js"></script>
+  <script>
+    // ?頛??炎?交??亦偷?啁???    document.addEventListener('DOMContentLoaded', function() {
+      // 撱園銝暺??Ⅱ靽??頂蝯梢撌脰???      setTimeout(() => {
+        checkDailyReward();
+      }, 1000);
+
+      // --- ??單??批 ---
+      const bgm = document.getElementById('bgm');
+      const musicToggleBtn = document.getElementById('music-toggle-btn');
+
+      function toggleMusic() {
+        if (isMusicPlaying) {
+          bgm.pause();
+          musicToggleBtn.textContent = '??';
+          isMusicPlaying = false;
+        } else {
+          // ?岫?剜嚗??仃???冽?嗅憿舐內?航炊
+          bgm.play().then(() => {
+            musicToggleBtn.textContent = '??';
+            isMusicPlaying = true;
+          }).catch(e => {
+            console.error("?⊥??剜?單?:", e);
+            musicToggleBtn.textContent = '??';
+            isMusicPlaying = false;
+          });
+        }
+      }
+
+      musicToggleBtn.addEventListener('click', toggleMusic);
+
+      // ?頛???芸??剜??單?嚗?雿輻???璅???鈭????剜
+      musicToggleBtn.textContent = '??';
+      isMusicPlaying = false;
+    });
+
+    // ??單???恣??    let bgmWasPlaying = false; // 閮??賢???舫璅?血?剜
+    let isMusicPlaying = false; // ?典??單??剜???
+    // ?怠???單?銝西?????    function pauseBGM() {
+      const bgm = document.getElementById('bgm');
+      const musicToggleBtn = document.getElementById('music-toggle-btn');
+      
+      if (bgm && !bgm.paused) {
+        bgmWasPlaying = true;
+        isMusicPlaying = false;
+        bgm.pause();
+        if (musicToggleBtn) {
+          musicToggleBtn.textContent = '??';
+        }
+      } else {
+        bgmWasPlaying = false;
+      }
+    }
+
+    // ?Ｗ儔??單?嚗??∪?????
+    function resumeBGM() {
+      const bgm = document.getElementById('bgm');
+      const musicToggleBtn = document.getElementById('music-toggle-btn');
+      
+      if (bgm && bgmWasPlaying) {
+        bgm.play().then(() => {
+          isMusicPlaying = true;
+          if (musicToggleBtn) {
+            musicToggleBtn.textContent = '??';
+          }
+        }).catch(e => {
+          console.error("?⊥??Ｗ儔??單?:", e);
+          isMusicPlaying = false;
+          if (musicToggleBtn) {
+            musicToggleBtn.textContent = '??';
+          }
+        });
+      }
+    }
+
+    // ??撌脫????    let ownedCards = LinkageSystem.cards.getOwnedCards();
+
+    // ??閮剖?
+    let stars = LinkageSystem.stars.get();
+
+    // ?啣?嚗迂憿?蝟餌絞
+    let currentWishCard = null;
+
+    const rankMap = { '?桅?: 'A', '蝔??: 'R', '頞???: 'SSR' };
+
+    // 靽?閮?典?閮剖?
+    let pityCounter = 0; // 銝?砌?摨??詨嚗?0?賢?敺SR嚗?    let wishPityCounter = 0; // 閮梢?靽?閮?剁?70?賢?敺迂憿SR嚗?    const PITY_THRESHOLD = 50; // 銝?砌?摨??    const WISH_PITY_THRESHOLD = 70; // 閮梢?靽??曉?    
+    // 頛靽?閮??    function loadPityCounters() {
+      const savedPity = localStorage.getItem('pityCounter');
+      const savedWishPity = localStorage.getItem('wishPityCounter');
+      if (savedPity) pityCounter = parseInt(savedPity);
+      if (savedWishPity) wishPityCounter = parseInt(savedWishPity);
+    }
+    
+    // ?脣?靽?閮??    function savePityCounters() {
+      localStorage.setItem('pityCounter', pityCounter.toString());
+      localStorage.setItem('wishPityCounter', wishPityCounter.toString());
+    }
+    
+    // 憓?靽?閮??    function incrementPityCounters() {
+      pityCounter++;
+      wishPityCounter++;
+      savePityCounters();
+    }
+    
+    // ?蔭靽?閮??    function resetPityCounters() {
+      pityCounter = 0;
+      wishPityCounter = 0;
+      savePityCounters();
+    }
+    
+    // ?蔭閮梢?靽?閮??    function resetWishPityCounter() {
+      wishPityCounter = 0;
+      savePityCounters();
+    }
+
+    // ??initializeWishPool 銋?鋆? getRarityEmoji ?賣
+    function getRarityEmoji(rarity) {
+      if (rarity === '頞???) return '??';
+      if (rarity === '蝔??) return '?';
+      if (rarity === '?桅?) return '??;
+      return '';
+    }
+
+    // ?啣?嚗?憪?閮梢?瘙???舫????漲嚗?    // === ?芷 initializeWishPool ?賣摰儔?????===
+    // 嚗??湔蝘駁 function initializeWishPool(...) { ... } ????initializeWishPool(...) ?澆嚗?    // ... existing code ...
+
+    // ?啣?嚗身摰迂憿??    function setWishCard() {
+      const card = getCurrentWishCard();
+      if (!card) {
+        LinkageSystem.notifications.show('隢??豢?閬迂憿??∠?嚗?, 'warning');
+        return;
+      }
+      
+      // ?活瑼Ｘ?∠??臬撌脩???嚗誑?脰銝嚗?      if (LinkageSystem.cards.isCardOwned(card.word)) {
+        LinkageSystem.notifications.show('甇文?歇蝬????⊥?閮剖??箄迂憿?', 'warning');
+        return;
+      }
+      
+      currentWishCard = card;
+      localStorage.setItem('currentWishCard', JSON.stringify(card));
+      LinkageSystem.notifications.show(`??撌脰身摰迂憿?${card.zh}嚗, 'success');
+    }
+
+    // ?啣?嚗??方迂憿??    function clearWishCard() {
+      currentWishCard = null;
+      localStorage.removeItem('currentWishCard');
+      updateWishDisplay();
+      
+      LinkageSystem.notifications.show('??儭?撌脫???SSR 閮梢?閮剖?', 'info');
+    }
+
+    // ?啣?嚗?啗迂憿＊蝷?    function updateWishDisplay() {
+      const card = getCurrentWishCard();
+      const currentWishDiv = document.getElementById('currentWish');
+      if (!currentWishDiv) return;
+      if (!card) {
+        currentWishDiv.innerHTML = '?桀?瘝?閮剖?閮梢?';
+        return;
+      }
+      const rarityClass = card.rarity === '?桅? ? 'common' : card.rarity === '蝔?? ? 'rare' : 'epic';
+      const isImageMP4 = card.image && card.image.endsWith('.mp4');
+      let cardMedia = isImageMP4
+        ? `<video class="card-media" autoplay loop muted playsinline style="width: 100%; height: 50%; object-fit: cover; border-radius: 10px;">
+            <source src="${card.image}" type="video/mp4">?函??汗?其??舀敶梁??剜</video>`
+        : `<img class="card-media" src="${card.image}" alt="${card.word}">`;
+      let starIcons = card.rarity === '?桅? ? '?? : card.rarity === '蝔?? ? '??' : '????;
+      currentWishDiv.innerHTML = `
+        <div class="wish-card-outer">
+          <div class="wish-card-inner">
+            <div class="card ${rarityClass} wish-card-style" style="margin:0 auto;">
+              ${cardMedia}
+              <div class="stars">${starIcons}</div>
+              <div class="label">
+                <div class="chinese-text">${card.zh}</div>
+                <div class="english-text">${card.word}</div>
+              </div>
+              <div class="category-tag">憿嚗?{card.category}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // 閮梢???璈?嚗?蝔?漲嚗?    function getWishBonus(rarity) {
+      if (rarity === '頞???) return 2; // SSR 2%
+      if (rarity === '蝔??) return 4;   // R??4%
+      if (rarity === '?桅?) return 6;   // A??6%
+      return 0;
+    }
+
+    // 瑼Ｘ?臬?賭葉閮梢??∠?
+    function checkWishCard() {
+      if (!currentWishCard) return false;
+      const wishBonus = getWishBonus(currentWishCard.rarity);
+      const random = Math.random() * 100;
+      return random < wishBonus;
+    }
+
+    // ?湔?恍銝??
+    function updateStars() {
+      LinkageSystem.stars.updateDisplay();
+    }
+
+    // ?頛??憪?
+    window.addEventListener("load", () => {
+      // 頛???賊?
+      stars = LinkageSystem.stars.get();
+      updateStars();
+
+      // 頛靽?閮??      loadPityCounters();
+
+      // 頛閮梢??∠?閮剖?
+      const savedWishCard = localStorage.getItem('currentWishCard');
+      if (savedWishCard) {
+        try {
+          currentWishCard = JSON.parse(savedWishCard);
+        } catch (e) {
+          console.error('頛閮梢??∠?憭望?:', e);
+          localStorage.removeItem('currentWishCard');
+        }
+      }
+
+      // ???迂憿??賊?
+      // === ?芷 initializeWishPool ?賣摰儔?????===
+      // 嚗??湔蝘駁 function initializeWishPool(...) { ... } ????initializeWishPool(...) ?澆嚗?      // ... existing code ...
+
+      // 擐活靘?撠梁策 150 憿?嚗?瑁?銝甈∴?
+      if (!localStorage.getItem("firstGachaGifted")) {
+        LinkageSystem.stars.add(150);
+        localStorage.setItem("firstGachaGifted", "true");
+        LinkageSystem.notifications.show('?? 擐活閬蝳殷??脣? 150 憿???', 'success');
+      }
+      
+      // 憿舐內靽?璈?砍?
+      showPityAnnouncement();
+    });
+    
+    // 靽?璈?砍?
+    function showPityAnnouncement() {
+      if (!localStorage.getItem('pityAnnouncementShown')) {
+        const announcement = `
+          <div style="text-align: center; padding: 20px;">
+            <h3 style="color: #ffd700; margin-bottom: 15px;">? 靽?璈隤芣?</h3>
+            <div style="color: #fff; line-height: 1.6;">
+              <p><strong>潃?銝?砌?摨?</strong>50?賢敹?SSR?∠?</p>
+              <p><strong>? 閮梢?靽?嚗?/strong>70?賢敹?閮梢?SSR?∠?</p>
+              <p><strong>??閮梢???嚗?/strong>閮剖?閮梢?SSR敺??賭葉璈???2%</p>
+              <p style="color: #ffaa00; margin-top: 15px;">? 閮剖?閮梢?SSR?臬之撟??銝剜???</p>
+            </div>
+          </div>
+        `;
+        
+        LinkageSystem.notifications.show(announcement, 'info');
+        localStorage.setItem('pityAnnouncementShown', 'true');
+      }
+    }
+
+    // [FINAL VERSION] 蝯曹????賢蝯??敹?頛?    function processDraw(card) {
+      const isOwned = LinkageSystem.cards.isCardOwned(card.word);
+      
+      if (!isOwned) {
+        // ?啣???湔閫??
+        LinkageSystem.cards.addCard(card.word);
+        addNewCard(card.word);
+        return { 
+          type: 'new_card_unlocked', 
+          card: card
+        };
+      } else {
+        // 撌脰圾??蝯行?????        let starReward = 0;
+        switch(card.rarity) {
+          case '頞???: starReward = 10; break; // SSR 蝯?10 ??
+          case '蝔??: starReward = 5; break;    // R 蝯?5 ??
+          case '?桅?: starReward = 2; break;    // A 蝯?2 ??
+        }
+        LinkageSystem.stars.add(starReward);
+        return { type: 'duplicate', card: card, stars: starReward };
+      }
+    }
+
+    // [FINAL VERSION] ???格蝯??
+    function handleSingleDrawResult(result) {
+      if (result.type === 'duplicate') {
+        LinkageSystem.notifications.show(`<span style='color:#ffd700;font-weight:bold;text-shadow:0 0 6px #fff,0 0 12px #ffd700;'>?賢???∠?</span> <span style='color:#fff;font-weight:bold;'>${result.card.zh}</span>嚗?span style='color:#00ffff;font-weight:bold;'>頧???潃?${result.stars}</span>嚗, 'info');
+      } else if (result.type === 'new_card_unlocked') {
+        LinkageSystem.notifications.show(`<span style='color:#ff2d55;font-weight:bold;text-shadow:0 0 8px #fff,0 0 16px #ff2d55;'>?? ?剖?嚗圾??∠?嚗?/span> <span style='color:#fff;font-weight:bold;'>${result.card.zh}</span>嚗, 'success');
+        
+        // 憒??特SR?∠?嚗?予摰?        if (result.card.rarity === '頞???) {
+          notifyChatRoomSSR(result.card);
+        }
+      }
+    }
+
+    // ??予摰又SR?賢蝯?
+    function notifyChatRoomSSR(card) {
+      const chatUser = localStorage.getItem('chatUserForGacha');
+      if (!chatUser) return;
+
+      const API_BASE_URL = 'https://script.google.com/macros/s/AKfycby6gzLGN6b1bwkdf7u2aM_nfjT8DM1JV4v_6QPD9ZWuqfCGRhfWH4NtL33W4rjV-gU8/exec';
+      
+      const message = `?? ?剖? ${chatUser} ?賢鈭?蝔???\n?? ${card.zh} (${card.word})\n?? 憿嚗?{card.category}\n潃?蝔?漲嚗?{card.rarity}`;
+
+      fetch(`${API_BASE_URL}?action=sendChatMessage&user=蝟餌絞&message=${encodeURIComponent(message)}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            console.error('?潮SR??啗?憭拙恕憭望?:', data.error);
+          } else {
+            console.log('SSR?撌脩??予摰?);
+          }
+        })
+        .catch(error => {
+          console.error('?潮SR??啗?憭拙恕憭望?:', error);
+        });
+    }
+
+    function drawCard() {
+      console.log('drawCard ?賣鋡怨矽??);
+      console.log('allCards:', allCards);
+      console.log('stars:', stars);
+      
+      if (!Array.isArray(allCards) || allCards.length === 0) {
+        console.log('?∠?鞈??芾??交??箇征');
+        return LinkageSystem.notifications.show("?∠?鞈?撠頛嚗?蝔??岫??, 'warning');
+      }
+      if (stars < 20) {
+        console.log('??銝雲嚗????', stars);
+        return LinkageSystem.notifications.show("??銝雲嚗??閬?20 憿?", 'warning');
+      }
+      
+      // ?怠???單?銝西?????      pauseBGM();
+      
+      // ?剜?賢??單?
+      const gachaBg = document.getElementById('gachaBg');
+      if (gachaBg) {
+        gachaBg.currentTime = 0;
+        gachaBg.play().catch(e => console.error("?⊥??剜?賢??單?:", e));
+      }
+      
+      console.log('???賢嚗??20 ??');
+      LinkageSystem.stars.subtract(20);
+      stars = LinkageSystem.stars.get();
+
+      let selectedCard; // 撠??詨恐?宏?啣?賊???      let isWishSuccess = false; // ?啣?嚗???西迂憿???
+      // 靽?瑼Ｘ嚗?炎?亥迂憿?摨?70?賢?敺迂憿SR嚗?      if (wishPityCounter >= WISH_PITY_THRESHOLD && currentWishCard) {
+        selectedCard = currentWishCard;
+        isWishSuccess = true;
+        resetWishPityCounter(); // ?蔭閮梢?靽?閮??        console.log('? 閮梢?靽?閫貊嚗?0?賢?敺迂憿SR:', selectedCard.zh);
+      }
+      // 銝?砌?摨炎?伐?50?賢?敺SR嚗?      else if (pityCounter >= PITY_THRESHOLD) {
+        const ssrCards = allCards.filter(card => card.rarity === '頞???);
+        selectedCard = ssrCards.length ? ssrCards[Math.floor(Math.random() * ssrCards.length)] : allCards[Math.floor(Math.random() * allCards.length)];
+        resetPityCounters(); // ?蔭???摨??詨
+        console.log('潃?銝?砌?摨孛?潘?50?賢?敺SR:', selectedCard.zh);
+      }
+      // 瑼Ｘ?臬?賭葉閮梢??∠?嚗?%璈?嚗?      else if (checkWishCard() && currentWishCard) {
+        selectedCard = currentWishCard;
+        isWishSuccess = true;
+        resetWishPityCounter(); // ?蔭閮梢?靽?閮??        console.log('??閮梢???嚗銝?', selectedCard.zh);
+      }
+      // 甇?虜?賢?摩
+      else {
+        const random = Math.random() * 100;
+        console.log('?冽???', random);
+        
+        if (random < 3) { // 3% 璈??賢 SSR
+          const ssrCards = allCards.filter(card => card.rarity === '頞???);
+          selectedCard = ssrCards.length ? ssrCards[Math.floor(Math.random() * ssrCards.length)] : allCards[Math.floor(Math.random() * allCards.length)];
+          console.log('?賭葉 SSR:', selectedCard.zh);
+        } else {
+          // 敺? SSR ?∠?銝剝璈??          const nonSsrCards = allCards.filter(card => card.rarity !== '頞???);
+          selectedCard = nonSsrCards.length ? nonSsrCards[Math.floor(Math.random() * nonSsrCards.length)] : allCards[Math.floor(Math.random() * allCards.length)];
+          console.log('?賭葉?桅?蝔?:', selectedCard.zh);
+        }
+      }
+      
+      // 憓?靽?閮?剁??支?靽?閫貊??瘜?
+      if (!isWishSuccess && selectedCard.rarity !== '頞???) {
+        incrementPityCounters();
+      }
+
+      console.log('?蝯銝剔??∠?:', selectedCard);
+      
+      // ?喲?閮梢?????策??賣
+      showCard(selectedCard, isWishSuccess);
+      
+      // ?典??急?曉???蝯?嚗矽?游辣?脫??誑???啁??蝭憟?
+      setTimeout(() => {
+        const result = processDraw(selectedCard);
+        handleSingleDrawResult(result);
+        
+        // ?賢摰?敺敺拙??祉???單?
+        setTimeout(() => {
+          // ?迫?賢??單?
+          const gachaBg = document.getElementById('gachaBg');
+          if (gachaBg) {
+            gachaBg.pause();
+          }
+          // ?Ｗ儔????舫璅?          resumeBGM();
+        }, 1000);
+      }, 2500);
+    }
+
+    function drawTen() {
+      if (!Array.isArray(allCards) || allCards.length === 0) {
+        return LinkageSystem.notifications.show("?∠?鞈?撠頛嚗?蝔??岫??, 'warning');
+      }
+      if (stars < 200) {
+        return LinkageSystem.notifications.show("??銝雲嚗????閬?200 憿?", 'warning');
+      }
+      
+      // ?怠???單?銝西?????      pauseBGM();
+      
+      // ?剜?賢??單?
+      const gachaBg = document.getElementById('gachaBg');
+      if (gachaBg) {
+        gachaBg.currentTime = 0;
+        gachaBg.play().catch(e => console.error("?⊥??剜?賢??單?:", e));
+      }
+      
+      LinkageSystem.stars.subtract(200);
+      stars = LinkageSystem.stars.get();
+      
+      const drawnCards = [];
+      let hasWishCard = false; // 閮???銝剜?行?閮梢???      
+      // ??嚗蝙?其?摨?頛?      for (let i = 0; i < 10; i++) {
+        let selectedCard;
+        let isWishSuccess = false;
+        
+        // 靽?瑼Ｘ嚗?炎?亥迂憿?摨?70?賢?敺迂憿SR嚗?        if (wishPityCounter >= WISH_PITY_THRESHOLD && currentWishCard && !hasWishCard) {
+          selectedCard = currentWishCard;
+          isWishSuccess = true;
+          hasWishCard = true;
+          resetWishPityCounter();
+          console.log('? ??閮梢?靽?閫貊嚗?0?賢?敺迂憿SR:', selectedCard.zh);
+        }
+        // 銝?砌?摨炎?伐?50?賢?敺SR嚗?        else if (pityCounter >= PITY_THRESHOLD) {
+          const ssrCards = allCards.filter(card => card.rarity === '頞???);
+          selectedCard = ssrCards.length ? ssrCards[Math.floor(Math.random() * ssrCards.length)] : allCards[Math.floor(Math.random() * allCards.length)];
+          resetPityCounters();
+          console.log('潃???銝?砌?摨孛?潘?50?賢?敺SR:', selectedCard.zh);
+        }
+        // 瑼Ｘ?臬?賭葉閮梢??∠?嚗?%璈?嚗?        else if (checkWishCard() && currentWishCard && !hasWishCard) {
+          selectedCard = currentWishCard;
+          isWishSuccess = true;
+          hasWishCard = true;
+          resetWishPityCounter();
+          console.log('????閮梢???嚗銝?', selectedCard.zh);
+        }
+        // 甇?虜?賢?摩
+        else {
+          const random = Math.random() * 100;
+          if (random < 3) { // 3% 璈??賢 SSR
+            const ssrCards = allCards.filter(card => card.rarity === '頞???);
+            selectedCard = ssrCards.length ? ssrCards[Math.floor(Math.random() * ssrCards.length)] : allCards[Math.floor(Math.random() * allCards.length)];
+          } else {
+            const nonSsrCards = allCards.filter(card => card.rarity !== '頞???);
+            selectedCard = nonSsrCards.length ? nonSsrCards[Math.floor(Math.random() * nonSsrCards.length)] : allCards[Math.floor(Math.random() * allCards.length)];
+          }
+        }
+        
+        // 憓?靽?閮?剁??支?靽?閫貊?SR??瘜?
+        if (!isWishSuccess && selectedCard.rarity !== '頞???) {
+          incrementPityCounters();
+        }
+        
+        drawnCards.push({ card: selectedCard, isWishSuccess });
+      }
+
+      const drawSequence = async () => {
+        let newCards = [];
+        let totalBonusStars = 0;
+        let duplicateCardsLog = {};
+        
+        for (let i = 0; i < drawnCards.length; i++) {
+          const { card, isWishSuccess } = drawnCards[i];
+          
+          // 雿輻?舐?敺???賣嚗?迂憿?????          await showCardAsync(card, isWishSuccess);
+          
+          const result = processDraw(card);
+
+          if (result.type === 'duplicate') {
+            totalBonusStars += result.stars;
+            if (!duplicateCardsLog[result.card.zh]) {
+              duplicateCardsLog[result.card.zh] = { count: 0, rarity: result.card.rarity };
+            }
+            duplicateCardsLog[result.card.zh].count++;
+          } else if (result.type === 'new_card_unlocked') {
+            newCards.push(result.card.zh);
+          }
+          // 瘥撐?∩???急??霈摰嗉??嚗???????
+          await new Promise(resolve => setTimeout(resolve, 1200));
+        }
+
+        // 瑼Ｘ?臬?SR?∠?銝阡?予摰?        const ssrCards = newCards.filter(cardName => {
+          const card = allCards.find(c => c.zh === cardName);
+          return card && card.rarity === '頞???;
+        });
+        
+        if (ssrCards.length > 0) {
+          ssrCards.forEach(cardName => {
+            const card = allCards.find(c => c.zh === cardName);
+            if (card) {
+              notifyChatRoomSSR(card);
+            }
+          });
+        }
+
+        // 憿舐內???
+        let summaryMessage = `<h3 style="margin-top:0; margin-bottom:10px; border-bottom:1px solid #ffd70044; padding-bottom:5px;color:#00ffff;text-shadow:0 0 8px #00ffff;">??蝯?</h3>`;
+        if (newCards.length > 0) {
+            summaryMessage += `<p style="margin:4px 0; color:#ff2d55;font-weight:bold;text-shadow:0 0 8px #fff,0 0 16px #ff2d55;">?? ?啗圾?? ${newCards.join(', ')}</p>`;
+        }
+        
+        const duplicateEntries = Object.entries(duplicateCardsLog);
+        if (duplicateEntries.length > 0) {
+            const duplicatesText = duplicateEntries.map(([name, data]) => `${name} (${data.rarity}) x${data.count}`).join(', ');
+            summaryMessage += `<p style="margin:4px 0; color:#ffd700;font-weight:bold;text-shadow:0 0 6px #fff,0 0 12px #ffd700;">?? ??頧?: ${duplicatesText}</p>`;
+        }
+        
+        if (totalBonusStars > 0) {
+            summaryMessage += `<p style="margin:4px 0; color:#00ffff;font-weight:bold;text-shadow:0 0 8px #00ffff;">潃????: +${totalBonusStars} ??</p>`;
+        }
+        
+        LinkageSystem.notifications.show(summaryMessage, 'success');
+      
+      // ??摰?敺敺拙??祉???單?
+      setTimeout(() => {
+        // ?迫?賢??單?
+        const gachaBg = document.getElementById('gachaBg');
+        if (gachaBg) {
+          gachaBg.pause();
+        }
+        // ?Ｗ儔????舫璅?        resumeBGM();
+      }, 1000);
+    };
+
+    drawSequence();
+    }
+
+    // ?啣?嚗蝑????怠?賂??冽??嚗?    function showCardAsync(card, isWishSuccess = false) {
+      return new Promise((resolve) => {
+        const gachaAnimation = document.getElementById('gachaAnimation');
+        const cardInner = gachaAnimation.querySelector('.card-inner');
+        const cardFront = gachaAnimation.querySelector('.card-front');
+
+        // 1. ?身???        gachaAnimation.style.display = 'flex';
+        gachaAnimation.className = 'gacha-animation'; // ?身蝔?漲 class
+        cardInner.classList.remove('is-flipped');
+        cardInner.style.transition = 'transform 0.8s cubic-bezier(0.7, 0, 0.3, 1)';
+        
+        // 2. 憒??航迂憿????典??恍?憪?憿舐內?
+        if (isWishSuccess) {
+          LinkageSystem.notifications.show(`? 閮梢???嚗銝?${card.zh}嚗, 'success');
+        }
+        
+        // 3. ?剜撠??單?
+        try {
+          const soundMap = {
+            '?桅?: document.getElementById('drawSoundA'),
+            '蝔??: document.getElementById('drawSoundR'),
+            '頞???: document.getElementById('ssrSound')
+          };
+          const soundToPlay = soundMap[card.rarity];
+          if (soundToPlay) {
+            soundToPlay.currentTime = 0;
+            soundToPlay.play().catch(e => console.error(`${card.rarity} ?單??剜憭望?:`, e));
+          }
+        } catch (error) {
+          console.error("?單??剜??隤?", error);
+        }
+        
+        // 4. 閮剖??⊿?批捆???漲璅??
+        // 瑼Ｘ?臬??MP4 敶梁?
+        const isImageMP4 = card.image && card.image.endsWith('.mp4');
+        
+        if (isImageMP4) {
+          // 憒???MP4 敶梁?嚗撱?video ??
+          cardFront.innerHTML = `
+            <div class="card-front-content">
+              <div class="card-front-title">${card.zh} (${card.word})</div>
+              <div class="card-front-info">${card.category} | ${card.rarity}</div>
+              <video class="card-front-video" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
+                <source src="${card.image}" type="video/mp4">
+                ?函??汗?其??舀敶梁??剜
+              </video>
+            </div>
+          `;
+        } else {
+          // 憒??臬???雿輻???
+          cardFront.style.backgroundImage = `url('${card.image}')`;
+          cardFront.style.setProperty('--card-image', `url('${card.image}')`);
+          
+          // 皜征銝阡??啣撱箏?摰?          cardFront.innerHTML = `
+            <div class="card-front-content">
+              <div class="card-front-title">${card.zh} (${card.word})</div>
+              <div class="card-front-info">${card.category} | ${card.rarity}</div>
+            </div>
+          `;
+        }
+        
+        const rarityClass = getRarityClass(card.rarity);
+        if (rarityClass) {
+          gachaAnimation.classList.add(rarityClass);
+        }
+
+              // 5. 瑼Ｘ?∠??臬撌脰圾??      const isUnlocked = LinkageSystem.cards.isCardOwned(card.word);
+      
+      // 瘛餃?隤輯岫鞈?
+      console.log('?? ?賢隤輯岫嚗?, card.word);
+      console.log('- isUnlocked:', isUnlocked);
+      console.log('- ownedCards:', LinkageSystem.cards.getOwnedCards());
+      console.log('- localStorage ownedCards:', localStorage.getItem('ownedCards'));
+      
+      // ??瑼Ｘ?∠??臬摮
+      const ownedCards = LinkageSystem.cards.getOwnedCards();
+      const manualCheck = ownedCards.hasOwnProperty(card.word);
+      console.log('- ??瑼Ｘ hasOwnProperty:', manualCheck);
+      console.log('- ?∠??臬摮??ownedCards:', card.word in ownedCards);
+      console.log('- ownedCards[card.word]:', ownedCards[card.word]);
+      
+      // 憿舐內?∠????      let unlockIcon = isUnlocked
+        ? '<span class="unlock-status-icon">??/span>'
+        : '<span class="unlock-status-icon">??/span>';
+
+        // 6. ?寞?蝔?漲閮剖?銝????怠辣?脫???        let flipDelay = 2000;
+        let closeDelay = 6000;
+
+        if (card.rarity === '頞???) {
+          flipDelay = 3000;
+          closeDelay = 8000;
+        }
+
+        // 7. 瘛餃? skip ??
+        let animationAccelerated = false;
+        let flipTimeout, closeTimeout;
+        
+              // ?萄遣 skip ??
+      const skipButton = document.createElement('button');
+      skipButton.textContent = '?哨?';
+      skipButton.style.cssText = `
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 50%;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 9999;
+        pointer-events: auto;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        transition: all 0.3s ease;
+        font-family: 'Inter', 'Noto Sans TC', sans-serif;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+      `;
+        
+        // 瘛餃??游之??????        skipButton.setAttribute('data-clickable', 'true');
+        skipButton.style.position = 'relative';
+        
+        // ?萄遣銝?憭抒?暺????        const clickArea = document.createElement('div');
+        clickArea.style.cssText = `
+          position: absolute;
+          top: -10px;
+          left: -10px;
+          right: -10px;
+          bottom: -10px;
+          background: transparent;
+          cursor: pointer;
+          z-index: 9998;
+        `;
+        
+        // 撠???隞嗥?摰?游之????        clickArea.addEventListener('click', (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          skipButton.click(); // 閫貊??????隞?        });
+        
+        skipButton.appendChild(clickArea);
+        
+        // skip ???詨???
+        skipButton.addEventListener('mouseenter', () => {
+          skipButton.style.transform = 'scale(1.1)';
+          skipButton.style.boxShadow = '0 6px 20px rgba(255, 107, 107, 0.6)';
+          skipButton.style.borderColor = 'rgba(255, 255, 255, 0.6)';
+        });
+        
+        skipButton.addEventListener('mouseleave', () => {
+          skipButton.style.transform = 'scale(1)';
+          skipButton.style.boxShadow = '0 4px 15px rgba(255, 107, 107, 0.4)';
+          skipButton.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+        });
+        
+        // 瘛餃??????
+        skipButton.style.animation = 'skipPulse 2s ease-in-out infinite';
+        
+        // ?萄遣???璅??
+        const pulseStyle = document.createElement('style');
+        pulseStyle.textContent = `
+          @keyframes skipPulse {
+            0% { 
+              box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+              transform: scale(1);
+            }
+            50% { 
+              box-shadow: 0 6px 25px rgba(255, 107, 107, 0.7);
+              transform: scale(1.05);
+            }
+            100% { 
+              box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+              transform: scale(1);
+            }
+          }
+        `;
+        document.head.appendChild(pulseStyle);
+        
+        // skip ??暺?鈭辣
+        skipButton.addEventListener('click', (e) => {
+          e.stopPropagation(); // ?脫迫閫貊????          e.preventDefault(); // ?脫迫?身銵
+          if (animationAccelerated) return;
+          
+          animationAccelerated = true;
+          console.log('?哨? ?拙振暺? SKIP ??嚗?);
+          console.log('?哨? ????:', skipButton);
+          console.log('?哨? 鈭辣撠情:', e);
+          
+          // 皜?????
+          if (flipTimeout) clearTimeout(flipTimeout);
+          if (closeTimeout) clearTimeout(closeTimeout);
+          
+          // 蝡?瑁?蝧駁
+          cardInner.classList.add('is-flipped');
+          
+          // 蝡摰??
+          setTimeout(() => {
+            finishAnimation();
+          }, 100);
+        });
+        
+        // 瘛餃????萄遣???隤?        console.log('?哨? SKIP ??撌脣撱?', skipButton);
+        console.log('?哨? ??璅??:', skipButton.style.cssText);
+        
+        // 瘛餃? skip ???啣??怠???        gachaAnimation.appendChild(skipButton);
+        
+        // 瘛餃??內??
+        const hintText = document.createElement('div');
+        hintText.textContent = '? 暺? SKIP 頝喲??';
+        hintText.style.cssText = `
+          position: absolute;
+          top: 15px;
+          left: 15px;
+          background: rgba(0,0,0,0.7);
+          color: white;
+          padding: 5px 10px;
+          border-radius: 15px;
+          font-size: 12px;
+          z-index: 1000;
+          animation: fadeInOut 2s ease-in-out;
+        `;
+        
+        // 瘛餃?瘛∪瘛∪?
+        const style = document.createElement('style');
+        style.textContent = `
+          @keyframes fadeInOut {
+            0% { opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; }
+          }
+        `;
+        document.head.appendChild(style);
+        
+        gachaAnimation.appendChild(hintText);
+        
+        // 2蝘?蝘駁?內
+        setTimeout(() => {
+          if (hintText.parentNode) {
+            hintText.remove();
+          }
+          if (style.parentNode) {
+            style.remove();
+          }
+        }, 2000);
+
+        // 8. ?瑁?蝧駁?
+        flipTimeout = setTimeout(() => {
+          if (!animationAccelerated) {
+            cardInner.classList.add('is-flipped');
+          }
+        }, flipDelay);
+
+              // 9. ?蝯?敺??梯??銝血??∠??銝餌??      closeTimeout = setTimeout(() => {
+        if (!animationAccelerated) {
+          finishAnimation();
+        }
+      }, closeDelay + 2000); // 憿?憓? 2 蝘?????        
+        // 摰?????        function finishAnimation() {
+          gachaAnimation.style.display = 'none';
+          gachaAnimation.onclick = null;
+          gachaAnimation.style.cursor = 'default';
+          
+          // 蝘駁 skip ??
+          if (skipButton.parentNode) {
+            skipButton.remove();
+          }
+          
+          const grid = document.getElementById("cardGrid");
+          const div = document.createElement("div");
+
+          div.className = `card ${getRarityClass(card.rarity)}${isUnlocked ? " unlocked" : ""}`;
+
+          if (card.rarity === "?桅?) div.style.background = 'linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(0, 255, 255, 0.05))';
+          else if (card.rarity === "蝔??) div.style.background = 'linear-gradient(135deg, rgba(162, 89, 255, 0.1), rgba(162, 89, 255, 0.05))';
+          else if (card.rarity === "頞???) div.style.background = 'linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05))';
+
+          let starIcons = "";
+          if (card.rarity === "?桅?) starIcons = "??;
+          else if (card.rarity === "蝔??) starIcons = "??";
+          else if (card.rarity === "頞???) starIcons = "????;
+
+          // ?舀MP4憿舐內
+          let cardMedia = '';
+          if (card.image && card.image.endsWith('.mp4')) {
+            cardMedia = `<video src="${card.image}" autoplay loop muted playsinline style="width:100%;height:120px;object-fit:cover;border-radius:10px;"></video>`;
+          } else {
+            cardMedia = `<img src="${card.image}" alt="${card.word}">`;
+          }
+
+          div.innerHTML = `
+            ${cardMedia}
+            <div class="stars">${starIcons}</div>
+            <div class="label">
+              <div class="chinese-text">${card.zh}</div>
+              <div class="english-text">${card.word}</div>
+            </div>
+            <div class="category-tag">憿嚗?{card.category}</div>
+            <div class="rank-badge">${rankMap[card.rarity] || ""}</div>
+            ${unlockIcon}
+          `;
+          if (isUnlocked) {
+            // ?啣?嚗???啣??蝯虫?鈭桀??
+            let recentCards = [];
+            try { recentCards = JSON.parse(localStorage.getItem('recentlyObtainedCards') || '[]'); } catch(e){}
+            if (recentCards.includes(card.word)) {
+              div.classList.add('new-card-glow');
+              // 2.5蝘??芸?蝘駁鈭桀?
+              setTimeout(()=>div.classList.remove('new-card-glow'), 2500);
+            }
+            div.onclick = (e) => openModal(card);
+          }
+          grid.prepend(div);
+          
+          // 閫?? Promise
+          resolve();
+        }
+      });
+    }
+
+    function showCard(card, isWishSuccess = false) {
+      const gachaAnimation = document.getElementById('gachaAnimation');
+      const cardInner = gachaAnimation.querySelector('.card-inner');
+      const cardFront = gachaAnimation.querySelector('.card-front');
+
+      // 1. ?身???      gachaAnimation.style.display = 'flex';
+      gachaAnimation.className = 'gacha-animation'; // ?身蝔?漲 class
+      cardInner.classList.remove('is-flipped');
+      cardInner.style.transition = 'transform 0.8s cubic-bezier(0.7, 0, 0.3, 1)';
+      
+      // 2. 憒??航迂憿????典??恍?憪?憿舐內?
+      if (isWishSuccess) {
+        LinkageSystem.notifications.show(`? 閮梢???嚗銝?${card.zh}嚗, 'success');
+      }
+      
+      // 3. ?剜撠??單?
+      try {
+        const soundMap = {
+          '?桅?: document.getElementById('drawSoundA'),
+          '蝔??: document.getElementById('drawSoundR'),
+          '頞???: document.getElementById('ssrSound')
+        };
+        const soundToPlay = soundMap[card.rarity];
+        if (soundToPlay) {
+          soundToPlay.currentTime = 0;
+          soundToPlay.play().catch(e => console.error(`${card.rarity} ?單??剜憭望?:`, e));
+        }
+      } catch (error) {
+        console.error("?單??剜??隤?", error);
+      }
+      
+      // 4. 閮剖??⊿?批捆???漲璅??
+      // 瑼Ｘ?臬??MP4 敶梁?
+      const isImageMP4 = card.image && card.image.endsWith('.mp4');
+      
+      if (isImageMP4) {
+        // 憒???MP4 敶梁?嚗撱?video ??
+        cardFront.innerHTML = `
+          <div class="card-front-content">
+            <div class="card-front-title">${card.zh} (${card.word})</div>
+            <div class="card-front-info">${card.category} | ${card.rarity}</div>
+            <video class="card-front-video" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
+              <source src="${card.image}" type="video/mp4">
+              ?函??汗?其??舀敶梁??剜
+            </video>
+          </div>
+        `;
+      } else {
+        // 憒??臬???雿輻???
+        cardFront.style.backgroundImage = `url('${card.image}')`;
+        cardFront.style.setProperty('--card-image', `url('${card.image}')`);
+        
+        // 皜征銝阡??啣撱箏?摰?        cardFront.innerHTML = `
+          <div class="card-front-content">
+            <div class="card-front-title">${card.zh} (${card.word})</div>
+            <div class="card-front-info">${card.category} | ${card.rarity}</div>
+          </div>
+        `;
+      }
+      
+      const rarityClass = getRarityClass(card.rarity);
+      if (rarityClass) {
+        gachaAnimation.classList.add(rarityClass);
+      }
+
+      // 5. 瑼Ｘ?∠??臬撌脰圾??      const isUnlocked = LinkageSystem.cards.isCardOwned(card.word);
+      
+      // 瘛餃?隤輯岫鞈?
+      console.log('?? ?賢隤輯岫嚗?, card.word);
+      console.log('- isUnlocked:', isUnlocked);
+      console.log('- ownedCards:', LinkageSystem.cards.getOwnedCards());
+      console.log('- localStorage ownedCards:', localStorage.getItem('ownedCards'));
+      
+      // ??瑼Ｘ?∠??臬摮
+      const ownedCards = LinkageSystem.cards.getOwnedCards();
+      const manualCheck = ownedCards.hasOwnProperty(card.word);
+      console.log('- ??瑼Ｘ hasOwnProperty:', manualCheck);
+      console.log('- ?∠??臬摮??ownedCards:', card.word in ownedCards);
+      console.log('- ownedCards[card.word]:', ownedCards[card.word]);
+      
+      // 憿舐內?∠????      let unlockIcon = isUnlocked
+        ? '<span class="unlock-status-icon">??/span>'
+        : '<span class="unlock-status-icon">??/span>';
+
+      // 6. ?寞?蝔?漲閮剖?銝????怠辣?脫???      let flipDelay = 2000;
+      let closeDelay = 6000;
+
+      if (card.rarity === '頞???) {
+        flipDelay = 3000;
+        closeDelay = 8000;
+      }
+
+      // 7. 瘛餃? skip ??
+      let animationAccelerated = false;
+      let flipTimeout, closeTimeout;
+      
+      // ?萄遣 skip ??
+      const skipButton = document.createElement('button');
+      skipButton.textContent = '?哨?';
+      skipButton.style.cssText = `
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 50%;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 9999;
+        pointer-events: auto;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        transition: all 0.3s ease;
+        font-family: 'Inter', 'Noto Sans TC', sans-serif;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+      `;
+      
+      // 瘛餃??游之??????      skipButton.setAttribute('data-clickable', 'true');
+      skipButton.style.position = 'relative';
+      
+      // ?萄遣銝?憭抒?暺????      const clickArea = document.createElement('div');
+      clickArea.style.cssText = `
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        background: transparent;
+        cursor: pointer;
+        z-index: 9998;
+      `;
+      
+      // 撠???隞嗥?摰?游之????      clickArea.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        skipButton.click(); // 閫貊??????隞?      });
+      
+      skipButton.appendChild(clickArea);
+      
+      // skip ???詨???
+      skipButton.addEventListener('mouseenter', () => {
+        skipButton.style.transform = 'scale(1.1)';
+        skipButton.style.boxShadow = '0 6px 20px rgba(255, 107, 107, 0.6)';
+        skipButton.style.borderColor = 'rgba(255, 255, 255, 0.6)';
+      });
+      
+      skipButton.addEventListener('mouseleave', () => {
+        skipButton.style.transform = 'scale(1)';
+        skipButton.style.boxShadow = '0 4px 15px rgba(255, 107, 107, 0.4)';
+        skipButton.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+      });
+      
+      // 瘛餃?????? (蝚砌???showCard ?賣)
+      skipButton.style.animation = 'skipPulse 2s ease-in-out infinite';
+      
+      // ?萄遣???璅?? (蝚砌???showCard ?賣)
+      const pulseStyle2 = document.createElement('style');
+      pulseStyle2.textContent = `
+        @keyframes skipPulse {
+          0% { 
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            transform: scale(1);
+          }
+          50% { 
+            box-shadow: 0 6px 25px rgba(255, 107, 107, 0.7);
+            transform: scale(1.05);
+          }
+          100% { 
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            transform: scale(1);
+          }
+        }
+      `;
+      document.head.appendChild(pulseStyle2);
+      
+      // skip ??暺?鈭辣
+      skipButton.addEventListener('click', (e) => {
+        e.stopPropagation(); // ?脫迫閫貊????        e.preventDefault(); // ?脫迫?身銵
+        if (animationAccelerated) return;
+        
+        animationAccelerated = true;
+        console.log('?哨? ?拙振暺? SKIP ??嚗?);
+        console.log('?哨? ????:', skipButton);
+        console.log('?哨? 鈭辣撠情:', e);
+        
+        // 皜?????
+        if (flipTimeout) clearTimeout(flipTimeout);
+        if (closeTimeout) clearTimeout(closeTimeout);
+        
+        // 蝡?瑁?蝧駁
+        cardInner.classList.add('is-flipped');
+        
+        // 蝡摰??
+        setTimeout(() => {
+          finishAnimation();
+        }, 100);
+      });
+      
+      // 瘛餃????萄遣???隤?(蝚砌???showCard ?賣)
+      console.log('?哨? SKIP ??撌脣撱?(showCard 蝚砌???:', skipButton);
+      console.log('?哨? ??璅?? (showCard 蝚砌???:', skipButton.style.cssText);
+      
+      // 瘛餃? skip ???啣??怠???      gachaAnimation.appendChild(skipButton);
+      
+      // 瘛餃??內??
+      const hintText = document.createElement('div');
+      hintText.textContent = '? 暺??喃?閫歲????;
+      hintText.style.cssText = `
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+        z-index: 1000;
+        animation: fadeInOut 2s ease-in-out;
+      `;
+      
+      // 瘛餃?瘛∪瘛∪?
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes fadeInOut {
+          0% { opacity: 0; }
+          20% { opacity: 1; }
+          80% { opacity: 1; }
+          100% { opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      gachaAnimation.appendChild(hintText);
+      
+      // 2蝘?蝘駁?內
+      setTimeout(() => {
+        if (hintText.parentNode) {
+          hintText.remove();
+        }
+        if (style.parentNode) {
+          style.remove();
+        }
+      }, 2000);
+
+      // 8. ?瑁?蝧駁?
+      flipTimeout = setTimeout(() => {
+        if (!animationAccelerated) {
+          cardInner.classList.add('is-flipped');
+        }
+      }, flipDelay);
+
+      // 9. ?蝯?敺??梯??銝血??∠??銝餌??      closeTimeout = setTimeout(() => {
+        if (!animationAccelerated) {
+          finishAnimation();
+        }
+      }, closeDelay + 2000); // 憿?憓? 2 蝘?????      
+      
+      // 摰?????      function finishAnimation() {
+        gachaAnimation.style.display = 'none';
+        gachaAnimation.onclick = null;
+        gachaAnimation.style.cursor = 'default';
+        
+        // 蝘駁 skip ??
+        if (skipButton.parentNode) {
+          skipButton.remove();
+        }
+        
+        const grid = document.getElementById("cardGrid");
+        const div = document.createElement("div");
+
+        div.className = `card ${getRarityClass(card.rarity)}${isUnlocked ? " unlocked" : ""}`;
+
+        if (card.rarity === "?桅?) div.style.background = 'linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(0, 255, 255, 0.05))';
+        else if (card.rarity === "蝔??) div.style.background = 'linear-gradient(135deg, rgba(162, 89, 255, 0.1), rgba(162, 89, 255, 0.05))';
+        else if (card.rarity === "頞???) div.style.background = 'linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05))';
+
+        let starIcons = "";
+        if (card.rarity === "?桅?) starIcons = "??;
+        else if (card.rarity === "蝔??) starIcons = "??";
+        else if (card.rarity === "頞???) starIcons = "????;
+
+                  // ?舀MP4憿舐內
+          let cardMedia = '';
+          if (card.image && card.image.endsWith('.mp4')) {
+            cardMedia = `<video src="${card.image}" autoplay loop muted playsinline style="width:100%;height:120px;object-fit:cover;border-radius:10px;"></video>`;
+          } else {
+            cardMedia = `<img src="${card.image}" alt="${card.word}">`;
+          }
+
+          div.innerHTML = `
+            ${cardMedia}
+            <div class="stars">${starIcons}</div>
+            <div class="label">
+              <div class="chinese-text">${card.zh}</div>
+              <div class="english-text">${card.word}</div>
+            </div>
+            <div class="category-tag">憿嚗?{card.category}</div>
+            <div class="rank-badge">${rankMap[card.rarity] || ""}</div>
+            ${unlockIcon}
+          `;
+        if (isUnlocked) {
+          // ?啣?嚗???啣??蝯虫?鈭桀??
+          let recentCards = [];
+          try { recentCards = JSON.parse(localStorage.getItem('recentlyObtainedCards') || '[]'); } catch(e){}
+          if (recentCards.includes(card.word)) {
+            div.classList.add('new-card-glow');
+            // 2.5蝘??芸?蝘駁鈭桀?
+            setTimeout(()=>div.classList.remove('new-card-glow'), 2500);
+          }
+          div.onclick = (e) => openModal(card);
+        }
+        grid.prepend(div);
+      }
+    }
+
+    function getRarityClass(r) {
+      return r === "?桅? ? "common" : r === "蝔?? ? "rare" : "epic";
+    }
+
+    function openModal(card) {
+      document.getElementById("overlay").style.display = "block";
+      const modal = document.getElementById("modal");
+      const modalImg = document.getElementById("modalImg");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalDesc = document.getElementById("modalDesc");
+      const soundBtn = document.querySelector(".sound-btn-modal");
+      // 憿舐內憭批?
+      modalImg.src = card.image;
+      // 憿舐內?迂
+      modalTitle.textContent = `${card.zh} (${card.word})`;
+      // 憿舐內?膩+憿+蝔?漲+蝣??賊?
+      const required = getRequiredShards(card.rarity);
+      const haveShards = LinkageSystem.cards.getShardCount(card.word);
+      const isUnlocked = LinkageSystem.cards.isCardOwned(card.word);
+      let shardInfo = '';
+      if (isUnlocked) {
+        if (haveShards > 0) {
+          shardInfo = `<div style='color:#ffd700;margin-top:8px;'>憭?蝣?嚗?{haveShards}</div>`;
+        } else {
+          shardInfo = `<div style='color:#00ff99;margin-top:8px;'>撌脰圾??/div>`;
+        }
+      } else {
+        shardInfo = `<div style='color:#00ffff;margin-top:8px;'>蝣??脣漲嚗?{haveShards}/${required}</div>`;
+      }
+      modalDesc.innerHTML = `
+        <div style='margin-bottom:8px;'>${card.description || ''}</div>
+        <div style='color:#ffd700;'>憿嚗?{card.category}?|?蝔?漲嚗?{card.rarity}</div>
+        ${shardInfo}
+      `;
+      // ?單?
+      if (card.audio) {
+        const modalAudio = document.getElementById("modalAudio");
+        modalAudio.src = card.audio;
+        soundBtn.onclick = playModalAudio;
+      } else {
+        soundBtn.onclick = () => {
+          SoundSystem.speech.speakWord(card.word);
+          setTimeout(() => {
+            SoundSystem.speech.speak(card.zh, { lang: 'zh-TW' });
+          }, 500);
+        };
+      }
+      soundBtn.style.display = "inline-flex";
+      modal.classList.add("show");
+    }
+
+    function closeModal() {
+      document.getElementById("modal").classList.remove("show");
+      document.getElementById("overlay").style.display = "none";
+      speechSynthesis.cancel();
+    }
+
+    function playModalAudio() {
+      const audioElem = document.getElementById("modalAudio");
+      if (audioElem && audioElem.src) {
+        audioElem.play();
+      }
+    }
+
+    // 瘛餃??啣??閮???    function addNewCard(word) {
+      // 瘛餃??啣??餈敺?銵?      let recentCards = JSON.parse(localStorage.getItem('recentlyObtainedCards') || '[]');
+      if (!recentCards.includes(word)) {
+        recentCards.push(word);
+        // ?芯???餈?0撘菜?∠?
+        if (recentCards.length > 20) {
+          recentCards = recentCards.slice(-20);
+        }
+        localStorage.setItem('recentlyObtainedCards', JSON.stringify(recentCards));
+        // ?啣?嚗??圾????        let unlockTimes = {};
+        try { unlockTimes = JSON.parse(localStorage.getItem('recentlyObtainedCardsUnlockTime') || '{}'); } catch(e){}
+        unlockTimes[word] = new Date().toISOString();
+        localStorage.setItem('recentlyObtainedCardsUnlockTime', JSON.stringify(unlockTimes));
+        console.log(`?? ?啣?歇璅?: ${word}`);
+      }
+    }
+
+    // ?湔?∠???停蝯梯?
+    function updateCardGameAchievements() {
+      // ?湔?∠??摰?甈⊥
+      const cardGames = parseInt(localStorage.getItem('cardGamesCompleted') || '0');
+      localStorage.setItem('cardGamesCompleted', cardGames + 1);
+      
+      // 瑼Ｘ銝行?啁??撠?      checkAndUpdateCardGameAchievements();
+    }
+    
+    function checkAndUpdateCardGameAchievements() {
+      // 瑼Ｘ?臬??停??
+      const achievements = [
+        { id: 'speed_learner', name: '敹恍飛蝧?, requirement: 10 },
+        { id: 'accuracy_master', name: '皞Ⅱ憭批葦', requirement: 20 },
+        { id: 'combo_king', name: '???銋?', requirement: 15 }
+      ];
+      
+      const claimed = JSON.parse(localStorage.getItem('claimedAchievements') || '[]');
+      
+      achievements.forEach(ach => {
+        if (claimed.includes(ach.id)) return; // 撌脩?????
+        
+        // 閮??????⊥??        const fillGames = parseInt(localStorage.getItem('fillGamesCompleted') || '0');
+        const cardGames = parseInt(localStorage.getItem('cardGamesCompleted') || '0');
+        const quizGames = parseInt(localStorage.getItem('quizGamesCompleted') || '0');
+        const spellingGames = parseInt(localStorage.getItem('spellingGamesCompleted') || '0');
+        const matchingGames = parseInt(localStorage.getItem('matchingGamesCompleted') || '0');
+        const totalGames = fillGames + cardGames + quizGames + spellingGames + matchingGames;
+        
+        if (totalGames >= ach.requirement) {
+          // 憿舐內?停???
+          showAchievementNotification(ach.name, ach.id);
+        }
+      });
+    }
+    
+    function showAchievementNotification(achievementName, achievementId) {
+      // ?萄遣?停?
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #ffd700, #ffed4e);
+        color: #000;
+        padding: 20px 30px;
+        border-radius: 15px;
+        font-weight: bold;
+        font-size: 1.2rem;
+        z-index: 10000;
+        box-shadow: 0 0 30px #ffd700;
+        animation: achievementPop 0.8s cubic-bezier(.68, -0.55, .27, 1.55);
+        text-align: center;
+        min-width: 300px;
+      `;
+      
+      notification.innerHTML = `
+        <div style="font-size: 3rem; margin-bottom: 10px;">??</div>
+        <div style="margin-bottom: 5px;">?? ?停??嚗?/div>
+        <div style="font-size: 1.1rem;">${achievementName}</div>
+        <div style="font-size: 0.9rem; margin-top: 10px; color: #666;">
+          ???停????
+        </div>
+      `;
+      
+      // 瘛餃??璅??
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes achievementPop {
+          0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+          50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+          100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(notification);
+      
+      // 3蝘??芸?蝘駁
+      setTimeout(() => {
+        notification.remove();
+        style.remove();
+      }, 3000);
+    }
+
+    // ???啣?嚗?????(???撘Ⅳ) ??    // ?券??Ｖ葉?湔頛詨 money999 ?嗅??? Enter ?喳憓? 999 ??
+    let cheatCodeBuffer = '';
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        if (cheatCodeBuffer.toLowerCase() === 'money999') {
+          LinkageSystem.stars.add(999);
+          LinkageSystem.notifications.show('? ???脣?999 ??嚗?, 'success');
+        }
+        cheatCodeBuffer = ''; // 瘥活??Enter ?賡?蝵?      } else if (e.key === 'Backspace') {
+        // ?舀??潮
+        cheatCodeBuffer = cheatCodeBuffer.slice(0, -1);
+      } else if (e.key.length === 1) {
+        // ?芾??銝摮泵????        cheatCodeBuffer += e.key;
+      }
+      
+      // ?踹?摮葡?⊿?憓
+      if (cheatCodeBuffer.length > 100) {
+        cheatCodeBuffer = '';
+      }
+    });
+
+    // =================== 撌脩宏?方??恣?頂蝯?===================
+    // 鞈?蝞∠??撌脫?蝯曹??芸??脣?蝟餌絞銝?    // 隢蝙?其蜓??????芸??脣????脣 autoSaveManager.html
+
+    // =================== 雿輻蝯曹??芸??脣?蝟餌絞 ===================
+    // ???芸??脣?蝟餌絞撌脩宏?歹??曉雿輻 js/autoSaveSystem.js ???絞銝蝟餌絞
+    
+    // ?湔?芸??脣???＊蝷?(?箔????I?澆捆)
+    function updateAutoSaveStatus(message = '') {
+      if (typeof window.UnifiedAutoSave === 'undefined') return;
+      
+      const statusElement = document.getElementById('autoSaveStatus');
+      const toggleButton = document.getElementById('autoSaveToggle');
+      
+      if (!statusElement || !toggleButton) return;
+      
+      const status = window.UnifiedAutoSave.getStatus();
+      
+      if (status.enabled) {
+        toggleButton.innerHTML = '?賂? ??芸??脣?';
+        toggleButton.style.background = 'linear-gradient(90deg, #ff6b6b 0%, #e74c3c 100%)';
+        
+        let statusText = '? ?芸??脣?嚗歇?';
+        statusText += ` | ?敺?隞踝?${status.lastSaveTime}`;
+        
+        if (message) {
+          statusText += ` | ${message}`;
+        }
+        
+        statusElement.textContent = statusText;
+      } else {
+        toggleButton.innerHTML = '?? ??芸??脣?';
+        toggleButton.style.background = 'linear-gradient(90deg, #00ffff 0%, #a259ff 100%)';
+        statusElement.textContent = '? ?芸??脣?嚗歇?';
+      }
+    }
+    
+    // ???芸??脣????(雿輻蝯曹?蝟餌絞)
+    function toggleAutoSave() {
+      if (typeof window.UnifiedAutoSave === 'undefined') {
+        console.error('???芸??脣?蝟餌絞?芾??伐?隢??唳????);
+        return;
+      }
+      
+      const newState = window.UnifiedAutoSave.toggleAutoSave();
+      updateAutoSaveStatus();
+    }
+    
+    // 銝?圈蝡?(雿輻蝯曹?蝟餌絞)
+    async function uploadToCloud(isAutoSave = false) {
+      if (typeof window.UnifiedAutoSave === 'undefined') {
+        console.error('???芸??脣?蝟餌絞?芾??伐?隢??唳????);
+        return;
+      }
+      
+      if (isAutoSave) return; // ?芸??脣??梁絞銝蝟餌絞??
+      
+      // ??銝
+      window.UnifiedAutoSave.performImmediateSave();
+    }
+    
+    // 敺蝡臭?頛?(雿輻蝯曹?蝟餌絞)  
+    async function downloadFromCloud() {
+      if (typeof window.UnifiedAutoSave === 'undefined') {
+        console.error('???芸??脣?蝟餌絞?芾??伐?隢??唳????);
+        return;
+      }
+      
+      window.UnifiedAutoSave.loadFromCloud();
+    }
+    
+
+
+    // ?頛??憪???＊蝷?    setTimeout(() => {
+      updateAutoSaveStatus();
+    }, 2000);
+
+    // ====== ????? ======
+    function renderCategoryTabs() {
+      // 撌脩宏??    }
+    function filterCardsByCategory(category) {
+      // 撌脩宏??    }
+    // ?頛??葡????    window.addEventListener('load', () => {
+      // renderCategoryTabs();
+      // filterCardsByCategory('?券');
+    });
+
+    // ?啣?嚗迂憿?桀??閬賢???    function updateWishPreview() {
+      const card = getCurrentWishCard();
+      const previewDiv = document.getElementById('wishPreview');
+      if (!previewDiv) return;
+      if (!card) {
+        previewDiv.innerHTML = '';
+        return;
+      }
+      
+      // 瑼Ｘ?∠??臬撌脩???
+      if (LinkageSystem.cards.isCardOwned(card.word)) {
+        previewDiv.innerHTML = '';
+        return;
+      }
+      
+      const rarityClass = card.rarity === '?桅? ? 'common' : card.rarity === '蝔?? ? 'rare' : 'epic';
+      const isImageMP4 = card.image && card.image.endsWith('.mp4');
+      let cardMedia = isImageMP4
+        ? `<video class="card-media" autoplay loop muted playsinline style="width: 100%; height: 50%; object-fit: cover; border-radius: 10px;">
+            <source src="${card.image}" type="video/mp4">?函??汗?其??舀敶梁??剜</video>`
+        : `<img class="card-media" src="${card.image}" alt="${card.word}">`;
+      let starIcons = card.rarity === '?桅? ? '?? : card.rarity === '蝔?? ? '??' : '????;
+      previewDiv.innerHTML = `
+        <div class="wish-card-outer">
+          <div class="wish-card-inner">
+            <div class="card ${rarityClass} wish-card-style" style="margin:0 auto;">
+              ${cardMedia}
+              <div class="stars">${starIcons}</div>
+              <div class="label">
+                <div class="chinese-text">${card.zh}</div>
+                <div class="english-text">${card.word}</div>
+              </div>
+              <div class="category-tag">憿嚗?{card.category}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    // 蝬??詨 change 鈭辣
+    window.addEventListener('DOMContentLoaded', function() {
+      const wishSelect = document.getElementById('wishPool');
+      if (wishSelect) {
+        wishSelect.addEventListener('change', updateWishPreview);
+        setTimeout(updateWishPreview, 500); // ?????憿舐內銝甈?      }
+    });
+
+    // ??input鈭辣
+    window.addEventListener('DOMContentLoaded', function() {
+      const wishSearch = document.getElementById('wishSearch');
+      if (wishSearch) {
+        wishSearch.addEventListener('input', function() {
+          // === ?芷 initializeWishPool ?賣摰儔?????===
+          // 嚗??湔蝘駁 function initializeWishPool(...) { ... } ????initializeWishPool(...) ?澆嚗?          // ... existing code ...
+        });
+      }
+    });
+
+    console.log(allCards);
+
+    // 4. 蝬?鈭辣
+    // 撠誑銝摰寞??window.addEventListener('load', ...)
+    window.addEventListener('load', function() {
+      const wishSearchGlobal = document.getElementById('wishSearchGlobal');
+      function refreshAllWishSelects() {
+        const val = wishSearchGlobal ? wishSearchGlobal.value : '';
+        fillWishSelect('頞???,'wishPoolSSR',val);
+        fillWishSelect('蝔??,'wishPoolR',val);
+        fillWishSelect('?桅?,'wishPoolA',val);
+        updateWishPreview();
+      }
+      refreshAllWishSelects();
+      if (wishSearchGlobal) {
+        wishSearchGlobal.value = '';
+        wishSearchGlobal.addEventListener('input', refreshAllWishSelects);
+      }
+      // ?詨鈭辣
+      ['wishPoolSSR','wishPoolR','wishPoolA'].forEach(id => {
+        const sel = document.getElementById(id);
+        if (sel) {
+          sel.addEventListener('change', function() {
+            clearOtherWishSelects(id);
+            updateWishPreview();
+          });
+        }
+      });
+      updateWishPreview();
+    });
+
+    // 2. ???????    function fillWishSelect(rarity, selectId, globalSearchValue) {
+      const select = document.getElementById(selectId);
+      if (!select) return;
+      select.innerHTML = '<option value="">隢???/option>';
+      if (!Array.isArray(allCards) || allCards.length === 0) return;
+      let hasOption = false;
+      let filterText = globalSearchValue ? globalSearchValue.trim().toLowerCase() : '';
+      const cards = allCards.filter(card => card.rarity === rarity);
+      cards.sort((a, b) => a.category.localeCompare(b.category));
+      cards.forEach(card => {
+        // 瑼Ｘ?∠??臬撌脩???
+        const isOwned = LinkageSystem.cards.isCardOwned(card.word);
+        if (isOwned) return; // 頝喲?撌脫????∠?
+        
+        if (filterText) {
+          const text = `${card.category} ${card.zh} ${card.word}`.toLowerCase();
+          if (!text.includes(filterText)) return;
+        }
+        const option = document.createElement('option');
+        option.value = card.word;
+        option.textContent = `${getRarityEmoji(card.rarity)} [${card.category}] ${card.zh}`;
+        select.appendChild(option);
+        hasOption = true;
+      });
+      if (!hasOption) {
+        const noOption = document.createElement('option');
+        noOption.value = '';
+        noOption.disabled = true;
+        noOption.selected = true;
+        noOption.textContent = '瘝?蝚血????;
+        select.appendChild(noOption);
+      }
+    }
+    function clearOtherWishSelects(exceptId) {
+      ['wishPoolSSR','wishPoolR','wishPoolA'].forEach(id => {
+        if (id !== exceptId) {
+          const sel = document.getElementById(id);
+          if (sel) sel.value = '';
+        }
+      });
+    }
+    function getCurrentWishCard() {
+      const ssr = document.getElementById('wishPoolSSR').value;
+      const r = document.getElementById('wishPoolR').value;
+      const a = document.getElementById('wishPoolA').value;
+      const word = ssr || r || a;
+      if (!word) return null;
+      const card = allCards.find(card => card.word === word);
+      
+      // 瑼Ｘ?∠??臬撌脩???
+      if (card && LinkageSystem.cards.isCardOwned(card.word)) {
+        return null; // 憒?撌脫???餈? null
+      }
+      
+      return card;
+    }
+    function updateWishPreview() {
+      const card = getCurrentWishCard();
+      const previewDiv = document.getElementById('wishPreview');
+      if (!previewDiv) return;
+      if (!card) {
+        previewDiv.innerHTML = '';
+        return;
+      }
+      
+      // 瑼Ｘ?∠??臬撌脩???
+      if (LinkageSystem.cards.isCardOwned(card.word)) {
+        previewDiv.innerHTML = '';
+        return;
+      }
+      
+      const rarityClass = card.rarity === '?桅? ? 'common' : card.rarity === '蝔?? ? 'rare' : 'epic';
+      const isImageMP4 = card.image && card.image.endsWith('.mp4');
+      let cardMedia = isImageMP4
+        ? `<video class="card-media" autoplay loop muted playsinline style="width: 100%; height: 50%; object-fit: cover; border-radius: 10px;">
+            <source src="${card.image}" type="video/mp4">?函??汗?其??舀敶梁??剜</video>`
+        : `<img class="card-media" src="${card.image}" alt="${card.word}">`;
+      let starIcons = card.rarity === '?桅? ? '?? : card.rarity === '蝔?? ? '??' : '????;
+      previewDiv.innerHTML = `
+        <div class="wish-card-outer">
+          <div class="wish-card-inner">
+            <div class="card ${rarityClass} wish-card-style" style="margin:0 auto;">
+              ${cardMedia}
+              <div class="stars">${starIcons}</div>
+              <div class="label">
+                <div class="chinese-text">${card.zh}</div>
+                <div class="english-text">${card.word}</div>
+              </div>
+              <div class="category-tag">憿嚗?{card.category}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    const setWishBtn = document.getElementById('setWishBtn');
+    if (setWishBtn) {
+      setWishBtn.addEventListener('click', setWishCard);
+    }
+
+    // 蝬??詨
+    ['wishPoolSSR','wishPoolR','wishPoolA'].forEach(id => {
+      const sel = document.getElementById(id);
+      if (sel) {
+        sel.addEventListener('change', function() {
+          clearOtherWishSelects(id);
+          updateWishDisplay();
+        });
+      }
+    });
+    // 蝬???
+    const wishSearchGlobal = document.getElementById('wishSearchGlobal');
+    if (wishSearchGlobal) {
+      wishSearchGlobal.addEventListener('input', updateWishDisplay);
+    }
+
+    // ========== ?啣?嚗?＊蝷箏?蝯???? ========== //
+    function renderCardGrid() {
+      const grid = document.getElementById("cardGrid");
+      if (!grid) return;
+      grid.innerHTML = "";
+
+      // ??撌脫????      let owned = LinkageSystem.cards.getOwnedCards();
+      let recent = [];
+      try { recent = JSON.parse(localStorage.getItem('recentlyObtainedCards') || '[]'); } catch(e){}
+
+      // ?曉???????createdAt ?交?
+      let allCreatedAts = (typeof allCards !== 'undefined' ? allCards : []).map(c => c.createdAt).filter(Boolean);
+      let latestCreatedAt = null;
+      if (allCreatedAts.length > 0) {
+        latestCreatedAt = allCreatedAts.sort().reverse()[0];
+      }
+
+      // 頧????
+      let ownedArr = Object.values(owned);
+      // 靘 recentlyObtainedCards ??嚗敺??折???      ownedArr.sort((a, b) => {
+        // ???扳?餈敺?摨?        let ia = recent.indexOf(a.word);
+        let ib = recent.indexOf(b.word);
+        if (ia !== -1 && ib !== -1) return ia - ib; // 頞頞?
+        if (ia !== -1) return -1;
+        if (ib !== -1) return 1;
+        // ???折???        if (a.category !== b.category) return a.category.localeCompare(b.category);
+        // ?敺??批?蝔?        return a.zh.localeCompare(b.zh);
+      });
+
+      // 靘憿???
+      let grouped = {};
+      ownedArr.forEach(card => {
+        if (!grouped[card.category]) grouped[card.category] = [];
+        grouped[card.category].push(card);
+      });
+
+      // 皜脫?
+      Object.keys(grouped).sort().forEach(category => {
+        // 憿?璅?
+        const catTitle = document.createElement('div');
+        catTitle.textContent = `??{category}?;
+        catTitle.style = "font-weight:bold;color:#00ffff;text-align:left;margin:12px 0 4px 0;font-size:1.15em;text-shadow:0 0 8px #00ffff,0 0 16px #000;letter-spacing:2px;";
+        grid.appendChild(catTitle);
+
+        grouped[category].forEach(card => {
+          // ?湔銴 showCard ?抒??∠?皜脫??摩
+          const div = document.createElement("div");
+          div.className = `card ${getRarityClass(card.rarity)} unlocked`;
+          if (card.rarity === "?桅?) div.style.background = 'linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(0, 255, 255, 0.05))';
+          else if (card.rarity === "蝔??) div.style.background = 'linear-gradient(135deg, rgba(162, 89, 255, 0.1), rgba(162, 89, 255, 0.05))';
+          else if (card.rarity === "頞???) div.style.background = 'linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05))';
+          let starIcons = "";
+          if (card.rarity === "?桅?) starIcons = "??;
+          else if (card.rarity === "蝔??) starIcons = "??";
+          else if (card.rarity === "頞???) starIcons = "????;
+          let cardMedia = '';
+          if (card.image && card.image.endsWith('.mp4')) {
+            cardMedia = `<video src="${card.image}" autoplay loop muted playsinline style="width:100%;height:120px;object-fit:cover;border-radius:10px;"></video>`;
+          } else {
+            cardMedia = `<img src="${card.image}" alt="${card.word}">`;
+          }
+
+          // ?斗?臬?箸???createdAt ???          let isNewCard = false;
+          if (card.createdAt && latestCreatedAt && card.createdAt === latestCreatedAt) {
+            isNewCard = true;
+          }
+
+          div.innerHTML = `
+            ${cardMedia}
+            <div class="stars">${starIcons}</div>
+            <div class="label">
+              <div class="chinese-text">${card.zh}</div>
+              <div class="english-text">${card.word}</div>
+            </div>
+            <div class="category-tag">憿嚗?{card.category}</div>
+            <div class="rank-badge">${rankMap[card.rarity] || ""}</div>
+            <span class="unlock-status-icon">??/span>
+            ${isNewCard ? '<span style="position:absolute;top:8px;left:8px;background:#ff2d55;color:#fff;font-size:0.95em;padding:2px 8px;border-radius:10px;z-index:10;font-weight:bold;box-shadow:0 0 8px #ff2d55;letter-spacing:1px;">?啣</span>' : ''}
+          `;
+          div.onclick = (e) => openModal(card);
+          grid.appendChild(div);
+        });
+      });
+    }
+    // ========== END ========== //
+
+    // ... existing code ...
+    // ?冽?甈⊥?～圾??∠????Ｚ??交??澆 renderCardGrid
+    // 靘???drawCard?rawTen?indow.onload 蝑?孵?銝?renderCardGrid();
+    // 靘?嚗?    // window.addEventListener("load", () => { ... renderCardGrid(); ... });
+    // ... existing code ...
+
+    // ========== 靽格閮梢??詨?黎 ========== //
+    function fillWishSelect(rarity, selectId, globalSearchValue) {
+      const select = document.getElementById(selectId);
+      if (!select) return;
+      select.innerHTML = '<option value="">隢???/option>';
+      if (!Array.isArray(allCards) || allCards.length === 0) return;
+      let filterText = globalSearchValue ? globalSearchValue.trim().toLowerCase() : '';
+      // 靘憿??黎
+      let cards = allCards.filter(card => card.rarity === rarity && !LinkageSystem.cards.isCardOwned(card.word));
+      // ========== ?啣?嚗?箸???createdAt ?交? ========== //
+      let allCreatedAts = allCards.map(c => c.createdAt ? String(c.createdAt) : null).filter(Boolean);
+      let latestCreatedAt = null;
+      if (allCreatedAts.length > 0) {
+        latestCreatedAt = allCreatedAts.sort().reverse()[0];
+      }
+      // ========== END ========== //
+      let grouped = {};
+      cards.forEach(card => {
+        if (filterText) {
+          const text = `${card.category} ${card.zh} ${card.word}`.toLowerCase();
+          if (!text.includes(filterText)) return;
+        }
+        if (!grouped[card.category]) grouped[card.category] = [];
+        grouped[card.category].push(card);
+      });
+      let hasOption = false;
+      Object.keys(grouped).sort().forEach(category => {
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = category;
+        optgroup.style = "color:#00ffff;font-weight:bold;text-shadow:0 0 8px #00ffff,0 0 16px #000;letter-spacing:1px;background:#101a2a;";
+        grouped[category].sort((a, b) => a.zh.localeCompare(b.zh));
+        grouped[category].forEach(card => {
+          const option = document.createElement('option');
+          option.value = card.word;
+          let isNewCard = card.createdAt && latestCreatedAt && String(card.createdAt) === String(latestCreatedAt);
+          option.textContent = `${getRarityEmoji(card.rarity)} ${card.zh}${isNewCard ? ' [?啣]' : ''}`;
+          optgroup.appendChild(option);
+          hasOption = true;
+        });
+        select.appendChild(optgroup);
+      });
+      if (!hasOption) {
+        const noOption = document.createElement('option');
+        noOption.value = '';
+        noOption.disabled = true;
+        noOption.selected = true;
+        noOption.textContent = '瘝?蝚血????;
+        select.appendChild(noOption);
+      }
+    }
+    // ========== END ========== //
+
+    // ... existing code ...
+    // ?券??Ｚ??乓?～迂憿身摰??閬??澆 renderCardGrid();
+    // ... existing code ...
+  </script>
+</body>
+</html>

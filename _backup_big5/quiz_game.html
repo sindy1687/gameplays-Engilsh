@@ -1,0 +1,1591 @@
+<!-- quiz_game.html ???桀??豢?憿???-->
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Cosmic Quiz: Chapter of Choice</title>
+  <!-- ?啣?擃?Noto Sans TC -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="responsive_enhanced.css">
+  <style>
+    /* ?脫迫瘞游像皛曉? */
+    html {
+      overflow-x: hidden;
+    }
+    
+    /* 蝣箔????蝝?刻?蝒?? */
+    * {
+      box-sizing: border-box;
+      max-width: 100%;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Orbitron', Arial, sans-serif;
+      background: linear-gradient(to bottom, #020111 0%, #000010 100%);
+      color: #fff;
+      min-height: 100vh;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    /*-------------------------
+      ?典??身 & 摮?
+    -------------------------*/
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Noto Sans TC', 'Inter', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+      background: linear-gradient(to bottom, #020111 0%, #000010 100%);
+      color: #fff;
+      overflow: hidden;
+      font-size: 16px; /* 閮剖??箇?摮?憭批? */
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /*-------------------------
+      撌虫?閫?TopBar嚗＊蝷箸?? + 餈?蝺刻摩??
+    -------------------------*/
+    #topBar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(10, 20, 40, 0.85);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 3;
+      border-bottom: 2px solid #00ffff;
+      box-shadow: 0 0 16px #00ffff;
+    }
+    #topBar #starsDisplay {
+      font-size: 1.3rem;
+      color: #ffd700;
+      font-weight: bold;
+      text-shadow: 0 0 8px #ffd700;
+    }
+    #topBar .back-btn {
+      background: linear-gradient(90deg, #00ffff 0%, #a259ff 100%);
+      border: none;
+      color: #000;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 0 16px #00ffff;
+    }
+    #topBar .back-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 24px #00ffff;
+    }
+
+    /*-------------------------
+      ?征 Canvas ?
+    -------------------------*/
+    canvas#stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    /*-------------------------
+      銝餃捆??    -------------------------*/
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 80px auto 40px;
+      background: rgba(10, 20, 40, 0.7);
+      padding: 24px;
+      border-radius: 20px;
+      box-shadow: 0 0 32px #00ffff44, 0 0 80px #a259ff22 inset;
+      border: 2px solid #00ffff;
+      backdrop-filter: blur(8px);
+      overflow-y: auto;
+      max-height: calc(100vh - 140px);
+      line-height: 1.6; /* 憓?摰孵?蝷?擃?*/
+    }
+    .container h1 {
+      color: #00ffff;
+      text-align: center;
+      text-shadow: 0 0 12px #00ffff, 0 0 32px #a259ff;
+      margin-bottom: 20px;
+      font-size: 2.2rem;
+      font-family: 'Orbitron', sans-serif;
+    }
+    .container .progress {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #99ccff;
+      margin-bottom: 12px;
+    }
+    
+    /*-------------------------
+      閮??冽見撘?    -------------------------*/
+    .timer-container {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      border: 1px solid #00ffff;
+      position: relative;
+    }
+    .timer-container.shake {
+      animation: shake 0.5s infinite;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-2px); }
+      75% { transform: translateX(2px); }
+    }
+    .timer-display {
+      font-size: 1.5rem;
+      font-weight: bold;
+      font-family: 'Orbitron', sans-serif;
+      color: #00ffff;
+      text-shadow: 0 0 8px #00ffff;
+      margin-bottom: 5px;
+    }
+    .timer-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    .timer-progress {
+      height: 100%;
+      background: linear-gradient(90deg, #00ffff, #a259ff);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+      box-shadow: 0 0 8px #00ffff;
+    }
+    .timer-warning {
+      background: linear-gradient(90deg, #ff6b6b, #ff8e53);
+      animation: pulse 1s infinite;
+    }
+    .timer-danger {
+      background: linear-gradient(90deg, #ff4757, #ff3838);
+      animation: pulse 0.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    @keyframes flash {
+      0%, 100% { background: rgba(0, 0, 0, 0.3); }
+      50% { background: rgba(255, 107, 107, 0.3); }
+    }
+    
+    /* 頝喲???璅?? */
+    .skip-btn {
+      display: none;
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(90deg, #ff6b6b, #ff8e53);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 8px #ff6b6b;
+    }
+    .skip-btn:hover {
+      background: linear-gradient(90deg, #ff4757, #ff3838);
+      box-shadow: 0 0 12px #ff4757;
+      transform: translateY(-50%) scale(1.05);
+    }
+    .skip-btn:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+    
+    .container .question-area {
+      margin-top: 24px;
+    }
+    .container .question-area #questionText {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      color: #cceeff;
+      line-height: 1.7;
+      text-align: center; /* 霈??桀?銝剜??賜蔭銝?*/
+    }
+    .container .choices {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap; /* 撘瑕銝?銵?*/
+      justify-content: center;
+      gap: 10px; /* 蝮桀???隞仿?撟?*/
+    }
+    .container .choices button.choice-btn {
+      flex: 1; /* 霈??像???祝摨?*/
+      /* 蝘駁 min-width ??max-width 隞亙?閮梯?望蝮?*/
+      background: rgba(10, 30, 50, 0.8);
+      color: #cceeff;
+      border: 2px solid #00ffff;
+      border-radius: 8px;
+      padding: 14px 8px; /* 隤踵 padding 隞亙???皞Ｗ */
+      font-size: 1.1rem;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 0 12px #00ffff80;
+      transition: all 0.2s ease;
+    }
+    .container .choices button.choice-btn:hover {
+      background: rgba(0, 255, 255, 0.2);
+      box-shadow: 0 0 20px #00ffff;
+    }
+    .container .choices button:disabled {
+        background: #555 !important;
+        color: #aaa !important;
+        border-color: #555 !important;
+        cursor: not-allowed;
+        box-shadow: none !important;
+    }
+    .container .choices button.correct {
+        background: rgba(46, 204, 113, 0.2);
+        color: #2ecc71;
+        border-color: #2ecc71;
+        box-shadow: 0 0 16px #2ecc71;
+    }
+    .container .choices button.incorrect {
+        background: rgba(231, 76, 60, 0.2);
+        color: #e74c3c;
+        border-color: #e74c3c;
+        box-shadow: 0 0 16px #e74c3c;
+    }
+    .container .feedback {
+      margin-top: 20px;
+      font-size: 1.1rem;
+      min-height: 1.6rem; /* ?寧 min-height 隞仿??銵摰?*/
+      text-align: center;
+      line-height: 1.5; /* 憓?銵?隞交?霈??*/
+    }
+    .container .next-btn {
+      display: none;
+      margin: 20px auto 0;
+      background: #f1c40f;
+      color: #0b0c10;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+      transition: background 0.2s;
+    }
+    .container .next-btn:hover {
+      background: #f39c12;
+    }
+
+    /*-------------------------
+      Scrollbar for .container
+    -------------------------*/
+    .container::-webkit-scrollbar {
+      width: 10px;
+    }
+    .container::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.2);
+      border-radius: 5px;
+    }
+    .container::-webkit-scrollbar-thumb {
+      background: rgba(69,162,158,0.6);
+      border-radius: 5px;
+    }
+    .container::-webkit-scrollbar-thumb:hover {
+      background: rgba(69,162,158,0.8);
+    }
+    .container {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(69,162,158,0.6) rgba(0,0,0,0.2);
+    }
+
+    /*-------------------------
+      Review Modal
+    -------------------------*/
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.7);
+      backdrop-filter: blur(5px);
+    }
+    .modal-content {
+      background: rgba(10, 20, 40, 0.95);
+      margin: 5% auto; /* 隤踵 margin */
+      padding: 30px;
+      border: 2px solid #00ffff;
+      width: 90%;
+      max-width: 1000px;
+      border-radius: 10px;
+      box-shadow: 0 0 32px #00ffff44, 0 0 80px #a259ff22 inset;
+      position: relative;
+      backdrop-filter: blur(8px);
+    }
+    .modal-content h2 {
+      text-align: center;
+      color: #00ffff;
+      font-size: 2rem;
+      margin-bottom: 25px;
+      text-shadow: 0 0 8px #00ffff;
+    }
+    
+    #reviewWordsContainer {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+        max-height: 60vh;
+        overflow-y: auto;
+        padding: 15px;
+        margin-bottom: 25px;
+        background: #0a192f;
+        border-radius: 8px;
+    }
+    #reviewWordsContainer::-webkit-scrollbar {
+        width: 8px;
+    }
+    #reviewWordsContainer::-webkit-scrollbar-track {
+        background: #0a192f;
+    }
+    #reviewWordsContainer::-webkit-scrollbar-thumb {
+        background-color: #00ffff;
+        border-radius: 4px;
+    }
+
+    .word-item {
+        background: #112240;
+        padding: 15px 20px;
+        border-radius: 6px;
+        border-left: 4px solid #00ffff;
+      color: #8892b0;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .word-item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+    }
+    .word-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .word-header h3 {
+      color: #ccd6f6;
+        font-size: 1.3rem;
+        margin-right: 10px;
+      font-weight: 500;
+    }
+    .pronounce-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+        font-size: 1.4rem;
+      color: #00ffff;
+        transition: color 0.2s;
+        padding: 5px;
+    }
+    .pronounce-btn:hover {
+        color: #fff;
+    }
+    .word-item p {
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    #continueQuizBtn {
+      display: block;
+      width: fit-content;
+      margin: 25px auto 0;
+      background: linear-gradient(90deg, #00ffff 0%, #a259ff 100%);
+      color: #0a192f;
+      padding: 12px 35px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 500;
+      box-shadow: 0 0 16px #00ffff;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    #continueQuizBtn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 24px #00ffff;
+    }
+    
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 25px;
+      color: #00ffff;
+      font-size: 2rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .close-btn:hover,
+    .close-btn:focus {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    /* 蝯??恍璅?? */
+    #endScreen {
+      display: none;
+      text-align: center;
+      padding: 40px;
+      font-size: 1.2rem;
+    }
+    #endScreen h2 {
+      font-size: 2.5rem;
+      color: #66fcf1;
+      margin-bottom: 20px;
+    }
+    #endScreen p {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+    }
+    #endScreen button {
+      background: #45a29e;
+      color: #0b0c10;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      cursor: pointer;
+      margin: 0 10px;
+      transition: background 0.2s;
+    }
+    #endScreen button:hover {
+      background: #66fcf1;
+    }
+
+    /*-------------------------
+      ??憌??
+    -------------------------*/
+    .floating-star {
+      position: fixed;
+      font-size: 2rem;
+      color: #ffd700;
+      text-shadow: 0 0 10px #ffd700;
+      pointer-events: none;
+      z-index: 1000;
+      animation: starFloat 1.5s ease-out forwards;
+    }
+    
+    @keyframes starFloat {
+      0% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.8;
+        transform: scale(1.2);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.5) translate(var(--target-x), var(--target-y));
+      }
+    }
+    
+    .stars-count-animation {
+      animation: countBounce 0.6s ease-out;
+    }
+    
+    @keyframes countBounce {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <!-- 撌虫?閫?TopBar嚗＊蝷箸?? + 餈?蝺刻摩? -->
+  <div id="topBar">
+    <div id="starsDisplay">潃?span id="totalStarsCount">0</span></div>
+    <div id="currentEarnedStars" style="display: none; color: #ffd700; font-size: 1.1rem; margin-left: 15px;">
+      ?祈憚?脣?: <span id="earnedStarsCount">0</span>潃?    </div>
+    <a href="#" id="backToBook" class="back-btn">漎?餈?蝺刻摩?桀???/a>
+  </div>
+
+  <!-- ?征 Canvas -->
+  <canvas id="stars"></canvas>
+
+  <!-- 銝餃捆?剁??桀??豢?憿摰?-->
+  <div class="container">
+    <h1 id="modeTitle">?桀??豢?憿?/h1>
+    <!-- ?脣漲憿舐內 -->
+    <p class="progress">
+      蝚?<span id="currentIdx">1</span> 憿?嚗???<span id="totalCount">0</span> 憿?    </p>
+    
+    <!-- 閮???-->
+    <div class="timer-container">
+      <div class="timer-display" id="timerDisplay">10</div>
+      <div class="timer-bar">
+        <div class="timer-progress" id="timerProgress"></div>
+      </div>
+      <button class="skip-btn">頝喲?</button>
+    </div>
+    
+    <div class="question-area">
+      <!-- 憿舐內???乩葉?征??憿 -->
+      <div id="questionText">頛銝凌?/div>
+      <!-- ???偌撟單???-->
+      <div class="choices" id="choices"></div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+  </div>
+
+  <!-- ?桅?銴?敶? -->
+  <div id="reviewModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeModalBtn">&times;</span>
+      <h2 id="reviewModalTitle">?桀?銴?</h2>
+      <div id="reviewWordsContainer">
+        <!-- Word will be dynamically inserted here -->
+      </div>
+      <button id="continueQuizBtn">銝?憿?/button>
+    </div>
+  </div>
+
+  <script src="js/sound.js"></script>
+  <script src="js/starRewardSystem.js"></script>
+  <script>
+    /*----------------------------------------
+      (1) 霈??URL ?嚗ook, mode
+    ----------------------------------------*/
+    const params = new URLSearchParams(location.search);
+    const bookName = params.get('book');
+    const mode = params.get('mode'); // 'meaning-to-word' ??'word-to-meaning'
+    if (!bookName || !mode) {
+      alert('??航炊嚗撩撠?book ??mode??);
+      history.back();
+    }
+
+    // 閮剖??????????
+    document.getElementById('backToBook').href = `book_edit.html?book=${encodeURIComponent(bookName)}`;
+
+    // 憿舐內皜祇?璅∪?璅?
+    const modeTitleMap = {
+      'meaning-to-word': 'Cosmic Clues: Meaning to Word',
+      'word-to-meaning': 'Decoding the Cosmos: Word to Meaning'
+    };
+    if (!modeTitleMap[mode]) {
+      alert('mode ??航炊??);
+      history.back();
+    }
+    document.getElementById('modeTitle').textContent = modeTitleMap[mode];
+
+    /*----------------------------------------
+      (2) 霈?摮?批捆
+    ----------------------------------------*/
+    const storageKey = 'book_' + bookName;
+    let vocab = [];
+    try {
+        const vocabData = localStorage.getItem(storageKey);
+        // ??????圾??        if (vocabData) {
+            vocab = JSON.parse(vocabData);
+        }
+        console.log(`[DEBUG] ??霈?摮 '${bookName}'嚗 ${vocab.length} 蝑摮);
+    } catch (e) {
+        console.error(`[DEBUG] 閫???桀???'${bookName}' ??JSON 鞈???隤?`, e);
+        alert(`霈?摮 '${bookName}' 憭望?嚗???賢歇????璅? JSON ?澆????啁楊頛舫??ａ??啣摮?甈∴??炎?乩蜓?批?航炊?);
+        // ?箔??菟嚗銝歲頧?        // location.href = `book_edit.html?book=${encodeURIComponent(bookName)}`;
+    }
+
+    if (!Array.isArray(vocab) || vocab.length < 4) {
+      alert('甇文摮?喳??閬?4 蝑誑銝摮??賡脰?皜祇???);
+      location.href = `book_edit.html?book=${encodeURIComponent(bookName)}`;
+    }
+
+    // ----------- ?芸???銝行毽?憿?-------------
+    function autoLevelVocab(vocab, totalCount = 20) {
+      // ??
+      const easy = vocab.filter(v => v.word.length <= 4);
+      const hard = vocab.filter(v => v.word.length >= 7);
+      const medium = vocab.filter(v => v.word.length > 4 && v.word.length < 7);
+      // 瘙箏????賊?
+      let easyCount = Math.round(totalCount * 0.4);
+      let mediumCount = Math.round(totalCount * 0.4);
+      let hardCount = totalCount - easyCount - mediumCount;
+      // ?冽??賢?
+      function pick(arr, n) {
+        const copy = arr.slice();
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy.slice(0, n);
+      }
+      let result = [];
+      result = result.concat(pick(easy, easyCount));
+      result = result.concat(pick(medium, mediumCount));
+      result = result.concat(pick(hard, hardCount));
+      // ?乩?頞喳?鋆?
+      const used = new Set(result.map(v => v.word));
+      const left = vocab.filter(v => !used.has(v.word));
+      while (result.length < Math.min(totalCount, vocab.length) && left.length > 0) {
+        result.push(left.pop());
+      }
+      // ?敺?瘣?
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+      }
+      return result;
+    }
+
+    // ???訾???20
+    vocab = autoLevelVocab(vocab, Math.min(20, vocab.length));
+
+    const totalCount = vocab.length;
+    let currentIdx = 0; // 敺?0 ??
+    let earnedStars = 0; // ?啣?嚗蕭頩斗葫撽??敺???
+
+    // ?湔?脣漲??
+    const currentIdxEl = document.getElementById('currentIdx');
+    const totalCountEl = document.getElementById('totalCount');
+    totalCountEl.textContent = totalCount;
+
+    /*----------------------------------------
+      (3) 閮??函頂蝯?    ----------------------------------------*/
+    const TIMER_DURATION = 10; // 瘥?10蝘?    let timerInterval;
+    let timeLeft;
+    let timerDisplay = document.getElementById('timerDisplay');
+    let timerProgress = document.getElementById('timerProgress');
+    let skipBtn = document.querySelector('.skip-btn');
+    
+    function startTimer() {
+      timeLeft = TIMER_DURATION;
+      updateTimerDisplay();
+      
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          handleTimeUp();
+        }
+      }, 1000);
+    }
+    
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+    
+    function updateTimerDisplay() {
+      timerDisplay.textContent = timeLeft;
+      
+      const progressPercent = (timeLeft / TIMER_DURATION) * 100;
+      timerProgress.style.width = progressPercent + '%';
+      
+      // ?寞??拚????寡?憿????      timerProgress.className = 'timer-progress';
+      const timerContainer = document.querySelector('.timer-container');
+      
+      // ??0蝘?憿舐內頝喲???
+      if (timeLeft <= 10) {
+        skipBtn.style.display = 'block';
+      } else {
+        skipBtn.style.display = 'none';
+      }
+      
+      if (timeLeft <= 5) {
+        timerProgress.classList.add('timer-danger');
+        timerContainer.classList.add('shake');
+      } else if (timeLeft <= 7) {
+        timerProgress.classList.add('timer-warning');
+        timerContainer.classList.remove('shake');
+      } else {
+        timerContainer.classList.remove('shake');
+      }
+    }
+    
+    function handleTimeUp() {
+      if (answered) return; // 憒?撌脩?????嚗停銝???      
+      // ?剜???啁??單?
+      const wrongSound = new Audio('sound/wrong.mp3');
+      wrongSound.currentTime = 0;
+      wrongSound.play();
+      
+      // 瘛餃????啁?閬死??
+      const timerContainer = document.querySelector('.timer-container');
+      timerContainer.style.animation = 'flash 0.3s 3';
+      
+      // ?芸??豢??航炊蝑?嚗洵銝???
+      handleChoice(0);
+      
+      // 憿舐內???啁??內
+      const feedbackEl = document.getElementById('feedback');
+      feedbackEl.innerHTML = '<span style="font-size: 1.3rem; color: #ff6b6b; font-weight: bold;">?????堆?</span>';
+      feedbackEl.style.color = '#ff6b6b';
+    }
+    
+    // 頝喲???暺?鈭辣
+    function handleSkip() {
+      if (answered) return; // 憒?撌脩?????嚗停銝???      
+      // ?剜頝喲??單?
+      const skipSound = new Audio('sound/click.mp3');
+      skipSound.currentTime = 0;
+      skipSound.play();
+      
+      // 憿舐內頝喲??內
+      const feedbackEl = document.getElementById('feedback');
+      feedbackEl.innerHTML = '<span style="font-size: 1.3rem; color: #ff8e53; font-weight: bold;">?哨? 撌脰歲?迨憿?/span>';
+      feedbackEl.style.color = '#ff8e53';
+      
+      // ?迫閮???      stopTimer();
+      
+      // 蝳?????      const allChoiceBtns = document.querySelectorAll('.choice-btn');
+      allChoiceBtns.forEach(btn => {
+        btn.disabled = true;
+      });
+      
+      // 璅內甇?Ⅱ蝑?
+      const correctBtn = Array.from(allChoiceBtns).find(btn => choices[btn.dataset.index].isCorrect);
+      if(correctBtn) correctBtn.classList.add('correct');
+      
+      // 敹萄甇?Ⅱ蝑?
+      const correctText = choices.find(c => c.isCorrect).text;
+      if (correctText && currentQuestion.example) {
+        speak(correctText, () => speak(currentQuestion.example, () => {
+          setTimeout(goToNextStep, 500);
+        }));
+      } else if (correctText) {
+        speak(correctText, () => {
+          setTimeout(goToNextStep, 500);
+        });
+      } else {
+        setTimeout(goToNextStep, 500);
+      }
+    }
+
+    /*----------------------------------------
+      (4) ?征??
+    ----------------------------------------*/
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let W, H;
+    let stars = [];
+    const numStars = 100;
+
+    function initCanvas() {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W;
+      canvas.height = H;
+      stars = [];
+      for (let i = 0; i < numStars; i++) {
+        stars.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          size: Math.random() * 1.5 + 0.5,
+          speed: Math.random() * 0.5 + 0.2
+        });
+      }
+    }
+    function updateStars() {
+      stars.forEach(s => {
+        s.y += s.speed;
+        if (s.y > H) {
+          s.y = 0;
+          s.x = Math.random() * W;
+        }
+      });
+    }
+    function drawStars() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#ffffff';
+      stars.forEach(s => {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+    function animate() {
+      updateStars();
+      drawStars();
+      requestAnimationFrame(animate);
+    }
+    window.addEventListener('resize', initCanvas);
+
+    /*----------------------------------------
+      (5) 憿舐內????    ----------------------------------------*/
+    function loadTotalStars() {
+      const v = localStorage.getItem('totalStars');
+      return v ? parseInt(v, 10) : 0;
+    }
+    function updateStarsDisplay() {
+      document.getElementById('totalStarsCount').textContent = loadTotalStars();
+    }
+    
+    function updateCurrentEarnedStars() {
+      const currentEarnedEl = document.getElementById('currentEarnedStars');
+      const earnedCountEl = document.getElementById('earnedStarsCount');
+      
+      if (earnedStars > 0) {
+        currentEarnedEl.style.display = 'block';
+        earnedCountEl.textContent = earnedStars;
+      } else {
+        currentEarnedEl.style.display = 'none';
+      }
+    }
+
+    /*----------------------------------------
+      (5.5) ??憌??蝟餌絞
+    ----------------------------------------*/
+    function createFloatingStar(startX, startY, targetX, targetY) {
+      const star = document.createElement('div');
+      star.className = 'floating-star';
+      star.textContent = '潃?;
+      star.style.left = startX + 'px';
+      star.style.top = startY + 'px';
+      star.style.setProperty('--target-x', (targetX - startX) + 'px');
+      star.style.setProperty('--target-y', (targetY - startY) + 'px');
+      
+      document.body.appendChild(star);
+      
+      // ?蝯?敺宏?文?蝝?      setTimeout(() => {
+        if (star.parentNode) {
+          star.parentNode.removeChild(star);
+        }
+      }, 1500);
+    }
+    
+    function animateStarsCollection() {
+      if (earnedStars <= 0) return;
+      
+      const starsDisplay = document.getElementById('totalStarsCount');
+      const rect = starsDisplay.getBoundingClientRect();
+      const targetX = rect.left + rect.width / 2;
+      const targetY = rect.top + rect.height / 2;
+      
+      // ?萄遣憭???銝?雿蔭憌??格?
+      for (let i = 0; i < earnedStars; i++) {
+        setTimeout(() => {
+          // ?冽?韏瑕?雿蔭嚗?Ｗ?銝剖亢???
+          const startX = window.innerWidth / 2 + (Math.random() - 0.5) * 200;
+          const startY = window.innerHeight / 2 + (Math.random() - 0.5) * 200;
+          
+          createFloatingStar(startX, startY, targetX, targetY);
+        }, i * 200); // 瘥?????00ms
+      }
+      
+      // ?????摰?嚗?啁蜇???訾蒂?剜?詨??
+      setTimeout(() => {
+        const currentStars = loadTotalStars();
+        const newTotal = currentStars + earnedStars;
+        localStorage.setItem('totalStars', newTotal);
+        
+        // ?剜?詨?霈??
+        animateStarsCount(currentStars, newTotal);
+        
+        // ?蔭?脣????
+        earnedStars = 0;
+      }, earnedStars * 200 + 1500);
+    }
+    
+    function animateStarsCount(from, to) {
+      const starsDisplay = document.getElementById('totalStarsCount');
+      const duration = 1000; // 1蝘???      const startTime = Date.now();
+      
+      function updateCount() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // 雿輻蝺拙??賣霈??急?芰
+        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+        const currentCount = Math.floor(from + (to - from) * easeOutQuart);
+        
+        starsDisplay.textContent = currentCount;
+        starsDisplay.classList.add('stars-count-animation');
+        
+        if (progress < 1) {
+          requestAnimationFrame(updateCount);
+        } else {
+          // ?蝯?嚗宏?文??恍???          setTimeout(() => {
+            starsDisplay.classList.remove('stars-count-animation');
+          }, 600);
+        }
+      }
+      
+      updateCount();
+    }
+
+    /*----------------------------------------
+      (5.5) 隤?? (TTS)
+    ----------------------------------------*/
+    function speak(text, onEndCallback) {
+      // 雿輻?啁??潮蝟餌絞
+      if (onEndCallback && typeof onEndCallback === 'function') {
+        SoundSystem.speech.speakQuestion(text, onEndCallback);
+      } else {
+        SoundSystem.speech.speakQuestion(text);
+      }
+    }
+
+    /*----------------------------------------
+      (6) Quiz ?摩
+      - 隞亙摮?蝛箇??孵??粹?
+      - 蝑???暹迤蝣箏摮??    ----------------------------------------*/
+    let currentQuestion = null;
+    let choices = [];
+    let answered = false;
+
+    const questionTextEl = document.getElementById('questionText');
+    const choicesEl = document.getElementById('choices');
+    const feedbackEl = document.getElementById('feedback');
+
+    // 頛?單?
+    const correctSound = new Audio('sound/correct.mp3');
+    correctSound.preload = 'auto';
+    const wrongSound = new Audio('sound/wrong.mp3');
+    wrongSound.preload = 'auto';
+
+    /**
+     * ?箔?霈迤閬”???賣迤蝣箏???恍貊畾???     * @param {string} str - ??摮葡
+     * @returns {string} ?恍詨???銝?     */
+    function escapeRegex(str) {
+      // ?恍詨甇??銵券?撘葉?畾?蝢拍?摮?
+      return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    /**
+     * 閮??拙?銝脖??? Levenshtein 頝嚗楊頛航??ｇ?
+     * ?其?撠?澆??訾撮?摮?     */
+    function levenshteinDistance(s1, s2) {
+      s1 = s1.toLowerCase();
+      s2 = s2.toLowerCase();
+      const costs = [];
+      for (let i = 0; i <= s1.length; i++) {
+        let lastValue = i;
+        for (let j = 0; j <= s2.length; j++) {
+          if (i === 0) {
+            costs[j] = j;
+          } else {
+            if (j > 0) {
+              let newValue = costs[j - 1];
+              if (s1.charAt(i - 1) !== s2.charAt(j - 1)) {
+                newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+              }
+              costs[j - 1] = lastValue;
+              lastValue = newValue;
+            }
+          }
+        }
+        if (i > 0) {
+          costs[s2.length] = lastValue;
+        }
+      }
+      return costs[s2.length];
+    }
+
+    /**
+     * 敺摮銝剖??曇??格??桀???訾撮??N ?摮?     * @param {string} targetWord - ?格??桀?
+     * @param {number} count - 閬?箇??訾撮?桀??賊?
+     * @returns {string[]} ?訾撮?桀????
+     */
+    function findSimilarWords(targetWord, count) {
+      const allOtherWords = vocab
+        .map(v => v.word)
+        .filter(word => word.toLowerCase() !== targetWord.toLowerCase());
+
+      if (allOtherWords.length <= count) {
+        return allOtherWords; // ?桀?摨思?頞喉?餈???隞摮?      }
+
+      // 閮???摮? Levenshtein 頝
+      const wordsWithDistance = allOtherWords.map(word => ({
+        word: word,
+        distance: levenshteinDistance(targetWord, word)
+      }));
+
+      // 靘??Ｘ?摨?頝?詨??璈?摨?      wordsWithDistance.sort((a, b) => {
+        if (a.distance !== b.distance) {
+          return a.distance - b.distance;
+        }
+        return Math.random() - 0.5; // ????
+      });
+
+      // ????訾撮?? count ?摮?      return wordsWithDistance.slice(0, count).map(item => item.word);
+    }
+
+    // ?Ｙ?蝚?currentIdx 憿?敺?vocab[currentIdx]
+    function generateQuestion() {
+      currentQuestion = vocab[currentIdx];
+
+      // example 鋆⊿?鈭摮?撠府?桀??踵??_____??      let rawSentence = currentQuestion.example || '';
+      
+      // ?箔????桀?銝剖?賢??怎?甇??銵券?撘畾????脰??恍?      const escapedWord = escapeRegex(currentQuestion.word);
+      // ?冽迤閬???桀?嚗之撠神銝???
+      const wordRegex = new RegExp(`\\b${escapedWord}\\b`, 'i');
+      let displaySentence = rawSentence.replace(wordRegex, '______');
+      
+      // ?券??桐??寥＊蝷箏??渡?銝剜?靘蝧餉陌嚗蒂擃漁?桀?撠??葉??      let chineseTranslation = currentQuestion.exampleMeaning || '(?∩??亦蕃霅?';
+      const wordMeaning = currentQuestion.meaning;
+      if (wordMeaning && chineseTranslation.includes(wordMeaning)) {
+        // 雿輻銝?悅鞊?憿靘?蝷箏摮?銝剜???        const highlightedMeaning = `<span style="color: #ffd700; font-weight: bold; text-shadow: 0 0 6px #ffd700;">${wordMeaning}</span>`;
+        // ?芣?洵銝??曄?嚗??憭?隞??        chineseTranslation = chineseTranslation.replace(wordMeaning, highlightedMeaning);
+      }
+
+      questionTextEl.innerHTML = `
+        ${displaySentence}
+        <div style="margin-top: 10px; font-size: 1.1rem; color: #a7ffea; font-weight: 500;">${chineseTranslation}</div>
+      `;
+
+      // 皞??賊?嚗迤蝣箏摮?+ 銝僕??      choices = [];
+      // 甇?Ⅱ?賊?
+      choices.push({ text: currentQuestion.word, isCorrect: true });
+
+      // ??3 ?僕?橘??寧撠?澆??訾撮?摮?      const distractors = findSimilarWords(currentQuestion.word, 3);
+      distractors.forEach(d => choices.push({ text: d, isCorrect: false }));
+
+      // 憒??曆??啗雲憭??訾撮摮??券璈?鋆遛
+      while (choices.length < 4 && vocab.length > choices.length) {
+          const r = vocab[Math.floor(Math.random() * totalCount)];
+          let candidate = r.word;
+          // 瑼Ｘ?臬撌脣?賊?銝?          if (!choices.some(c => c.text.toLowerCase() === candidate.toLowerCase())) {
+              choices.push({ text: candidate, isCorrect: false });
+          }
+      }
+
+      // Shuffle choices
+      for (let i = choices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [choices[i], choices[j]] = [choices[j], choices[i]];
+      }
+
+      // ?芸?敹萄憿嚗艙?箏??怎?獢?摰?亙?嚗?      if (currentQuestion && currentQuestion.example) {
+        speak(currentQuestion.example);
+      }
+    }
+
+    // ??雿輻????    function handleChoice(index) {
+      if (answered) return;
+      answered = true;
+      
+      // ?迫閮???      stopTimer();
+      
+      // ===== ?啣?嚗?蝞?憿???=====
+      const answerTime = (TIMER_DURATION - timeLeft); // 10蝘????隞亦10皜?拚???
+      gameStats.totalAnswered++;
+      gameStats.totalTimeUsed += answerTime;
+      
+      const selected = choices[index];
+      const correctText = choices.find(c => c.isCorrect).text;
+      const allChoiceBtns = choicesEl.querySelectorAll('.choice-btn');
+      
+      // 蝳?????      allChoiceBtns.forEach(btn => {
+        btn.disabled = true;
+      });
+
+      let feedbackMessage = '';
+      if (selected.isCorrect) {
+        feedbackMessage = '??蝑?鈭?';
+        feedbackEl.style.color = '#2ecc71';
+        selected.buttonEl.classList.add('correct');
+
+        // ?剜蝑??單?
+        correctSound.currentTime = 0;
+        correctSound.play();
+
+        // ===== ?啣?嚗?撠?頛?=====
+        gameStats.correctCount++;
+        gameStats.consecutiveCorrect++;
+        
+        // ?湔?敹???Ｙ?憿???        if (answerTime < gameStats.fastestAnswer) {
+          gameStats.fastestAnswer = answerTime;
+        }
+        if (answerTime > gameStats.slowestAnswer) {
+          gameStats.slowestAnswer = answerTime;
+        }
+        
+        // 瑼Ｘ?臬?箏?蝢?憿?5蝘蝑?嚗?        if (answerTime <= 5) {
+          gameStats.perfectAnswers++;
+        }
+        
+        // 閮????
+        const starsEarned = calculateStarReward(true, answerTime, gameStats.consecutiveCorrect, currentQuestion.word.length, '?桅?);
+        
+        // 雿輻蝯曹????頂蝯?        if (typeof StarRewardSystem !== 'undefined') {
+          StarRewardSystem.addStars(starsEarned);
+        } else {
+          earnedStars += starsEarned;
+        }
+        
+        // ?湔憿舐內
+        updateCurrentEarnedStars();
+        
+        // 憿舐內??
+        let reasonText = '';
+        if (answerTime <= 3) {
+          reasonText = '??頞翰??憿?';
+        } else if (answerTime <= 5) {
+          reasonText = '? 敹恍?憿?';
+        } else if (answerTime <= 7) {
+          reasonText = '??皞Ⅱ蝑?嚗?;
+        }
+        if (gameStats.consecutiveCorrect >= 3) {
+          reasonText += reasonText ? ' + ????嚗? : '? ????嚗?;
+        }
+        
+        showRewardAnimation(starsEarned, reasonText);
+        
+        // 憿舐內????
+        showComboNotification(gameStats.consecutiveCorrect);
+
+        // 閮?蝑??摮??冽?桀??犖?停嚗?        if (typeof VocabularyAchievementSystem !== 'undefined') {
+          VocabularyAchievementSystem.recordCorrectWord(currentQuestion.word, bookName);
+        }
+      } else {
+        const correctWord = currentQuestion.word;
+        feedbackMessage = `??蝑鈭? 甇?Ⅱ蝑??荔? <strong style="color: #ffd700; font-weight: bold;">${correctWord}</strong>`;
+        feedbackEl.style.color = '#e74c3c';
+        selected.buttonEl.classList.add('incorrect');
+        
+        // ?剜蝑?單?
+        wrongSound.currentTime = 0;
+        wrongSound.play();
+
+        // ===== ?啣?嚗??舫?頛?=====
+        gameStats.consecutiveCorrect = 0; // ?蔭???
+
+        // ?曉銝行?蝷箸迤蝣箇?獢?        const correctBtn = Array.from(allChoiceBtns).find(btn => choices[btn.dataset.index].isCorrect);
+        if(correctBtn) correctBtn.classList.add('correct');
+      }
+      
+      // ??銝阡??葉?圾??      feedbackEl.innerHTML = feedbackMessage;
+
+      // 銝?撠嚗??甇Ｙ????嚗敺艙?箸迤蝣箏摮?靘
+      // 銝血??蝯?敺??脣銝?甇?      window.speechSynthesis.cancel();
+
+      const onSpeechFinished = () => {
+        // ??摰敺?蝔凝撱園銝銝?頝唾?嚗?云蝒?
+        setTimeout(goToNextStep, 500);
+      };
+
+      if (correctText && currentQuestion.example) {
+        // ?艙?桀?嚗艙摰??艙靘嚗??亙艙摰?閫貊?
+        speak(correctText, () => speak(currentQuestion.example, onSpeechFinished));
+      } else if (correctText) {
+        // ?芸艙?桀?嚗艙摰?閫貊?
+        speak(correctText, onSpeechFinished);
+      } else {
+        // 憒?瘝??梯正?臭誑敹蛛?撠梁?仿脣銝?甇?        onSpeechFinished();
+      }
+    }
+
+    // ?冽葡??嚗????????圈?隞嗡?嚗靘蹂?敺???    function renderQuestion() {
+        currentIdxEl.textContent = currentIdx + 1;
+        choicesEl.innerHTML = '';
+        feedbackEl.textContent = '';
+        answered = false;
+
+        generateQuestion();
+
+        choices.forEach((choiceObj, i) => {
+            const btn = document.createElement('button');
+            btn.textContent = String.fromCharCode(65 + i) + '. ' + choiceObj.text;
+            btn.className = 'choice-btn';
+            btn.dataset.index = i;
+            btn.addEventListener('click', () => handleChoice(i));
+            choicesEl.appendChild(btn);
+            choiceObj.buttonEl = btn; // 撠??祕靘???拐辣
+        });
+
+        // ??閮???        startTimer();
+
+        if (currentQuestion && currentQuestion.example) {
+            speak(currentQuestion.example);
+        }
+    }
+
+    /*----------------------------------------
+      (7) 蝺渡?敶??賊??摩
+    ----------------------------------------*/
+    const reviewModal = document.getElementById('reviewModal');
+    const reviewWordsContainer = document.getElementById('reviewWordsContainer');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const continueQuizBtn = document.getElementById('continueQuizBtn');
+
+    function goToNextStep() {
+      window.speechSynthesis.cancel(); // ?迫??
+      stopTimer(); // ?迫閮???
+      const isEnding = (currentIdx + 1) >= totalCount;
+      if (isEnding) {
+        // ====== ?啣?嚗?撠梁頂蝯梢?? ======
+        updateQuizGameAchievements();
+        
+        // ?剜???園??
+        animateStarsCollection();
+        
+        // 撱園憿舐內摰?閮嚗???????        setTimeout(() => {
+          alert(`?剖?摰?????殷?蝮賣??賂?${loadTotalStars()}`);
+          window.location.href = `book_edit.html?book=${encodeURIComponent(bookName)}`;
+        }, earnedStars * 200 + 2500); // 蝑????摰?
+      } else {
+        currentIdx++;
+        renderQuestion();
+      }
+    }
+
+    // ====== ?啣?嚗?撠梁頂蝯勗??======
+    function updateQuizGameAchievements() {
+      // ?湔?豢?憿??脣??活??      const quizGames = parseInt(localStorage.getItem('quizGamesCompleted') || '0');
+      localStorage.setItem('quizGamesCompleted', quizGames + 1);
+      
+      // 瑼Ｘ銝行?啁??撠?      checkAndUpdateQuizGameAchievements();
+    }
+    
+    function checkAndUpdateQuizGameAchievements() {
+      // 瑼Ｘ?臬??停??
+      const achievements = [
+        { id: 'speed_learner', name: '敹恍飛蝧?, requirement: 10 },
+        { id: 'accuracy_master', name: '皞Ⅱ憭批葦', requirement: 20 },
+        { id: 'combo_king', name: '???銋?', requirement: 15 }
+      ];
+      
+      const claimed = JSON.parse(localStorage.getItem('claimedAchievements') || '[]');
+      
+      achievements.forEach(ach => {
+        if (claimed.includes(ach.id)) return; // 撌脩?????
+        
+        // 閮??????⊥??        const fillGames = parseInt(localStorage.getItem('fillGamesCompleted') || '0');
+        const cardGames = parseInt(localStorage.getItem('cardGamesCompleted') || '0');
+        const quizGames = parseInt(localStorage.getItem('quizGamesCompleted') || '0');
+        const spellingGames = parseInt(localStorage.getItem('spellingGamesCompleted') || '0');
+        const matchingGames = parseInt(localStorage.getItem('matchingGamesCompleted') || '0');
+        const totalGames = fillGames + cardGames + quizGames + spellingGames + matchingGames;
+        
+        if (totalGames >= ach.requirement) {
+          // 憿舐內?停???
+          showAchievementNotification(ach.name, ach.id);
+        }
+      });
+    }
+    
+    function showAchievementNotification(achievementName, achievementId) {
+      // ?萄遣?停?
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #ffd700, #ffed4e);
+        color: #000;
+        padding: 20px 30px;
+        border-radius: 15px;
+        font-weight: bold;
+        font-size: 1.2rem;
+        z-index: 10000;
+        box-shadow: 0 0 30px #ffd700;
+        animation: achievementPop 0.8s cubic-bezier(.68, -0.55, .27, 1.55);
+        text-align: center;
+        min-width: 300px;
+      `;
+      
+      notification.innerHTML = `
+        <div style="font-size: 3rem; margin-bottom: 10px;">??</div>
+        <div style="margin-bottom: 5px;">?? ?停??嚗?/div>
+        <div style="font-size: 1.1rem;">${achievementName}</div>
+        <div style="font-size: 0.9rem; margin-top: 10px; color: #666;">
+          ???停????
+        </div>
+      `;
+      
+      // 瘛餃??璅??
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes achievementPop {
+          0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+          50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+          100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(notification);
+      
+      // 3蝘??芸?蝘駁
+      setTimeout(() => {
+        notification.remove();
+        style.remove();
+      }, 3000);
+    }
+
+    function showPreviewModal() {
+      reviewWordsContainer.innerHTML = ''; // 皜征?批捆
+      
+      // 憿舐內??撠葫撽??桀?
+      vocab.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'word-item';
+        div.innerHTML = `
+          <div class="word-header">
+            <h3>${index + 1}. ${item.word}</h3>
+            <button class="pronounce-btn" data-word="${item.word}">??</button>
+          </div>
+          <p><strong>銝剜???</strong> ${item.meaning || '嚗銝剜???'}</p>
+        `;
+        reviewWordsContainer.appendChild(div);
+      });
+
+      // 撟急???單???銝?隞?      reviewWordsContainer.querySelectorAll('.pronounce-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const wordToSpeak = e.currentTarget.getAttribute('data-word');
+          speak(wordToSpeak);
+        });
+      });
+      
+      // ?湔璅?????      document.getElementById('reviewModalTitle').textContent = '皜祇???蝧?;
+      continueQuizBtn.textContent = '??皜祇?';
+      reviewModal.style.display = 'block';
+
+      // ?芸?靘?敹萄??摮?      autoPronouncePreviewWords();
+    }
+
+    function autoPronouncePreviewWords() {
+      let i = 0;
+      function speakNext() {
+        if (i < vocab.length) {
+          const word = vocab[i].word;
+          i++;
+          speak(word, speakNext);
+        }
+      }
+      speakNext(); // ????
+    }
+
+    function startQuiz() {
+      window.speechSynthesis.cancel(); // ?迫??
+      stopTimer(); // ?迫閮???      reviewModal.style.display = 'none';
+      currentIdx = 0; // ?蔭?箇洵銝憿?      earnedStars = 0; // ?蔭?脣????
+      document.getElementById('currentEarnedStars').style.display = 'none'; // ?梯??嗅??脣?????      renderQuestion();
+    }
+
+    closeModalBtn.addEventListener('click', startQuiz);
+    continueQuizBtn.addEventListener('click', startQuiz);
+    
+    // 暺? modal 憭銋隞仿?憪葫撽?    window.addEventListener('click', (event) => {
+      if (event.target == reviewModal) {
+        startQuiz();
+      }
+    });
+
+    /*----------------------------------------
+      (8) ????    ----------------------------------------*/
+    window.addEventListener('load', () => {
+      // ????頂蝯?      if (typeof SoundSystem !== 'undefined') {
+        SoundSystem.speech.init();
+      }
+      
+      // 瘛餃?頝喲???鈭辣????      skipBtn.addEventListener('click', handleSkip);
+      
+      updateStarsDisplay();
+      initCanvas();
+      animate();
+      // ?＊蝷粹?蝧?蝒????舐?仿?憪葫撽?      showPreviewModal();
+    });
+    
+    // ??貉???甇Ｚ??
+    window.addEventListener('beforeunload', () => {
+      stopTimer();
+    });
+
+    // ===== ?啣?嚗??脩??蕭頩?=====
+    let gameStats = {
+      correctCount: 0,
+      totalAnswered: 0,
+      consecutiveCorrect: 0, // ???蝑?甈⊥
+      fastestAnswer: Infinity, // ?敹怎?憿???      slowestAnswer: 0, // ??Ｙ?憿???      totalTimeUsed: 0, // 蝮賜??      perfectAnswers: 0, // 摰?蝑?甈⊥嚗?蝘蝑?嚗?      startTime: Date.now()
+    };
+
+    // ===== ?啣?嚗????菔?蝞??=====
+    function calculateStarReward(isCorrect, answerTime, consecutiveCount, wordLength, rarity) {
+      if (!isCorrect) return 0;
+      
+      let baseReward = 1; // ?箇??
+      
+      // ???嚗?敹怎?撠??菔?憭?      if (answerTime <= 3) {
+        baseReward += 3; // 3蝘 +3??      } else if (answerTime <= 5) {
+        baseReward += 2; // 5蝘 +2??      } else if (answerTime <= 7) {
+        baseReward += 1; // 7蝘 +1??      }
+      
+      // ????嚗??蝑?頞??頞?
+      if (consecutiveCount >= 5) {
+        baseReward += 3; // 5??? +3??      } else if (consecutiveCount >= 3) {
+        baseReward += 2; // 3??? +2??      } else if (consecutiveCount >= 2) {
+        baseReward += 1; // 2??? +1??      }
+      
+      // ?桀???漲?嚗?摮摨衣策鈭?憭???      if (wordLength >= 8) {
+        baseReward += 2; // ?瑕摮?憭???      } else if (wordLength >= 6) {
+        baseReward += 1; // 銝剔??瑕漲?桀??
+      }
+      
+      // ?豢?憿??脩畾???      baseReward += 1; // ?豢?憿??脤?憭???      
+      return baseReward;
+    }
+    
+    // ===== ?啣?嚗＊蝷箇??萄???=====
+    function showRewardAnimation(starsEarned, reason = '') {
+      const rewardDiv = document.createElement('div');
+      rewardDiv.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.95), rgba(255, 170, 0, 0.95));
+        color: #000;
+        padding: 20px 30px;
+        border-radius: 15px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        z-index: 1000;
+        box-shadow: 0 0 30px #ffd700;
+        animation: rewardPop 1.2s ease-out forwards;
+        font-family: 'Orbitron', sans-serif;
+        text-align: center;
+        min-width: 300px;
+      `;
+      
+      let reasonText = '';
+      if (reason) {
+        reasonText = `<div style="font-size: 1rem; margin-top: 8px; color: #666;">${reason}</div>`;
+      }
+      
+      rewardDiv.innerHTML = `
+        <div style="font-size: 3rem; margin-bottom: 10px;">潃?/div>
+        <div style="font-size: 1.8rem; margin-bottom: 5px;">+${starsEarned} ??</div>
+        ${reasonText}
+      `;
+      
+      // 瘛餃??璅??
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes rewardPop {
+          0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+          50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+          100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(rewardDiv);
+      
+      // ?剜???單?
+      if (typeof StarRewardSystem !== 'undefined') {
+        StarRewardSystem.playStarSound();
+      }
+      
+      // 2.5蝘?蝘駁
+      setTimeout(() => {
+        if (document.body.contains(rewardDiv)) {
+          document.body.removeChild(rewardDiv);
+        }
+        if (document.head.contains(style)) {
+          document.head.removeChild(style);
+        }
+      }, 2500);
+    }
+    
+    // ===== ?啣?嚗＊蝷粹??? =====
+    function showComboNotification(comboCount) {
+      if (comboCount < 2) return;
+      
+      const comboDiv = document.createElement('div');
+      comboDiv.style.cssText = `
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, rgba(255, 69, 0, 0.9), rgba(255, 140, 0, 0.9));
+        color: #fff;
+        padding: 15px 25px;
+        border-radius: 25px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        z-index: 1000;
+        box-shadow: 0 0 20px #ff4500;
+        animation: comboSlide 0.8s ease-out forwards;
+        font-family: 'Orbitron', sans-serif;
+      `;
+      
+      let comboText = '';
+      let comboIcon = '';
+      
+      if (comboCount >= 5) {
+        comboText = `${comboCount} ???嚗???⊥???嚗;
+        comboIcon = '?';
+      } else if (comboCount >= 3) {
+        comboText = `${comboCount} ???嚗 頞撥???嚗;
+        comboIcon = '??;
+      } else {
+        comboText = `${comboCount} ???嚗 ?????嚗;
+        comboIcon = '??;
+      }
+      
+      comboDiv.innerHTML = `${comboIcon} ${comboText} ${comboIcon}`;
+      
+      // 瘛餃??璅??
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes comboSlide {
+          0% { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+          50% { transform: translateX(-50%) translateY(0); opacity: 1; }
+          100% { transform: translateX(-50%) translateY(0); opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(comboDiv);
+      
+      // 2蝘?蝘駁
+      setTimeout(() => {
+        if (document.body.contains(comboDiv)) {
+          document.body.removeChild(comboDiv);
+        }
+        if (document.head.contains(style)) {
+          document.head.removeChild(style);
+        }
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

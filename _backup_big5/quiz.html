@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>?望?撠??- ?漣?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="responsive_enhanced.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    /* ?脫迫瘞游像皛曉? */
+    html {
+      overflow-x: hidden;
+    }
+    
+    /* 蝣箔????蝝?刻?蝒?? */
+    * {
+      box-sizing: border-box;
+      max-width: 100%;
+    }
+    
+    /* === ?嚗?蝛箄?瞍詨惜 === */
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: auto;
+      font-family: 'Orbitron', sans-serif;
+      color: #fff;
+      background: linear-gradient(to bottom, #020111 0%, #000010 100%);
+      width: 100%;
+      overflow-x: hidden;
+    }
+    /* ??蝎? */
+    #starfield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    /* 銝餉?摰孵嚗?????芋蝟???*/
+    #container {
+      position: relative;
+      z-index: 1;
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 20px;
+      background: rgba(10, 20, 40, 0.7);
+      border-radius: 16px;
+      box-shadow: 0 0 32px #00ffff44, 0 0 80px #a259ff22 inset;
+      backdrop-filter: blur(8px);
+    }
+    /* 餈?擐??? */
+    .home-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: linear-gradient(90deg, #00ffff 0%, #a259ff 100%);
+      color: #000;
+      font-weight: bold;
+      padding: 8px 16px;
+      border-radius: 8px;
+      box-shadow: 0 0 16px #00ffff;
+      text-decoration: none;
+      z-index: 2;
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-family: 'Orbitron', sans-serif;
+    }
+    .home-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 32px #00ffff;
+    }
+    /* 蝮賣??＊蝷?*/
+    #totalStars {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(10, 20, 40, 0.85);
+      padding: 8px 14px;
+      border-radius: 10px;
+      box-shadow: 0 0 12px #ffd700, 0 0 32px #00ffff;
+      border: 2px solid #00ffff;
+      color: #ffd700;
+      font-size: 1.2rem;
+      font-weight: bold;
+      z-index: 2;
+      font-family: 'Orbitron', sans-serif;
+    }
+    /* ??潮＊蝷?*/
+    #lives {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(10, 20, 40, 0.85);
+      padding: 8px 14px;
+      border-radius: 10px;
+      box-shadow: 0 0 12px #ffd700, 0 0 32px #00ffff;
+      border: 2px solid #00ffff;
+      color: #ffd700;
+      font-size: 1.2rem;
+      font-weight: bold;
+      z-index: 2;
+      font-family: 'Orbitron', sans-serif;
+    }
+    
+    /* ?單??批?? */
+    #audioControls {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1001;
+      display: flex;
+      gap: 10px;
+    }
+    
+    #toggleMusic {
+      background: rgba(10, 20, 40, 0.85);
+      border: 2px solid #00ffff;
+      color: #00ffff;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 16px #00ffff;
+    }
+    
+    #toggleMusic:hover {
+      background: rgba(0, 255, 255, 0.2);
+      transform: scale(1.1);
+      box-shadow: 0 0 24px #00ffff;
+    }
+    
+    #toggleMusic.playing {
+      background: rgba(0, 255, 255, 0.2);
+      border-color: #00ffff;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+
+    /* 璅? */
+    h1 {
+      margin-top: 60px;
+      font-size: 2rem;
+      letter-spacing: 1px;
+      color: #00ffff;
+      text-shadow: 0 0 12px #00ffff, 0 0 32px #a259ff;
+      z-index: 2;
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+    }
+    /* 憿憿舐內 */
+    #questionCount {
+      margin: 10px auto;
+      font-size: 1.2rem;
+      color: #a0a0ff;
+      text-align: center;
+      z-index: 2;
+      font-family: 'Orbitron', sans-serif;
+      text-shadow: 0 0 6px #00ffff;
+    }
+    /* ?桀?憿舐內 */
+    #wordDisplay {
+      margin: 20px auto;
+      font-size: 2.8rem;
+      font-weight: bold;
+      color: #ffd700;
+      text-shadow: 0 0 8px #ffd700;
+      animation: glow 2s ease-in-out infinite alternate;
+      z-index: 2;
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 8px #ffd700; }
+      to { text-shadow: 0 0 16px #ffd700, 0 0 32px #00ffff; }
+    }
+    /* 閮???*/
+    #timerDisplay {
+      font-size: 1.1rem;
+      color: #00ffff;
+      margin-bottom: 15px;
+      z-index: 2;
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+      text-shadow: 0 0 6px #00ffff;
+    }
+    #timerDisplay.danger { animation: flash 1s infinite; }
+    @keyframes flash { 0%,100% { color: #00ffff; } 50% { color: #ff4444; } }
+    /* 頛詨獢?*/
+    #answerInput {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.1rem;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 2px solid #00ffff;
+      width: 80%;
+      max-width: 400px;
+      background: rgba(10, 20, 40, 0.7);
+      color: #fff;
+      box-shadow: 0 0 16px #00ffff80;
+      text-align: center;
+      outline: none;
+      margin-bottom: 15px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #answerInput:focus {
+      border-color: #00ffff;
+      box-shadow: 0 0 32px #00ffff;
+    }
+    /* ??閮 */
+    #feedback {
+      height: 30px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin: 12px 0;
+      z-index: 2;
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+      color: #ffd700;
+      text-shadow: 0 0 6px #00ffff;
+    }
+    /* ????*/
+    .btn-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+      margin-bottom: 80px;
+      z-index: 2;
+    }
+    .btn-row button {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(90deg, #00ffff 0%, #a259ff 100%);
+      color: #000;
+      font-weight: bold;
+      box-shadow: 0 0 16px #00ffff, 0 0 24px #a259ff99;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-row button:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 32px #00ffff, 0 0 48px #a259ffcc;
+    }
+    #speakBtn { 
+      background: linear-gradient(90deg, #ffd700 0%, #ffaa00 100%);
+      color: #000;
+    }
+    /* 璅⊥?閬? - 蝢?? */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      align-items: flex-start;
+      justify-content: center;
+      overflow-y: auto;
+      padding: 20px;
+      backdrop-filter: blur(8px);
+      animation: modalFadeIn 0.3s ease-out;
+    }
+    
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    .modal-content {
+      background: linear-gradient(135deg, rgba(10, 20, 40, 0.98), rgba(20, 40, 80, 0.95));
+      padding: 35px;
+      border-radius: 20px;
+      color: #fff;
+      max-width: 600px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 
+        0 0 40px #00ffff88, 
+        0 0 80px #a259ff44 inset,
+        0 20px 40px rgba(0, 0, 0, 0.5);
+      font-family: 'Orbitron', sans-serif;
+      margin: 20px;
+      border: 3px solid #00ffff;
+      position: relative;
+      overflow-y: auto;
+      max-height: 80vh;
+      animation: modalSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+    
+    @keyframes modalSlideIn {
+      from { transform: translateY(-50px) scale(0.9); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    
+    .modal-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #00ffff, #a259ff, #ffd700, #00ffff);
+      animation: borderGlow 2s linear infinite;
+    }
+    
+    @keyframes borderGlow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+    
+    .modal-content h2 {
+      margin-bottom: 20px;
+      color: #00ffff;
+      text-shadow: 0 0 15px #00ffff, 0 0 35px #a259ff;
+      font-size: 1.8rem;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      letter-spacing: 1px;
+      position: relative;
+    }
+    
+    .modal-content h2::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #00ffff, #a259ff);
+      border-radius: 2px;
+    }
+    
+    .modal-content p {
+      margin: 12px 0;
+      font-size: 1rem;
+      font-family: 'Orbitron', sans-serif;
+      color: #a0a0ff;
+      line-height: 1.5;
+    }
+    
+    .modal-content ul {
+      list-style: none;
+      padding: 0;
+      max-height: 200px;
+      overflow-y: auto;
+      margin: 20px 0;
+      text-align: left;
+      font-size: 0.95rem;
+      font-family: 'Roboto Mono', monospace;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      padding: 15px;
+      border: 1px solid rgba(0, 255, 255, 0.2);
+    }
+    
+    .modal-content ul li { 
+      margin: 8px 0;
+      padding: 8px 12px;
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(162, 89, 255, 0.1));
+      border-radius: 8px;
+      border-left: 3px solid #00ffff;
+      transition: all 0.3s ease;
+    }
+    
+    .modal-content ul li:hover {
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(162, 89, 255, 0.2));
+      transform: translateX(5px);
+      box-shadow: 0 2px 8px rgba(0, 255, 255, 0.3);
+    }
+    
+    /* ??璁”?潛???*/
+    .modal-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .modal-content th {
+      background: linear-gradient(135deg, #00ffff22, #a259ff22);
+      color: #00ffff;
+      padding: 12px 8px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 2px solid #00ffff;
+    }
+    
+    .modal-content td {
+      padding: 10px 8px;
+      border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+      transition: background 0.3s ease;
+    }
+    
+    .modal-content tr:hover td {
+      background: rgba(0, 255, 255, 0.1);
+    }
+    
+    /* ??蝢? */
+    .modal-content button {
+      background: linear-gradient(135deg, #00ffff 0%, #a259ff 100%);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      color: #000;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+      font-family: 'Orbitron', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .modal-content button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 255, 255, 0.5);
+      background: linear-gradient(135deg, #00ffff 0%, #ffd700 100%);
+    }
+    
+    .modal-content button:active {
+      transform: translateY(0);
+    }
+    
+    /* 銝??詨璅?? */
+    .category-select {
+      background: linear-gradient(135deg, rgba(10, 20, 40, 0.9), rgba(20, 40, 80, 0.9));
+      border: 2px solid #00ffff;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Orbitron', sans-serif;
+      min-width: 200px;
+      outline: none;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300ffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+      padding-right: 40px;
+    }
+    
+    .category-select:hover {
+      border-color: #a259ff;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+      transform: translateY(-1px);
+    }
+    
+    .category-select:focus {
+      border-color: #ffd700;
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+      outline: none;
+    }
+    
+    .category-select option {
+      background: rgba(10, 20, 40, 0.95);
+      color: #fff;
+      padding: 8px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+    }
+    
+    .category-select option:hover {
+      background: rgba(0, 255, 255, 0.2);
+    }
+    
+    /* ??璁??亦???*/
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #00ffff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+    }
+    
+    .loading::after {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #00ffff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+      margin-left: 10px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
+    }
+    
+    /* ?芸?蝢拇遝??璅?? */
+    .modal-content::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .modal-content::-webkit-scrollbar-track {
+      background: rgba(0, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+    
+    .modal-content::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #00ffff, #a259ff);
+      border-radius: 4px;
+      border: 1px solid rgba(0, 255, 255, 0.3);
+    }
+    
+    .modal-content::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #00ffff, #ffd700);
+      box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+    }
+    
+    /* Firefox 皛曉?璇見撘?*/
+    .modal-content {
+      scrollbar-width: thin;
+      scrollbar-color: #00ffff rgba(0, 255, 255, 0.2);
+    }
+    
+    /* ??璁遝?捆?冽見撘?*/
+    .leaderboard-scroll-container::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .leaderboard-scroll-container::-webkit-scrollbar-track {
+      background: rgba(0, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+    
+    .leaderboard-scroll-container::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #00ffff, #a259ff);
+      border-radius: 4px;
+      border: 1px solid rgba(0, 255, 255, 0.3);
+    }
+    
+    .leaderboard-scroll-container::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #00ffff, #ffd700);
+      box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+    }
+    
+    .leaderboard-scroll-container {
+      scrollbar-width: thin;
+      scrollbar-color: #00ffff rgba(0, 255, 255, 0.2);
+    }
+    /* 蝧餌??∠?? */
+    .flip-card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px 18px;
+      justify-content: center;
+      margin: 32px auto 0 auto;
+      max-width: 600px;
+    }
+    .flip-card {
+      background: transparent;
+      width: 260px;
+      height: 160px;
+      perspective: 1000px;
+      cursor: pointer;
+      margin: 0 auto;
+    }
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.7s cubic-bezier(.4,2,.6,1);
+      transform-style: preserve-3d;
+    }
+    .flip-card.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-card-front, .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      font-family: 'Orbitron', sans-serif;
+      border-radius: 18px;
+      box-shadow: 0 0 24px #00ffff44, 0 0 48px #a259ff22 inset;
+      background: linear-gradient(135deg, #181818 60%, #00ffff22 100%);
+      color: #00ffff;
+      border: 2px solid #00ffff;
+      user-select: none;
+    }
+    .flip-card-back {
+      background: linear-gradient(135deg, #ffd700 60%, #a259ff22 100%);
+      color: #a259ff;
+      transform: rotateY(180deg);
+      font-size: 2.2rem;
+      font-weight: bold;
+      text-shadow: 0 0 12px #ffd700, 0 0 32px #a259ff;
+    }
+    .practice-next-btn {
+      display: block;
+      margin: 28px auto 0 auto;
+      font-size: 1.1rem;
+      padding: 10px 32px;
+      border-radius: 10px;
+      background: linear-gradient(90deg,#00ffff 0%,#a259ff 100%);
+      color: #000;
+      font-weight: bold;
+      box-shadow: 0 0 12px #00ffff;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .practice-next-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 32px #00ffff, 0 0 48px #a259ffcc;
+    }
+  </style>
+</head>
+<body>
+  <!-- ?單??批 -->
+  <div id="audioControls">
+    <button id="toggleMusic" title="??單?">
+      <span class="material-icons">music_note</span>
+    </button>
+
+  </div>
+
+  <!-- ??單??喲?? -->
+  <audio id="backgroundMusic" loop>
+    <source src="sound/???暸???嚗??單?嚗?mp3" type="audio/mpeg">
+  </audio>
+
+  <canvas id="starfield"></canvas>
+  <div id="container">
+    <a href="atlas.html" class="home-btn">??餈?擐?</a>
+    <div id="totalStars">蝮賣???<span id="totalStarCount">0</span> 潃?/div>
+    <div id="lives">?歹??歹??歹??歹??歹?</div>
+    <h1>?? ?漣?嚗?span id="categoryName"></span></h1>
+    <div id="questionCount">蝚?<span id="currentQuestion">0</span> 憿?/ 20 憿?/div>
+    <div id="wordDisplay">皞?銝?..</div>
+    <div id="timerDisplay">????嚗?span id="timeLeft">30</span> 蝘?/div>
+    <input type="text" id="answerInput" placeholder="隢撓?亥??.." autocomplete="off" />
+    <div id="feedback"></div>
+    <div class="btn-row">
+      <button onclick="checkAnswer()">?</button>
+      <button onclick="nextWord()">頝喲?</button>
+      <button id="speakBtn" onclick="speakCurrentWord()">?? ?潮</button>
+      <button onclick="restartGame()">?? ?</button>
+    </div>
+
+    <!-- 蝯??Ｘ -->
+    <div id="resultModal" class="modal">
+      <div class="modal-content">
+        <h2>?蝯?</h2>
+        <p>潃??祆活????<span id="sessionStars">0</span></p>
+        <p>??蝑?憿嚗?span id="sessionCorrect">0</span></p>
+        <p>??蝑憿嚗?span id="sessionWrong">0</span></p>
+        <button id="wrongBtn" onclick="showWrongModal()">?舫?銴?</button>
+        <button onclick="showLeaderboard()">?? ??璁?/button>
+        <button onclick="restartGame()">???</button>
+        <button onclick="goHome()">餈?擐?</button>
+      </div>
+    </div>
+    
+    <!-- ??璁??-->
+    <div id="leaderboardModal" class="modal">
+      <div class="modal-content">
+        <h2>?? ?漣???璁?/h2>
+        
+        <!-- ??豢???-->
+        <div style="margin-bottom: 20px; text-align: center;">
+          <div style="margin-bottom: 10px; color: #00ffff; font-weight: bold; font-size: 1rem;">
+            ?豢??嚗?          </div>
+          <div style="position: relative; display: inline-block; min-width: 200px;">
+            <select id="categorySelect" class="category-select" onchange="selectCategory(this.value)">
+              <option value="all">?? ?券?</option>
+              <option value="aries">???賜?摨?/option>
+              <option value="taurus">????摨?/option>
+              <option value="gemini">????摨?/option>
+              <option value="cancer">??撌刻摨?/option>
+              <option value="leo">????摨?/option>
+              <option value="virgo">???戊摨?/option>
+              <option value="libra">??憭拍坐摨?/option>
+              <option value="scorpio">??憭抵?摨?/option>
+              <option value="sagittarius">??撠?摨?/option>
+              <option value="capricorn">???拍劑摨?/option>
+              <option value="aquarius">??瘞渡摨?/option>
+              <option value="pisces">????摨?/option>
+            </select>
+          </div>
+        </div>
+        
+        <div id="leaderboardContent">
+          <div class="loading">甇?頛??璁?..</div>
+        </div>
+        <button onclick="closeLeaderboard()">??</button>
+      </div>
+    </div>
+    
+    <!-- ?舫?銴??Ｘ -->
+    <div id="wrongModal" class="modal">
+      <div class="modal-content">
+        <h2>?舫?銴?</h2>
+        <ul id="wrongItems"></ul>
+        <button onclick="closeWrongModal()">??</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 憭摮澈瑼? -->
+  <script src="js/userData.js"></script>
+  <script src="js/sound.js"></script>
+  <script src="js/starRewardSystem.js"></script>
+  <script src="js/vocabData.js"></script>
+  <!-- ?啣?嚗??亙????-->
+  <script src="js/cards.js"></script>
+  <script src="js/achievementSystem.js"></script>
+  <script>
+    /***** ??單????蝟餌絞 *****/
+    function initBackgroundMusic() {
+      if (typeof SoundSystem !== 'undefined') {
+        SoundSystem.bgm.initGlobalAudio();
+        SoundSystem.bgm.updateAllControls();
+      }
+    }
+
+    function playBackgroundMusic() {
+      if (typeof SoundSystem !== 'undefined') {
+        SoundSystem.bgm.play();
+      }
+    }
+
+    function pauseBackgroundMusic() {
+      if (typeof SoundSystem !== 'undefined') {
+        SoundSystem.bgm.pause();
+      }
+    }
+
+    function toggleBackgroundMusic() {
+      if (typeof SoundSystem !== 'undefined') {
+        SoundSystem.bgm.toggle();
+      }
+    }
+    
+    // === ?征??? ===
+    const starCanvas = document.getElementById('starfield');
+    const ctx = starCanvas.getContext('2d');
+    let width = window.innerWidth, height = window.innerHeight;
+    starCanvas.width = width;
+    starCanvas.height = height;
+    const starsBg = [];
+    function initStars() {
+      starsBg.length = 0;
+      for (let i = 0; i < 100; i++) {
+        starsBg.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: Math.random() * 1.2 + 0.3,
+          alpha: Math.random(),
+          twinkle: Math.random() * 5
+        });
+      }
+    }
+    function drawStars() {
+      ctx.clearRect(0, 0, width, height);
+      starsBg.forEach(s => {
+        s.twinkle += 0.02;
+        s.alpha = Math.abs(Math.sin(s.twinkle));
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(drawStars);
+    }
+    window.addEventListener('resize', () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      starCanvas.width = width;
+      starCanvas.height = height;
+      initStars();
+    });
+    initStars();
+    drawStars();
+
+    // === TTS voices 頛 ===
+    // 雿輻?啁??潮蝟餌絞嚗宏?方????唾??仿?頛?
+    function speak(text) {
+      if (!text) return;
+      isSpeaking = true;
+      document.getElementById('answerInput').disabled = true;
+      SoundSystem.speech.speakWord(text, function() {
+        isSpeaking = false;
+        document.getElementById('answerInput').disabled = false;
+        document.getElementById('answerInput').focus();
+      });
+    }
+    
+    function speakCurrentWord() {
+      if (!current) return;
+      isSpeaking = true;
+      document.getElementById('answerInput').disabled = true;
+      SoundSystem.speech.speakWord(current.en, function() {
+        isSpeaking = false;
+        document.getElementById('answerInput').disabled = false;
+        document.getElementById('answerInput').focus();
+      });
+    }
+
+    // === 雿輻憭頛??vocabData ===
+    // ?身 js/vocabData.js ??蝢拙????vocabData
+
+    // ====== ?芷蝺渡?璅∪????瘚? ======
+    // ?霈
+    const params = new URLSearchParams(location.search);
+    const categoryKey = params.get('category') || 'aries';
+    document.getElementById('categoryName').textContent = categoryKey;
+    let words = vocabData[categoryKey] || [];
+    words = words.slice(0, 20); // 瘥??憭?20 憿?
+    let current = null;
+    let used = [];
+    let wrongList = [];
+    let correctCount = 0;
+    let timer = null;
+    let timeLeft = 30;
+    let lives = 5;
+    
+    // ===== ?啣?嚗??脩??蕭頩?=====
+    let gameStats = {
+      correctCount: 0,
+      totalAnswered: 0,
+      consecutiveCorrect: 0, // ???蝑?甈⊥
+      fastestAnswer: Infinity, // ?敹怎?憿???      slowestAnswer: 0, // ??Ｙ?憿???      totalTimeUsed: 0, // 蝮賜??      perfectAnswers: 0, // 摰?蝑?甈⊥嚗?5蝘蝑?嚗?      startTime: Date.now()
+    };
+    
+    // ===== ?啣?嚗?憿?????=====
+    let isProcessingAnswer = false; // ?臬甇???蝑?
+    // ===== ?啣?嚗?喲?摰???=====
+    let isSpeaking = false; // ?臬甇??潮
+
+    // 敺?localStorage ?蜇??嚗?∪???0
+    let totalStarCount = parseInt(localStorage.getItem('totalStars') || '0', 10);
+    function updateTotal() {
+      // 雿輻???蝟餌絞?脣???啁????賊?
+      if (typeof LinkageSystem !== 'undefined') {
+        totalStarCount = LinkageSystem.stars.get();
+      } else if (typeof StarRewardSystem !== 'undefined') {
+        // 憒?雿輻 StarRewardSystem嚗?摰?????        totalStarCount = StarRewardSystem.getTotalStars ? StarRewardSystem.getTotalStars() : totalStarCount;
+      }
+      document.getElementById('totalStarCount').textContent = totalStarCount;
+    }
+
+    function updateLives() {
+      const livesDiv = document.getElementById('lives');
+      livesDiv.innerHTML = '?歹?'.repeat(lives) + '??'.repeat(5 - lives);
+    }
+
+    function updateQuestionCount() {
+      document.getElementById('currentQuestion').textContent = used.length;
+    }
+    
+    // ===== ?啣?嚗????菔?蝞??=====
+    function calculateStarReward(isCorrect, answerTime, consecutiveCount, wordLength) {
+      if (!isCorrect) return 0;
+      
+      let baseReward = 1; // ?箇??
+      let comboReward = 0; // ????
+      
+      // ????嚗??蝑?頞??頞?
+      if (consecutiveCount >= 5) {
+        comboReward = 2; // 5??? +2??      } else if (consecutiveCount >= 3) {
+        comboReward = 1; // 3??? +1??      } else if (consecutiveCount >= 2) {
+        comboReward = 1; // 2??? +1??      }
+      
+      // 閮?蝮賜??蛛??箇?1??+ ????
+      let totalReward = baseReward + comboReward;
+      
+      return totalReward;
+    }
+    
+    // ===== ?啣?嚗＊蝷箇??萄???=====
+    function showRewardAnimation(starsEarned, reason = '') {
+      const rewardDiv = document.createElement('div');
+      rewardDiv.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.95), rgba(255, 170, 0, 0.95));
+        color: #000;
+        padding: 20px 30px;
+        border-radius: 15px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        z-index: 1000;
+        box-shadow: 0 0 30px #ffd700;
+        animation: rewardPop 1.2s ease-out forwards;
+        font-family: 'Orbitron', sans-serif;
+        text-align: center;
+        min-width: 300px;
+      `;
+      
+      let reasonText = '';
+      if (reason) {
+        reasonText = `<div style="font-size: 1rem; margin-top: 8px; color: #666;">${reason}</div>`;
+      }
+      
+      rewardDiv.innerHTML = `
+        <div style="font-size: 3rem; margin-bottom: 10px;">潃?/div>
+        <div style="font-size: 1.8rem; margin-bottom: 5px;">+${starsEarned} ??</div>
+        ${reasonText}
+      `;
+      
+      // 瘛餃??璅??
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes rewardPop {
+          0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+          50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+          100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(rewardDiv);
+      
+      // ?剜???單?
+      if (typeof StarRewardSystem !== 'undefined') {
+        StarRewardSystem.playStarSound();
+      }
+      
+      // 3.5蝘?蝘駁
+      setTimeout(() => {
+        if (document.body.contains(rewardDiv)) {
+          document.body.removeChild(rewardDiv);
+        }
+        if (document.head.contains(style)) {
+          document.head.removeChild(style);
+        }
+      }, 3500);
+    }
+    
+    // ===== ?啣?嚗＊蝷粹??? =====
+    function showComboNotification(comboCount) {
+      if (comboCount < 2) return;
+      
+      const comboDiv = document.createElement('div');
+      comboDiv.style.cssText = `
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, rgba(255, 69, 0, 0.9), rgba(255, 140, 0, 0.9));
+        color: #fff;
+        padding: 15px 25px;
+        border-radius: 25px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        z-index: 1000;
+        box-shadow: 0 0 20px #ff4500;
+        animation: comboSlide 0.8s ease-out forwards;
+        font-family: 'Orbitron', sans-serif;
+      `;
+      
+      let comboText = '';
+      let comboIcon = '';
+      
+      if (comboCount >= 5) {
+        comboText = `${comboCount} ???嚗???⊥???嚗;
+        comboIcon = '?';
+      } else if (comboCount >= 3) {
+        comboText = `${comboCount} ???嚗 頞撥???嚗;
+        comboIcon = '??;
+      } else {
+        comboText = `${comboCount} ???嚗 ?????嚗;
+        comboIcon = '??;
+      }
+      
+      comboDiv.innerHTML = `${comboIcon} ${comboText} ${comboIcon}`;
+      
+      // 瘛餃??璅??
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes comboSlide {
+          0% { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+          50% { transform: translateX(-50%) translateY(0); opacity: 1; }
+          100% { transform: translateX(-50%) translateY(0); opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(comboDiv);
+      
+      // 4蝘?蝘駁
+      setTimeout(() => {
+        if (document.body.contains(comboDiv)) {
+          document.body.removeChild(comboDiv);
+        }
+        if (document.head.contains(style)) {
+          document.head.removeChild(style);
+        }
+      }, 4000);
+    }
+
+    function showResultPanel() {
+      // ?祆活??撌脣checkAnswer蝝臬?嚗??閬?甈∟身蝵?      document.getElementById('sessionStars').textContent = correctCount * 2;
+      document.getElementById('sessionCorrect').textContent = correctCount;
+      document.getElementById('sessionWrong').textContent = wrongList.length;
+      document.getElementById('wrongBtn').style.display = wrongList.length ? 'inline-block' : 'none';
+      document.getElementById('resultModal').style.display = 'flex';
+      disablePlay();
+      
+      // ?芸瘝?雿輻憭??蝟餌絞??啁蜇??憿舐內
+      if (typeof StarRewardSystem === 'undefined' && typeof LinkageSystem === 'undefined') {
+        updateTotal();
+      }
+
+      // 閰?????      const score = correctCount * 2;
+      let rating = '';
+      if (correctCount === 20) rating = '?? 皛踹?擃?嚗?;
+      else if (correctCount >= 16) rating = '?? 敺?嚗匱蝥?瘝對?';
+      else if (correctCount >= 10) rating = '?? ???荔????';
+      else if (correctCount >= 5) rating = '? 憭?蝺渡??憟踝?';
+      else rating = '?? 撱箄降憭?蝧摮?';
+
+      // ====== ?啣?嚗??斗?摮?======
+      if (correctCount === 20 || correctCount >= 16) {
+        let passed = JSON.parse(localStorage.getItem('passed_atlas')||'[]');
+        if (!passed.includes(categoryKey)) {
+          passed.push(categoryKey);
+          localStorage.setItem('passed_atlas', JSON.stringify(passed));
+        }
+      }
+
+      // ??銝活?
+      let lastScore = parseInt(localStorage.getItem('lastScore') || '0', 10);
+      let compare = '';
+      if (lastScore === 0) compare = '嚗?甈⊿??抬?';
+      else if (score > lastScore) compare = '漎? ?脫郊嚗?;
+      else if (score < lastScore) compare = '漎? ?甇?;
+      else compare = '?∴? ?像';
+      localStorage.setItem('lastScore', score);
+
+      // 憿舐內??憿?銵?      let wrongListHtml = '';
+      if (wrongList.length > 0) {
+        wrongListHtml = '<ul style="max-height:120px;overflow-y:auto;text-align:left;font-size:1rem;margin:10px 0 0 0;padding:0 10px 0 20px;">';
+        wrongList.forEach(item => {
+          wrongListHtml += `<li>??<b>${item.zh}</b> ??<span style='color:#ffd700;'>${item.en}</span></li>`;
+        });
+        wrongListHtml += '</ul>';
+      } else {
+        wrongListHtml = '<div style="color:#0f0;margin-top:10px;">?祆活?⊿憿?</div>';
+      }
+      // ??啁?蝞?選?sessionWrong銝嚗?      const resultModal = document.getElementById('resultModal').querySelector('.modal-content');
+      let wrongListDiv = document.getElementById('wrongListAll');
+      if (!wrongListDiv) {
+        wrongListDiv = document.createElement('div');
+        wrongListDiv.id = 'wrongListAll';
+        resultModal.appendChild(wrongListDiv);
+      }
+      wrongListDiv.innerHTML = wrongListHtml;
+
+      // ?????嫘脫郊
+      let scoreDiv = document.getElementById('scoreInfo');
+      if (!scoreDiv) {
+        scoreDiv = document.createElement('div');
+        scoreDiv.id = 'scoreInfo';
+        resultModal.insertBefore(scoreDiv, wrongListDiv);
+      }
+      scoreDiv.innerHTML = `<div style='margin:10px 0 0 0;font-size:1.2rem;'>?祆活?嚗?b style='color:#ffd700;'>${score}</b> ??br>${rating} <span style='font-size:1rem;color:#00ffff;'>${compare}</span></div>`;
+
+      // ====== ?啣?嚗?撠梁頂蝯梢?? ======
+      updateQuizAchievements();
+      
+      // ====== ?啣?嚗??鈭文??詨??璁?======
+      submitScoreToLeaderboard();
+    }
+
+    // ====== ?啣?嚗?撠梁頂蝯勗??=====
+    function updateQuizAchievements() {
+      // ?湔?漣?摰?甈⊥
+      const quizGames = parseInt(localStorage.getItem('quizGamesCompleted') || '0');
+      localStorage.setItem('quizGamesCompleted', quizGames + 1);
+      
+      // 瑼Ｘ銝行?啁??撠?      checkAndUpdateQuizAchievements();
+    }
+    
+    // ===== ?啣?嚗oogle Sheets ??璁頂蝯?=====
+    const GOOGLE_SHEETS_API = "https://script.google.com/macros/s/AKfycbyhcoJVk9MVFWqsyee2PeE-vCo3u2p6oyL8HUCaMk0ZeNL0Td9mOBZnMlHNb6mIO5eCHQ/exec";
+    const LEADERBOARD_SHEET_ID = "11kMAXtBxLICMUYysPLP1noZzTsjbfXmbRcZSKK8_6cw";
+    
+    // ?嗅??豢?????    let currentCategory = 'all';
+    
+    // 憿舐內??璁?    function showLeaderboard() {
+      document.getElementById('leaderboardModal').style.display = 'flex';
+      // ?蔭?箏?券???      currentCategory = 'all';
+      updateCategorySelect();
+      loadLeaderboard();
+    }
+    
+    // ????璁?    function closeLeaderboard() {
+      document.getElementById('leaderboardModal').style.display = 'none';
+    }
+    
+    // ?豢??
+    function selectCategory(category) {
+      currentCategory = category;
+      updateCategorySelect();
+      loadLeaderboard();
+    }
+    
+    // ?湔銝??詨???    function updateCategorySelect() {
+      const select = document.getElementById('categorySelect');
+      if (select) {
+        select.value = currentCategory;
+      }
+    }
+    
+    // 頛??璁??    async function loadLeaderboard() {
+      const content = document.getElementById('leaderboardContent');
+      content.innerHTML = '<div class="loading">甇?頛??璁?..</div>';
+      
+      try {
+        // ?寞?1嚗?閰血? Google Apps Script API ?脣??豢?
+        const formData = new URLSearchParams();
+        formData.append('action', 'getQuizLeaderboard');
+        
+        const response = await fetch(GOOGLE_SHEETS_API, {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: formData.toString()
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.leaderboard) {
+            // ?寞??豢????⊿?瞈暹??            let filteredData = data.leaderboard;
+            if (currentCategory !== 'all') {
+              filteredData = data.leaderboard.filter(item => item.category === currentCategory);
+            }
+            displayLeaderboard(filteredData);
+            return;
+          }
+        }
+        
+        // ?寞?2嚗???API 憭望?嚗＊蝷箸葫閰行??        console.log('API 隤輻憭望?嚗＊蝷箸葫閰行??);
+        const testData = [
+          // ?賜?摨扳??          { rank: 1, playerName: '?賜??拙振1', score: 40, correctCount: 20, category: 'aries', date: new Date(Date.now() - 5 * 60 * 1000).toISOString(), totalTime: 450 },
+          { rank: 2, playerName: '?賜??拙振2', score: 38, correctCount: 19, category: 'aries', date: new Date(Date.now() - 15 * 60 * 1000).toISOString(), totalTime: 480 },
+          { rank: 3, playerName: '?賜??拙振3', score: 36, correctCount: 18, category: 'aries', date: new Date(Date.now() - 25 * 60 * 1000).toISOString(), totalTime: 520 },
+          { rank: 4, playerName: '?賜??拙振4', score: 34, correctCount: 17, category: 'aries', date: new Date(Date.now() - 35 * 60 * 1000).toISOString(), totalTime: 550 },
+          { rank: 5, playerName: '?賜??拙振5', score: 32, correctCount: 16, category: 'aries', date: new Date(Date.now() - 45 * 60 * 1000).toISOString(), totalTime: 580 },
+          
+          // ??摨扳??          { rank: 6, playerName: '???拙振1', score: 42, correctCount: 21, category: 'taurus', date: new Date(Date.now() - 10 * 60 * 1000).toISOString(), totalTime: 420 },
+          { rank: 7, playerName: '???拙振2', score: 40, correctCount: 20, category: 'taurus', date: new Date(Date.now() - 20 * 60 * 1000).toISOString(), totalTime: 450 },
+          { rank: 8, playerName: '???拙振3', score: 38, correctCount: 19, category: 'taurus', date: new Date(Date.now() - 30 * 60 * 1000).toISOString(), totalTime: 480 },
+          { rank: 9, playerName: '???拙振4', score: 36, correctCount: 18, category: 'taurus', date: new Date(Date.now() - 40 * 60 * 1000).toISOString(), totalTime: 510 },
+          { rank: 10, playerName: '???拙振5', score: 34, correctCount: 17, category: 'taurus', date: new Date(Date.now() - 50 * 60 * 1000).toISOString(), totalTime: 540 },
+          
+          // ??摨扳??          { rank: 11, playerName: '???拙振1', score: 44, correctCount: 22, category: 'gemini', date: new Date(Date.now() - 8 * 60 * 1000).toISOString(), totalTime: 380 },
+          { rank: 12, playerName: '???拙振2', score: 42, correctCount: 21, category: 'gemini', date: new Date(Date.now() - 18 * 60 * 1000).toISOString(), totalTime: 410 },
+          { rank: 13, playerName: '???拙振3', score: 40, correctCount: 20, category: 'gemini', date: new Date(Date.now() - 28 * 60 * 1000).toISOString(), totalTime: 440 },
+          { rank: 14, playerName: '???拙振4', score: 38, correctCount: 19, category: 'gemini', date: new Date(Date.now() - 38 * 60 * 1000).toISOString(), totalTime: 470 },
+          { rank: 15, playerName: '???拙振5', score: 36, correctCount: 18, category: 'gemini', date: new Date(Date.now() - 48 * 60 * 1000).toISOString(), totalTime: 500 },
+          
+          // 撌刻摨扳??          { rank: 16, playerName: '撌刻?拙振1', score: 40, correctCount: 20, category: 'cancer', date: new Date(Date.now() - 12 * 60 * 1000).toISOString(), totalTime: 460 },
+          { rank: 17, playerName: '撌刻?拙振2', score: 38, correctCount: 19, category: 'cancer', date: new Date(Date.now() - 22 * 60 * 1000).toISOString(), totalTime: 490 },
+          { rank: 18, playerName: '撌刻?拙振3', score: 36, correctCount: 18, category: 'cancer', date: new Date(Date.now() - 32 * 60 * 1000).toISOString(), totalTime: 520 },
+          
+          // ??摨扳??          { rank: 19, playerName: '???拙振1', score: 46, correctCount: 23, category: 'leo', date: new Date(Date.now() - 6 * 60 * 1000).toISOString(), totalTime: 350 },
+          { rank: 20, playerName: '???拙振2', score: 44, correctCount: 22, category: 'leo', date: new Date(Date.now() - 16 * 60 * 1000).toISOString(), totalTime: 380 },
+          { rank: 21, playerName: '???拙振3', score: 42, correctCount: 21, category: 'leo', date: new Date(Date.now() - 26 * 60 * 1000).toISOString(), totalTime: 410 },
+          { rank: 22, playerName: '???拙振4', score: 40, correctCount: 20, category: 'leo', date: new Date(Date.now() - 36 * 60 * 1000).toISOString(), totalTime: 440 },
+          { rank: 23, playerName: '???拙振5', score: 38, correctCount: 19, category: 'leo', date: new Date(Date.now() - 46 * 60 * 1000).toISOString(), totalTime: 470 },
+          
+          // ?戊摨扳??          { rank: 24, playerName: '?戊?拙振1', score: 42, correctCount: 21, category: 'virgo', date: new Date(Date.now() - 9 * 60 * 1000).toISOString(), totalTime: 430 },
+          { rank: 25, playerName: '?戊?拙振2', score: 40, correctCount: 20, category: 'virgo', date: new Date(Date.now() - 19 * 60 * 1000).toISOString(), totalTime: 460 },
+          { rank: 26, playerName: '?戊?拙振3', score: 38, correctCount: 19, category: 'virgo', date: new Date(Date.now() - 29 * 60 * 1000).toISOString(), totalTime: 490 },
+          
+          // 憭拍坐摨扳??          { rank: 27, playerName: '憭拍坐?拙振1', score: 40, correctCount: 20, category: 'libra', date: new Date(Date.now() - 11 * 60 * 1000).toISOString(), totalTime: 470 },
+          { rank: 28, playerName: '憭拍坐?拙振2', score: 38, correctCount: 19, category: 'libra', date: new Date(Date.now() - 21 * 60 * 1000).toISOString(), totalTime: 500 },
+          { rank: 29, playerName: '憭拍坐?拙振3', score: 36, correctCount: 18, category: 'libra', date: new Date(Date.now() - 31 * 60 * 1000).toISOString(), totalTime: 530 },
+          
+          // 憭抵?摨扳??          { rank: 30, playerName: '憭抵??拙振1', score: 44, correctCount: 22, category: 'scorpio', date: new Date(Date.now() - 7 * 60 * 1000).toISOString(), totalTime: 390 },
+          { rank: 31, playerName: '憭抵??拙振2', score: 42, correctCount: 21, category: 'scorpio', date: new Date(Date.now() - 17 * 60 * 1000).toISOString(), totalTime: 420 },
+          { rank: 32, playerName: '憭抵??拙振3', score: 40, correctCount: 20, category: 'scorpio', date: new Date(Date.now() - 27 * 60 * 1000).toISOString(), totalTime: 450 },
+          
+          // 撠?摨扳??          { rank: 33, playerName: '撠??拙振1', score: 46, correctCount: 23, category: 'sagittarius', date: new Date(Date.now() - 4 * 60 * 1000).toISOString(), totalTime: 360 },
+          { rank: 34, playerName: '撠??拙振2', score: 44, correctCount: 22, category: 'sagittarius', date: new Date(Date.now() - 14 * 60 * 1000).toISOString(), totalTime: 390 },
+          { rank: 35, playerName: '撠??拙振3', score: 42, correctCount: 21, category: 'sagittarius', date: new Date(Date.now() - 24 * 60 * 1000).toISOString(), totalTime: 420 },
+          
+          // ?拍劑摨扳??          { rank: 36, playerName: '?拍劑?拙振1', score: 42, correctCount: 21, category: 'capricorn', date: new Date(Date.now() - 13 * 60 * 1000).toISOString(), totalTime: 440 },
+          { rank: 37, playerName: '?拍劑?拙振2', score: 40, correctCount: 20, category: 'capricorn', date: new Date(Date.now() - 23 * 60 * 1000).toISOString(), totalTime: 470 },
+          { rank: 38, playerName: '?拍劑?拙振3', score: 38, correctCount: 19, category: 'capricorn', date: new Date(Date.now() - 33 * 60 * 1000).toISOString(), totalTime: 500 },
+          
+          // 瘞渡摨扳??          { rank: 39, playerName: '瘞渡?拙振1', score: 44, correctCount: 22, category: 'aquarius', date: new Date(Date.now() - 3 * 60 * 1000).toISOString(), totalTime: 370 },
+          { rank: 40, playerName: '瘞渡?拙振2', score: 42, correctCount: 21, category: 'aquarius', date: new Date(Date.now() - 13 * 60 * 1000).toISOString(), totalTime: 400 },
+          { rank: 41, playerName: '瘞渡?拙振3', score: 40, correctCount: 20, category: 'aquarius', date: new Date(Date.now() - 23 * 60 * 1000).toISOString(), totalTime: 430 },
+          
+          // ??摨扳??          { rank: 42, playerName: '???拙振1', score: 40, correctCount: 20, category: 'pisces', date: new Date(Date.now() - 14 * 60 * 1000).toISOString(), totalTime: 480 },
+          { rank: 43, playerName: '???拙振2', score: 38, correctCount: 19, category: 'pisces', date: new Date(Date.now() - 24 * 60 * 1000).toISOString(), totalTime: 510 },
+          { rank: 44, playerName: '???拙振3', score: 36, correctCount: 18, category: 'pisces', date: new Date(Date.now() - 34 * 60 * 1000).toISOString(), totalTime: 540 }
+        ];
+        
+        // ?寞??豢????⊿?瞈暹葫閰行??        let filteredTestData = testData;
+        if (currentCategory !== 'all') {
+          filteredTestData = testData.filter(item => item.category === currentCategory);
+        }
+        displayLeaderboard(filteredTestData);
+        
+      } catch (error) {
+        console.error('頛??璁仃??', error);
+        content.innerHTML = `
+          <div style="color: #ff6b6b; text-align: center; padding: 30px; background: rgba(255, 107, 107, 0.1); border-radius: 15px; border: 2px solid #ff6b6b;">
+            <div style="font-size: 3rem; margin-bottom: 15px; animation: pulse 2s infinite;">??</div>
+            <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 10px;">頛??璁仃??/div>
+            <div style="font-size: 0.9rem; margin-top: 15px; color: #ff9999; background: rgba(0, 0, 0, 0.3); padding: 10px; border-radius: 8px;">
+              <strong>?航炊嚗?/strong>${error.message}
+            </div>
+            <div style="font-size: 0.9rem; margin-top: 10px; color: #ccc;">
+              隢炎??Google Apps Script 閮剔蔭
+            </div>
+          </div>
+        `;
+      }
+    }
+    
+    // 憿舐內??璁?    function displayLeaderboard(data) {
+      const content = document.getElementById('leaderboardContent');
+      
+      // ?脣???迂
+      const categoryNames = {
+        'all': '?券?',
+        'aries': '?賜?摨?,
+        'taurus': '??摨?,
+        'gemini': '??摨?,
+        'cancer': '撌刻摨?,
+        'leo': '??摨?,
+        'virgo': '?戊摨?,
+        'libra': '憭拍坐摨?,
+        'scorpio': '憭抵?摨?,
+        'sagittarius': '撠?摨?,
+        'capricorn': '?拍劑摨?,
+        'aquarius': '瘞渡摨?,
+        'pisces': '??摨?
+      };
+      
+      const categoryName = categoryNames[currentCategory] || '?芰?';
+      
+      if (data.length === 0) {
+        content.innerHTML = `
+          <div style="text-align: center; padding: 30px; color: #666; background: rgba(0, 255, 255, 0.1); border-radius: 15px; border: 2px solid rgba(0, 255, 255, 0.3);">
+            <div style="font-size: 3rem; margin-bottom: 15px; animation: bounce 2s infinite;">??</div>
+            <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; color: #00ffff;">
+              ${categoryName} ?桀?????銵??豢?
+            </div>
+            <div style="font-size: 1rem; margin-top: 15px; color: #a0a0ff;">
+              ? ?蝚砌???璁??拙振?改?
+            </div>
+          </div>
+        `;
+        return;
+      }
+      
+      let html = `
+        <div style="margin-bottom: 15px; text-align: center;">
+          <div style="color: #00ffff; font-size: 1.1rem; font-weight: bold; margin-bottom: 5px;">
+            ?? ${categoryName} ??璁?          </div>
+          <div style="color: #a0a0ff; font-size: 0.9rem;">
+            ??${data.length} 璇???          </div>
+        </div>
+        <div class="leaderboard-scroll-container" style="max-height: 350px; overflow-y: auto; margin-bottom: 20px; border-radius: 12px; background: rgba(0, 0, 0, 0.2); padding: 10px;">
+          <table style="width: 100%; border-collapse: collapse; font-family: 'Orbitron', sans-serif;">
+            <thead>
+              <tr>
+                <th style="padding: 12px 8px; text-align: center; color: #00ffff; border-bottom: 2px solid #00ffff; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">??</th>
+                <th style="padding: 12px 8px; text-align: left; color: #00ffff; border-bottom: 2px solid #00ffff; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">?拙振</th>
+                <th style="padding: 12px 8px; text-align: center; color: #00ffff; border-bottom: 2px solid #00ffff; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">?</th>
+                <th style="padding: 12px 8px; text-align: center; color: #00ffff; border-bottom: 2px solid #00ffff; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">蝑?</th>
+                <th style="padding: 12px 8px; text-align: center; color: #00ffff; border-bottom: 2px solid #00ffff; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">撟喳???</th>
+                <th style="padding: 12px 8px; text-align: center; color: #00ffff; border-bottom: 2px solid #00ffff; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">蝮賣???/th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+      
+      data.slice(0, 20).forEach((item, index) => {
+        const isTop3 = index < 3;
+        const rankIcon = index === 0 ? '??' : index === 1 ? '??' : index === 2 ? '??' : `${item.rank}`;
+        const rowStyle = isTop3 ? 
+          `background: linear-gradient(90deg, ${index === 0 ? '#ffd70022' : index === 1 ? '#c0c0c022' : '#cd7f3222'}, transparent);` : '';
+        
+        // ?脣??漣憿舐內?迂
+        const categoryDisplayName = categoryNames[item.category] || item.category;
+        
+        // ?澆?????憿舐內
+        const formatTime = (seconds) => {
+          if (!seconds || seconds === 0) return '-';
+          const minutes = Math.floor(seconds / 60);
+          const remainingSeconds = seconds % 60;
+          if (minutes > 0) {
+            return `${minutes}??{remainingSeconds}蝘;
+          } else {
+            return `${remainingSeconds}蝘;
+          }
+        };
+        
+        // ?澆????脫??＊蝷綽?蝮賡??脫???
+        const formatGameTime = (totalTimeSeconds) => {
+          if (!totalTimeSeconds || totalTimeSeconds === 0) return '-';
+          const minutes = Math.floor(totalTimeSeconds / 60);
+          const remainingSeconds = totalTimeSeconds % 60;
+          if (minutes > 0) {
+            return `${minutes}??{remainingSeconds}蝘;
+          } else {
+            return `${remainingSeconds}蝘;
+          }
+        };
+        
+        html += `
+          <tr style="${rowStyle}; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(0, 255, 255, 0.1)'" onmouseout="this.style.background='${rowStyle}'">
+            <td style="padding: 10px 8px; text-align: center; font-weight: bold; color: ${isTop3 ? '#ffd700' : '#fff'}; font-size: 1.1rem;">
+              ${rankIcon}
+            </td>
+            <td style="padding: 10px 8px; text-align: left; color: #fff; font-weight: 500;">
+              ${item.playerName}
+            </td>
+            <td style="padding: 10px 8px; text-align: center; color: #ffd700; font-weight: bold; font-size: 1.1rem;">
+              ${item.score}
+            </td>
+            <td style="padding: 10px 8px; text-align: center; color: #0f0; font-weight: 500;">
+              ${item.correctCount}/20
+            </td>
+            <td style="padding: 10px 8px; text-align: center; color: #ff6b6b; font-weight: 500; font-size: 0.9rem;">
+              ${formatTime(item.totalTime && item.correctCount ? Math.round(item.totalTime / item.correctCount) : 0)}
+            </td>
+            <td style="padding: 10px 8px; text-align: center; color: #a0a0ff; font-size: 0.9rem; font-style: italic;">
+              ${formatGameTime(item.totalTime)}
+            </td>
+          </tr>
+        `;
+      });
+      
+      html += `
+            </tbody>
+          </table>
+        </div>
+        <div style="text-align: center; font-size: 0.9rem; color: #666; margin-top: 15px; padding: 10px; background: rgba(0, 0, 0, 0.2); border-radius: 8px;">
+          <span style="color: #00ffff;">??</span> 憿舐內??20 ?摰?        </div>
+      `;
+      
+      content.innerHTML = html;
+    }
+    
+    // ?漱??唳?銵?
+    async function submitScoreToLeaderboard() {
+      const playerName = localStorage.getItem('playerName') || '?踹??拙振';
+      const score = correctCount * 2;
+      const category = categoryKey;
+      const date = new Date().toLocaleDateString('zh-TW');
+      const totalTime = gameStats.totalTimeUsed; // ?脣?蝮質???
+      
+      try {
+        const formData = new URLSearchParams();
+        formData.append('action', 'addQuizScore');
+        formData.append('playerName', playerName);
+        formData.append('score', score.toString());
+        formData.append('correctCount', correctCount.toString());
+        formData.append('category', category);
+        formData.append('date', date);
+        formData.append('totalTime', totalTime.toString()); // 瘛餃?????
+        
+        const response = await fetch(GOOGLE_SHEETS_API, {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: formData.toString()
+        });
+        
+        if (response.ok) {
+          console.log('?撌脫???鈭文??璁?);
+        } else {
+          console.error('?漱?憭望?');
+        }
+      } catch (error) {
+        console.error('?漱???隤?', error);
+      }
+    }
+    
+    function checkAndUpdateQuizAchievements() {
+      // 瑼Ｘ?臬??停??
+      const achievements = [
+        { id: 'speed_learner', name: '敹恍飛蝧?, requirement: 10 },
+        { id: 'accuracy_master', name: '皞Ⅱ憭批葦', requirement: 20 },
+        { id: 'combo_king', name: '???銋?', requirement: 15 }
+      ];
+      
+      const claimed = JSON.parse(localStorage.getItem('claimedAchievements') || '[]');
+      
+      achievements.forEach(ach => {
+        if (claimed.includes(ach.id)) return; // 撌脩?????
+        
+        // 閮??????⊥??        const fillGames = parseInt(localStorage.getItem('fillGamesCompleted') || '0');
+        const cardGames = parseInt(localStorage.getItem('cardGamesCompleted') || '0');
+        const quizGames = parseInt(localStorage.getItem('quizGamesCompleted') || '0');
+        const spellingGames = parseInt(localStorage.getItem('spellingGamesCompleted') || '0');
+        const matchingGames = parseInt(localStorage.getItem('matchingGamesCompleted') || '0');
+        const totalGames = fillGames + cardGames + quizGames + spellingGames + matchingGames;
+        
+        if (totalGames >= ach.requirement) {
+          // 憿舐內?停???
+          showAchievementNotification(ach.name, ach.id);
+        }
+      });
+    }
+    
+    function showAchievementNotification(achievementName, achievementId) {
+      // ?萄遣?停?
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #ffd700, #ffed4e);
+        color: #000;
+        padding: 20px 30px;
+        border-radius: 15px;
+        font-weight: bold;
+        font-size: 1.2rem;
+        z-index: 10000;
+        box-shadow: 0 0 30px #ffd700;
+        animation: achievementPop 0.8s cubic-bezier(.68, -0.55, .27, 1.55);
+        text-align: center;
+        min-width: 300px;
+      `;
+      
+      notification.innerHTML = `
+        <div style="font-size: 3rem; margin-bottom: 10px;">??</div>
+        <div style="margin-bottom: 5px;">?? ?停??嚗?/div>
+        <div style="font-size: 1.1rem;">${achievementName}</div>
+        <div style="font-size: 0.9rem; margin-top: 10px; color: #666;">
+          ???停????
+        </div>
+      `;
+      
+      // 瘛餃??璅??
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes achievementPop {
+          0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+          50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+          100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(notification);
+      
+      // 3蝘??芸?蝘駁
+      setTimeout(() => {
+        notification.remove();
+        style.remove();
+      }, 3000);
+    }
+
+    function disablePlay() {
+      document.getElementById('answerInput').disabled = true;
+      document.querySelectorAll('.btn-row button').forEach(btn => btn.disabled = true);
+    }
+    function enablePlay() {
+      document.getElementById('answerInput').disabled = false;
+      document.querySelectorAll('.btn-row button').forEach(btn => btn.disabled = false);
+    }
+
+    function showWrongModal() {
+      if (!wrongList.length) return;
+      // ??銴?璅∪?
+      startReviewMode();
+    }
+    
+    // ===== 銴?璅∪? =====
+    let reviewList = [];
+    let reviewIndex = 0;
+    let inReviewMode = false;
+
+    function startReviewMode() {
+      reviewList = wrongList.slice();
+      reviewIndex = 0;
+      inReviewMode = true;
+      // 銝?璅∠?銝餌??      // document.getElementById('container').style.filter = 'blur(2px)';
+      document.getElementById('wrongModal').style.display = 'flex';
+      showReviewQuestion();
+    }
+
+    function showReviewQuestion() {
+      const list = document.getElementById('wrongItems');
+      list.innerHTML = '';
+      if (reviewIndex >= reviewList.length) {
+        // 銴?蝯?
+        const li = document.createElement('li');
+        li.textContent = '?? 銴?摰?嚗?;
+        list.appendChild(li);
+        document.getElementById('answerInput').disabled = true;
+        return;
+      }
+      const item = reviewList[reviewIndex];
+      const li = document.createElement('li');
+      li.innerHTML = `<span style='color:#ffd700;font-weight:bold;'>${item.zh}</span> <input id='reviewInput' type='text' style='font-size:1rem;padding:4px 8px;border-radius:6px;border:1px solid #00ffff;width:120px;margin-left:8px;' autocomplete='off' /> <span id='reviewFeedback'></span>`;
+      list.appendChild(li);
+      document.getElementById('reviewInput').focus();
+      document.getElementById('reviewInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') checkReviewAnswer();
+      });
+    }
+
+    function checkReviewAnswer() {
+      const item = reviewList[reviewIndex];
+      const input = document.getElementById('reviewInput');
+      const feedback = document.getElementById('reviewFeedback');
+      if (!input) return;
+      if (input.value.trim().toLowerCase() === item.en.toLowerCase()) {
+        feedback.textContent = '??甇?Ⅱ';
+        feedback.style.color = '#0f0';
+        setTimeout(() => {
+          reviewIndex++;
+          showReviewQuestion();
+        }, 600);
+      } else {
+        feedback.textContent = `??甇?圾嚗?{item.en}`;
+        feedback.style.color = '#f66';
+        setTimeout(() => {
+          reviewIndex++;
+          showReviewQuestion();
+        }, 1200);
+      }
+    }
+
+    function closeWrongModal() {
+      document.getElementById('wrongModal').style.display = 'none';
+      // document.getElementById('container').style.filter = '';
+      inReviewMode = false;
+      document.getElementById('answerInput').disabled = false;
+    }
+
+    function goHome() {
+      location.href = 'atlas.html';
+    }
+
+    // ===== ?啣?嚗???賣 =====
+    function startTimer() {
+      timeLeft = 30;
+      document.getElementById('timeLeft').textContent = timeLeft;
+      document.getElementById('timerDisplay').classList.remove('danger');
+      
+      if (timer) {
+        clearInterval(timer);
+      }
+      
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timeLeft').textContent = timeLeft;
+        
+        // ??銝雲?＊蝷箄郎??        if (timeLeft <= 10) {
+          document.getElementById('timerDisplay').classList.add('danger');
+        }
+        
+        // ????        if (timeLeft <= 0) {
+          clearInterval(timer);
+          // ???啁?蝑嚗?閬?蝞???
+          const answerTime = 30; // ???啣停?舐鈭?0蝘?          gameStats.totalAnswered++;
+          gameStats.totalTimeUsed += answerTime;
+          
+          document.getElementById('feedback').textContent = `?????堆?甇?圾?荔?${current.en}`;
+          document.getElementById('feedback').style.color = '#f66';
+          SoundSystem.play('wrong');
+          wrongList.push(current);
+          lives--;
+          gameStats.consecutiveCorrect = 0; // ?蔭???
+          
+          updateLives();
+          if (lives <= 0) {
+            setTimeout(() => {
+              showResultPanel();
+              isProcessingAnswer = false; // ?蔭?????            }, 800);
+          } else {
+            setTimeout(() => {
+              nextWord();
+              isProcessingAnswer = false; // ?蔭?????            }, 800);
+          }
+        }
+      }, 1000);
+    }
+
+    function nextWord() {
+      isProcessingAnswer = false; // ?蔭?????      if (used.length >= words.length) {
+        document.getElementById('wordDisplay').textContent = '???摰?';
+        clearInterval(timer);
+        showResultPanel();
+        return;
+      }
+      // 頝喲?銋????敹蒂蝞憿?      if (used.length > 0 && document.getElementById('answerInput').value === '') { // ?芣?頝喲????
+        // 頝喲???閬?蝞???
+        const answerTime = (30 - timeLeft); // 閮?撌脩??
+        gameStats.totalAnswered++;
+        gameStats.totalTimeUsed += answerTime;
+        
+        lives--;
+        updateLives();
+        wrongList.push(current);
+        gameStats.consecutiveCorrect = 0; // 頝喲?銋?蝵桅??
+        if (lives <= 0) {
+          clearInterval(timer);
+          showResultPanel();
+          return;
+        }
+      }
+      const available = words.filter(w => !used.includes(w.en));
+      current = available[Math.floor(Math.random() * available.length)];
+      used.push(current.en);
+      updateQuestionCount();
+      document.getElementById('wordDisplay').textContent = current.zh;
+      document.getElementById('answerInput').value = '';
+      document.getElementById('feedback').textContent = '';
+      isSpeaking = true;
+      document.getElementById('answerInput').disabled = true;
+      SoundSystem.speech.speakWord(current.en, function() {
+        isSpeaking = false;
+        document.getElementById('answerInput').disabled = false;
+        document.getElementById('answerInput').focus();
+      });
+      startTimer();
+      document.getElementById('resultModal').style.display = 'none';
+      document.getElementById('wrongModal').style.display = 'none';
+      enablePlay();
+      updateLives();
+    }
+
+    function checkAnswer() {
+      if (!current || isProcessingAnswer) return; // 憒?甇???蝑?嚗?亥???      isProcessingAnswer = true; // 閮剔蔭甇???蝑????      const ans = document.getElementById('answerInput').value.trim().toLowerCase();
+      
+      // ===== ?啣?嚗?蝞?憿???=====
+      const answerTime = (30 - timeLeft); // 30蝘????隞亦30皜?拚???
+      gameStats.totalAnswered++;
+      gameStats.totalTimeUsed += answerTime;
+      
+      if (ans === current.en.toLowerCase()) {
+        document.getElementById('feedback').textContent = '??甇?Ⅱ';
+        document.getElementById('feedback').style.color = '#0f0';
+        SoundSystem.play('correct');
+        correctCount++;
+        
+        // ===== ?啣?嚗?撠?頛?=====
+        gameStats.correctCount++;
+        gameStats.consecutiveCorrect++;
+        
+        // ?湔?敹???Ｙ?憿???        if (answerTime < gameStats.fastestAnswer) {
+          gameStats.fastestAnswer = answerTime;
+        }
+        if (answerTime > gameStats.slowestAnswer) {
+          gameStats.slowestAnswer = answerTime;
+        }
+        
+        // 瑼Ｘ?臬?箏?蝢?憿?15蝘蝑?嚗?        if (answerTime <= 15) {
+          gameStats.perfectAnswers++;
+        }
+        
+        // 閮????
+        const starsEarned = calculateStarReward(true, answerTime, gameStats.consecutiveCorrect, current.en.length);
+        
+        // ?芯蝙?其????頂蝯梧??踹???????        if (typeof StarRewardSystem !== 'undefined') {
+          StarRewardSystem.addStars(starsEarned);
+        } else if (typeof LinkageSystem !== 'undefined') {
+          LinkageSystem.stars.add(starsEarned);
+        } else {
+          totalStarCount += starsEarned;
+          localStorage.setItem('totalStars', totalStarCount);
+        }
+        
+        // ?湔憿舐內嚗?冽??蝙?典??函頂蝯望??湔嚗?        if (typeof StarRewardSystem === 'undefined' && typeof LinkageSystem === 'undefined') {
+          updateTotal();
+        }
+        
+        // 憿舐內??
+        let reasonText = '';
+        if (gameStats.consecutiveCorrect >= 3) {
+          reasonText = '? ????嚗?;
+        }
+        
+        // showRewardAnimation(starsEarned, reasonText); // 蝘駁??銵?蝯曹???StarRewardSystem ??敶??
+        
+        // 憿舐內????
+        showComboNotification(gameStats.consecutiveCorrect);
+        
+        // ===== ?啣?嚗???撠??桀? =====
+        if (typeof VocabularyAchievementSystem !== 'undefined') {
+          VocabularyAchievementSystem.recordCorrectWord(current.en, categoryKey);
+        }
+        
+        clearInterval(timer);
+        setTimeout(() => {
+          nextWord();
+          isProcessingAnswer = false; // ?蔭?????        }, 800);
+      } else {
+        document.getElementById('feedback').textContent = `??甇?圾?荔?${current.en}`;
+        document.getElementById('feedback').style.color = '#f66';
+        SoundSystem.play('wrong');
+        wrongList.push(current);
+        lives--;
+        
+        // ===== ?啣?嚗??舫?頛?=====
+        gameStats.consecutiveCorrect = 0; // ?蔭???
+        
+        updateLives();
+        clearInterval(timer);
+        if (lives <= 0) {
+          setTimeout(() => {
+            showResultPanel();
+            isProcessingAnswer = false; // ?蔭?????          }, 800);
+        } else {
+          setTimeout(() => {
+            nextWord();
+            isProcessingAnswer = false; // ?蔭?????          }, 800);
+        }
+      }
+    }
+
+    function restartGame() {
+      used = [];
+      wrongList = [];
+      correctCount = 0;
+      lives = 5;
+      isProcessingAnswer = false; // ?蔭?????      gameStats = {
+        correctCount: 0,
+        totalAnswered: 0,
+        consecutiveCorrect: 0,
+        fastestAnswer: Infinity,
+        slowestAnswer: 0,
+        totalTimeUsed: 0,
+        perfectAnswers: 0,
+        startTime: Date.now()
+      };
+      document.getElementById('currentQuestion').textContent = '0';
+      document.getElementById('resultModal').style.display = 'none';
+      document.getElementById('wrongModal').style.display = 'none';
+      updateLives();
+      nextWord();
+    }
+
+    // ===== ?????=====
+    document.addEventListener('DOMContentLoaded', function() {
+      // ????頂蝯?      if (typeof SoundSystem !== 'undefined') {
+        SoundSystem.init();
+      }
+      
+      // ???璅頂蝯?      setTimeout(() => {
+        initBackgroundMusic();
+        
+        // 蝬??單??批??鈭辣
+        const musicBtn = document.getElementById('toggleMusic');
+        if (musicBtn) {
+          musicBtn.addEventListener('click', toggleBackgroundMusic);
+          console.log('? ?單??批??鈭辣撌脩?摰?);
+        }
+        
+        // 瘛餃??冽鈭?閫貊?單??剜
+        let hasUserInteracted = false;
+        
+        function handleUserInteraction() {
+          if (!hasUserInteracted) {
+            hasUserInteracted = true;
+            console.log('?? ?冽鈭?閫貊嚗璅頂蝯勗歇?');
+            
+            // 憒??府?剜雿?瘝?橘??岫?剜
+            if (isMusicPlaying && backgroundMusic && backgroundMusic.paused) {
+              playBackgroundMusic();
+            }
+          }
+        }
+        
+        // ???車?冽鈭?鈭辣
+        ['click', 'touchstart', 'keydown'].forEach(eventType => {
+          document.addEventListener(eventType, handleUserInteraction, { once: true });
+        });
+      }, 500);
+      
+      // ????航??扯??????單??怠?/?Ｗ儔
+      document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+          // ??梯???璅?          if (isMusicPlaying && backgroundMusic) {
+            backgroundMusic.pause();
+          }
+        } else {
+          // ?憿舐內?敺拚璅?          if (isMusicPlaying && backgroundMusic && backgroundMusic.paused) {
+            backgroundMusic.play().catch(err => {
+              console.log('??Ｗ儔?璅?曉仃??', err);
+            });
+          }
+        }
+      });
+      
+      // ??????      updateTotal();
+      updateQuestionCount();
+      lives = 5;
+      updateLives();
+      
+      // 閮剔蔭 Enter ?萎?隞嗥?賢
+      const answerInput = document.getElementById('answerInput');
+      if (answerInput) {
+        answerInput.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault(); // ?脫迫銵典?漱
+            if (isSpeaking || isProcessingAnswer) return; // ?潮???葉蝳迫?
+            checkAnswer();
+          }
+        });
+      }
+      
+      // 瘛餃??萇敹急??      document.addEventListener('keydown', (e) => {
+        // ?單??批敹急??        if (e.key === 'm' || e.key === 'M') {
+          toggleBackgroundMusic();
+        }
+      });
+      
+      // ???
+      nextWord();
+    });
+  </script>
+  
+  <!-- 頛?豢筑?予摰?-->
+  <script src="floating_chat_loader.js"></script>
+</body>
+</html>

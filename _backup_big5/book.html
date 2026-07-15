@@ -1,0 +1,1241 @@
+<!-- book.html ??摰?憸冽?桀??祉恣??-->
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>???望?? ???桀??祉恣??/title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="responsive_enhanced.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <style>
+    /*-------------------------
+      ?典??身 & 摮?
+    -------------------------*/
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Noto Sans TC', 'Orbitron', sans-serif;
+      background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+      color: #fff;
+      overflow-x: hidden;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /*-------------------------
+      Scrollbar ?芾? (WebKit)
+    -------------------------*/
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #45a29e, #66fcf1);
+      border-radius: 8px;
+      border: 2px solid rgba(0,0,0,0.2);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, #66fcf1, #45a29e);
+    }
+    body {
+      scrollbar-width: thin;
+      scrollbar-color: #45a29e rgba(0,0,0,0.3);
+    }
+    .container {
+      scrollbar-width: thin;
+      scrollbar-color: #45a29e rgba(0,0,0,0.3);
+    }
+
+    /*-------------------------
+      撌虫?閫?TopBar嚗＊蝷箇蜇???賂?
+    -------------------------*/
+    #topBar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(90deg, rgba(0, 0, 0, 0.8), rgba(26, 26, 46, 0.8));
+      backdrop-filter: blur(10px);
+      padding: 15px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(69, 162, 158, 0.3);
+    }
+    
+    /*-------------------------
+      ?單??批??
+    -------------------------*/
+    #audioControls {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1001;
+      display: flex;
+      gap: 10px;
+    }
+    
+    #toggleMusic {
+      background: rgba(10, 20, 40, 0.85);
+      border: 2px solid #45a29e;
+      color: #66fcf1;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    #toggleMusic:hover {
+      background: rgba(69, 162, 158, 0.2);
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(69, 162, 158, 0.4);
+    }
+    
+    #toggleMusic.playing {
+      background: rgba(0, 255, 255, 0.2);
+      border-color: #66fcf1;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    #testMusic {
+      background: rgba(10, 20, 40, 0.85);
+      border: 2px solid #45a29e;
+      color: #66fcf1;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      font-size: 0.8rem;
+    }
+    
+    #testMusic:hover {
+      background: rgba(69, 162, 158, 0.2);
+      transform: scale(1.1);
+    }
+    #topBar #starsDisplay {
+      font-size: 1.3rem;
+      color: #66fcf1;
+      font-weight: 700;
+      text-shadow: 0 0 10px #66fcf1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #topBar #starsDisplay::before {
+      content: "潃?;
+      font-size: 1.5rem;
+      animation: twinkle 2s infinite;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.1); }
+    }
+
+    /*-------------------------
+      ?征 Canvas ?
+    -------------------------*/
+    canvas#stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    /*-------------------------
+      銝餃捆??
+    -------------------------*/
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 100px auto 50px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(69, 162, 158, 0.2);
+      overflow-y: auto;
+      max-height: calc(100vh - 150px);
+    }
+    
+    .container h1 {
+      color: #66fcf1;
+      text-align: center;
+      text-shadow: 
+        0 0 20px #66fcf1,
+        0 0 40px #66fcf1;
+      margin-bottom: 25px;
+      font-size: 2.5rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      position: relative;
+    }
+    .container h1::before {
+      content: "??";
+      position: absolute;
+      left: -50px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2rem;
+      animation: float 3s ease-in-out infinite;
+    }
+    .container h1::after {
+      content: "??";
+      position: absolute;
+      right: -50px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2rem;
+      animation: float 3s ease-in-out infinite reverse;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(-50%) rotate(0deg); }
+      50% { transform: translateY(-50%) rotate(10deg); }
+    }
+
+    /*-------------------------
+      餈?擐???
+    -------------------------*/
+    .back-btn {
+      display: block;
+      margin: 0 auto 25px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #0b0c10, #1a1a2e);
+      border: 2px solid #45a29e;
+      color: #66fcf1;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      text-decoration: none;
+      text-align: center;
+      width: 180px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(69, 162, 158, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .back-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(69, 162, 158, 0.2), transparent);
+      transition: left 0.5s;
+    }
+    .back-btn:hover::before {
+      left: 100%;
+    }
+    .back-btn:hover {
+      background: linear-gradient(135deg, #45a29e, #66fcf1);
+      color: #0b0c10;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(69, 162, 158, 0.5);
+    }
+
+    /*-------------------------
+      ?啣??桀????憛?
+    -------------------------*/
+    .input-section {
+      background: rgba(69, 162, 158, 0.1);
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(69, 162, 158, 0.3);
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    .input-section h3 {
+      color: #66fcf1;
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+      font-weight: 600;
+      text-shadow: 0 0 10px #66fcf1;
+    }
+    
+    .input-group {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .input-group input {
+      flex: 2;
+      min-width: 200px;
+      padding: 15px 20px;
+      border-radius: 12px;
+      border: 2px solid rgba(69, 162, 158, 0.3);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 400;
+      box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+    
+    .input-group input:focus {
+      outline: none;
+      border-color: #66fcf1;
+      box-shadow: 
+        0 4px 20px rgba(69, 162, 158, 0.3),
+        0 0 20px rgba(69, 162, 158, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .input-group input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .input-group button {
+      flex: 1;
+      min-width: 120px;
+      background: linear-gradient(135deg, #45a29e, #66fcf1);
+      color: #0b0c10;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 16px;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(69, 162, 158, 0.4);
+      padding: 15px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .input-group button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
+    
+    .input-group button:hover::before {
+      left: 100%;
+    }
+    
+    .input-group button:hover {
+      background: linear-gradient(135deg, #66fcf1, #45a29e);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 25px rgba(69, 162, 158, 0.6);
+    }
+    
+    .input-group button:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    #imgUploader {
+      display: none;
+    }
+    
+    .cost-info {
+      margin-top: 15px;
+      color: #99ccff;
+      font-size: 1rem;
+      text-shadow: 0 0 8px #3388cc;
+      text-align: center;
+      padding: 10px;
+      background: rgba(153, 204, 255, 0.1);
+      border-radius: 8px;
+      border: 1px solid rgba(153, 204, 255, 0.2);
+    }
+
+    /*-------------------------
+      ?∠??澆?雿?
+    -------------------------*/
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-top: 30px;
+      padding-bottom: 30px;
+    }
+    
+    @media (max-width: 768px) {
+      .grid { 
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .grid { 
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+    }
+
+    /*-------------------------
+      ?格?∠?璅??
+    -------------------------*/
+    .card {
+      background: linear-gradient(145deg, rgba(20, 20, 30, 0.8), rgba(26, 26, 46, 0.8));
+      border: 2px solid rgba(69, 162, 158, 0.3);
+      border-radius: 15px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      animation: fadeInUp 0.6s ease;
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #45a29e, #66fcf1, #45a29e);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+    
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.8),
+        0 0 30px rgba(69, 162, 158, 0.3);
+      border-color: rgba(69, 162, 158, 0.6);
+    }
+    
+    .card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      border: 2px solid rgba(69, 162, 158, 0.4);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+    
+    .card img:hover {
+      transform: scale(1.05);
+      border-color: #66fcf1;
+      box-shadow: 0 6px 20px rgba(69, 162, 158, 0.4);
+    }
+    
+    .card-name {
+      font-weight: 700;
+      margin: 10px 0;
+      color: #66fcf1;
+      text-shadow: 0 0 10px #66fcf1;
+      font-size: 1.3rem;
+      letter-spacing: 1px;
+    }
+    
+    .card-meta {
+      font-size: 14px;
+      color: #c5c6c7;
+      margin: 5px 0;
+      padding: 5px 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .card button {
+      margin-top: 12px;
+      width: 100%;
+      background: linear-gradient(135deg, #0b0c10, #1a1a2e);
+      border: 2px solid #45a29e;
+      color: #66fcf1;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 12px 0;
+      font-size: 1rem;
+      font-weight: 500;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(69, 162, 158, 0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    .card button:hover::before {
+      left: 100%;
+    }
+    
+    .card button:hover {
+      background: linear-gradient(135deg, #45a29e, #66fcf1);
+      color: #0b0c10;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(69, 162, 158, 0.4);
+    }
+    
+    .card button.delete-btn {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      border-color: #e74c3c;
+      color: white;
+      margin-top: 8px;
+    }
+    
+    .card button.delete-btn:hover {
+      background: linear-gradient(135deg, #c0392b, #e74c3c);
+      box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+    }
+    
+    /*-------------------------
+      蝛箇???蝷?
+    -------------------------*/
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .empty-state h3 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: #66fcf1;
+    }
+    
+    .empty-state p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+    
+    /*-------------------------
+      ?蝟餌絞璅??
+    -------------------------*/
+    .notification {
+      animation: slideInRight 0.3s ease;
+    }
+    
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    .notification.success {
+      border-left: 4px solid #27ae60;
+    }
+    
+    .notification.error {
+      border-left: 4px solid #e74c3c;
+    }
+    
+    .notification.warning {
+      border-left: 4px solid #f39c12;
+    }
+    
+    .notification.info {
+      border-left: 4px solid #3498db;
+    }
+    
+    /*-------------------------
+      頛?
+    -------------------------*/
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(69, 162, 158, 0.3);
+      border-radius: 50%;
+      border-top-color: #66fcf1;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /*-------------------------
+      頛詨獢暺???
+    -------------------------*/
+    .input-group input:focus {
+      outline: none;
+      border-color: #66fcf1;
+      box-shadow: 
+        0 4px 20px rgba(69, 162, 158, 0.3),
+        0 0 20px rgba(69, 162, 158, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    /*-------------------------
+      ??暺???
+    -------------------------*/
+    .input-group button:active,
+    .card button:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    /*-------------------------
+      ?踵?撘身閮?
+    -------------------------*/
+    @media (max-width: 768px) {
+      .container {
+        margin: 90px 15px 30px;
+        padding: 20px;
+        border-radius: 15px;
+      }
+      
+      .container h1 {
+        font-size: 2rem;
+      }
+      
+      .container h1::before,
+      .container h1::after {
+        display: none;
+      }
+      
+      .input-group {
+        flex-direction: column;
+      }
+      
+      .input-group input,
+      .input-group button {
+        flex: none;
+        width: 100%;
+      }
+      
+      .notification {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container h1 {
+        font-size: 1.8rem;
+      }
+      
+      .input-section {
+        padding: 20px;
+      }
+      
+      .card {
+        padding: 15px;
+      }
+      
+      .card-name {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 撌虫?閫?TopBar嚗＊蝷箇蜇????-->
+  <div id="topBar">
+    <div id="starsDisplay">蝮賣??嚗?span id="totalStarsCount">0</span></div>
+  </div>
+
+  <!-- ?單??批 -->
+  <div id="audioControls">
+    <button id="toggleMusic" title="??單?">
+      <span class="material-icons">music_note</span>
+    </button>
+    <button id="testMusic" title="皜祈岫?單?蝟餌絞" onclick="diagnoseMusicSystem()" style="font-size: 0.8rem; padding: 2px 6px;">
+      ??
+    </button>
+  </div>
+
+  <!-- ??單??喲?? -->
+  <audio id="backgroundMusic" loop>
+    <source src="sound/???暸???嚗??單?嚗?mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- ?征 Canvas -->
+  <canvas id="stars"></canvas>
+
+  <!-- 銝餃捆?剁??桀??祉恣??-->
+  <div class="container">
+    <h1>?桀??祉恣??/h1>
+    
+    <!-- 餈?擐??? -->
+    <a href="index.html" class="back-btn">?? 餈?擐?</a>
+
+    <!-- ?啣??桀??砍???-->
+    <div class="input-section">
+      <h3>?? ?萄遣?啣摮</h3>
+      <div class="input-group">
+        <input id="newBook" placeholder="頛詨?啣摮?迂" maxlength="20">
+        <input id="newCategory" placeholder="頛詨憿嚗?憒?GEPT??瘣餉隤?" maxlength="15">
+        <button onclick="createBook()">???啣??桀???/button>
+      </div>
+      <div class="cost-info">? 蝚砌???鞎鳴?蝚砌???憪????臭? 10 ??</div>
+    </div>
+
+    <!-- ?梯???獢??喉??冽銝撠 -->
+    <input type="file" id="imgUploader" accept="image/*" onchange="handleImageUpload(event)">
+
+    <!-- ?桀??砍?摮?-->
+    <div class="grid" id="bookList"></div>
+  </div>
+
+  <!-- 頛敹???JavaScript 瑼? -->
+  <script src="js/userData.js"></script>
+  <script src="js/sound.js"></script>
+  
+  <script>
+    /***** ??單????蝟餌絞 *****/
+    let backgroundMusic = null;
+    let toggleMusicBtn = null;
+    let isMusicPlaying = false;
+    
+    // ?????舫璅頂蝯?
+    function initBackgroundMusic() {
+      console.log('? ?????舫璅頂蝯?..');
+      
+      backgroundMusic = document.getElementById('backgroundMusic');
+      toggleMusicBtn = document.getElementById('toggleMusic');
+      
+      if (!backgroundMusic) {
+        console.error('???曆??啗??舫璅?蝝?);
+        return;
+      }
+      
+      if (!toggleMusicBtn) {
+        console.error('???曆??圈璅?嗆???);
+        return;
+      }
+      
+      // 閮剖??單?撅祆?
+      backgroundMusic.volume = 0.3;
+      backgroundMusic.loop = true;
+      
+      // 瑼Ｘ LinkageSystem ?臬?舐
+      if (typeof LinkageSystem !== 'undefined' && LinkageSystem.music) {
+        isMusicPlaying = LinkageSystem.music.isPlaying();
+        console.log('?? LinkageSystem ?單????', isMusicPlaying);
+      } else {
+        // ??寞?嚗?亙? localStorage 霈??
+        const musicState = localStorage.getItem('bgMusicState');
+        isMusicPlaying = musicState === 'playing';
+        console.log('? localStorage ?單????', isMusicPlaying);
+      }
+      
+      // ?寞???身摰???閫
+      updateMusicButtonState();
+      
+      // 憒??府?剜嚗?閰行??
+      if (isMusicPlaying) {
+        playBackgroundMusic();
+      }
+      
+      console.log('????單?蝟餌絞??????);
+    }
+    
+    // ?湔?單??????
+    function updateMusicButtonState() {
+      if (!toggleMusicBtn) return;
+      
+      if (isMusicPlaying) {
+        toggleMusicBtn.classList.add('playing');
+        toggleMusicBtn.style.background = 'rgba(0, 255, 255, 0.2)';
+      } else {
+        toggleMusicBtn.classList.remove('playing');
+        toggleMusicBtn.style.background = 'rgba(10, 20, 40, 0.85)';
+      }
+    }
+    
+    // ?剜??單?
+    function playBackgroundMusic() {
+      if (!backgroundMusic) return;
+      
+      // ?芸?雿輻 SoundSystem
+      if (typeof SoundSystem !== 'undefined' && SoundSystem.bgm) {
+        SoundSystem.bgm.play();
+        isMusicPlaying = true;
+        updateMusicButtonState();
+        console.log('? ?? SoundSystem ?剜??單?');
+        return;
+      }
+      
+      // ??寞?嚗?交?暹?圈璅?蝝?
+      backgroundMusic.play().then(() => {
+        isMusicPlaying = true;
+        updateMusicButtonState();
+        
+        // ?郊??LinkageSystem
+        if (typeof LinkageSystem !== 'undefined' && LinkageSystem.music) {
+          LinkageSystem.music.setPlaying(true);
+        } else {
+          localStorage.setItem('bgMusicState', 'playing');
+        }
+        
+        console.log('? ??單????剜');
+      }).catch(err => {
+        console.error('????單??剜憭望?:', err);
+        isMusicPlaying = false;
+        updateMusicButtonState();
+      });
+    }
+    
+    // ?怠???單?
+    function pauseBackgroundMusic() {
+      if (!backgroundMusic) return;
+      
+      // ?芸?雿輻 SoundSystem
+      if (typeof SoundSystem !== 'undefined' && SoundSystem.bgm) {
+        SoundSystem.bgm.pause();
+        isMusicPlaying = false;
+        updateMusicButtonState();
+        console.log('?? ?? SoundSystem ?怠???單?');
+        return;
+      }
+      
+      // ??寞?嚗?交??圈璅?蝝?
+      backgroundMusic.pause();
+      isMusicPlaying = false;
+      updateMusicButtonState();
+      
+      // ?郊??LinkageSystem
+      if (typeof LinkageSystem !== 'undefined' && LinkageSystem.music) {
+        LinkageSystem.music.setPlaying(false);
+      } else {
+        localStorage.setItem('bgMusicState', 'paused');
+      }
+      
+      console.log('?? ??單?撌脫??);
+    }
+    
+    // ????單??剜???
+    function toggleBackgroundMusic() {
+      if (isMusicPlaying) {
+        pauseBackgroundMusic();
+      } else {
+        playBackgroundMusic();
+      }
+    }
+    
+    // ?單?蝟餌絞閮箸?賣
+    function diagnoseMusicSystem() {
+      console.log('?? === ?單?蝟餌絞閮箸 ===');
+      console.log('??單???:', backgroundMusic);
+      console.log('?單??批??:', toggleMusicBtn);
+      console.log('?嗅??剜???', isMusicPlaying);
+      console.log('LinkageSystem ?舐:', typeof LinkageSystem !== 'undefined');
+      console.log('SoundSystem ?舐:', typeof SoundSystem !== 'undefined');
+      
+      if (backgroundMusic) {
+        console.log('?單?瑼?頝臬?:', backgroundMusic.src);
+        console.log('?單??喲?:', backgroundMusic.volume);
+        console.log('?單??臬敺芰:', backgroundMusic.loop);
+        console.log('?單??臬?怠?:', backgroundMusic.paused);
+        console.log('?單??嗅???:', backgroundMusic.currentTime);
+      }
+      
+      if (typeof LinkageSystem !== 'undefined' && LinkageSystem.music) {
+        console.log('LinkageSystem ?單????', LinkageSystem.music.isPlaying());
+        console.log('LinkageSystem ?單??喲?:', LinkageSystem.music.getVolume());
+      }
+      
+      if (typeof SoundSystem !== 'undefined' && SoundSystem.bgm) {
+        console.log('SoundSystem ??單?:', SoundSystem.bgm);
+        console.log('SoundSystem ??單????', !SoundSystem.bgm.paused);
+      }
+      
+      showNotification('?單?蝟餌絞閮箸摰?嚗??亦??批??, 'info');
+    }
+    
+    /***** ??閮 (TopBar) *****/
+    function loadTotalStars() {
+      const v = localStorage.getItem('totalStars');
+      return v !== null ? parseInt(v, 10) : 0;
+    }
+    function updateStarsDisplay() {
+      document.getElementById('totalStarsCount').textContent = loadTotalStars();
+    }
+    function addStars(n) {
+      let cur = loadTotalStars();
+      localStorage.setItem('totalStars', cur + n);
+      updateStarsDisplay();
+    }
+    function subtractStars(n) {
+      let cur = loadTotalStars();
+      localStorage.setItem('totalStars', Math.max(0, cur - n));
+      updateStarsDisplay();
+    }
+
+    /***** ?征?? *****/
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let W, H;
+    let starfield = [];
+    const numStars = 120;
+
+    function initCanvas() {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W;
+      canvas.height = H;
+      starfield = [];
+      for (let i = 0; i < numStars; i++) {
+        starfield.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          size: Math.random() * 1.5 + 0.5,
+          speed: Math.random() * 0.6 + 0.2
+        });
+      }
+    }
+
+    function updateStars() {
+      for (let s of starfield) {
+        s.y += s.speed;
+        if (s.y > H) {
+          s.y = 0;
+          s.x = Math.random() * W;
+        }
+      }
+    }
+
+    function drawStars() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#ffffff';
+      for (let s of starfield) {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function animate() {
+      updateStars();
+      drawStars();
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', initCanvas);
+
+    /***** ?桀??祉恣??頛?*****/
+    function loadBooks() {
+      const bookList = document.getElementById('bookList');
+      bookList.innerHTML = '';
+      // ?曉???localStorage key 隞?"book_" ???
+      const keys = Object.keys(localStorage).filter(k => k.startsWith('book_'));
+      
+      if (keys.length === 0) {
+        // 憿舐內蝛箇???
+        bookList.innerHTML = `
+          <div class="empty-state" style="grid-column: 1 / -1;">
+            <h3>?? ???摮</h3>
+            <p>暺?銝?憓摮??憪撱箸?洵銝?摮?改?</p>
+            <p>??蝚砌????典?鞎鳴?蝡???函?摮貊?銋?</p>
+          </div>
+        `;
+        return;
+      }
+      
+      keys.forEach(key => {
+        const name = key.replace('book_', '');
+        const imgData = localStorage.getItem('img_' + name);
+        const image = imgData
+          ? imgData
+          : 'https://via.placeholder.com/300x120/1a1a2e/66fcf1?text=' + encodeURIComponent(name);
+        const words = JSON.parse(localStorage.getItem('book_' + name) || '[]');
+        const count = words.length;
+        const category = localStorage.getItem('cat_' + name) || '?芸?憿?;
+
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `
+          <img src="${image}" onclick="triggerUpload('${name}')" alt="${name}撠">
+          <div class="card-name">${name}</div>
+          <div class="card-meta">?? 憿嚗?{category}</div>
+          <div class="card-meta">?? ${count} ?摮?/div>
+          <button onclick="location.href='book_edit.html?book=${encodeURIComponent(name)}'">
+            ?? 蝺刻摩 / ? ?拚???
+          </button>
+          <button onclick="deleteBook('${name}')" class="delete-btn">
+            ??儭??芷
+          </button>
+        `;
+        bookList.appendChild(div);
+      });
+    }
+
+    function createBook() {
+      const name = document.getElementById('newBook').value.trim();
+      const category = document.getElementById('newCategory').value.trim();
+      
+      if (!name) {
+        showNotification('隢撓?交??, 'warning');
+        return;
+      }
+      if (!category) {
+        showNotification('隢撓?亙?憿?, 'warning');
+        return;
+      }
+      
+      // 閮?撌脣??函??豢?賊?
+      const existingBooks = Object.keys(localStorage).filter(k => k.startsWith('book_')).length;
+      // 憒?撌脫??喳? 1 ?穿???臭? 10 ??
+      if (existingBooks >= 1) {
+        const price = 10;
+        const stars = loadTotalStars();
+        if (stars < price) {
+          showNotification(`鞈潸眺蝚砌??砍?敺??豢?閬?${price} 憿?嚗???${stars} 憿??⊥?鞈潸眺?, 'error');
+          return;
+        }
+        subtractStars(price);
+        showNotification(`???? ${price} 憿?嚗撱箏摮??{name}?, 'success');
+      } else {
+        showNotification(`???萄遣?祥?桀??研?{name}?, 'success');
+      }
+      
+      if (localStorage.getItem('book_' + name)) {
+        showNotification('甇斗?歇摮嚗?雿輻?嗡??迂', 'error');
+        return;
+      }
+      
+      // ?啣?蝛粹??
+      localStorage.setItem('book_' + name, JSON.stringify([]));
+      localStorage.setItem('cat_' + name, category);
+      loadBooks();
+      document.getElementById('newBook').value = '';
+      document.getElementById('newCategory').value = '';
+    }
+
+    function deleteBook(name) {
+      if (!confirm(`蝣箏?閬?扎?{name}??嚗n\n?? 甇斗?雿瘜儔????摮???瘞訾??芷?)) return;
+      
+      localStorage.removeItem('book_' + name);
+      localStorage.removeItem('wrong_' + name);
+      localStorage.removeItem('img_' + name);
+      localStorage.removeItem('cat_' + name);
+      
+      showNotification(`撌脣?文摮??{name}?, 'success');
+      loadBooks();
+    }
+
+    function triggerUpload(bookName) {
+      window.currentBookForImage = bookName;
+      document.getElementById('imgUploader').click();
+    }
+
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      // 瑼Ｘ瑼?憿?
+      if (!file.type.startsWith('image/')) {
+        showNotification('隢????獢?, 'error');
+        return;
+      }
+      
+      // 瑼Ｘ瑼?憭批? (? 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        showNotification('??瑼?憭批?銝頞? 2MB', 'error');
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        localStorage.setItem('img_' + window.currentBookForImage, e.target.result);
+        showNotification(`撌脫?啜?{window.currentBookForImage}??撠??`, 'success');
+        loadBooks();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // ?蝟餌絞
+    function showNotification(message, type = 'info') {
+      // 蝘駁?暹??
+      const existingNotification = document.querySelector('.notification');
+      if (existingNotification) {
+        existingNotification.remove();
+      }
+      
+      const notification = document.createElement('div');
+      notification.className = `notification notification-${type}`;
+      notification.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 10px;
+        color: white;
+        font-weight: 500;
+        z-index: 10000;
+        max-width: 300px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+      `;
+      
+      // ?寞?憿?閮剔蔭璅??
+      switch(type) {
+        case 'success':
+          notification.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+          break;
+        case 'error':
+          notification.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)';
+          break;
+        case 'warning':
+          notification.style.background = 'linear-gradient(135deg, #f39c12, #e67e22)';
+          break;
+        default:
+          notification.style.background = 'linear-gradient(135deg, #3498db, #2980b9)';
+      }
+      
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      // ??脣
+      setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+      }, 100);
+      
+      // ?芸?蝘駁
+      setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.remove();
+          }
+        }, 300);
+      }, 3000);
+    }
+
+    // ?頛??憪?
+    window.addEventListener('load', () => {
+      updateStarsDisplay();
+      initCanvas();
+      animate();
+      loadBooks();
+      
+      // ???璅頂蝯?
+      setTimeout(() => {
+        initBackgroundMusic();
+        
+        // 蝬??單??批??鈭辣
+        const musicBtn = document.getElementById('toggleMusic');
+        if (musicBtn) {
+          musicBtn.addEventListener('click', toggleBackgroundMusic);
+          console.log('? ?單??批??鈭辣撌脩?摰?);
+        }
+        
+        // 瘛餃??冽鈭?閫貊?單??剜
+        let hasUserInteracted = false;
+        
+        function handleUserInteraction() {
+          if (!hasUserInteracted) {
+            hasUserInteracted = true;
+            console.log('?? ?冽鈭?閫貊嚗璅頂蝯勗歇?');
+            
+            // 憒??府?剜雿?瘝?橘??岫?剜
+            if (isMusicPlaying && backgroundMusic && backgroundMusic.paused) {
+              playBackgroundMusic();
+            }
+          }
+        }
+        
+        // ???車?冽鈭?鈭辣
+        ['click', 'touchstart', 'keydown'].forEach(eventType => {
+          document.addEventListener(eventType, handleUserInteraction, { once: true });
+        });
+      }, 500);
+      
+      // ????航??扯??????單??怠?/?Ｗ儔
+      document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+          // ??梯???璅?
+          if (isMusicPlaying && backgroundMusic) {
+            backgroundMusic.pause();
+          }
+        } else {
+          // ?憿舐內?敺拚璅?
+          if (isMusicPlaying && backgroundMusic && backgroundMusic.paused) {
+            backgroundMusic.play().catch(err => {
+              console.log('??Ｗ儔?璅?曉仃??', err);
+            });
+          }
+        }
+      });
+      
+      // 瘛餃??萇敹急??
+      document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key === 'Enter') {
+          createBook();
+        }
+        // ?單??批敹急??
+        if (e.key === 'm' || e.key === 'M') {
+          toggleBackgroundMusic();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

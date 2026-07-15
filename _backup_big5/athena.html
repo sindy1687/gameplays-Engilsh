@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>憛怎征? - ?望?撠??/title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="responsive_enhanced.css">
+  <style>
+    /* ?脫迫瘞游像皛曉? */
+    html {
+      overflow-x: hidden;
+    }
+    
+    /* 蝣箔????蝝?刻?蝒?? */
+    * {
+      box-sizing: border-box;
+      max-width: 100%;
+    }
+    
+    /* ===== ?箇?璅?? ===== */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Arial, sans-serif, 'Orbitron', sans-serif;
+      background: linear-gradient(135deg, #232526 0%, #414345 100%);
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+      min-height: 100vh;
+      width: 100%;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h1 {
+      color: #ffd700;
+      text-shadow: 0 0 8px #ffd700;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+      font-family: 'Orbitron', Arial, sans-serif;
+      font-size: 2.2rem;
+    }
+
+    /* ===== ??單??批??璅?? ===== */
+    #bgMusicControl {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(255, 215, 0, 0.9);
+      color: #000;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 12;
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #bgMusicControl:hover {
+      background: rgba(255, 215, 0, 1);
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    }
+
+    #bgMusicControl.paused {
+      background: rgba(255, 255, 255, 0.3);
+      color: #fff;
+    }
+
+    #bgMusicControl.paused:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    /* ===== ??璅?? ===== */
+    .top-btns {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      left: auto;
+      display: flex;
+      gap: 8px;
+      z-index: 11;
+    }
+
+    .top-btns button {
+      padding: 6px 12px;
+      font-size: 1rem;
+      background: #ffd700;
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 0 6px rgba(255, 215, 0, 0.2);
+      font-family: 'Orbitron', Arial, sans-serif;
+      transition: background 0.2s;
+    }
+
+    .top-btns button:hover {
+      background: #ffe54f;
+    }
+
+    button {
+      font-size: 1rem;
+      padding: 10px 26px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 2px 8px #0003;
+      font-family: 'Orbitron', Arial, sans-serif;
+    }
+
+    #submit-btn {
+      background: #ffd700;
+      color: #111;
+    }
+
+    #submit-btn:disabled {
+      background: #ccc;
+      color: #888;
+      cursor: not-allowed;
+    }
+
+    #skip-btn {
+      background: #bbb;
+      color: #222;
+    }
+
+    #skip-btn:hover {
+      background: #ccc;
+    }
+
+    #speak-btn {
+      background: #0ff;
+      color: #111;
+      margin-top: 10px;
+    }
+
+    #speak-btn:disabled {
+      background: #555;
+      color: #888;
+    }
+
+    #speak-btn:hover {
+      background: #7ff;
+    }
+
+    #next-btn {
+      background: #4caf50;
+      color: #fff;
+      margin-top: 10px;
+    }
+
+    #next-btn:hover {
+      background: #6fdc7f;
+    }
+
+    /* ===== 憿舐內?憛見撘?===== */
+    #star-counter {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      background: rgba(30, 30, 40, 0.92);
+      border-radius: 18px;
+      box-shadow: 0 4px 18px 0 rgba(31, 38, 135, 0.18);
+      padding: 14px 32px;
+      margin-bottom: 18px;
+      border: 1.5px solid #ffd70044;
+      font-size: 1.18rem;
+      color: #ffd700;
+      min-width: 260px;
+      font-family: 'Orbitron', Arial, sans-serif;
+    }
+
+    #starsDisplay {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: rgba(10, 20, 40, 0.85);
+      padding: 8px 14px;
+      border-radius: 10px;
+      color: #ffd700;
+      font-weight: bold;
+      box-shadow: 0 0 12px #ffd700, 0 0 32px #00ffff;
+      border: 2px solid #00ffff;
+      font-size: 1.2rem;
+      z-index: 10;
+    }
+
+    #timer {
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+    }
+
+    #timer.hidden {
+      display: none;
+    }
+
+    /* ===== ??摰孵璅?? ===== */
+    #question-container {
+      background: rgba(30, 30, 40, 0.97);
+      border-radius: 22px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+      padding: 38px 30px 30px;
+      max-width: 440px;
+      width: 100%;
+      margin: auto;
+      border: 1.5px solid #ffd70044;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .question-title {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .question-sentence {
+      font-size: 1.7rem;
+      font-weight: bold;
+      margin: 10px 0 20px 0;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    .question-sentence .blank {
+      color: #0ff;
+      background: #fff2;
+      border-radius: 8px;
+      padding: 2px 16px;
+      box-shadow: 0 1px 4px #0ff2;
+    }
+
+    .question-zh {
+      color: #ffd700;
+      margin-bottom: 16px;
+      font-size: 1.08rem;
+    }
+
+    /* ===== 頛詨獢見撘?===== */
+    input {
+      width: 92%;
+      padding: 15px;
+      font-size: 1.15rem;
+      border: 2px solid #ffd700;
+      border-radius: 14px;
+      background: #222;
+      color: #fff;
+      margin-bottom: 22px;
+      box-shadow: 0 2px 8px #0003;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    input:focus {
+      border-color: #0ff;
+    }
+
+    /* ===== ???見撘?===== */
+    .btn-row {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 14px;
+      width: 100%;
+    }
+
+    /* ===== ??璅?? ===== */
+    #feedback {
+      margin-top: 12px;
+      font-size: 1.13rem;
+      min-height: 28px;
+    }
+
+    .feedback-box {
+      display: inline-block;
+      padding: 10px 22px;
+      border-radius: 16px;
+      font-size: 1.18rem;
+      font-weight: bold;
+      box-shadow: 0 2px 16px #0004;
+      margin-top: 8px;
+      transition: background 0.3s, color 0.3s, transform 0.2s;
+      animation: popfade 0.7s cubic-bezier(.68, -0.55, .27, 1.55);
+    }
+
+    .feedback-correct {
+      background: linear-gradient(90deg, #2ecc40, #bfff00);
+      color: #222;
+    }
+
+    .feedback-wrong {
+      background: linear-gradient(90deg, #ff4f4f, #ffbaba);
+      color: #fff;
+    }
+
+    .feedback-bonus {
+      color: #ffd700;
+      animation: bonusflash 1s infinite alternate;
+      font-size: 1.25em;
+    }
+
+    /* ===== ??? ===== */
+    .complete-anim {
+      animation: pop 0.7s cubic-bezier(.68, -0.55, .27, 1.55) both;
+    }
+
+    @keyframes pop {
+      0% {
+        transform: scale(0.7);
+        opacity: 0;
+      }
+      60% {
+        transform: scale(1.15);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes popfade {
+      0% {
+        transform: scale(0.7);
+        opacity: 0;
+      }
+      60% {
+        transform: scale(1.15);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes bonusflash {
+      0% {
+        text-shadow: 0 0 8px #ffd700;
+      }
+      100% {
+        text-shadow: 0 0 24px #fff700;
+      }
+    }
+
+    /* ===== ?踵?撘身閮??===== */
+    @media (max-width: 768px) {
+      .top-btns {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        left: auto;
+        display: flex;
+        gap: 6px;
+        z-index: 11;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      
+      .top-btns button {
+        padding: 4px 8px;
+        font-size: 0.9rem;
+      }
+      
+      #starsDisplay {
+        top: 10px;
+        left: 10px;
+        padding: 6px 10px;
+        font-size: 1rem;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+        margin-top: 60px;
+      }
+      
+      #question-container {
+        max-width: 95vw;
+        padding: 20px 15px;
+        margin: 10px auto;
+      }
+      
+      .question-sentence {
+        font-size: 1.3rem;
+      }
+      
+      .modal-content {
+        padding: 20px;
+        margin: 10px;
+        max-width: 95vw;
+      }
+      
+      .end-buttons {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .end-buttons button {
+        width: 100%;
+        padding: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+      
+      .top-btns {
+        position: relative;
+        top: auto;
+        right: auto;
+        left: auto;
+        justify-content: center;
+        margin-bottom: 15px;
+      }
+      
+      #starsDisplay {
+        position: relative;
+        top: auto;
+        left: auto;
+        display: inline-block;
+        margin-bottom: 10px;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+        margin-top: 10px;
+      }
+      
+      #sessionStarsDisplay {
+        font-size: 1rem;
+        margin-bottom: 8px;
+      }
+      
+      #star-counter {
+        font-size: 1rem;
+        padding: 10px 20px;
+        min-width: 200px;
+      }
+      
+      .question-sentence {
+        font-size: 1.1rem;
+      }
+      
+      input {
+        font-size: 1rem;
+        padding: 12px;
+      }
+      
+      .btn-row {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .btn-row button {
+        width: 100%;
+        padding: 12px;
+      }
+    }
+
+    /* ===== ?蝯??恍璅?? ===== */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+      background: rgba(30, 30, 40, 0.95);
+      border: 2px solid #ffd700;
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 0 32px #ffd70044, 0 0 80px #00ffff22 inset;
+      animation: modalPop 0.5s cubic-bezier(.68, -0.55, .27, 1.55);
+    }
+
+    .end-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      animation: tada 1.2s infinite;
+    }
+
+    .modal-content h2 {
+      color: #ffd700;
+      font-size: 2rem;
+      margin-bottom: 25px;
+      text-shadow: 0 0 12px #ffd700;
+      font-family: 'Orbitron', Arial, sans-serif;
+    }
+
+    .end-stats {
+      margin-bottom: 30px;
+    }
+
+    .end-stats p {
+      font-size: 1.2rem;
+      margin: 10px 0;
+      color: #fff;
+    }
+
+    .end-stats span {
+      color: #ffd700;
+      font-weight: bold;
+    }
+
+    .end-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .end-buttons button {
+      background: linear-gradient(90deg, #ffd700, #ffed4e);
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-family: 'Orbitron', Arial, sans-serif;
+    }
+
+    .end-buttons button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 16px #ffd700;
+    }
+
+    @keyframes modalPop {
+      0% {
+        transform: scale(0.7);
+        opacity: 0;
+      }
+      60% {
+        transform: scale(1.1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes tada {
+      0% { transform: scale(1); }
+      10%, 20% { transform: scale(0.9) rotate(-3deg); }
+      30%, 50%, 70%, 90% { transform: scale(1.1) rotate(3deg); }
+      40%, 60%, 80% { transform: scale(1.1) rotate(-3deg); }
+      100% { transform: scale(1) rotate(0); }
+    }
+  </style>
+</head>
+<body>
+  <!-- ??單??批?? -->
+  <button id="bgMusicControl" onclick="toggleBackgroundMusic()" title="??單??批">?</button>
+
+  <!-- ???賊＊蝷箏?憛?-->
+  <div id="starsDisplay">
+    潃?span id="totalStarsCount">0</span>
+  </div>
+
+  <!-- ??? -->
+  <div class="top-btns">
+    <button onclick="location.href='atlas.html?tab=greek'" aria-label="????>?? ????/button>
+    <button onclick="resetProgress()" aria-label="???">?? ???</button>
+    <button onclick="showReviewModal()" aria-label="銴??桀?">?? 銴??桀?</button>
+  </div>
+
+  <h1>?憡?Athena - 憛怎征?</h1>
+
+  <!-- ?祆活??憿舐內 -->
+  <div id="sessionStarsDisplay" style="margin-bottom:10px;color:#ffd700;font-weight:bold;font-size:1.08rem;">
+    ?祆活撌脩敺?0 憿???
+  </div>
+
+  <!-- ?脣漲憿舐內 -->
+  <div id="star-counter">
+    蝚?<span id="current-index">0</span> / <span id="total-questions">0</span> 憿?
+  </div>
+
+  <!-- 閮???-->
+  <div id="timer" class="hidden">
+    ???嚗?span id="time-left">0</span> 蝘?
+  </div>
+
+  <!-- ??摰孵 -->
+  <div id="question-container"></div>
+
+  <!-- ?蝯??恍 -->
+  <div id="gameEndModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="end-icon">??</div>
+      <h2>?摰?嚗?/h2>
+      <div class="end-stats">
+        <p>潃??祆活?脣???嚗?span id="endSessionStars">0</span></p>
+        <p>??蝑?憿嚗?span id="endCorrectCount">0</span></p>
+        <p>??蝑憿嚗?span id="endWrongCount">0</span></p>
+        <p>潃?蝝舐?蝮賣???<span id="endTotalStars">0</span></p>
+      </div>
+      <div class="end-buttons">
+        <button onclick="restartGame()">?? ???</button>
+        <button onclick="location.href='atlas.html?tab=greek'">?? 餈?擐?</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 銴??桀?敶? -->
+  <div id="reviewModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="end-icon">??</div>
+      <h2>?桀?銴?</h2>
+      
+      <!-- ???豢???-->
+      <div style="margin-bottom: 20px;">
+        <label for="categoryFilter" style="color: #ffd700; font-weight: bold; margin-right: 10px;">?豢???嚗?/label>
+        <select id="categoryFilter" style="
+          background: #222;
+          color: #fff;
+          border: 2px solid #ffd700;
+          border-radius: 8px;
+          padding: 8px 12px;
+          font-size: 1rem;
+          cursor: pointer;
+        ">
+          <option value="all">?券?桀?</option>
+          <option value="?芰?啣?">?芰?啣?</option>
+          <option value="?亙虜?暑?典?">?亙虜?暑?典?</option>
+          <option value="?瑟平">?瑟平</option>
+          <option value="?湔?撱箇?">?湔?撱箇?</option>
+          <option value="???餌?">???餌?</option>
+          <option value="??">??</option>
+          <option value="?ˇ?辣">?ˇ?辣</option>
+          <option value="?怎??亙熒">?怎??亙熒</option>
+          <option value="隤???">隤???</option>
+          <option value="憡?瘣餃?">憡?瘣餃?</option>
+          <option value="?璊">?璊</option>
+          <option value="憌憌脫?">憌憌脫?</option>
+          <option value="敶Ｗ捆閰?>敶Ｗ捆閰?/option>
+          <option value="????">????</option>
+          <option value="?圾銵券?">?圾銵券?</option>
+          <option value="?拙?閰?>?拙?閰?/option>
+        </select>
+      </div>
+      
+      <!-- 蝯梯?鞈? -->
+      <div id="vocabStats" style="
+        background: rgba(255, 215, 0, 0.1);
+        border: 1px solid #ffd700;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 15px;
+        color: #ffd700;
+        font-size: 0.9rem;
+      ">
+        蝮賢 <span id="totalVocabCount">0</span> ?摮?
+        <button onclick="showVocabStats()" style="
+          background: #0ff;
+          color: #000;
+          border: none;
+          border-radius: 6px;
+          padding: 4px 8px;
+          font-size: 0.8rem;
+          margin-left: 10px;
+          cursor: pointer;
+        ">?? 閰喟敦蝯梯?</button>
+        <button onclick="exportVocabData()" style="
+          background: #4caf50;
+          color: #fff;
+          border: none;
+          border-radius: 6px;
+          padding: 4px 8px;
+          font-size: 0.8rem;
+          margin-left: 5px;
+          cursor: pointer;
+        ">? ?臬摮澈</button>
+      </div>
+      
+      <div id="reviewWordsContainer" style="max-height: 400px; overflow-y: auto; margin: 20px 0;">
+        <!-- ?桀??”撠?ㄐ???? -->
+      </div>
+      <div class="end-buttons">
+        <button onclick="closeReviewModal()">??</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/gameDialogue.js"></script>
+  <script>
+    // ===== ??蔭 =====
+    const GAME_CONFIG = {
+      QUESTIONS_COUNT: 20,
+      TIME_LIMIT: 30,
+      MAX_ATTEMPTS: 3
+    };
+
+    // ===== 憿澈鞈? =====
+   // ===== 憿澈鞈?嚗洵鈭?桀?嚗?=====
+const VOCAB_DATA = [
+  { word: "hotel", zh: "?尹", en_sentence: "We stayed at a nice hotel near the beach.", zh_sentence: "???冽絲??餈?銝摰嗡??舐??尹??, category: "?湔?撱箇?" },
+  { word: "season", zh: "摮??", en_sentence: "Spring is my favorite season.", zh_sentence: "?亙予?舀???迭?迤蝭??, category: "???餌?" },
+  { word: "high", zh: "擃?", en_sentence: "That mountain is very high.", zh_sentence: "??漣撅勗?擃?, category: "敶Ｗ捆閰? },
+  { word: "autumn", zh: "蝘予", en_sentence: "The leaves turn yellow in autumn.", zh_sentence: "蝘予?邦??霈???, category: "???餌?" },
+  { word: "snow", zh: "??, en_sentence: "It may snow tomorrow.", zh_sentence: "?予?航???芥?, category: "?芰?啣?" },
+  { word: "snowman", zh: "?芯犖", en_sentence: "The children made a snowman in the yard.", zh_sentence: "摮拙???Ｗ?鋆∪??芯犖??, category: "?芰?啣?" },
+  { word: "plan", zh: "閮", en_sentence: "I have a plan to travel next summer.", zh_sentence: "???急?撟游?憭拙????, category: "????" },
+  { word: "date", zh: "?交?", en_sentence: "What is the date today?", zh_sentence: "隞予?臬嗾??", category: "???餌?" },
+  { word: "Father's Day", zh: "?嗉扛蝭", en_sentence: "We give gifts on Father's Day.", zh_sentence: "??嗉扛蝭?旨?押?, category: "隤???" },
+  { word: "USA", zh: "蝢?", en_sentence: "My cousin lives in the USA.", zh_sentence: "??銵典?雿蝢???, category: "隤???" },
+  { word: "photo", zh: "?抒?", en_sentence: "She took a photo of the sunset.", zh_sentence: "憟寞?鈭?撘菜?賜??抒???, category: "?亙虜?暑?典?" },
+  { word: "mind", zh: "敹嚗???, en_sentence: "Do you mind if I open the window?", zh_sentence: "雿???????", category: "?圾銵券?" },
+  { word: "work", zh: "撌乩?嚗???, en_sentence: "He goes to work by bus every day.", zh_sentence: "隞?憭拇?祈?銝??, category: "????" },
+  { word: "exercise", zh: "??", en_sentence: "We should exercise every morning.", zh_sentence: "??閰脫?憭拇銝???, category: "憡?瘣餃?" },
+  { word: "turtle", zh: "??", en_sentence: "The turtle moves slowly.", zh_sentence: "????敺??, category: "?璊" },
+  { word: "practice", zh: "蝺渡?", en_sentence: "You need to practice speaking English.", zh_sentence: "雿?閬毀蝧牧?梯???, category: "????" },
+  { word: "race", zh: "瘥魚嚗魚頝?, en_sentence: "He joined the 100-meter race.", zh_sentence: "隞???銝?曉撠箄魚頝?, category: "憡?瘣餃?" },
+  { word: "team", zh: "??", en_sentence: "Our basketball team won the game.", zh_sentence: "??蝐???鈭?鞈賬?, category: "憡?瘣餃?" },
+  { word: "problem", zh: "??", en_sentence: "I have a problem with my computer.", zh_sentence: "???餉??憿?, category: "?圾銵券?" },
+  { word: "toe", zh: "?唾馮", en_sentence: "I hurt my toe while running.", zh_sentence: "??甇交??剖鈭頞整?, category: "?怎??亙熒" },
+  { word: "kind", zh: "閬芸???蝔桅?", en_sentence: "She is a kind person.", zh_sentence: "憟寞銝?扛??鈭箝?, category: "敶Ｗ捆閰? },
+  { word: "violin", zh: "撠???, en_sentence: "He plays the violin beautifully.", zh_sentence: "隞?撠??湔?敺????, category: "隤???" },
+  { word: "flute", zh: "?瑞?", en_sentence: "She can play the flute well.", zh_sentence: "憟寥蝚敺?憟賬?, category: "隤???" },
+  { word: "special", zh: "?孵??, en_sentence: "Today is a special day for us.", zh_sentence: "隞予撠???隤芣?孵??憭押?, category: "敶Ｗ捆閰? },
+  { word: "afraid", zh: "摰單?", en_sentence: "She is afraid of snakes.", zh_sentence: "憟孵拿????, category: "敶Ｗ捆閰? },
+  { word: "same", zh: "?詨???, en_sentence: "We are in the same class.", zh_sentence: "??????, category: "敶Ｗ捆閰? },
+  { word: "different", zh: "銝???, en_sentence: "Dogs and cats are different animals.", zh_sentence: "??鞎銝????押?, category: "敶Ｗ捆閰? },
+  { word: "snowy", zh: "銝??, en_sentence: "It? a snowy day today.", zh_sentence: "隞予?臬??芸予??, category: "敶Ｗ捆閰? },
+  { word: "dry", zh: "銋曄?", en_sentence: "The clothes are dry now.", zh_sentence: "銵???曉銋曆???, category: "敶Ｗ捆閰? },
+  { word: "wet", zh: "瞈?", en_sentence: "My shoes are wet from the rain.", zh_sentence: "????鋡恍瘛?鈭?, category: "敶Ｗ捆閰? },
+  { word: "popular", zh: "?迭餈?", en_sentence: "That singer is very popular.", zh_sentence: "???甇??虜?迭餈?, category: "敶Ｗ捆閰? },
+  { word: "dark", zh: "暺???, en_sentence: "It gets dark early in winter.", zh_sentence: "?砍予憭拚?敺??押?, category: "?芰?啣?" },
+  { word: "know", zh: "?仿?嚗?霅?, en_sentence: "Do you know the answer?", zh_sentence: "雿??獢?嚗?, category: "?圾銵券?" },
+  { word: "keep", zh: "靽?", en_sentence: "Please keep quiet in class.", zh_sentence: "銝玨??靽?摰???, category: "????" },
+  { word: "join", zh: "?", en_sentence: "I want to join the music club.", zh_sentence: "???單?蝷整?, category: "????" },
+  { word: "throw", zh: "銝?, en_sentence: "Throw the ball to me!", zh_sentence: "??銝策??", category: "????" },
+  { word: "hit", zh: "??嚗１??, en_sentence: "He hit the ball very hard.", zh_sentence: "隞????, category: "????" },
+  { word: "enjoy", zh: "鈭怠?", en_sentence: "I enjoy listening to music.", zh_sentence: "??甇∟?單???, category: "????" },
+  { word: "bow", zh: "?漪嚗?", en_sentence: "The actors bow at the end of the show.", zh_sentence: "瞍?刻”瞍????漪??, category: "????" },
+  { word: "win", zh: "韐?, en_sentence: "We will win the game together.", zh_sentence: "??銝韏瑁?敺?鞈賬?, category: "憡?瘣餃?" }
+];
+
+
+
+    // ===== ??????=====
+    let gameState = {
+      data: [],
+      currentIndex: 0,
+      attemptCount: 0,
+      answered: false,
+      timerInterval: null,
+      preferredVoice: null,
+      answerLog: [],
+      sessionStars: 0
+    };
+
+    // ===== ?單?鞈? =====
+    const SOUNDS = {
+      correct: new Audio('audio/correct.mp3'),
+      wrong: new Audio('audio/wrong.mp3'),
+      type: new Audio('audio/type.mp3')
+    };
+
+    // ===== ??單??批 =====
+    let isMusicPlaying = false;
+
+    function initBackgroundMusic() {
+      const backgroundMusic = document.getElementById('backgroundMusic');
+      if (backgroundMusic) {
+        backgroundMusic.volume = 0.3;
+        
+        // 敺ocalStorage霈?璅???
+        const musicState = localStorage.getItem('bgMusicState');
+        if (musicState === 'playing') {
+          playBackgroundMusic();
+        }
+      }
+    }
+
+    function toggleBackgroundMusic() {
+      const backgroundMusic = document.getElementById('backgroundMusic');
+      if (backgroundMusic) {
+        if (isMusicPlaying) {
+          pauseBackgroundMusic();
+        } else {
+          playBackgroundMusic();
+        }
+      }
+    }
+
+    function playBackgroundMusic() {
+      const backgroundMusic = document.getElementById('backgroundMusic');
+      if (backgroundMusic) {
+        backgroundMusic.play().then(() => {
+          isMusicPlaying = true;
+          document.getElementById('bgMusicControl').textContent = '??';
+          document.getElementById('bgMusicControl').classList.remove('paused');
+          localStorage.setItem('bgMusicState', 'playing');
+        }).catch(err => {
+          console.log('??單??剜憭望?:', err);
+        });
+      }
+    }
+
+    function pauseBackgroundMusic() {
+      const backgroundMusic = document.getElementById('backgroundMusic');
+      if (backgroundMusic) {
+        backgroundMusic.pause();
+        isMusicPlaying = false;
+        document.getElementById('bgMusicControl').textContent = '??';
+        document.getElementById('bgMusicControl').classList.add('paused');
+        localStorage.setItem('bgMusicState', 'paused');
+      }
+    }
+
+    // ===== 撌亙?賣 =====
+    function escapeRegExp(s) {
+      return s.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&');
+    }
+
+    function getRandomQuestions(arr, n) {
+      const count = Math.min(n, arr.length);
+      return arr.slice().sort(() => Math.random() - 0.5).slice(0, count);
+    }
+
+    // ===== 鞈?????=====
+    function initData() {
+      const selected = getRandomQuestions(VOCAB_DATA, GAME_CONFIG.QUESTIONS_COUNT);
+      gameState.data = selected.map(item => ({
+        answer: item.word,
+        zh: item.zh,
+        sentence: item.en_sentence.replace(new RegExp(escapeRegExp(item.word), 'i'), '___'),
+        original: item.en_sentence,
+        zh_sentence: item.zh_sentence,
+        category: item.category
+      }));
+      document.getElementById('total-questions').textContent = gameState.data.length;
+    }
+
+    // ===== ?脣漲蝞∠? =====
+    function saveProgress() {
+      localStorage.setItem('fillIndex', gameState.currentIndex);
+    }
+
+    function loadProgress() {
+      gameState.currentIndex = parseInt(localStorage.getItem('fillIndex')) || 0;
+      if (typeof gameState.data !== 'undefined' && Array.isArray(gameState.data) && gameState.currentIndex >= gameState.data.length) {
+        gameState.currentIndex = 0;
+        localStorage.removeItem('fillIndex');
+      }
+    }
+
+    function resetProgress() {
+      localStorage.removeItem('fillIndex');
+      location.reload();
+    }
+
+    function updateCounter() {
+      document.getElementById('current-index').textContent = gameState.currentIndex + 1;
+    }
+
+    // ===== 閮??典???=====
+    function startTimer() {
+      clearInterval(gameState.timerInterval);
+      let timeLeft = GAME_CONFIG.TIME_LIMIT;
+      document.getElementById('time-left').textContent = timeLeft;
+      document.getElementById('timer').classList.remove('hidden');
+      
+      gameState.timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById('time-left').textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(gameState.timerInterval);
+          revealAnswer(true);
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(gameState.timerInterval);
+    }
+
+    // ===== 隤? =====
+    function speak(text, rate = 1.0, callback) {
+      if (!window.speechSynthesis) return;
+      
+      const utter = new window.SpeechSynthesisUtterance(text);
+      utter.lang = 'en-US';
+      utter.rate = rate;
+      if (gameState.preferredVoice) {
+        utter.voice = gameState.preferredVoice;
+      }
+      if (callback) {
+        utter.onend = callback;
+      }
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utter);
+    }
+
+    function speakQuestionAndWord(question) {
+      speak(question.original, 1.0, () => {
+        setTimeout(() => speak(question.answer, 1.1), 100);
+      });
+    }
+
+    // ===== 蝑??? =====
+    function revealAnswer(autoNext = false) {
+      gameState.attemptCount = Infinity;
+      document.getElementById('feedback').innerHTML = 
+        '<span style="color:#f66;">?????堆?甇?Ⅱ蝑?嚗?b>' + gameState.data[gameState.currentIndex].answer + '</b></span>';
+      document.getElementById('submit-btn').disabled = true;
+      document.getElementById('user-input').disabled = true;
+      
+      logAnswer(false);
+      
+      if (autoNext) {
+        setTimeout(() => {
+          gameState.currentIndex++;
+          showQuestion();
+        }, 500);
+      }
+    }
+
+    function logAnswer(correct, userAnswer = '') {
+      const currentQuestion = gameState.data[gameState.currentIndex];
+      gameState.answerLog[gameState.currentIndex] = {
+        word: currentQuestion.answer,
+        zh: currentQuestion.zh_sentence || currentQuestion.zh,
+        en: currentQuestion.original,
+        user: userAnswer,
+        correct: correct,
+        stars: 0,
+        category: currentQuestion.category
+      };
+    }
+
+    // ===== ??憿舐內 =====
+    function showQuestion() {
+      if (!gameState.data || !Array.isArray(gameState.data) || gameState.data.length === 0) {
+        document.getElementById('question-container').innerHTML = 
+          '<div style="color:#f66;font-size:1.2rem;">?? 憿澈瘝?憿嚗?瑼Ｘ鞈?嚗?/div>';
+        return;
+      }
+
+      if (gameState.currentIndex < 0 || gameState.currentIndex >= gameState.data.length) {
+        // ?蝯?嚗＊蝷箇????
+        showGameEndScreen();
+        return;
+      }
+
+      gameState.answered = false;
+      gameState.attemptCount = 0;
+      const question = gameState.data[gameState.currentIndex];
+
+      document.getElementById('question-container').innerHTML = 
+        '<div class="question-title">?望??亙?嚗?/div>' +
+        '<div class="question-sentence">' + question.sentence.replace('___', '<span class="blank">___</span>') + '</div>' +
+        '<div class="question-zh">銝剜??內嚗? + (question.zh_sentence || question.zh) + '</div>' +
+        '<input id="user-input" placeholder="頛詨蝑??? autocomplete="off" />' +
+        '<div class="btn-row">' +
+          '<button id="submit-btn" onclick="checkAnswer()">?</button>' +
+          '<button id="skip-btn" onclick="skipQuestion()">頝喲?</button>' +
+          '<button id="next-btn" onclick="nextQuestion()">銝?憿?/button>' +
+        '</div>' +
+        '<div id="feedback"></div>' +
+        '<button id="speak-btn" onclick="speakQuestionAndWord(question)">?? ??</button>';
+
+      const inputEl = document.getElementById('user-input');
+      inputEl.focus();
+      inputEl.onkeydown = function(e) {
+        if (e.key === 'Enter') {
+          checkAnswer();
+        } else if (e.key.length === 1) {
+          try {
+            SOUNDS.type.currentTime = 0;
+            SOUNDS.type.play();
+          } catch (e) {}
+        }
+      };
+
+      updateCounter();
+      startTimer();
+      
+      setTimeout(() => {
+        speak(question.original, 0.97);
+      }, 400);
+
+      document.getElementById('speak-btn').onclick = () => speakQuestionAndWord(question);
+      window.answerStartTime = Date.now();
+      
+      // ??銴???
+      lockReviewButton();
+    }
+
+    // ===== ?蝯??恍 =====
+    function showGameEndScreen() {
+      // 閮?蝯梯??豢?
+      const correctCount = gameState.answerLog.filter(log => log && log.correct === true).length;
+      const wrongCount = gameState.answerLog.filter(log => log && log.correct === false).length;
+      const totalStars = loadTotalStars();
+
+      // ?湔蝯??恍?豢?
+      document.getElementById('endSessionStars').textContent = gameState.sessionStars;
+      document.getElementById('endCorrectCount').textContent = correctCount;
+      document.getElementById('endWrongCount').textContent = wrongCount;
+      document.getElementById('endTotalStars').textContent = totalStars;
+
+      // 憿舐內蝯??恍
+      document.getElementById('gameEndModal').style.display = 'flex';
+      
+      // ?迫閮???
+      stopTimer();
+      
+      // 閫??銴???
+      unlockReviewButton();
+      
+      // ?剜摰??單?
+      try {
+        SOUNDS.correct.currentTime = 0;
+        SOUNDS.correct.play();
+      } catch (e) {}
+    }
+
+    function restartGame() {
+      // ?梯?蝯??恍
+      document.getElementById('gameEndModal').style.display = 'none';
+      
+      // ?蔭????
+      gameState.currentIndex = 0;
+      gameState.sessionStars = 0;
+      gameState.answerLog = [];
+      
+      // ??????
+      initData();
+      updateCounter();
+      showQuestion();
+      
+      // ?湔?祆活??憿舐內
+      document.getElementById('sessionStarsDisplay').textContent = '?祆活撌脩敺?0 憿???;
+    }
+
+    // ===== ???? =====
+    function skipQuestion() {
+      stopTimer();
+      logAnswer(null, '');
+      const feedback = document.getElementById('feedback');
+      if (feedback) feedback.innerHTML = '<span style="color:#bbb;">撌脰歲?憿?/span>';
+      setTimeout(() => {
+        gameState.currentIndex++;
+        showQuestion();
+      }, 400);
+    }
+
+    function nextQuestion() {
+      stopTimer();
+      if (!gameState.answerLog[gameState.currentIndex]) {
+        logAnswer(false, document.getElementById('user-input')?.value || '');
+        const feedback = document.getElementById('feedback');
+        if (feedback) feedback.innerHTML = '<span style="color:#bbb;">?芯?蝑?/span>';
+      }
+      setTimeout(() => {
+        gameState.currentIndex++;
+        showQuestion();
+      }, 400);
+    }
+
+    function checkAnswer() {
+      if (gameState.answered) return;
+      
+      gameState.attemptCount++;
+      const inputEl = document.getElementById('user-input');
+      const feedback = document.getElementById('feedback');
+      const answer = gameState.data[gameState.currentIndex].answer.toLowerCase();
+      const userAnswer = inputEl.value.trim().toLowerCase();
+
+      if (userAnswer === answer) {
+        gameState.answered = true;
+        stopTimer();
+
+        const usedSeconds = (Date.now() - (window.answerStartTime || Date.now())) / 1000;
+        let bonus = 0;
+        let feedbackMsg = '<div class="feedback-box feedback-correct">??蝑?鈭?憭芣?鈭?';
+        
+        if (usedSeconds < 10) {
+          bonus = 2;
+          feedbackMsg += ' <span class="feedback-bonus">BONUS! ?梧? +2</span>';
+        }
+        feedbackMsg += '</div>';
+        
+        feedback.innerHTML = feedbackMsg;
+        inputEl.disabled = true;
+        document.getElementById('submit-btn').disabled = true;
+        
+        speak(answer, 1.1);
+        saveProgress();
+        updateCounter();
+        
+        logAnswer(true, inputEl.value.trim());
+        
+        const addStars = 1 + bonus;
+        addStarsToTotal(addStars);
+        gameState.sessionStars += addStars;
+        document.getElementById('sessionStarsDisplay').textContent = '?祆活撌脩敺?' + gameState.sessionStars + ' 憿???;
+        
+        try {
+          SOUNDS.correct.currentTime = 0;
+          SOUNDS.correct.play();
+        } catch (e) {}
+        
+        setTimeout(() => {
+          gameState.currentIndex++;
+          showQuestion();
+        }, 1300);
+      } else {
+        if (gameState.attemptCount < GAME_CONFIG.MAX_ATTEMPTS) {
+          feedback.innerHTML = '<div class="feedback-box feedback-wrong">???岫銝甈∴?雿隞亦?嚗?/div>';
+          try {
+            SOUNDS.wrong.currentTime = 0;
+            SOUNDS.wrong.play();
+          } catch (e) {}
+        } else {
+          feedback.innerHTML = '<div class="feedback-box feedback-wrong">??甇?Ⅱ蝑?嚗?b>' + gameState.data[gameState.currentIndex].answer + '</b><br>?交除擗???嚗?/div>';
+          inputEl.disabled = true;
+          document.getElementById('submit-btn').disabled = true;
+          
+          logAnswer(false, inputEl.value.trim());
+          
+          try {
+            SOUNDS.wrong.currentTime = 0;
+            SOUNDS.wrong.play();
+          } catch (e) {}
+          
+          setTimeout(() => {
+            gameState.currentIndex++;
+            showQuestion();
+          }, 1300);
+        }
+      }
+    }
+
+    // ===== ??蝟餌絞 =====
+    function loadTotalStars() {
+      const stars = localStorage.getItem('totalStars');
+      return stars !== null ? parseInt(stars, 10) : 0;
+    }
+
+    function addStarsToTotal(stars) {
+      const currentStars = loadTotalStars();
+      const newTotal = currentStars + stars;
+      localStorage.setItem('totalStars', newTotal);
+      updateStarsDisplay();
+    }
+
+    function updateStarsDisplay() {
+      document.getElementById('totalStarsCount').textContent = loadTotalStars();
+    }
+
+    // ===== 銴??桀?? =====
+    function showReviewModal() {
+      // ?怠??閮???
+      stopTimer();
+      
+      const container = document.getElementById('reviewWordsContainer');
+      const categoryFilter = document.getElementById('categoryFilter');
+      const totalVocabCount = document.getElementById('totalVocabCount');
+      
+      // ?湔蝮賣蝯梯?
+      totalVocabCount.textContent = VOCAB_DATA.length;
+      
+      // 憿舐內??摮?
+      displayVocabByCategory('all');
+      
+      // 瘛餃???蝭拚鈭辣????
+      categoryFilter.onchange = function() {
+        displayVocabByCategory(this.value);
+      };
+      
+      document.getElementById('reviewModal').style.display = 'flex';
+    }
+
+    function displayVocabByCategory(category) {
+      const container = document.getElementById('reviewWordsContainer');
+      const totalVocabCount = document.getElementById('totalVocabCount');
+      
+      // 皜征摰孵
+      container.innerHTML = '';
+      
+      // 蝭拚?桀?
+      let filteredVocab = VOCAB_DATA;
+      if (category !== 'all') {
+        filteredVocab = VOCAB_DATA.filter(item => item.category === category);
+      }
+      
+      // ?湔蝯梯?鞈?
+      totalVocabCount.textContent = filteredVocab.length;
+      
+      // 憿舐內??璅?
+      if (category !== 'all') {
+        const categoryTitle = document.createElement('div');
+        categoryTitle.style.cssText = `
+          color: #0ff;
+          font-size: 1.3rem;
+          font-weight: bold;
+          margin: 15px 0 10px 0;
+          padding: 10px;
+          background: rgba(0, 255, 255, 0.1);
+          border-radius: 8px;
+          text-align: center;
+        `;
+        categoryTitle.textContent = `?? ${category} (${filteredVocab.length}?摮?`;
+        container.appendChild(categoryTitle);
+      }
+      
+      // 憿舐內?桀?
+      filteredVocab.forEach((item, index) => {
+        const wordDiv = document.createElement('div');
+        wordDiv.style.cssText = `
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid #ffd700;
+          border-radius: 10px;
+          padding: 15px;
+          margin: 10px 0;
+          text-align: left;
+          cursor: pointer;
+          transition: all 0.3s;
+        `;
+        
+        // 瘛餃???璅惜
+        const categoryLabel = category === 'all' ? `<span style="color: #0ff; font-size: 0.8rem; background: rgba(0,255,255,0.2); padding: 2px 6px; border-radius: 4px; margin-left: 8px;">${item.category}</span>` : '';
+        
+        wordDiv.innerHTML = `
+          <div style="display: flex; align-items: flex-start; gap: 15px;">
+            <div style="flex: 1; min-width: 0;">
+              <div style="color: #ffd700; font-size: 1.2rem; font-weight: bold; margin-bottom: 8px; word-break: break-word;">
+                ${index+1}. ${item.word}${categoryLabel}
+              </div>
+              <div style="color: #fff; font-size: 1rem; margin-bottom: 8px; word-break: break-word;">
+                ${item.zh}
+              </div>
+              <div style="color: #0ff; font-size: 0.9rem; font-style: italic; word-break: break-word;">
+                ${item.en_sentence}
+              </div>
+            </div>
+            <button onclick="event.stopPropagation(); speakWord('${item.word}')" style="
+              background: #0ff;
+              color: #000;
+              border: none;
+              border-radius: 50%;
+              width: 45px;
+              height: 45px;
+              font-size: 1.3rem;
+              cursor: pointer;
+              flex-shrink: 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              transition: all 0.2s;
+              box-shadow: 0 2px 8px rgba(0,255,255,0.3);">??</button>
+          </div>
+        `;
+        
+        // 瘛餃??詨???
+        wordDiv.addEventListener('mouseenter', () => {
+          wordDiv.style.background = 'rgba(255, 215, 0, 0.2)';
+          wordDiv.style.transform = 'scale(1.02)';
+        });
+        
+        wordDiv.addEventListener('mouseleave', () => {
+          wordDiv.style.background = 'rgba(255, 255, 255, 0.1)';
+          wordDiv.style.transform = 'scale(1)';
+        });
+        
+        wordDiv.addEventListener('click', () => {
+          speakWord(item.word);
+        });
+        
+        container.appendChild(wordDiv);
+      });
+      
+      // 憒?瘝??桀?嚗＊蝷箸?蝷?
+      if (filteredVocab.length === 0) {
+        const noWordsDiv = document.createElement('div');
+        noWordsDiv.style.cssText = `
+          text-align: center;
+          color: #888;
+          font-size: 1.1rem;
+          padding: 40px;
+          font-style: italic;
+        `;
+        noWordsDiv.textContent = '甇文?憿?∪摮?;
+        container.appendChild(noWordsDiv);
+      }
+    }
+
+    function closeReviewModal() {
+      document.getElementById('reviewModal').style.display = 'none';
+      // ?Ｗ儔?閮??剁?憒????脰?銝哨?
+      if (gameState.currentIndex < gameState.data.length && !gameState.answered) {
+        startTimer();
+      }
+    }
+
+    function speakWord(word) {
+      if (!window.speechSynthesis) return;
+      
+      const utter = new window.SpeechSynthesisUtterance(word);
+      utter.lang = 'en-US';
+      utter.rate = 0.9;
+      utter.pitch = 1.1;
+      if (gameState.preferredVoice) utter.voice = gameState.preferredVoice;
+      
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utter);
+    }
+
+    // ===== 銴?????? =====
+    function lockReviewButton() {
+      const reviewBtn = document.querySelector('.top-btns button[onclick*="showReviewModal"]');
+      if (reviewBtn) {
+        reviewBtn.disabled = true;
+        reviewBtn.style.background = '#555';
+        reviewBtn.style.color = '#888';
+        reviewBtn.style.cursor = 'not-allowed';
+        reviewBtn.title = '??脰?銝哨??⊥?銴??桀?';
+      }
+    }
+
+    function unlockReviewButton() {
+      const reviewBtn = document.querySelector('.top-btns button[onclick*="showReviewModal"]');
+      if (reviewBtn) {
+        reviewBtn.disabled = false;
+        reviewBtn.style.background = '#ffd700';
+        reviewBtn.style.color = '#000';
+        reviewBtn.style.cursor = 'pointer';
+        reviewBtn.title = '銴??桀?';
+      }
+    }
+
+    // ===== 摮澈蝯梯?? =====
+    function showVocabStats() {
+      // 閮???憿??桀??賊?
+      const categoryStats = {};
+      VOCAB_DATA.forEach(item => {
+        categoryStats[item.category] = (categoryStats[item.category] || 0) + 1;
+      });
+      
+      // ?萄遣蝯梯?敶?
+      const statsModal = document.createElement('div');
+      statsModal.className = 'modal';
+      statsModal.style.display = 'flex';
+      statsModal.innerHTML = `
+        <div class="modal-content" style="max-width: 600px;">
+          <div class="end-icon">??</div>
+          <h2>摮澈蝯梯?</h2>
+          <div style="text-align: left; margin: 20px 0;">
+            <h3 style="color: #ffd700; margin-bottom: 15px;">?? ??蝯梯?</h3>
+            ${Object.entries(categoryStats).map(([category, count]) => `
+              <div style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 0;
+                border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+              ">
+                <span style="color: #fff;">${category}</span>
+                <span style="color: #0ff; font-weight: bold;">${count} ?摮?/span>
+              </div>
+            `).join('')}
+            <div style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding: 12px 0;
+              border-top: 2px solid #ffd700;
+              margin-top: 10px;
+              font-weight: bold;
+            ">
+              <span style="color: #ffd700;">蝮質?</span>
+              <span style="color: #ffd700;">${VOCAB_DATA.length} ?摮?/span>
+            </div>
+          </div>
+          <div class="end-buttons">
+            <button onclick="this.closest('.modal').remove()">??</button>
+          </div>
+        </div>
+      `;
+      
+      // 瘛餃?暺?憭???
+      statsModal.addEventListener('click', function(e) {
+        if (e.target === statsModal) {
+          statsModal.remove();
+        }
+      });
+      
+      document.body.appendChild(statsModal);
+    }
+
+    // ===== 摮澈?臬? =====
+    function exportVocabData() {
+      // ?萄遣CSV?澆????
+      const csvContent = [
+        ['?桀?', '銝剜?', '?望?靘', '銝剜?靘', '??'],
+        ...VOCAB_DATA.map(item => [
+          item.word,
+          item.zh,
+          item.en_sentence,
+          item.zh_sentence,
+          item.category
+        ])
+      ].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+      
+      // ?萄遣銝????
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `athena_vocabulary_${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // 憿舐內??閮
+      showNotification('??摮澈撌脫???綽?', 'success');
+    }
+
+    // ===== ?? =====
+    function showNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: ${type === 'success' ? '#4caf50' : '#2196f3'};
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: bold;
+        z-index: 10000;
+        animation: slideDown 0.3s ease-out;
+      `;
+      notification.textContent = message;
+      
+      // 瘛餃??璅??
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes slideDown {
+          from { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+          to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(notification);
+      
+      // 3蝘??芸?蝘駁
+      setTimeout(() => {
+        notification.remove();
+        style.remove();
+      }, 3000);
+    }
+
+    // ===== ????=====
+    let voices = [];
+    function pickVoice() {
+      voices = window.speechSynthesis.getVoices();
+      const preferredVoices = [
+        'Google US English', 'Microsoft Zira - English (United States)', 'Samantha'
+      ];
+      for (const name of preferredVoices) {
+        const voice = voices.find(v => v.name === name && v.lang.startsWith('en'));
+        if (voice) {
+          gameState.preferredVoice = voice;
+          return;
+        }
+      }
+      gameState.preferredVoice = voices.find(v => v.lang.startsWith('en-US'));
+    }
+
+    if (typeof speechSynthesis !== 'undefined') {
+      speechSynthesis.onvoiceschanged = pickVoice;
+      pickVoice();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateStarsDisplay();
+      document.getElementById('sessionStarsDisplay').textContent = '?祆活撌脩敺?0 憿???;
+      initData();
+      gameState.currentIndex = 0;
+      updateCounter();
+      showQuestion();
+      localStorage.removeItem('fillIndex');
+      
+      // ?????舫璅?
+      initBackgroundMusic();
+      
+      // ????閫??銴???
+      unlockReviewButton();
+    });
+
+    // 暺?敶?憭??賡???
+    document.addEventListener('DOMContentLoaded', function() {
+      const reviewModal = document.getElementById('reviewModal');
+      const gameEndModal = document.getElementById('gameEndModal');
+      
+      if(reviewModal){
+        reviewModal.addEventListener('click', function(e){
+          if(e.target === reviewModal){
+            closeReviewModal();
+          }
+        });
+      }
+      
+      if(gameEndModal){
+        gameEndModal.addEventListener('click', function(e){
+          if(e.target === gameEndModal){
+            document.getElementById('gameEndModal').style.display = 'none';
+          }
+        });
+      }
+    });
+
+    // 閫鈭?蝟餌絞?游?
+    let currentCharacter = localStorage.getItem('characterName') || 'zeus';
+    if (window.GameDialogue) {
+      window.GameDialogue.currentCharacter = currentCharacter;
+    }
+    function showGameStartDialogue() {
+      if (window.GameDialogue) {
+        window.GameDialogue.showGameStartDialogue();
+      }
+    }
+    function showCorrectAnswerDialogue() {
+      if (window.GameDialogue) {
+        window.GameDialogue.showCorrectAnswerDialogue();
+      }
+    }
+    function showWrongAnswerDialogue() {
+      if (window.GameDialogue) {
+        window.GameDialogue.showWrongAnswerDialogue();
+      }
+    }
+    function showGameVictoryDialogue() {
+      if (window.GameDialogue) {
+        window.GameDialogue.showGameVictoryDialogue();
+      }
+    }
+    function showGameDefeatDialogue() {
+      if (window.GameDialogue) {
+        window.GameDialogue.showGameDefeatDialogue();
+      }
+    }
+
+    // ?頛??憪?
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        if (window.GameDialogue) {
+          window.GameDialogue.init();
+        }
+      }, 1000);
+    });
+
+    // ?券??脤?憪?閫貊
+    function startGame() {
+      // ... existing code ...
+      showGameStartDialogue();
+    }
+
+    // ?函?撠?閫貊
+    function handleCorrectAnswer() {
+      // ... existing code ...
+      showCorrectAnswerDialogue();
+    }
+
+    // ?函??舀?閫貊
+    function handleWrongAnswer() {
+      // ... existing code ...
+      showWrongAnswerDialogue();
+    }
+
+    // ?券??脣??拇?閫貊
+    function handleGameVictory() {
+      // ... existing code ...
+      showGameVictoryDialogue();
+    }
+
+    // ?券??脣仃??閫貊
+    function handleGameDefeat() {
+      // ... existing code ...
+      showGameDefeatDialogue();
+    }
+  </script>
+</body>
+</html>
+
+

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>?? 憭芰征?梯?? - 憓撥??瑼???/title>
+  <link rel="stylesheet" href="responsive_enhanced.css">
+  <link rel="stylesheet" href="css/saveReminderAnimations.css">
+  <!-- ?嗡??暹???CSS 撘 -->
+</head>
+<body>
+  <div id="container">
+    <!-- ?暹????Ｗ摰?-->
+    <div class="header">
+      <h1 class="title">?? 憭芰征?梯??</h1>
+      <p class="subtitle">?Ｙ揣摰?嚗飛蝧隤?</p>
+    </div>
+
+    <!-- 憓撥??瑼?????-->
+    <div id="saveReminder" style="display: none;">
+      <!-- ?批捆撠憓撥?頂蝯勗?????-->
+    </div>
+
+    <!-- ?拙振鞈????-->
+    <div class="player-info">
+      <input type="text" id="playerName" placeholder="頛詨?函?憭芰征鈭箏?蝔?>
+      <div class="avatar-grid">
+        <!-- ?剖??賊? -->
+        <div class="avatar-option" style="background-image: url('img/avatars/avatar_astro1.png');" onclick="selectAvatar(this, 'img/avatars/avatar_astro1.png')"></div>
+        <!-- ?嗡??剖??賊?... -->
+      </div>
+    </div>
+
+    <!-- 銝餉???? -->
+    <div class="main-buttons">
+      <button class="btn" onclick="startAdventure()">?? ???</button>
+      <button class="btn" onclick="openVocabularyBook()">?? ?桀???/button>
+      <button class="btn" onclick="openGrammarTower()">??儭???憛?/button>
+      <button class="btn" onclick="openShop()">?? ??</button>
+      <button class="btn" onclick="openGacha()">? ?賢</button>
+    </div>
+
+    <!-- 撠?? -->
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="openCards()">?? ?∠??嗉?</button>
+      <button class="nav-btn" onclick="openAchievements()">?? ?停?喟?</button>
+      <button class="nav-btn" onclick="openAutoSaveManager()">? ?芸??脣?</button>
+    </div>
+  </div>
+
+  <!-- ?暹???砍???-->
+  <script src="js/userData.js"></script>
+  <script src="js/autoSaveSystem.js"></script>
+  <script src="js/achievementSystem.js"></script>
+  <script src="js/characterDialogue.js"></script>
+  <script src="js/cards.js"></script>
+  
+  <!-- ?啣?嚗?撘瑞?摮???蝟餌絞 -->
+  <script src="js/enhancedSaveReminder.js"></script>
+
+  <script>
+    // ?暹????脤?頛臭???霈?
+    console.log('=== JavaScript???瑁? ===');
+    
+    // 憓撥??瑼??頂蝯望??
+    function integrateEnhancedSaveReminder() {
+      // ?券?閬?雿葉閮?瘣餃?
+      
+      // ???????
+      window.startAdventure = function() {
+        window.recordImportantAction('adventure_start', '???');
+        location.href = 'atlas.html';
+      };
+      
+      // ???桀??祆?閮?
+      window.openVocabularyBook = function() {
+        window.recordImportantAction('vocabulary_access', '???桀???);
+        location.href = 'book.html';
+      };
+      
+      // ????憛?閮?
+      window.openGrammarTower = function() {
+        window.recordImportantAction('grammar_access', '????憛?);
+        location.href = 'grammar_tower_select.html';
+      };
+      
+      // ????????
+      window.openShop = function() {
+        window.recordImportantAction('shop_access', '????');
+        location.href = 'shop.html';
+      };
+      
+      // ???賢????
+      window.openGacha = function() {
+        window.recordImportantAction('gacha_access', '???賢');
+        location.href = 'gacha.html';
+      };
+      
+      // ???∠??嗉?????
+      window.openCards = function() {
+        window.recordImportantAction('cards_access', '???∠??嗉?');
+        location.href = 'cards.html';
+      };
+      
+      // ???停蝟餌絞????
+      window.openAchievements = function() {
+        window.recordImportantAction('achievements_access', '???停蝟餌絞');
+        location.href = 'achievement.html';
+      };
+      
+      // ???芸??脣?蝞∠???
+      window.openAutoSaveManager = function() {
+        window.open('autoSaveManager.html', '_blank');
+      };
+    }
+    
+    // ?剖??豢?????閬?雿?
+    function selectAvatar(element, avatarPath) {
+      // ?暹?????頛?..
+      document.querySelectorAll('.avatar-option').forEach(avatar => {
+        avatar.classList.remove('selected');
+      });
+      element.classList.add('selected');
+      
+      // 閮?????
+      window.recordImportantAction('avatar_change', '?湔??剖?');
+      
+      // ?嗡??暹??摩...
+    }
+    
+    // ?拙振?迂頛詨????
+    document.getElementById('playerName').addEventListener('input', function(e) {
+      const name = e.target.value.trim();
+      if (name) {
+        LinkageSystem.player.setName(name);
+        // 閮?????
+        window.recordImportantAction('name_change', '?湔?拙振?迂');
+      }
+    });
+    
+    // ?頛??????
+    window.addEventListener('load', function() {
+      console.log('?? 憓撥??瑼??頂蝯望????);
+      
+      // ?游?憓撥??瑼??頂蝯?
+      integrateEnhancedSaveReminder();
+      
+      // 頛雿輻??蝔勗??剖?
+      LinkageSystem.player.updateDisplay();
+      
+      // ?暹???憪??摩...
+      const savedAvatar = localStorage.getItem('selectedAvatar');
+      if (savedAvatar) {
+        // ?Ｗ儔?剖??豢??摩...
+      }
+      
+      // 瑼Ｘ?臬?粹?甈∟赤??
+      const hasShownWelcome = localStorage.getItem('hasShownWelcomeDialogue');
+      if (!hasShownWelcome && window.CharacterDialogue) {
+        setTimeout(() => {
+          window.CharacterDialogue.showWelcomeDialogue();
+          localStorage.setItem('hasShownWelcomeDialogue', 'true');
+        }, 2000);
+      }
+      
+      // 瘜冽?嚗???閬?????瑼??頂蝯?
+      // startSaveReminderCheck(); // ??鋡怠?撘瑞?蝟餌絞?誨
+    });
+    
+    // ?停蝟餌絞?游?
+    function updateAchievementBadge() {
+      // ?暹???撠望?圈?頛?..
+      // ?嗥敺?撠望?閮?????
+      window.recordImportantAction('achievement_progress', '?停?脣漲?湔');
+    }
+    
+    // 瘥蝪賢?游?
+    function checkDailyReward() {
+      // ?暹????亦偷?圈?頛?..
+      // ?嗥敺??亦??菜?閮?????
+      window.recordImportantAction('daily_reward', '?脣?瘥?');
+    }
+    
+    // ??蝟餌絞?游?
+    function updateStarsDisplay() {
+      LinkageSystem.stars.updateDisplay();
+      // ?嗆??????閮?????
+      window.recordImportantAction('stars_change', '???賊?霈?');
+    }
+    
+    // ?單??批嚗?????踝?
+    const backgroundMusic = document.getElementById('backgroundMusic');
+    const toggleMusicBtn = document.getElementById('toggleMusic');
+    let isMusicPlaying = LinkageSystem.music.isPlaying();
+    
+    // ?嗡??暹??avaScript?摩靽?銝?...
+  </script>
+</body>
+</html> 

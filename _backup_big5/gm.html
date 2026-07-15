@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GM 蝞∠???</title>
+  <link rel="stylesheet" href="css/gm.css">
+</head>
+<body>
+
+  <main class="gm-page">
+
+    <section class="gm-login-panel" id="gmLoginPanel">
+      <h1>GM 蝞∠???</h1>
+      <p>隢撓?亦恣??蝣澆??脣??/p>
+
+      <input
+        type="password"
+        id="gmPasswordInput"
+        placeholder="隢撓?亦恣??蝣?
+      >
+
+      <button type="button" id="gmLoginBtn">
+        ?脣蝞∠?
+      </button>
+
+      <p id="gmLoginMessage" class="gm-message"></p>
+    </section>
+
+    <section class="gm-dashboard" id="gmDashboard" hidden>
+
+      <header class="gm-header">
+        <div>
+          <h1>GM 蝞∠???</h1>
+          <p>?舐恣???～????鞈???/p>
+        </div>
+
+        <a href="index.html" class="gm-home-link">
+          餈?擐?
+        </a>
+      </header>
+
+      <section class="gm-summary">
+        <div class="gm-summary-card">
+          <span>?桀???</span>
+          <strong id="gmSummaryStars">0</strong>
+        </div>
+
+        <div class="gm-summary-card">
+          <span>撌脰圾????/span>
+          <strong id="gmSummaryUnlockedLevels">0</strong>
+        </div>
+
+        <div class="gm-summary-card">
+          <span>撌脣?????/span>
+          <strong id="gmSummaryCompletedLevels">0</strong>
+        </div>
+
+        <div class="gm-summary-card">
+          <span>撌脰圾???/span>
+          <strong id="gmSummaryUnlockedCards">0</strong>
+        </div>
+
+        <div class="gm-summary-card">
+          <span>???∠?</span>
+          <strong id="gmSummaryOwnedCards">0</strong>
+        </div>
+
+        <div class="gm-summary-card">
+          <span>撌脰圾??摨批???/span>
+          <strong id="gmSummaryUnlockedZodiac">0</strong>
+        </div>
+
+        <div class="gm-summary-card">
+          <span>撌脰圾????蟡?/span>
+          <strong id="gmSummaryUnlockedGods">0</strong>
+        </div>
+      </section>
+
+      <nav class="gm-tabs">
+        <button type="button" class="active" data-gm-tab="summary">蝮質汗</button>
+        <button type="button" data-gm-tab="user">雿輻??/button>
+        <button type="button" data-gm-tab="stars">??</button>
+        <button type="button" data-gm-tab="levels">?</button>
+        <button type="button" data-gm-tab="zodiac">?漣??</button>
+        <button type="button" data-gm-tab="gods">撣?蟡?</button>
+        <button type="button" data-gm-tab="cards">?∠?</button>
+        <button type="button" data-gm-tab="market">??鈭斗?</button>
+        <button type="button" data-gm-tab="gacha">?賢</button>
+        <button type="button" data-gm-tab="settings">閮剖?</button>
+        <button type="button" data-gm-tab="backup">?遢</button>
+        <button type="button" data-gm-tab="inspector">鞈?瑼Ｘ</button>
+        <button type="button" data-gm-tab="logs">??蝝??/button>
+      </nav>
+
+      <section class="gm-tab-panel" id="gmTabSummary">
+        <h2>蝮質汗</h2>
+        <p>蝬脩?鞈?蝮質汗??/p>
+        <div id="gmSummaryDetails" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabUser" hidden>
+        <h2>雿輻?恣??/h2>
+        <p>蝞∠?雿輻??蝔梯?鞈???/p>
+
+        <div class="gm-filter-row">
+          <input type="text" id="gmPlayerNameInput" placeholder="雿輻??蝔? maxlength="10">
+          <button type="button" id="gmSavePlayerNameBtn">?脣?雿輻??蝔?/button>
+        </div>
+
+        <div id="gmUserDetails" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabStars" hidden>
+        <h2>??蝞∠?</h2>
+        <p>蝞∠????賊???/p>
+
+        <div class="gm-filter-row">
+          <input type="number" id="gmStarsInput" placeholder="???賊?" min="0">
+          <button type="button" id="gmSetStarsBtn">閮剖???</button>
+        </div>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmAddStarsBtn">+100 ??</button>
+          <button type="button" id="gmRemoveStarsBtn">-100 ??</button>
+          <button type="button" id="gmResetStarsBtn" class="danger">??甇賊</button>
+        </div>
+
+        <div id="gmStarsDetails" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabLevels" hidden>
+        <h2>?蝞∠?</h2>
+        <p>?臭誑??閫????摰身?箏歇?????日?蝝??/p>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmUnlockAllLevelsBtn">閫???券?</button>
+          <button type="button" id="gmLockAllLevelsBtn" class="danger">???券?</button>
+          <button type="button" id="gmCompleteAllLevelsBtn">?券閮剔撌脤?</button>
+          <button type="button" id="gmClearAllLevelsBtn" class="danger">皜?券??</button>
+        </div>
+
+        <div id="gmLevelList" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabZodiac" hidden>
+        <h2>?漣??蝞∠?</h2>
+        <p>?臭誑??閫????摰?摨批????柴?/p>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmUnlockAllZodiacBtn">
+            閫???券?漣??
+          </button>
+          <button type="button" id="gmLockAllZodiacBtn" class="danger">
+            ???券?漣??
+          </button>
+        </div>
+
+        <div id="gmZodiacList" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabGods" hidden>
+        <h2>撣?蟡?蝞∠?</h2>
+        <p>?臭誑??閫????摰??亦?撣?蟡?鞈???/p>
+
+        <div class="gm-filter-row">
+          <input type="text" id="gmGodSearchInput" placeholder="??蟡??迂???蝔?>
+          <select id="gmGodUnlockFilter">
+            <option value="">?券???/option>
+            <option value="unlocked">撌脰圾??/option>
+            <option value="locked">?芾圾??/option>
+          </select>
+        </div>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmUnlockAllGodsBtn">
+            閫???券撣?蟡?
+          </button>
+          <button type="button" id="gmLockAllGodsBtn" class="danger">
+            ???券撣?蟡?
+          </button>
+        </div>
+
+        <div id="gmGodList" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabCards" hidden>
+        <h2>?∠?蝞∠?</h2>
+
+        <div class="gm-filter-row">
+          <input type="text" id="gmCardSearchInput" placeholder="???∠??迂?頂?D">
+          <select id="gmCardSeriesFilter">
+            <option value="">?券蝟餃?</option>
+          </select>
+          <select id="gmCardRarityFilter">
+            <option value="">?券蝔?漲</option>
+            <option value="頞???>頞???/option>
+            <option value="蝔??>蝔??/option>
+            <option value="?桅?>?桅?/option>
+          </select>
+        </div>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmUnlockAllCardsBtn">閫???券?∠?</button>
+          <button type="button" id="gmLockAllCardsBtn" class="danger">???券?∠?</button>
+        </div>
+
+        <div id="gmCardList" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabStars" hidden>
+        <h2>??蝞∠?</h2>
+
+        <div class="gm-star-panel">
+          <p class="gm-current-stars">
+            ?桀???嚗?strong id="gmCurrentStars">0</strong>
+          </p>
+
+          <input
+            type="number"
+            id="gmStarAmountInput"
+            min="1"
+            step="1"
+            placeholder="隢撓?交????
+          >
+
+          <div class="gm-star-actions">
+            <button type="button" id="gmAddStarsBtn">蝯虫???</button>
+            <button type="button" id="gmRemoveStarsBtn">????</button>
+            <button type="button" id="gmSetStarsBtn">閮剖????賊?</button>
+            <button type="button" id="gmResetStarsBtn" class="danger">??甇賊</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabMarket" hidden>
+        <h2>??鈭斗?蝞∠?</h2>
+        <p>蝞∠????漱????/p>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmClearMarketBtn" class="danger">皜??鞈?</button>
+          <button type="button" id="gmClearTradeBtn" class="danger">皜鈭斗?蝝??/button>
+          <button type="button" id="gmClearBargainBtn" class="danger">皜霅啣蝝??/button>
+        </div>
+
+        <div id="gmMarketList" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabGacha" hidden>
+        <h2>?賢蝞∠?</h2>
+        <p>蝞∠??賢蝝??靽???/p>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmClearGachaBtn" class="danger">皜?賢蝝??/button>
+          <button type="button" id="gmResetPityBtn">?蔭靽?甈⊥</button>
+        </div>
+
+        <div id="gmGachaList" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabSettings" hidden>
+        <h2>蝬脩?閮剖?</h2>
+        <p>蝞∠?蝬脩?閮剖???/p>
+
+        <div class="gm-filter-row">
+          <select id="gmThemeSelect">
+            <option value="">?豢?銝駁?</option>
+            <option value="light">鈭株</option>
+            <option value="dark">?</option>
+          </select>
+          <button type="button" id="gmSaveThemeBtn">?脣?銝駁?</button>
+        </div>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmClearSettingsBtn" class="danger">皜閮剖?</button>
+        </div>
+
+        <div id="gmSettingsList" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabBackup" hidden>
+        <h2>?遢??</h2>
+        <p>蝞∠??砍?遢??Google Drive ?遢??/p>
+
+        <div class="gm-backup-reminder">
+          ?脰?憭折?靽格??撱箄降??頛??渡雯蝡?隞踝??踹?鞈?隤斗??        </div>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmDownloadBackupBtn">銝?摰?遢</button>
+          <button type="button" id="gmUploadDriveBtn">銝 Google Drive</button>
+          <button type="button" id="gmDownloadDriveBtn">敺?Google Drive 銝?</button>
+        </div>
+
+        <div id="gmBackupList" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabInspector" hidden>
+        <h2>鞈?瑼Ｘ</h2>
+        <p>瑼Ｚ??耨敺?localStorage 鞈???/p>
+
+        <div class="gm-filter-row">
+          <input type="text" id="gmStorageSearchInput" placeholder="?? key">
+          <button type="button" id="gmStorageSearchBtn">??</button>
+        </div>
+
+        <div id="gmStorageList" class="gm-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabLogs" hidden>
+        <h2>??蝝??/h2>
+        <button type="button" id="gmClearLogsBtn" class="danger">皜??蝝??/button>
+        <div id="gmLogList" class="gm-log-list"></div>
+      </section>
+
+      <p id="gmStatusMessage" class="gm-status-message"></p>
+
+    </section>
+
+  </main>
+
+  <script src="js/cards.js"></script>
+  <script src="js/gm.js"></script>
+</body>
+</html>

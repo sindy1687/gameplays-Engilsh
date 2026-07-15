@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>蝞∠?????/title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="admin-page">
+    <section id="adminLoginBox" class="admin-card">
+      <h1>蝞∠?????/h1>
+      <p>隢撓?亦恣??蝣?/p>
+
+      <input
+        id="adminPasskey"
+        type="password"
+        placeholder="蝞∠???蝣?
+        class="admin-input"
+      >
+
+      <button class="admin-main-btn" onclick="adminLogin()">
+        ?餃蝞∠?敺
+      </button>
+    </section>
+
+    <main id="adminPanel" class="admin-panel hidden">
+      <header class="admin-header">
+        <h1>蝞∠?????/h1>
+        <button class="admin-logout-btn" onclick="adminLogout()">?餃</button>
+      </header>
+
+      <section class="admin-card">
+        <h2>?拙振?亥岷</h2>
+
+        <div class="admin-form-row">
+          <input
+            id="adminUserId"
+            class="admin-input"
+            placeholder="頛詨?拙振?迂??ID"
+          >
+
+          <button class="admin-main-btn" onclick="adminGetPlayer()">
+            ?亥岷?拙振
+          </button>
+        </div>
+
+        <div id="adminPlayerInfo" class="admin-player-info">
+          撠?亥岷?拙振
+        </div>
+      </section>
+
+      <section class="admin-grid">
+        <div class="admin-card">
+          <h2>??蝞∠?</h2>
+
+          <label>???賊?</label>
+          <input
+            id="adminStarAmount"
+            class="admin-input"
+            type="number"
+            min="0"
+            placeholder="靘? 100"
+          >
+
+          <label>??</label>
+          <textarea
+            id="adminReason"
+            class="admin-textarea"
+            placeholder="靘?嚗玨?”?曆蔔???遙???潛???
+          ></textarea>
+
+          <div class="admin-button-group">
+            <button class="admin-success-btn" onclick="adminAdjustStars('add')">
+              憓???
+            </button>
+
+            <button class="admin-warning-btn" onclick="adminAdjustStars('subtract')">
+              ????
+            </button>
+
+            <button class="admin-danger-btn" onclick="adminAdjustStars('set')">
+              ?湔閮剖?
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h2>閫??蝞∠?</h2>
+
+          <label>閫??憿?</label>
+          <select id="adminUnlockType" class="admin-input">
+            <option value="card">?∠?</option>
+            <option value="series">蝟餃?</option>
+            <option value="theme">銝駁?</option>
+            <option value="level">?</option>
+            <option value="feature">?</option>
+            <option value="item">?</option>
+          </select>
+
+          <label>閫?? ID ??蝔?/label>
+          <input
+            id="adminUnlockId"
+            class="admin-input"
+            placeholder="靘? card_001?aruto?heme_coco"
+          >
+
+          <label>??</label>
+          <textarea
+            id="adminUnlockReason"
+            class="admin-textarea"
+            placeholder="靘?嚗暑???萸葦鋆?頂蝯曹耨甇?
+          ></textarea>
+
+          <button class="admin-main-btn" onclick="adminUnlockItem()">
+            ?閫??
+          </button>
+        </div>
+      </section>
+
+      <section class="admin-card">
+        <h2>?潭?蝯衣摰?/h2>
+        <p>???摮 Google Sheet嚗摰嗥?亙?暺????萸???啜?/p>
+
+        <label>?拙振 ID ??蝔?/label>
+        <input
+          id="adminRewardUserId"
+          class="admin-input"
+          placeholder="頛詨?拙振 ID ??蝔?
+        >
+
+        <label>?憿?</label>
+        <select id="adminRewardType" class="admin-input">
+          <option value="stars">??</option>
+          <option value="card">?∠?</option>
+          <option value="series">蝟餃?</option>
+          <option value="theme">銝駁?</option>
+          <option value="level">?</option>
+          <option value="item">?</option>
+        </select>
+
+        <label>? ID ?摰?/label>
+        <input
+          id="adminRewardValue"
+          class="admin-input"
+          placeholder="靘? card_001?aruto?heme_coco嚗???征"
+        >
+
+        <label>?賊?</label>
+        <input
+          id="adminRewardAmount"
+          class="admin-input"
+          type="number"
+          min="1"
+          value="1"
+        >
+
+        <label>?潭??</label>
+        <textarea
+          id="adminRewardReason"
+          class="admin-textarea"
+          placeholder="靘?嚗玨?”?曆蔔?暑???萸??潛???
+        ></textarea>
+
+        <button class="admin-main-btn" onclick="adminSendReward()">
+          ??
+        </button>
+      </section>
+
+      <section class="admin-card">
+        <h2>蝞∠???蝝??/h2>
+        <button class="admin-main-btn" onclick="adminGetLogs()">?霈????/button>
+        <div id="adminLogs" class="admin-logs">
+          撠蝝??        </div>
+      </section>
+
+      <section class="admin-card">
+        <h2>鞈?蝞∠?</h2>
+        <p>蝞∠??砍鞈??遢?????賬?/p>
+        <button class="admin-main-btn" onclick="location.href='data-management.html'">
+          ??鞈?蝞∠?
+        </button>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/googleSheetApi.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
