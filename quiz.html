@@ -623,7 +623,6 @@
   <!-- 外部字庫檔案 -->
   <script src="js/userData.js"></script>
   <script src="js/sound.js"></script>
-  <script src="js/stars.js"></script>
   <script src="js/starRewardSystem.js"></script>
   <script src="js/vocabData.js"></script>
   <script src="js/cards.js"></script>
@@ -737,8 +736,13 @@
         pauseSkillUses = pauseSkillSeconds > 0 ? 1 : 0;
         starMultiplier = Math.max(1, Math.min(2, maxMultiply >= 2 ? 2 : maxMultiply));
 
+        const info = [];
+        if (extendPerQuestion > 0) info.push(`⏳+${extendPerQuestion}s`);
+        if (pauseSkillUses > 0) info.push(`⏸️${pauseSkillUses}次`);
+        if (starMultiplier > 1) info.push(`⭐x${starMultiplier}`);
+
         const badge = document.getElementById('categoryName');
-        if (badge) badge.textContent = categoryKey;
+        if (badge && info.length) badge.textContent = `${categoryKey}  ${info.join(' ')}`;
 
         if (pauseSkillUses > 0 && !document.getElementById('pauseSkillBtn')) {
           const row = document.querySelector('.btn-row');
@@ -791,17 +795,10 @@
 
     let isProcessingAnswer = false;
 
-    // 遊戲狀態標記
-    let isGameFinished = false;
-    let hasAppliedStarsThisRun = false;
-    let hasAnsweredCurrentQuestion = false;
-
     // 星星總數
     let totalStarCount = parseInt(localStorage.getItem('totalStars') || '0', 10);
     function updateTotal() {
-      if (typeof StarSystem !== 'undefined' && typeof StarSystem.getTotalStars === 'function') {
-        totalStarCount = StarSystem.getTotalStars();
-      } else if (typeof LinkageSystem !== 'undefined') {
+      if (typeof LinkageSystem !== 'undefined') {
         totalStarCount = LinkageSystem.stars.get();
       } else if (typeof StarRewardSystem !== 'undefined' &&
                  typeof StarRewardSystem.getTotalStars === 'function') {
@@ -869,14 +866,6 @@
     }
 
     function showResultPanel() {
-      // 防止重複結算
-      if (isGameFinished) {
-        console.warn('[星星系統] 結算已執行過，略過重複結算');
-        return;
-      }
-
-      isGameFinished = true;
-
       document.getElementById('sessionStars').textContent = correctCount * 2;
       document.getElementById('sessionCorrect').textContent = correctCount;
       document.getElementById('sessionWrong').textContent = wrongList.length;
@@ -884,37 +873,7 @@
       document.getElementById('resultModal').style.display = 'flex';
       disablePlay();
 
-      // 統一星星結算
-      if (!hasAppliedStarsThisRun) {
-        hasAppliedStarsThisRun = true;
-
-        // 計算本關星數（基於答對率）
-        const totalQuestions = used.length;
-        const earnedLevelStars = typeof StarSystem !== 'undefined'
-          ? StarSystem.calculateStars(correctCount, totalQuestions)
-          : (correctCount >= totalQuestions * 0.95 ? 3 : correctCount >= totalQuestions * 0.8 ? 2 : correctCount >= totalQuestions * 0.75 ? 1 : 0);
-
-        // 使用 categoryKey 作為關卡 ID
-        const levelId = categoryKey;
-
-        // 套用關卡星星（只補差額）
-        if (typeof StarSystem !== 'undefined') {
-          const starResult = StarSystem.applyLevelStars(levelId, earnedLevelStars, {
-            isPracticeMode: false,
-            isCompleted: lives > 0
-          });
-
-          console.group('[星星系統] 結算檢查');
-          console.log('關卡:', levelId);
-          console.log('答對數:', correctCount);
-          console.log('總題數:', totalQuestions);
-          console.log('本次獲得星數:', earnedLevelStars);
-          console.log('歷史最高星數:', starResult.oldStars);
-          console.log('本次實際增加星星:', starResult.addedStars);
-          console.log('目前總星星:', starResult.totalStars);
-          console.groupEnd();
-        }
-
+      if (typeof StarRewardSystem === 'undefined' && typeof LinkageSystem === 'undefined') {
         updateTotal();
       }
 
@@ -932,50 +891,6 @@
           passed.push(categoryKey);
           localStorage.setItem('passed_atlas', JSON.stringify(passed));
         }
-      }
-
-      // 保存 atlas 關卡結算資料
-      const atlasCategories = [
-        'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
-        'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces',
-        'andromeda', 'cygnus', 'orion', 'pegasus', 'cassiopeia',
-        'scorpius', 'phoenix', 'vela'
-      ];
-      const isAtlasLevel = atlasCategories.includes(categoryKey.toLowerCase());
-
-      if (isAtlasLevel) {
-        const accuracy = Math.round((correctCount / totalQuestions) * 100);
-        const timeUsedSeconds = Math.floor((Date.now() - startTime) / 1000);
-        const passed = correctCount >= 16;
-
-        const levelPlayRecord = {
-          date: new Date().toDateString(),
-          levelId: categoryKey,
-          levelTitle: categoryKey,
-          category: categoryKey,
-          isAtlasLevel: true,
-          correctCount: correctCount,
-          totalQuestions: totalQuestions,
-          accuracy: accuracy,
-          stars: earnedLevelStars,
-          passed: passed,
-          timeUsedSeconds: timeUsedSeconds,
-          remainingSeconds: 0,
-          finishedReason: passed ? 'completed' : 'failed'
-        };
-
-        // 保存到 levelPlayRecords
-        let levelPlayRecords = JSON.parse(localStorage.getItem('levelPlayRecords') || '[]');
-        levelPlayRecords.push(levelPlayRecord);
-        localStorage.setItem('levelPlayRecords', JSON.stringify(levelPlayRecords));
-
-        // 保存今日 atlas 紀錄
-        const today = new Date().toDateString();
-        let todayAtlasRecords = JSON.parse(localStorage.getItem('todayAtlasRecords') || '[]');
-        todayAtlasRecords.push(levelPlayRecord);
-        localStorage.setItem('todayAtlasRecords', JSON.stringify(todayAtlasRecords));
-
-        console.log('Atlas 關卡結算資料已保存:', levelPlayRecord);
       }
 
       let lastScore = parseInt(localStorage.getItem('lastScore') || '0', 10);
@@ -1543,8 +1458,15 @@
         let starsEarned = calculateStarReward(true, answerTime, gameStats.consecutiveCorrect, current.en.length);
         if (starMultiplier > 1) starsEarned = Math.round(starsEarned * starMultiplier);
 
-        // 不再答對時直接加星星，星星將在結算時統一計算
-        // starsEarned 僅用於顯示連擊通知
+        if (typeof StarRewardSystem !== 'undefined') {
+          StarRewardSystem.addStars(starsEarned);
+        } else if (typeof LinkageSystem !== 'undefined') {
+          LinkageSystem.stars.add(starsEarned);
+        } else {
+          totalStarCount += starsEarned;
+          localStorage.setItem('totalStars', totalStarCount);
+          updateTotal();
+        }
 
         showComboNotification(gameStats.consecutiveCorrect);
 

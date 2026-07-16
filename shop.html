@@ -50,63 +50,18 @@
       background: rgba(10, 20, 40, 0.9);
       border-bottom: 3px solid #00ffff;
       padding: 30px 20px;
+      text-align: center;
       backdrop-filter: blur(10px);
       position: relative;
+    }
+
+    .header-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 20px;
-    }
-
-    .header-left {
-      flex: 1;
-      display: flex;
-      align-items: center;
-    }
-
-    .header-center {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .header-right {
-      flex: 1;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-    }
-
-    .player-star-panel {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 20px;
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 170, 0, 0.2));
-      border: 2px solid #ffd700;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-    }
-
-    .star-icon {
-      font-size: 1.5rem;
-    }
-
-    .stars-count {
-      font-size: 1.3rem;
-      color: #ffd700;
-      font-weight: bold;
-      text-shadow: 0 0 10px #ffd700;
-      max-width: 200px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .shop-title-panel {
-      display: flex;
-      align-items: center;
+      margin-bottom: 40px;
+      position: relative;
+      margin-top: 10px;
     }
 
     header h1 {
@@ -114,6 +69,35 @@
       font-size: 2.5rem;
       text-shadow: 0 0 20px #00ffff;
       margin: 0;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .header-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .stars-display {
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 170, 0, 0.2));
+      border: 2px solid #ffd700;
+      border-radius: 15px;
+      font-size: 1.3rem;
+      color: #ffd700;
+      font-weight: bold;
+      text-shadow: 0 0 10px #ffd700;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+      white-space: nowrap;
+      min-width: fit-content;
+      margin: 0 auto;
     }
 
     .btn {
@@ -179,597 +163,6 @@
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 25px;
       margin-bottom: 30px;
-    }
-
-    /* 抽卡券網格 - 響應式佈局 */
-    .tickets-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-      gap: 18px;
-      margin-bottom: 30px;
-    }
-
-    /* 共用商品卡片樣式 - 5:7 比例 */
-    .shop-item-card {
-      width: 100%;
-      max-width: 220px;
-      aspect-ratio: 5 / 7;
-      border-radius: 20px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      background: linear-gradient(180deg, #1e293b, #0f172a);
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
-      border: 2px solid rgba(168, 85, 247, 0.8);
-      transition: all 0.3s ease;
-    }
-
-    .shop-item-card:hover {
-      transform: translateY(-4px) scale(1.03);
-      box-shadow: 0 15px 35px rgba(162, 89, 255, 0.4);
-      border-color: #c47aff;
-    }
-
-    .shop-card-media-wrap {
-      width: 100%;
-      height: 62%;
-      overflow: hidden;
-      background: #111827;
-    }
-
-    .shop-card-media,
-    .shop-card-media-wrap img,
-    .shop-card-media-wrap video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      display: block;
-    }
-
-    .shop-card-media-placeholder {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 48px;
-      color: #a259ff;
-    }
-
-    .shop-card-body {
-      flex: 1;
-      padding: 8px 10px 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .shop-card-title {
-      font-size: 16px;
-      font-weight: 900;
-      text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: #c084fc;
-    }
-
-    .shop-card-info {
-      font-size: 12px;
-      text-align: center;
-      color: #e5e7eb;
-    }
-
-    .shop-card-price {
-      margin-top: auto;
-      font-size: 15px;
-      font-weight: 900;
-      text-align: center;
-      color: #facc15;
-    }
-
-    .shop-card-button {
-      min-height: 36px;
-      border-radius: 14px;
-      font-weight: 900;
-      background: linear-gradient(135deg, #a259ff, #6a11cb);
-      border: none;
-      color: white;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin: 8px;
-    }
-
-    .shop-card-button:hover:not(:disabled) {
-      background: linear-gradient(135deg, #c47aff, #8a2be2);
-      transform: scale(1.05);
-    }
-
-    .shop-card-button:disabled {
-      background: #4a4a4a;
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-
-    .shop-item-card.used {
-      opacity: 0.6;
-      border-color: #4a4a4a;
-    }
-
-    .shop-item-card.used:hover {
-      transform: none;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
-    }
-
-    /* 共用 Grid 佈局 */
-    .shop-card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-      gap: 18px;
-      justify-items: center;
-    }
-
-    @media (min-width: 1200px) {
-      .shop-card-grid {
-        grid-template-columns: repeat(5, 1fr);
-      }
-    }
-
-    @media (min-width: 768px) and (max-width: 1199px) {
-      .shop-card-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    @media (min-width: 480px) and (max-width: 767px) {
-      .shop-card-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 479px) {
-      .shop-card-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* 系列抽卡池網格 - 響應式佈局 */
-    .series-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 18px;
-      margin-bottom: 30px;
-    }
-
-    @media (min-width: 1200px) {
-      .series-grid {
-        grid-template-columns: repeat(5, 1fr);
-      }
-    }
-
-    @media (min-width: 768px) and (max-width: 1199px) {
-      .series-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    @media (min-width: 480px) and (max-width: 767px) {
-      .series-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 479px) {
-      .series-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* 系列卡池商店美化樣式 */
-    .series-shop-section {
-      padding: 30px 20px;
-      background: rgba(20, 10, 40, 0.5);
-      border-radius: 24px;
-      border: 2px solid rgba(162, 89, 255, 0.3);
-      margin-bottom: 30px;
-    }
-
-    .series-shop-header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .series-shop-title {
-      font-size: 2.2rem;
-      color: #ffd700;
-      font-weight: 900;
-      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-      margin-bottom: 10px;
-    }
-
-    .series-shop-subtitle {
-      font-size: 1rem;
-      color: #a259ff;
-      font-weight: 500;
-    }
-
-    .series-pool-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 25px;
-    }
-
-    @media (min-width: 1200px) {
-      .series-pool-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    @media (min-width: 768px) and (max-width: 1199px) {
-      .series-pool-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 767px) {
-      .series-pool-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .series-pool-card {
-      background: linear-gradient(135deg, rgba(30, 20, 60, 0.9), rgba(15, 10, 40, 0.95));
-      border: 2px solid rgba(162, 89, 255, 0.5);
-      border-radius: 22px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-    }
-
-    .series-pool-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 40px rgba(162, 89, 255, 0.4);
-      border-color: #c47aff;
-    }
-
-    .series-pool-cover {
-      width: 100%;
-      height: 200px;
-      overflow: hidden;
-      background: #111827;
-      position: relative;
-    }
-
-    .series-pool-cover-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: 50% 30%;
-      display: block;
-    }
-
-    .series-pool-cover video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .series-pool-info {
-      padding: 20px;
-    }
-
-    .series-pool-title {
-      font-size: 1.5rem;
-      color: #fff;
-      font-weight: 900;
-      margin-bottom: 12px;
-      text-shadow: 0 0 10px rgba(162, 89, 255, 0.5);
-    }
-
-    .series-pool-rates {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 15px;
-      flex-wrap: wrap;
-    }
-
-    .series-rate-badge {
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      font-weight: 800;
-    }
-
-    .series-rate-ssr {
-      background: linear-gradient(135deg, #ffd700, #ffaa00);
-      color: #000;
-    }
-
-    .series-rate-a {
-      background: linear-gradient(135deg, #a259ff, #6a11cb);
-      color: #fff;
-    }
-
-    .series-rate-r {
-      background: linear-gradient(135deg, #00ffff, #0099ff);
-      color: #000;
-    }
-
-    .series-daily-limit {
-      margin-bottom: 15px;
-    }
-
-    .series-daily-progress {
-      width: 100%;
-      height: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
-      overflow: hidden;
-      margin-top: 8px;
-    }
-
-    .series-daily-progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #00ffff, #a259ff, #ffd700);
-      border-radius: 4px;
-      transition: width 0.3s ease;
-    }
-
-    .series-daily-text {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.9rem;
-      color: #cfd6ff;
-      margin-bottom: 5px;
-    }
-
-    .series-buy-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    @media (max-width: 767px) {
-      .series-buy-actions {
-        flex-direction: column;
-      }
-    }
-
-    .series-buy-btn {
-      flex: 1;
-      padding: 12px 16px;
-      border: none;
-      border-radius: 14px;
-      font-weight: 900;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      background: linear-gradient(135deg, #a259ff, #6a11cb);
-      color: #fff;
-      box-shadow: 0 4px 15px rgba(162, 89, 255, 0.3);
-    }
-
-    .series-buy-btn:hover:not(:disabled) {
-      background: linear-gradient(135deg, #c47aff, #8a2be2);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(162, 89, 255, 0.5);
-    }
-
-    .series-buy-btn:disabled {
-      background: #4a4a4a;
-      color: #999;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-      opacity: 0.6;
-    }
-
-    .series-pool-soldout {
-      opacity: 0.5;
-      pointer-events: none;
-    }
-
-    .series-pool-soldout .series-daily-progress-fill {
-      background: #ff6b6b;
-    }
-
-    @media (max-width: 1024px) {
-      .tickets-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 600px) {
-      .tickets-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* 抽卡券卡片 */
-    .ticket-item {
-      background: rgba(10, 20, 40, 0.85);
-      border: 2px solid #ffd700;
-      border-radius: 20px;
-      padding: 25px;
-      text-align: center;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      backdrop-filter: blur(10px);
-    }
-
-    .ticket-item:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
-      border-color: #ffed4a;
-    }
-
-    .ticket-icon {
-      font-size: 3rem;
-      margin-bottom: 15px;
-    }
-
-    .ticket-product-image {
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      object-position: center;
-      border-radius: 12px;
-      border: 2px solid #ffd700;
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-      aspect-ratio: 1 / 1;
-    }
-
-    /* 系列抽卡池卡片 - 5:7 比例 */
-    .series-item {
-      aspect-ratio: 5 / 7;
-      border-radius: 20px;
-      overflow: hidden;
-      background: linear-gradient(180deg, #1e293b, #0f172a);
-      border: 2px solid rgba(168, 85, 247, 0.8);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-      display: flex;
-      flex-direction: column;
-      transition: all 0.3s ease;
-      position: relative;
-    }
-
-    .series-item:hover {
-      transform: translateY(-4px) scale(1.03);
-      box-shadow: 0 15px 35px rgba(162, 89, 255, 0.4);
-      border-color: #c47aff;
-    }
-
-    .series-product-image {
-      width: 100%;
-      height: 58%;
-      overflow: hidden;
-      background: #111827;
-    }
-
-    .series-product-image img,
-    .series-product-image video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .series-product-placeholder {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 48px;
-      color: #a259ff;
-    }
-
-    .series-name {
-      font-size: 18px;
-      font-weight: 900;
-      color: #c084fc;
-      text-align: center;
-      margin: 8px 8px 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .series-description {
-      display: none;
-    }
-
-    .series-card-count {
-      font-size: 13px;
-      color: #e5e7eb;
-      text-align: center;
-      line-height: 1.4;
-      margin: 0 8px;
-    }
-
-    .series-price {
-      font-size: 15px;
-      font-weight: 800;
-      color: #facc15;
-      text-align: center;
-      margin-top: auto;
-      padding: 0 8px;
-    }
-
-    .series-buy-btn {
-      margin: 8px;
-      min-height: 38px;
-      border-radius: 14px;
-      font-weight: 900;
-      background: linear-gradient(135deg, #a259ff, #6a11cb);
-      border: none;
-      color: white;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .series-buy-btn:hover:not(:disabled) {
-      background: linear-gradient(135deg, #c47aff, #8a2be2);
-      transform: scale(1.05);
-    }
-
-    .series-buy-btn:disabled {
-      background: #4a4a4a;
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-
-    .ticket-name {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #ffd700;
-      margin-bottom: 10px;
-      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-    }
-
-    .ticket-description {
-      font-size: 0.95rem;
-      color: #ccc;
-      margin-bottom: 15px;
-      font-style: italic;
-    }
-
-    .ticket-quantity {
-      font-size: 1.1rem;
-      color: #fff;
-      margin-bottom: 15px;
-    }
-
-    .ticket-price {
-      font-size: 1.2rem;
-      color: #ffd700;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-
-    .ticket-buy-btn {
-      background: linear-gradient(135deg, #ffd700 0%, #ff6b9d 100%);
-      border: none;
-      color: #000;
-      padding: 12px 30px;
-      border-radius: 25px;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .ticket-buy-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 5px 20px rgba(255, 215, 0, 0.5);
-    }
-
-    .ticket-buy-btn:disabled {
-      background: #666;
-      cursor: not-allowed;
-      transform: none;
     }
 
     /* 商品卡片 */
@@ -1027,29 +420,18 @@
 
     /* 響應式設計 */
     @media (max-width: 768px) {
-      header {
+      .header-top {
         flex-direction: column;
         gap: 15px;
-        padding: 20px 15px;
-      }
-
-      .header-left,
-      .header-center,
-      .header-right {
-        width: 100%;
-        justify-content: center;
-      }
-
-      .header-center {
-        order: -1;
+        margin-bottom: 30px;
+        position: relative;
       }
 
       header h1 {
         font-size: 2rem;
-      }
-
-      .stars-count {
-        max-width: 150px;
+        position: static;
+        transform: none;
+        left: auto;
       }
 
       .shop-grid {
@@ -1072,6 +454,12 @@
         width: 200px;
       }
 
+      .header-actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
+        margin-bottom: 15px;
+      }
       .stars-display {
         margin: 0 auto;
       }
@@ -4332,133 +3720,17 @@
       margin-bottom: 15px;
       font-style: italic;
     }
-
-    /* 快捷導航工具列樣式 */
-    .quick-nav-toolbar {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      z-index: 1000;
-      background: rgba(10, 20, 40, 0.85);
-      backdrop-filter: blur(10px);
-      border: 2px solid rgba(162, 89, 255, 0.5);
-      border-radius: 16px;
-      padding: 12px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    }
-
-    .quick-nav-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 60px;
-      height: 60px;
-      background: rgba(162, 89, 255, 0.2);
-      border: 2px solid rgba(162, 89, 255, 0.4);
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      color: white;
-      font-size: 24px;
-    }
-
-    .quick-nav-btn:hover {
-      background: rgba(162, 89, 255, 0.4);
-      border-color: #00ffff;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-      transform: scale(1.1);
-    }
-
-    .quick-nav-btn:active {
-      transform: scale(0.95);
-    }
-
-    .quick-nav-icon {
-      font-size: 24px;
-      line-height: 1;
-    }
-
-    .quick-nav-label {
-      font-size: 10px;
-      margin-top: 4px;
-      color: #ccc;
-      font-weight: bold;
-    }
-
-    .quick-nav-btn:hover .quick-nav-label {
-      color: #00ffff;
-    }
-
-    /* 手機版快捷工具列 */
-    @media (max-width: 768px) {
-      .quick-nav-toolbar {
-        top: auto;
-        bottom: 20px;
-        right: 20px;
-        flex-direction: row;
-        flex-wrap: wrap;
-        max-width: calc(100vw - 40px);
-        justify-content: center;
-      }
-
-      .quick-nav-btn {
-        width: 50px;
-        height: 50px;
-      }
-
-      .quick-nav-icon {
-        font-size: 20px;
-      }
-
-      .quick-nav-label {
-        font-size: 9px;
-      }
-    }
   </style>
 </head>
 <body>
-  <!-- 快捷導航工具列 -->
-  <div class="quick-nav-toolbar">
-    <button class="quick-nav-btn" onclick="location.href='gacha.html'" title="返回抽卡">
-      <span class="quick-nav-icon">🎲</span>
-      <span class="quick-nav-label">抽卡</span>
-    </button>
-    <button class="quick-nav-btn" onclick="location.href='cards.html'" title="卡片倉庫">
-      <span class="quick-nav-icon">🎴</span>
-      <span class="quick-nav-label">倉庫</span>
-    </button>
-    <button class="quick-nav-btn" onclick="location.href='atlas.html'" title="卡片圖鑑">
-      <span class="quick-nav-icon">📖</span>
-      <span class="quick-nav-label">圖鑑</span>
-    </button>
-    <button class="quick-nav-btn" onclick="location.href='dailyCheckCenter.html'" title="每日簽到">
-      <span class="quick-nav-icon">🎁</span>
-      <span class="quick-nav-label">簽到</span>
-    </button>
-    <button class="quick-nav-btn" onclick="location.href='index.html'" title="回首頁">
-      <span class="quick-nav-icon">🏠</span>
-      <span class="quick-nav-label">首頁</span>
-    </button>
-  </div>
-
   <header>
-    <div class="header-left">
-      <div class="player-star-panel">
-        <span class="star-icon">⭐</span>
-        <span id="totalStarsCount" class="stars-count">0</span>
-      </div>
+    <div class="header-top">
+      <h1>🌟 商城</h1>
+      <span id="totalStarsCount" class="stars-display">0</span>
     </div>
-    <div class="header-center">
-      <div class="shop-title-panel">
-        <h1>🌟 商城</h1>
-      </div>
-    </div>
-    <div class="header-right">
-      <!-- 預留空間，未來放商城功能按鈕 -->
+    <div class="header-actions">
+      <button class="btn" onclick="location.href='cards.html'">📁 卡片倉庫</button>
+      <button class="btn" onclick="location.href='index.html'">🏠 首頁</button>
     </div>
   </header>
 
@@ -4466,8 +3738,6 @@
     <!-- 商城分類標籤 -->
     <div class="shop-tabs">
       <button class="tab-btn active" onclick="ShopSystem.switchTab('invite')">🎫 邀請碼兌換</button>
-      <button class="tab-btn" onclick="ShopSystem.switchTab('tickets')">🎫 普通抽卡券商店</button>
-      <button class="tab-btn" onclick="ShopSystem.switchTab('series')">🎴 系列抽卡池商店</button>
       <button class="tab-btn" onclick="ShopSystem.switchTab('chests')">📦 邀請碼寶箱</button>
       <button class="tab-btn" onclick="ShopSystem.switchTab('trade')">🤝 卡片交易</button>
       <button id="adminTabBtn" class="tab-btn" onclick="ShopSystem.switchTab('admin')" style="display:none;">🛠️ 邀請碼管理</button>
@@ -4497,26 +3767,6 @@
         <div id="noSeriesReward" style="text-align: center; color: rgba(255, 255, 255, 0.5); padding: 20px; display: none;">
           尚未完成任何系列套卡
         </div>
-      </div>
-    </div>
-
-    <!-- 抽卡券商店 -->
-    <div id="tickets-shop" class="shop-section" style="display:none;">
-      <div class="tickets-section">
-        <h3 style="color: #ffd700; text-align: center; margin-bottom: 10px; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">🎫 普通抽卡券商店</h3>
-        <p style="color: #ccc; text-align: center; margin-bottom: 30px;">購買抽卡券後，可到抽卡頁使用。</p>
-        <div id="ticketsGrid" class="tickets-grid"></div>
-      </div>
-    </div>
-
-    <!-- 系列抽卡池商店 -->
-    <div id="series-shop" class="shop-section" style="display:none;">
-      <div class="series-shop-section">
-        <div class="series-shop-header">
-          <h2 class="series-shop-title">🎴 系列卡池商店</h2>
-          <p class="series-shop-subtitle">選擇喜歡的系列卡池，每個系列每日最多購買 10 次</p>
-        </div>
-        <div id="seriesGrid" class="series-pool-grid"></div>
       </div>
     </div>
 
@@ -4695,66 +3945,14 @@
 
   <!-- 載入必要的JavaScript -->
   <script src="js/sound.js"></script>
-  <script src="js/stars.js"></script>
   <script src="js/userData.js"></script>
   <script src="js/starRewardSystem.js"></script>
   <script src="js/cardUtils.js"></script>
   <script src="js/cards.js"></script>
   <script src="js/googleSheetApi.js"></script>
   <script src="js/achievementSystem.js"></script>
-  <script src="js/seriesGacha.js"></script>
 
   <script>
-    // 每日購買限制輔助函式
-    function getTodayKey() {
-      const now = new Date();
-      return now.toISOString().slice(0, 10);
-    }
-
-    function getSeriesTodayPurchaseCount(seriesId) {
-      const dailyPurchases = JSON.parse(localStorage.getItem('shopSeriesDailyPurchases') || '{}');
-      const today = getTodayKey();
-      
-      if (!dailyPurchases[today]) {
-        return 0;
-      }
-      
-      return Number(dailyPurchases[today][seriesId]) || 0;
-    }
-
-    function canBuySeriesPack(seriesId, amount) {
-      const todayCount = getSeriesTodayPurchaseCount(seriesId);
-      return todayCount + amount <= 10;
-    }
-
-    function addSeriesPurchaseCount(seriesId, amount) {
-      const dailyPurchases = JSON.parse(localStorage.getItem('shopSeriesDailyPurchases') || '{}');
-      const today = getTodayKey();
-      
-      if (!dailyPurchases[today]) {
-        dailyPurchases[today] = {};
-      }
-      
-      const current = Number(dailyPurchases[today][seriesId]) || 0;
-      dailyPurchases[today][seriesId] = current + amount;
-      
-      localStorage.setItem('shopSeriesDailyPurchases', JSON.stringify(dailyPurchases));
-    }
-
-    // 取得系列卡池圖片重點位置
-    // 常用設定建議：
-    // - 臉部在上方：focusY: 20
-    // - 臉部在中上：focusY: 30 (預設)
-    // - 全身圖：focusY: 45
-    // - 畫面重點偏左：focusX: 35
-    // - 畫面重點偏右：focusX: 65
-    function getPoolImageFocus(pool) {
-      return {
-        x: Number(pool.focusX ?? 50),
-        y: Number(pool.focusY ?? 30)
-      };
-    }
-
     // 商城系統
     const ShopSystem = {
       currentTab: 'invite',
@@ -4815,11 +4013,7 @@
       },
 
       getLocalPlayerStars() {
-        // 優先使用 StarSystem
-        if (typeof StarSystem !== 'undefined' && typeof StarSystem.getTotalStars === 'function') {
-          return StarSystem.getTotalStars();
-        }
-        // 備用方案：讀取 totalStars（與其他頁面同步），如果沒有則讀取 playerStars
+        // 優先讀取 totalStars（與其他頁面同步），如果沒有則讀取 playerStars
         const totalStars = Number(localStorage.getItem('totalStars') || 0);
         const playerStars = Number(localStorage.getItem('playerStars') || 0);
         const stars = totalStars > 0 ? totalStars : playerStars;
@@ -4828,20 +4022,13 @@
 
       saveLocalPlayerStars(stars) {
         const value = Number.isFinite(Number(stars)) && Number(stars) >= 0 ? Math.floor(Number(stars)) : 0;
-
-        // 優先使用 StarSystem
-        if (typeof StarSystem !== 'undefined' && typeof StarSystem.setTotalStars === 'function') {
-          StarSystem.setTotalStars(value);
+        // 同時保存到 totalStars 和 playerStars 以確保跨頁面同步
+        localStorage.setItem('totalStars', String(value));
+        if (window.GoogleSheetTradeApi && typeof window.GoogleSheetTradeApi.saveLocalPlayerStars === 'function') {
+          window.GoogleSheetTradeApi.saveLocalPlayerStars(value);
         } else {
-          // 備用方案：同時保存到 totalStars 和 playerStars 以確保跨頁面同步
-          localStorage.setItem('totalStars', String(value));
-          if (window.GoogleSheetTradeApi && typeof window.GoogleSheetTradeApi.saveLocalPlayerStars === 'function') {
-            window.GoogleSheetTradeApi.saveLocalPlayerStars(value);
-          } else {
-            localStorage.setItem('playerStars', String(value));
-          }
+          localStorage.setItem('playerStars', String(value));
         }
-
         this.currentPlayerStars = value;
         return value;
       },
@@ -5578,21 +4765,19 @@
           const stars = c.stars || 0;
           const earnedAt = c.earnedAt ? new Date(c.earnedAt).toLocaleString('zh-TW') : '';
           return `
-            <div class="shop-item-card ${c.used ? 'used' : ''}">
-              <div class="shop-card-media-wrap">
-                <img src="https://i.pinimg.com/736x/66/11/c6/6611c6066259ccd89441b4449d66f28b.jpg" alt="邀請碼寶箱" onerror="this.parentElement.innerHTML='<div class=\\'shop-card-media-placeholder\\'>🎁</div>'">
+            <div class="chest-card ${c.used ? 'used' : ''}">
+              <div class="chest-image-wrap">
+                <img class="chest-image" src="https://i.pinimg.com/736x/66/11/c6/6611c6066259ccd89441b4449d66f28b.jpg" alt="邀請碼寶箱" onerror="this.style.display='none'; this.closest('.chest-image-wrap').classList.add('image-missing');">
               </div>
-              <div class="shop-card-body">
-                <div class="shop-card-title">🎁 邀請碼寶箱</div>
-                <div class="shop-card-info">${title}</div>
-                <div class="shop-card-info">⭐ ${this.escapeHTML(String(stars))}</div>
-                <div class="shop-card-info">${codeText}</div>
-                <div class="shop-card-info">${earnedAt}</div>
-                <button class="shop-card-button" 
-                        onclick="ShopSystem.claimChest('${c.code}', ${stars})"
-                        ${c.used ? 'disabled' : ''}>
-                  ${c.used ? '已兌換' : '兌換'}
-                </button>
+              <div class="chest-title">🎁 邀請碼寶箱</div>
+              <div class="chest-meta">
+                <span>⭐ ${this.escapeHTML(String(stars))}</span>
+                <span>${title}</span>
+              </div>
+              <div class="chest-code">${codeText}</div>
+              <div class="chest-time">${this.escapeHTML(earnedAt)}</div>
+              <div class="chest-actions">
+                ${(!c.used && c.code) ? `<button class="redeem-chest-btn" onclick="ShopSystem.redeemInviteChest(${idx})">兌換</button>` : `<button class="redeem-chest-btn" disabled style="opacity:0.6;cursor:not-allowed;">${c.used ? '已兌換' : '無法兌換'}</button>`}
               </div>
             </div>
           `;
@@ -5627,12 +4812,8 @@
         if (!ok) return;
 
         // 增加星星
-        if (typeof StarSystem !== 'undefined' && typeof StarSystem.addTotalStars === 'function') {
-          StarSystem.addTotalStars(stars, '兌換邀請碼寶箱');
-        } else {
-          const currentStars = this.getLocalPlayerStars();
-          this.saveLocalPlayerStars(currentStars + stars);
-        }
+        const currentStars = this.getLocalPlayerStars();
+        this.saveLocalPlayerStars(currentStars + stars);
 
         // 標記為已使用
         const record = { code, stars, used: true, usedAt: new Date().toISOString(), usedBy: 'user' };
@@ -5674,8 +4855,6 @@
       // 切換標籤
       switchTab(tab) {
         const inviteSection = document.getElementById('invite-shop');
-        const ticketsSection = document.getElementById('tickets-shop');
-        const seriesSection = document.getElementById('series-shop');
         const chestSection = document.getElementById('chest-shop');
         const tradeSection = document.getElementById('trade-shop');
         const adminSection = document.getElementById('invite-admin');
@@ -5685,8 +4864,6 @@
 
         // 預設都先隱藏
         if (inviteSection) inviteSection.style.display = 'none';
-        if (ticketsSection) ticketsSection.style.display = 'none';
-        if (seriesSection) seriesSection.style.display = 'none';
         if (chestSection) chestSection.style.display = 'none';
         if (tradeSection) tradeSection.style.display = 'none';
         if (adminSection) adminSection.style.display = 'none';
@@ -5700,27 +4877,9 @@
           return;
         }
 
-        if (tab === 'tickets') {
-          if (ticketsSection) ticketsSection.style.display = 'block';
-          const ticketsBtn = document.querySelectorAll('.shop-tabs .tab-btn')[1];
-          if (ticketsBtn) ticketsBtn.classList.add('active');
-          this.currentTab = 'tickets';
-          this.renderTicketsShop();
-          return;
-        }
-
-        if (tab === 'series') {
-          if (seriesSection) seriesSection.style.display = 'block';
-          const seriesBtn = document.querySelectorAll('.shop-tabs .tab-btn')[2];
-          if (seriesBtn) seriesBtn.classList.add('active');
-          this.currentTab = 'series';
-          this.renderSeriesShop();
-          return;
-        }
-
         if (tab === 'chests') {
           if (chestSection) chestSection.style.display = 'block';
-          const chestBtn = document.querySelectorAll('.shop-tabs .tab-btn')[3];
+          const chestBtn = document.querySelectorAll('.shop-tabs .tab-btn')[1];
           if (chestBtn) chestBtn.classList.add('active');
           this.currentTab = 'chests';
           this.renderInviteCodeChests();
@@ -5729,7 +4888,7 @@
 
         if (tab === 'trade') {
           if (tradeSection) tradeSection.style.display = 'block';
-          const tradeBtn = document.querySelectorAll('.shop-tabs .tab-btn')[4];
+          const tradeBtn = document.querySelectorAll('.shop-tabs .tab-btn')[2];
           if (tradeBtn) tradeBtn.classList.add('active');
           this.currentTab = 'trade';
           // 確保使用本地星星進行購買判斷
@@ -6178,9 +5337,7 @@
         } catch (e) {}
 
         // 增加星星
-        if (typeof StarSystem !== 'undefined' && typeof StarSystem.addTotalStars === 'function') {
-          StarSystem.addTotalStars(price, '出售卡片');
-        } else if (window.LinkageSystem && window.LinkageSystem.stars && typeof window.LinkageSystem.stars.add === 'function') {
+        if (window.LinkageSystem && window.LinkageSystem.stars && typeof window.LinkageSystem.stars.add === 'function') {
           window.LinkageSystem.stars.add(price);
         } else {
           const currentStars = this.getLocalPlayerStars();
@@ -6549,9 +5706,7 @@
         } catch (e) {}
 
         // 增加星星
-        if (typeof StarSystem !== 'undefined' && typeof StarSystem.addTotalStars === 'function') {
-          StarSystem.addTotalStars(price, '交易成交售出卡片');
-        } else if (window.LinkageSystem && window.LinkageSystem.stars && typeof window.LinkageSystem.stars.add === 'function') {
+        if (window.LinkageSystem && window.LinkageSystem.stars && typeof window.LinkageSystem.stars.add === 'function') {
           window.LinkageSystem.stars.add(price);
         } else {
           const currentStars = this.getLocalPlayerStars();
@@ -7040,12 +6195,8 @@
         }
 
         // 增加星星
-        if (typeof StarSystem !== 'undefined' && typeof StarSystem.addTotalStars === 'function') {
-          StarSystem.addTotalStars(rewardAmount, '邀請碼寶箱獎勵');
-        } else {
-          const currentStars = this.getLocalPlayerStars();
-          this.saveLocalPlayerStars(currentStars + rewardAmount);
-        }
+        const currentStars = this.getLocalPlayerStars();
+        this.saveLocalPlayerStars(currentStars + rewardAmount);
 
         console.log(`[邀請碼寶箱] 發放獎勵：${rewardAmount} 星星`);
         return true;
@@ -7316,12 +6467,8 @@
         inviteCode.usedBy = 'user'; // 可以加入用戶ID
 
         // 增加星星
-        if (typeof StarSystem !== 'undefined' && typeof StarSystem.addTotalStars === 'function') {
-          StarSystem.addTotalStars(stars, '兌換邀請碼');
-        } else {
-          const currentStars = this.getLocalPlayerStars();
-          this.saveLocalPlayerStars(currentStars + stars);
-        }
+        const currentStars = this.getLocalPlayerStars();
+        this.saveLocalPlayerStars(currentStars + stars);
 
         // 儲存已使用的邀請碼記錄
         this.saveUsedInviteCodes();
@@ -7509,345 +6656,6 @@
           }
         `;
         document.head.appendChild(style);
-      },
-
-      // 渲染抽卡券商店
-      renderTicketsShop() {
-        const ticketsGrid = document.getElementById('ticketsGrid');
-        if (!ticketsGrid) return;
-
-        // 抽卡券商品列表 - 只保留普通抽卡券
-        const ticketProducts = [
-          { id: 'normal_1', name: '普通抽卡券 x1', icon: '🎫', quantity: 1, price: 100, type: 'normal', image: 'https://i.pinimg.com/736x/9f/c4/97/9fc4972feb0c8175a33a6934a98b4788.jpg', description: '單次購買 1 張抽卡券' },
-          { id: 'normal_5', name: '普通抽卡券 x5', icon: '🎫', quantity: 5, price: 450, type: 'normal', image: 'https://i.pinimg.com/736x/2c/e6/51/2ce6513bca15b29ffb791a576b87cdbc.jpg', description: '一次購買 5 張，省 50 星星！' },
-          { id: 'normal_10', name: '普通抽卡券 x10', icon: '🎫', quantity: 10, price: 850, type: 'normal', image: 'https://i.pinimg.com/736x/be/50/e9/be50e93e06d1a24782a7f94a248a8840.jpg', description: '一次購買 10 張，最划算！' }
-        ];
-
-        // 獲取當前星星數量
-        const currentStars = this.getLocalPlayerStars();
-
-        let html = '';
-        ticketProducts.forEach(product => {
-          const canAfford = currentStars >= product.price;
-          
-          // 處理圖片/影片
-          let mediaHtml = '';
-          if (product.image) {
-            if (product.image.endsWith('.mp4')) {
-              mediaHtml = `<video src="${product.image}" autoplay loop muted playsinline preload="metadata"></video>`;
-            } else {
-              mediaHtml = `<img src="${product.image}" alt="${product.name}" onerror="this.parentElement.innerHTML='<div class=\\'shop-card-media-placeholder\\'>🎫</div>'">`;
-            }
-          } else {
-            mediaHtml = '<div class="shop-card-media-placeholder">🎫</div>';
-          }
-          
-          html += `
-            <div class="shop-item-card">
-              <div class="shop-card-media-wrap">${mediaHtml}</div>
-              <div class="shop-card-body">
-                <div class="shop-card-title">${product.name}</div>
-                <div class="shop-card-info">${product.description}</div>
-                <div class="shop-card-price">⭐${product.price}</div>
-                <div class="shop-card-info">獲得 🎫x${product.quantity}</div>
-                <button class="shop-card-button" 
-                        onclick="ShopSystem.buyTicket('${product.id}', ${product.price}, ${product.quantity}, '${product.type}')"
-                        ${canAfford ? '' : 'disabled'}>
-                  ${canAfford ? '購買' : '星星不足'}
-                </button>
-              </div>
-            </div>
-          `;
-        });
-
-        ticketsGrid.innerHTML = html;
-      },
-
-      // 渲染系列抽卡池商店
-      renderSeriesShop() {
-        const seriesGrid = document.getElementById('seriesGrid');
-        if (!seriesGrid) return;
-
-        // 檢查 SeriesGachaSystem 是否可用
-        if (typeof SeriesGachaSystem === 'undefined') {
-          seriesGrid.innerHTML = '<p style="color: #ff6b6b; text-align: center;">系列抽卡系統尚未載入，請確認 js/seriesGacha.js 已引入</p>';
-          return;
-        }
-
-        // 獲取所有系列
-        const allSeries = SeriesGachaSystem.getAllSeries();
-        
-        // 獲取當前星星數量
-        const currentStars = this.getLocalPlayerStars();
-        
-        // 獲取系列抽卡券數量
-        const ticketsData = SeriesGachaSystem.getGachaTicketsData();
-
-        let html = '';
-        
-        allSeries.forEach(seriesName => {
-          // 獲取該系列的卡片
-          const seriesCards = SeriesGachaSystem.getSeriesCards(seriesName);
-          const cardCount = seriesCards.length;
-          
-          // 如果該系列沒有卡片，不顯示
-          if (cardCount === 0) return;
-          
-          // 取得該系列的第一張 SSR 卡片圖片作為封面，如果沒有 SSR 則使用第一張卡
-          const ssrCard = seriesCards.find(card => card.rarity === '超稀有');
-          const coverCard = ssrCard || seriesCards[0];
-          const coverImage = coverCard?.image || coverCard?.video || null;
-          const isVideo = coverImage && coverImage.endsWith('.mp4');
-          
-          // 系列抽卡券數量
-          const ticketCount = ticketsData.series[seriesName] || 0;
-          
-          // 售價：⭐300
-          const price = 300;
-          
-          // 每日購買限制
-          const todayCount = getSeriesTodayPurchaseCount(seriesName);
-          const remaining = 10 - todayCount;
-          const progressPercent = (todayCount / 10) * 100;
-          const isSoldOut = todayCount >= 10;
-          
-          // 檢查各種購買數量是否可用
-          const canBuy1 = canBuySeriesPack(seriesName, 1) && currentStars >= price;
-          const canBuy5 = canBuySeriesPack(seriesName, 5) && currentStars >= price * 5;
-          const canBuy10 = canBuySeriesPack(seriesName, 10) && currentStars >= price * 10;
-
-          // 取得圖片重點位置
-          const pool = { focusX: coverCard?.focusX, focusY: coverCard?.focusY };
-          const focus = getPoolImageFocus(pool);
-
-          let mediaHtml = '';
-          if (coverImage) {
-            if (isVideo) {
-              mediaHtml = `<video src="${coverImage}" autoplay loop muted playsinline onerror="this.parentElement.innerHTML='<div class=\\'series-product-placeholder\\'>🃏</div>'"></video>`;
-            } else {
-              mediaHtml = `<img class="series-pool-cover-img" src="${coverImage}" alt="${seriesName}" style="object-position: ${focus.x}% ${focus.y}%;" onerror="this.onerror=null;this.src='https://i.pinimg.com/736x/9f/c4/97/9fc4972feb0c8175a33a6934a98b4788.jpg'">`;
-            }
-          } else {
-            mediaHtml = '<div class="series-product-placeholder">🃏</div>';
-          }
-
-          html += `
-            <div class="series-pool-card ${isSoldOut ? 'series-pool-soldout' : ''}">
-              <div class="series-pool-cover">${mediaHtml}</div>
-              <div class="series-pool-info">
-                <div class="series-pool-title">${seriesName}</div>
-                <div class="series-pool-rates">
-                  <span class="series-rate-badge series-rate-ssr">SSR</span>
-                  <span class="series-rate-badge series-rate-a">A</span>
-                  <span class="series-rate-badge series-rate-r">R</span>
-                </div>
-                <div class="series-daily-limit">
-                  <div class="series-daily-text">
-                    <span>今日已購買：${todayCount} / 10</span>
-                    <span>剩餘：${remaining} 次</span>
-                  </div>
-                  <div class="series-daily-progress">
-                    <div class="series-daily-progress-fill" style="width: ${progressPercent}%"></div>
-                  </div>
-                </div>
-                <div class="series-buy-actions">
-                  <button class="series-buy-btn" 
-                          onclick="ShopSystem.buySeriesTicket('${seriesName}', ${price}, 1)"
-                          ${canBuy1 ? '' : 'disabled'}>
-                    🎫×1
-                  </button>
-                  <button class="series-buy-btn" 
-                          onclick="ShopSystem.buySeriesTicket('${seriesName}', ${price}, 5)"
-                          ${canBuy5 ? '' : 'disabled'}>
-                    🎫×5
-                  </button>
-                  <button class="series-buy-btn" 
-                          onclick="ShopSystem.buySeriesTicket('${seriesName}', ${price}, 10)"
-                          ${canBuy10 ? '' : 'disabled'}>
-                    🎫×10
-                  </button>
-                </div>
-              </div>
-            </div>
-          `;
-        });
-
-        if (html === '') {
-          seriesGrid.innerHTML = '<p style="color: #ccc; text-align: center;">目前沒有可購買的系列卡池</p>';
-        } else {
-          seriesGrid.innerHTML = html;
-        }
-      },
-
-      // 購買系列抽卡券
-      buySeriesTicket(seriesName, price, amount = 1) {
-        // 檢查每日購買限制
-        if (!canBuySeriesPack(seriesName, amount)) {
-          const todayCount = getSeriesTodayPurchaseCount(seriesName);
-          const remaining = 10 - todayCount;
-          this.showToast(`今日此系列最多只能購買 10 次。剩餘 ${remaining} 次。`, 'error');
-          return;
-        }
-
-        // 檢查星星是否足夠
-        const currentStars = this.getLocalPlayerStars();
-        const totalPrice = price * amount;
-        if (currentStars < totalPrice) {
-          this.showToast('星星不足，無法購買', 'error');
-          return;
-        }
-
-        // 檢查 SeriesGachaSystem 是否可用
-        if (typeof SeriesGachaSystem === 'undefined') {
-          this.showToast('系列抽卡系統尚未載入', 'error');
-          return;
-        }
-
-        // 扣除星星
-        const newStars = currentStars - totalPrice;
-        localStorage.setItem('totalStars', newStars.toString());
-        this.currentPlayerStars = newStars;
-        this.updateStarsDisplay(newStars);
-
-        // 增加系列抽卡券
-        SeriesGachaSystem.addSeriesTicket(seriesName, amount);
-
-        // 記錄購買紀錄
-        SeriesGachaSystem.recordSeriesTicketPurchase(seriesName, amount, totalPrice);
-
-        // 增加每日購買次數
-        addSeriesPurchaseCount(seriesName, amount);
-
-        // 更新UI
-        this.renderSeriesShop();
-        this.showToast(`購買成功！獲得 ${seriesName} 抽卡券 x${amount}`, 'success');
-
-        // 顯示購買特效
-        this.showTicketPurchaseEffect(amount);
-      },
-
-      // 購買抽卡券
-      buyTicket(productId, price, quantity, type) {
-        // 檢查星星是否足夠
-        const currentStars = this.getLocalPlayerStars();
-        if (currentStars < price) {
-          this.showToast('星星不足，無法購買', 'error');
-          return;
-        }
-
-        // 扣除星星
-        const newStars = currentStars - price;
-        localStorage.setItem('totalStars', newStars.toString());
-        this.currentPlayerStars = newStars;
-        this.updateStarsDisplay(newStars);
-
-        // 增加抽卡券
-        const currentTickets = parseInt(localStorage.getItem('gachaTickets') || '0');
-        const newTickets = currentTickets + quantity;
-        localStorage.setItem('gachaTickets', newTickets.toString());
-
-        // 記錄購買紀錄
-        this.recordPurchase(productId, quantity, price, type);
-
-        // 更新UI
-        this.renderTicketsShop();
-        this.showToast(`購買成功！獲得 ${quantity} 張抽卡券`, 'success');
-
-        // 顯示購買特效
-        this.showTicketPurchaseEffect(quantity);
-
-        // 如果抽卡頁面有更新函數，調用它
-        if (typeof updateGachaTicketsDisplay === 'function') {
-          updateGachaTicketsDisplay();
-        }
-      },
-
-      // 記錄購買紀錄
-      recordPurchase(productId, quantity, price, type) {
-        const purchaseHistory = JSON.parse(localStorage.getItem('purchaseHistory') || '[]');
-        const purchase = {
-          date: new Date().toISOString(),
-          productId: productId,
-          quantity: quantity,
-          price: price,
-          type: 'normalTicket', // 統一記錄為普通抽卡券
-          name: '普通抽卡券',
-          starsAfter: this.getLocalPlayerStars(),
-          ticketsAfter: parseInt(localStorage.getItem('gachaTickets') || '0')
-        };
-        purchaseHistory.push(purchase);
-        localStorage.setItem('purchaseHistory', JSON.stringify(purchaseHistory));
-      },
-
-      // 顯示提示訊息
-      showToast(message, type = 'info') {
-        const toast = document.createElement('div');
-        toast.style.cssText = `
-          position: fixed;
-          top: 20px;
-          right: 20px;
-          padding: 15px 25px;
-          background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196f3'};
-          color: white;
-          border-radius: 10px;
-          z-index: 10000;
-          animation: slideIn 0.3s ease;
-          box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-          font-weight: bold;
-          font-size: 16px;
-        `;
-        toast.textContent = message;
-        document.body.appendChild(toast);
-
-        setTimeout(() => {
-          toast.style.animation = 'slideIn 0.3s ease reverse';
-          setTimeout(() => toast.remove(), 300);
-        }, 3000);
-      },
-
-      // 顯示抽卡券購買成功的特效
-      showTicketPurchaseEffect(quantity) {
-        const effect = document.createElement('div');
-        effect.style.cssText = `
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          font-size: 48px;
-          z-index: 10001;
-          animation: ticketPurchase 1.5s ease-out forwards;
-          pointer-events: none;
-        `;
-        effect.innerHTML = `🎫 +${quantity}`;
-        document.body.appendChild(effect);
-
-        // 添加動畫樣式
-        const style = document.createElement('style');
-        style.textContent = `
-          @keyframes ticketPurchase {
-            0% {
-              opacity: 0;
-              transform: translate(-50%, -50%) scale(0.5);
-            }
-            20% {
-              opacity: 1;
-              transform: translate(-50%, -50%) scale(1.2);
-            }
-            40% {
-              transform: translate(-50%, -50%) scale(1);
-            }
-            100% {
-              opacity: 0;
-              transform: translate(-50%, -100%) scale(1.5);
-            }
-          }
-        `;
-        document.head.appendChild(style);
-
-        setTimeout(() => {
-          effect.remove();
-          style.remove();
-        }, 1500);
       }
     };
     window.ShopSystem = ShopSystem; // ←加這行

@@ -640,13 +640,10 @@
 
     // ----------- 自動分級並混合出題 -------------
     function autoLevelVocab(vocab, totalCount = 20) {
-      // 排除需要修正的單字
-      const validVocab = vocab.filter(v => !v.importNeedsReview);
-
       // 分級
-      const easy = validVocab.filter(v => v.word.length <= 4);
-      const hard = validVocab.filter(v => v.word.length >= 7);
-      const medium = validVocab.filter(v => v.word.length > 4 && v.word.length < 7);
+      const easy = vocab.filter(v => v.word.length <= 4);
+      const hard = vocab.filter(v => v.word.length >= 7);
+      const medium = vocab.filter(v => v.word.length > 4 && v.word.length < 7);
       // 決定各級數量
       let easyCount = Math.round(totalCount * 0.4);
       let mediumCount = Math.round(totalCount * 0.4);
@@ -666,8 +663,8 @@
       result = result.concat(pick(hard, hardCount));
       // 若不足則補齊
       const used = new Set(result.map(v => v.word));
-      const left = validVocab.filter(v => !used.has(v.word));
-      while (result.length < Math.min(totalCount, validVocab.length) && left.length > 0) {
+      const left = vocab.filter(v => !used.has(v.word));
+      while (result.length < Math.min(totalCount, vocab.length) && left.length > 0) {
         result.push(left.pop());
       }
       // 最後再洗牌
@@ -872,105 +869,6 @@
     function updateStarsDisplay() {
       document.getElementById('totalStarsCount').textContent = loadTotalStars();
     }
-
-    /*----------------------------------------
-      (5.1) 統一星星系統 - 防止重複加星星
-    ----------------------------------------*/
-    // 遊戲狀態標記
-    let isGameFinished = false;
-    let hasAppliedStarsThisRun = false;
-    let hasAnsweredCurrentQuestion = false;
-
-    // 取得每關最高星數
-    function getLevelBestStars(levelId) {
-      const data = JSON.parse(localStorage.getItem('levelBestStars') || '{}');
-      return Number(data[String(levelId)] || 0);
-    }
-
-    // 設定每關最高星數
-    function setLevelBestStars(levelId, stars) {
-      const data = JSON.parse(localStorage.getItem('levelBestStars') || '{}');
-      data[String(levelId)] = Math.max(Number(data[String(levelId)] || 0), Number(stars || 0));
-      localStorage.setItem('levelBestStars', JSON.stringify(data));
-    }
-
-    // 取得總星星數
-    function getTotalStars() {
-      return Number(localStorage.getItem('totalStars') || 0);
-    }
-
-    // 設定總星星數
-    function setTotalStars(value) {
-      localStorage.setItem('totalStars', String(Math.max(0, Number(value || 0))));
-    }
-
-    // 增加總星星數
-    function addTotalStars(amount) {
-      const current = getTotalStars();
-      setTotalStars(current + Number(amount || 0));
-    }
-
-    // 計算本關星數（基於答對率）
-    function calculateStars(correctCount, totalCount) {
-      if (!totalCount || totalCount <= 0) return 0;
-
-      const accuracy = correctCount / totalCount;
-
-      if (accuracy >= 0.95) return 3;
-      if (accuracy >= 0.8) return 2;
-      if (accuracy >= 0.75) return 1;
-
-      return 0;
-    }
-
-    // 套用關卡星星（只補差額）
-    function applyLevelStars(levelId, newStars, options = {}) {
-      const {
-        isPracticeMode = false,
-        isCompleted = true
-      } = options;
-
-      if (isPracticeMode) {
-        console.log('[星星系統] 錯題練習不更新星星');
-        return {
-          addedStars: 0,
-          oldStars: getLevelBestStars(levelId),
-          newBestStars: getLevelBestStars(levelId),
-          totalStars: getTotalStars(),
-          reason: '錯題練習不更新星星'
-        };
-      }
-
-      if (!isCompleted || newStars <= 0) {
-        console.log('[星星系統] 未通關或沒有獲得星星');
-        return {
-          addedStars: 0,
-          oldStars: getLevelBestStars(levelId),
-          newBestStars: getLevelBestStars(levelId),
-          totalStars: getTotalStars(),
-          reason: '未通關或沒有獲得星星'
-        };
-      }
-
-      const oldStars = getLevelBestStars(levelId);
-      const addedStars = Math.max(0, newStars - oldStars);
-
-      if (addedStars > 0) {
-        setLevelBestStars(levelId, newStars);
-        addTotalStars(addedStars);
-        console.log(`[星星系統] 補差額星星：${addedStars} 顆（舊紀錄 ${oldStars} 星 → 新紀錄 ${newStars} 星）`);
-      } else {
-        console.log(`[星星系統] 沒有超過歷史最高星數，不加星星（舊紀錄 ${oldStars} 星，本次 ${newStars} 星）`);
-      }
-
-      return {
-        addedStars,
-        oldStars,
-        newBestStars: Math.max(oldStars, newStars),
-        totalStars: getTotalStars(),
-        reason: addedStars > 0 ? '補差額星星' : '沒有超過歷史最高星數，不加星星'
-      };
-    }
     
     function updateCurrentEarnedStars() {
       const currentEarnedEl = document.getElementById('currentEarnedStars');
@@ -1008,31 +906,33 @@
     
     function animateStarsCollection() {
       if (earnedStars <= 0) return;
-
+      
       const starsDisplay = document.getElementById('totalStarsCount');
       const rect = starsDisplay.getBoundingClientRect();
       const targetX = rect.left + rect.width / 2;
       const targetY = rect.top + rect.height / 2;
-
+      
       // 創建多個星星從不同位置飄向目標
       for (let i = 0; i < earnedStars; i++) {
         setTimeout(() => {
           // 隨機起始位置（在螢幕中央區域）
           const startX = window.innerWidth / 2 + (Math.random() - 0.5) * 200;
           const startY = window.innerHeight / 2 + (Math.random() - 0.5) * 200;
-
+          
           createFloatingStar(startX, startY, targetX, targetY);
         }, i * 200); // 每個星星間隔200ms
       }
-
-      // 所有星星飄完後，只播放數字動畫，不實際加星星
-      // 星星已在結算時統一計算
+      
+      // 所有星星飄完後，更新總星星數並播放數字動畫
       setTimeout(() => {
         const currentStars = loadTotalStars();
-        // 播放數字變化動畫（從當前數字到當前數字，僅用於視覺效果）
-        animateStarsCount(currentStars, currentStars);
-
-        // 重置獲得的星星數（僅用於顯示動畫）
+        const newTotal = currentStars + earnedStars;
+        localStorage.setItem('totalStars', newTotal);
+        
+        // 播放數字變化動畫
+        animateStarsCount(currentStars, newTotal);
+        
+        // 重置獲得的星星數
         earnedStars = 0;
       }, earnedStars * 200 + 1500);
     }
@@ -1228,20 +1128,12 @@
       if (currentQuestion && currentQuestion.example) {
         speak(currentQuestion.example);
       }
-
-      // 重置本題作答狀態
-      hasAnsweredCurrentQuestion = false;
     }
 
     // 處理使用者點選
     function handleChoice(index) {
       if (answered) return;
-      if (hasAnsweredCurrentQuestion) {
-        console.warn('[星星系統] 本題已作答，略過重複送出');
-        return;
-      }
       answered = true;
-      hasAnsweredCurrentQuestion = true;
       
       // 停止計時器
       stopTimer();
@@ -1287,13 +1179,16 @@
           gameStats.perfectAnswers++;
         }
         
-        // 計算星星獎勵（僅用於顯示，不直接加星星）
+        // 計算星星獎勵
         const starsEarned = calculateStarReward(true, answerTime, gameStats.consecutiveCorrect, currentQuestion.word.length, '普通');
-
-        // 不再直接加星星，星星將在結算時統一計算
-        // 保留 earnedStars 僅用於顯示本輪獎勵動畫
-        earnedStars += starsEarned;
-
+        
+        // 使用統一的星星系統
+        if (typeof StarRewardSystem !== 'undefined') {
+          StarRewardSystem.addStars(starsEarned);
+        } else {
+          earnedStars += starsEarned;
+        }
+        
         // 更新顯示
         updateCurrentEarnedStars();
         
@@ -1402,56 +1297,15 @@
 
       const isEnding = (currentIdx + 1) >= totalCount;
       if (isEnding) {
-        // 防止重複結算
-        if (isGameFinished) {
-          console.warn('[星星系統] 結算已執行過，略過重複結算');
-          return;
-        }
-
-        isGameFinished = true;
-
         // ====== 新增：成就系統連動 ======
         updateQuizGameAchievements();
-
-        // 統一星星結算
-        if (!hasAppliedStarsThisRun) {
-          hasAppliedStarsThisRun = true;
-
-          // 計算本關星數（基於答對率）
-          const correctCount = gameStats.correctAnswers;
-          const totalQuestions = totalCount;
-          const earnedLevelStars = calculateStars(correctCount, totalQuestions);
-
-          // 使用書名作為關卡 ID
-          const levelId = bookName;
-
-          // 套用關卡星星（只補差額）
-          const starResult = applyLevelStars(levelId, earnedLevelStars, {
-            isPracticeMode: false,
-            isCompleted: true
-          });
-
-          console.group('[星星系統] 結算檢查');
-          console.log('關卡:', levelId);
-          console.log('答對數:', correctCount);
-          console.log('總題數:', totalQuestions);
-          console.log('本次獲得星數:', earnedLevelStars);
-          console.log('歷史最高星數:', starResult.oldStars);
-          console.log('本次實際增加星星:', starResult.addedStars);
-          console.log('目前總星星:', starResult.totalStars);
-          console.groupEnd();
-
-          // 更新星星顯示
-          updateStarsDisplay();
-        }
-
-        // 播放星星收集動畫（僅用於視覺效果）
+        
+        // 播放星星收集動畫
         animateStarsCollection();
-
+        
         // 延遲顯示完成訊息，讓星星動畫先播放
         setTimeout(() => {
-          const currentTotalStars = loadTotalStars();
-          alert(`恭喜完成所有題目！\n\n總星數：${currentTotalStars} 顆`);
+          alert(`恭喜完成所有題目！總星數：${loadTotalStars()}`);
           window.location.href = `book_edit.html?book=${encodeURIComponent(bookName)}`;
         }, earnedStars * 200 + 2500); // 等待星星動畫完成
       } else {
@@ -1606,14 +1460,8 @@
       stopTimer(); // 停止計時器
       reviewModal.style.display = 'none';
       currentIdx = 0; // 重置為第一題
-      earnedStars = 0; // 重置獲得的星星數（僅用於顯示動畫）
+      earnedStars = 0; // 重置獲得的星星數
       document.getElementById('currentEarnedStars').style.display = 'none'; // 隱藏當前獲得星星數
-
-      // 重置遊戲狀態標記
-      isGameFinished = false;
-      hasAppliedStarsThisRun = false;
-      hasAnsweredCurrentQuestion = false;
-
       renderQuestion();
     }
 

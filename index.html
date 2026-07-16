@@ -2178,7 +2178,7 @@
       will-change: transform;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-
+    
     @keyframes badgePulse {
       0%, 100% {
         transform: scale(1);
@@ -2186,57 +2186,10 @@
       }
       50% {
         transform: scale(1.1);
-        box-shadow: 0 0 20px rgba(255, 107, 107, 0.9);
+        box-shadow: 0 0 15px rgba(255, 107, 107, 0.8);
       }
     }
-
-    /* 新增：收藏冊獎勵徽章樣式 */
-    .reward-badge {
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      background: linear-gradient(135deg, #ffd700, #ff6b6b);
-      color: #fff;
-      font-size: 1.2rem;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
-      animation: rewardPulse 2s ease-in-out infinite;
-      z-index: 10;
-    }
-
-    @keyframes rewardPulse {
-      0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
-      }
-      50% {
-        transform: scale(1.1);
-        box-shadow: 0 0 20px rgba(255, 215, 0, 1);
-      }
-    }
-
-    /* 確保收藏冊按鈕可以顯示徽章 */
-    .nav-btn#cardCollectionBtn {
-      overflow: visible !important;
-      position: relative;
-      isolation: isolate;
-    }
-
-    .nav-btn#cardCollectionBtn:hover .reward-badge {
-      transform: scale(1.1);
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.9);
-      animation: none;
-    }
-
-    .nav-btn#cardCollectionBtn:not(:hover) .reward-badge {
-      animation: rewardPulse 2s ease-in-out infinite;
-    }
-
+    
     .achievement-badge.hidden {
       display: none;
     }
@@ -3042,7 +2995,6 @@
       <button class="btn" onclick="location.href='firebase_chat_enhanced.html'">💬 聊天室</button>
       <button class="btn" onclick="location.href='chat_room.html'" style="background: linear-gradient(135deg, #ff6b6b 0%, #a259ff 100%);">🎲 抽卡聊天室</button>
       <button class="btn" onclick="location.href='shop.html'">🛒 商城</button>
-      <button class="btn" onclick="location.href='dailyCheckCenter.html'" style="background: linear-gradient(135deg, #ffd700 0%, #ff6b9d 100%);">📅 每日簽到</button>
       <button class="btn" onclick="window.open('vocabulary_download.html', '_blank')" style="background: linear-gradient(135deg, #00ff88 0%, #00bfff 100%);">📥 單字下載</button>
       <button class="btn" onclick="location.href='game_center_simple.html'" style="background: linear-gradient(135deg, #ff6b6b 0%, #a259ff 100%);">🎮 遊戲中心</button>
 
@@ -3050,8 +3002,7 @@
     </div>
 
     <div class="nav-buttons">
-      <button class="nav-btn" id="cardsBtn" onclick="location.href='cards.html'">🏷️ 卡片上架系統</button>
-      <button class="nav-btn" id="cardCollectionBtn" onclick="location.href='cardCollection.html'" style="background: linear-gradient(135deg, #18f5ff 0%, #a259ff 100%);">📖 卡片收藏冊</button>
+      <button class="nav-btn" id="cardsBtn" onclick="location.href='cards.html'">📁 卡片收藏</button>
       <button class="nav-btn" id="achievementBtn" onclick="location.href='achievement.html'">🏆 成就勳章</button>
       <button class="nav-btn" onclick="location.href='stars_leaderboard.html'" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);">⭐ 星星排行榜</button>
       <a href="gm.html" class="gm-entry-link">GM 管理</a>
@@ -3215,6 +3166,9 @@
       { id: 'common_master', name: '普通卡大師', requirement: 50, reward: 20, icon: '📚', type: 'rarity', rarity: '普通', description: '收集50張普通卡片，掌握基礎詞彙' },
       { id: 'rare_master', name: '稀有卡大師', requirement: 30, reward: 40, icon: '🔮', type: 'rarity', rarity: '稀有', description: '收集30張稀有卡片，擴展詞彙範圍' },
       { id: 'epic_master', name: '超稀有大師', requirement: 20, reward: 80, icon: '🌟', type: 'rarity', rarity: '超稀有', description: '收集20張超稀有卡片，掌握高級詞彙' },
+      { id: 'shard_collector', name: '碎片收集者', requirement: 100, reward: 25, icon: '💎', type: 'shards', description: '收集100個碎片，開始碎片收集之路' },
+      { id: 'shard_hoarder', name: '碎片囤積者', requirement: 500, reward: 100, icon: '🏦', type: 'shards', description: '收集500個碎片，成為碎片囤積者' },
+      { id: 'shard_master', name: '碎片大師', requirement: 1000, reward: 200, icon: '💍', type: 'shards', description: '收集1000個碎片，成為碎片大師' },
       { id: 'first_card', name: '初學者', requirement: 1, reward: 1, icon: '🎯', type: 'special', description: '獲得第一張卡片，開始學習之旅' },
       { id: 'lucky_starter', name: '幸運新手', requirement: 5, reward: 5, icon: '🍀', type: 'special', description: '獲得5張卡片，展現你的幸運' },
       { id: 'dedicated', name: '專注學習者', requirement: 25, reward: 20, icon: '��', type: 'special', description: '獲得25張卡片，展現你的專注' },
@@ -3291,6 +3245,7 @@
 
     function checkAchievementUnlocked(ach) {
       const ownedCards = JSON.parse(localStorage.getItem('ownedCards') || '{}');
+      const shards = JSON.parse(localStorage.getItem('cardShards') || '{}');
       
       switch (ach.type) {
         case 'collection':
@@ -3305,6 +3260,10 @@
             return cardsByRarity.length >= ach.requirement;
           }
           return false; // 如果沒有allCards數據，返回false
+        case 'shards':
+          return Object.values(shards).reduce((sum, c) => sum + c, 0) >= ach.requirement;
+        case 'daily':
+          return parseInt(localStorage.getItem('loginDays') || '0') >= ach.requirement;
         case 'stars':
           return parseInt(localStorage.getItem('totalStars') || '0') >= ach.requirement;
         case 'performance':
@@ -5411,93 +5370,6 @@
         alert('❌ 下載失敗：' + e.message);
       }
     }
-
-    // 卡片收藏冊進度顯示功能
-    function updateCardCollectionProgress() {
-      try {
-        if (!window.allCards || !Array.isArray(window.allCards)) {
-          console.log('cards.js 尚未載入');
-          return;
-        }
-
-        const ownedCards = LinkageSystem.cards.getOwnedCards();
-        const totalCards = window.allCards.length;
-        const collectedCards = Object.keys(ownedCards).length;
-
-        // 計算完成率
-        const completionRate = totalCards > 0 ? Math.round((collectedCards / totalCards) * 100) : 0;
-
-        // 計算系列完成數
-        const allSeries = new Set();
-        window.allCards.forEach(card => {
-          if (card.category) {
-            allSeries.add(card.category);
-          }
-        });
-
-        let completedSeriesCount = 0;
-        let nearCompleteSeries = null;
-        let nearCompleteProgress = 0;
-        let claimableRewards = 0;
-
-        // 讀取已領取的系列獎勵
-        const claimedRewards = JSON.parse(localStorage.getItem('claimedCardSetRewards') || '{}');
-
-        allSeries.forEach(series => {
-          const seriesCards = window.allCards.filter(card => card.category === series);
-          const collectedInSeries = seriesCards.filter(card => ownedCards[card.word]).length;
-          const seriesProgress = seriesCards.length > 0 ? (collectedInSeries / seriesCards.length) * 100 : 0;
-
-          if (collectedInSeries === seriesCards.length) {
-            completedSeriesCount++;
-            
-            // 檢查是否可領獎（已完成但未領取）
-            const rewardKey = `set_${series}`;
-            if (!claimedRewards[rewardKey]) {
-              claimableRewards++;
-            }
-          }
-
-          // 找出即將完成的系列（進度 > 70% 且未完成）
-          if (seriesProgress > 70 && seriesProgress < 100 && seriesProgress > nearCompleteProgress) {
-            nearCompleteSeries = series;
-            nearCompleteProgress = seriesProgress;
-          }
-        });
-
-        // 更新按鈕顯示（如果有對應的元素）
-        const cardCollectionBtn = document.getElementById('cardCollectionBtn');
-        if (cardCollectionBtn) {
-          const missingCards = totalCards - collectedCards;
-          const rewardBadge = claimableRewards > 0 ? `<span class="reward-badge">🎁</span>` : '';
-          cardCollectionBtn.innerHTML = `📖 卡片收藏冊${rewardBadge}<br><small>${completionRate}% 已完成</small><br><small>${collectedCards} / ${totalCards} 張</small>`;
-        }
-
-        console.log('📖 卡片收藏冊進度更新:', {
-          totalCards,
-          collectedCards,
-          completionRate,
-          completedSeriesCount,
-          totalSeries: allSeries.size,
-          nearCompleteSeries,
-          claimableRewards
-        });
-      } catch (error) {
-        console.error('更新卡片收藏冊進度時發生錯誤:', error);
-      }
-    }
-
-    // 頁面載入時更新收藏冊進度
-    document.addEventListener('DOMContentLoaded', function() {
-      setTimeout(updateCardCollectionProgress, 1000);
-    });
-
-    // 監聽 storage 變化，即時更新進度
-    window.addEventListener('storage', function(event) {
-      if (event.key === 'ownedCards' || event.key === 'typingGamePlayerData') {
-        updateCardCollectionProgress();
-      }
-    });
   </script>
   
 </body>

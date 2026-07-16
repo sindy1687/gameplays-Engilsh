@@ -736,22 +736,11 @@
                     >
                         🔄 重置篩選
                     </button>
-                    <button 
-                        @click="refreshVocabularyFolder" 
-                        style="padding: 12px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; font-weight: bold; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0 15px rgba(255,215,0,0.3);"
-                        @mouseover="$event.target.style.transform='translateY(-2px)'; $event.target.style.boxShadow='0 0 25px rgba(255,215,0,0.5)'"
-                        @mouseout="$event.target.style.transform='translateY(0)'; $event.target.style.boxShadow='0 0 15px rgba(255,215,0,0.3)'"
-                    >
-                        📁 重新讀取單字資料夾
-                    </button>
 
 
                 </div>
                 <div style="margin-top: 15px; color: #00ffff; font-size: 0.9rem; text-shadow: 0 0 5px rgba(0,255,255,0.5);">
                     ✨ 找到 {{ filteredFiles.length }} 個檔案
-                </div>
-                <div style="margin-top: 10px; color: #ffd700; font-size: 0.8rem; text-shadow: 0 0 5px rgba(255,215,0,0.5);">
-                    💡 新增 CSV 後，請同步更新 data/vocabulary_manifest.json
                 </div>
             </div>
 
@@ -1065,14 +1054,7 @@
                     // 添加星星系統數據
                     totalStars: 0,
                     starRewardHistory: [],
-                    // 從 manifest 讀取的單字檔案列表
-                    vocabularyFiles: [],
-                    // 記錄上一次 manifest 內容，用於比對是否更新
-                    lastManifestText: '',
-                    // 自動更新計時器
-                    manifestUpdateInterval: null,
-                    // 備用硬編碼資料（如果 manifest 讀取失敗）
-                    fallbackFiles: [
+                    vocabularyFiles: [
                         {
                             id: 'basic400',
                             title: '🌟 宇宙入門單字集',
@@ -1842,169 +1824,6 @@
                 }
             },
             methods: {
-                // 讀取 vocabulary_manifest.json
-                async loadVocabularyManifest() {
-                    try {
-                        const response = await fetch(`data/vocabulary_manifest.json?t=${Date.now()}`);
-                        if (!response.ok) {
-                            throw new Error(`HTTP ${response.status}`);
-                        }
-                        const manifestText = await response.text();
-                        
-                        // 比對 manifest 是否更新
-                        if (manifestText === this.lastManifestText) {
-                            console.log('📋 Manifest 未更新，跳過重新載入');
-                            return;
-                        }
-                        
-                        this.lastManifestText = manifestText;
-                        const manifest = JSON.parse(manifestText);
-                        
-                        // 清空舊列表
-                        this.vocabularyFiles = [];
-                        
-                        // 載入每個 CSV 檔案
-                        for (const item of manifest) {
-                            await this.loadVocabularyCsvFile(item);
-                        }
-                        
-                        console.log(`✅ Manifest 載入成功，共 ${this.vocabularyFiles.length} 個檔案`);
-                        
-                        // 如果沒有檔案，顯示提醒
-                        if (this.vocabularyFiles.length === 0) {
-                            this.message = '⚠️ 尚未讀取到單字下載清單';
-                            this.messageClass = 'error-message';
-                        }
-                    } catch (error) {
-                        console.error('❌ 讀取 manifest 失敗:', error);
-                        this.message = '❌ 讀取單字清單失敗，請確認 data/vocabulary_manifest.json 是否存在';
-                        this.messageClass = 'error-message';
-                        
-                        // 如果 manifest 讀取失敗，使用備用資料
-                        if (this.vocabularyFiles.length === 0) {
-                            this.vocabularyFiles = this.fallbackFiles;
-                            console.log('🔄 使用備用硬編碼資料');
-                        }
-                    }
-                },
-                
-                // 載入單一 CSV 檔案
-                async loadVocabularyCsvFile(item) {
-                    try {
-                        const response = await fetch(`${item.file}?t=${Date.now()}`);
-                        if (!response.ok) {
-                            throw new Error(`HTTP ${response.status}`);
-                        }
-                        const csvText = await response.text();
-                        
-                        // 解析 CSV
-                        const lines = csvText.split('\n').filter(line => line.trim());
-                        const wordCount = lines.length > 0 ? lines.length - 1 : 0; // 減去標題行
-                        
-                        // 取得檔案名稱
-                        const filename = item.file.split('/').pop();
-                        
-                        // 驗證 unlockCost 在 50～100 之間
-                        let unlockCost = item.unlockCost || 50;
-                        if (unlockCost < 50) unlockCost = 50;
-                        if (unlockCost > 100) unlockCost = 100;
-                        
-                        // 建立檔案物件
-                        const fileObj = {
-                            id: item.file, // 使用完整檔案路徑作為 ID
-                            title: item.title,
-                            subtitle: item.subtitle || item.category,
-                            icon: item.icon || '📄',
-                            iconClass: item.iconClass || 'basic-icon',
-                            wordCount: wordCount.toString(),
-                            fileSize: this.calculateFileSize(csvText.length),
-                            level: item.category,
-                            unlockCost: unlockCost,
-                            description: item.description || '',
-                            filename: filename,
-                            file: item.file, // 保存 manifest 中的完整檔案路徑
-                            preview: this.parseCsvPreview(csvText, 5) // 取前5筆作為預覽
-                        };
-                        
-                        this.vocabularyFiles.push(fileObj);
-                        console.log(`✅ 載入成功: ${filename} (${wordCount} 個單字)`);
-                    } catch (error) {
-                        console.error(`❌ 載入 CSV 失敗: ${item.file}`, error);
-                        // 即使失敗也加入列表，但標記為錯誤
-                        const filename = item.file.split('/').pop();
-                        
-                        // 驗證 unlockCost 在 50～100 之間
-                        let unlockCost = item.unlockCost || 50;
-                        if (unlockCost < 50) unlockCost = 50;
-                        if (unlockCost > 100) unlockCost = 100;
-                        
-                        const fileObj = {
-                            id: item.file, // 使用完整檔案路徑作為 ID
-                            title: item.title,
-                            subtitle: 'CSV 讀取失敗',
-                            icon: '❌',
-                            iconClass: 'basic-icon',
-                            wordCount: '0',
-                            fileSize: '0KB',
-                            level: item.category,
-                            unlockCost: unlockCost,
-                            description: '無法讀取 CSV 檔案，請確認檔案路徑是否正確',
-                            filename: filename,
-                            file: item.file, // 保存 manifest 中的完整檔案路徑
-                            preview: [],
-                            error: true
-                        };
-                        this.vocabularyFiles.push(fileObj);
-                    }
-                },
-                
-                // 解析 CSV 預覽
-                parseCsvPreview(csvText, limit = 5) {
-                    const lines = csvText.split('\n').filter(line => line.trim());
-                    if (lines.length <= 1) return []; // 只有標題或空檔案
-                    
-                    const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
-                    const preview = [];
-                    
-                    for (let i = 1; i < Math.min(lines.length, limit + 1); i++) {
-                        const values = lines[i].split(',').map(v => v.trim().replace(/"/g, ''));
-                        const wordObj = {};
-                        
-                        headers.forEach((header, index) => {
-                            wordObj[header] = values[index] || '';
-                        });
-                        
-                        // 如果 CSV 格式不符合預期，使用預設格式
-                        if (Object.keys(wordObj).length === 0 || !wordObj.english) {
-                            wordObj.english = values[0] || '';
-                            wordObj.chinese = values[1] || '';
-                            wordObj.example_en = values[2] || '';
-                            wordObj.example_ch = values[3] || '';
-                        }
-                        
-                        preview.push(wordObj);
-                    }
-                    
-                    return preview;
-                },
-                
-                // 計算檔案大小
-                calculateFileSize(bytes) {
-                    if (bytes < 1024) return `${bytes}B`;
-                    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)}KB`;
-                    return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
-                },
-                
-                // 重新讀取 manifest
-                refreshVocabularyFolder() {
-                    this.message = '🔄 正在重新讀取單字資料夾...';
-                    this.messageClass = 'success-message';
-                    this.loadVocabularyManifest();
-                    setTimeout(() => {
-                        this.message = '';
-                    }, 2000);
-                },
-                
                 // 星星系統方法
                 getStars() {
                     return parseInt(localStorage.getItem('totalStars') || '0');
@@ -2124,7 +1943,7 @@
                         return;
                     }
                     
-                    const unlockCost = file.unlockCost || 50;
+                    const unlockCost = file.unlockCost || 10;
                     const currentStars = this.getStars();
                     
                     if (currentStars < unlockCost) {
@@ -2142,10 +1961,12 @@
                     this.totalStars = newStars;
                     this.updateStarsDisplay();
                     
-                    // 記錄已解鎖的檔案（使用 vocabularyUnlocks）
-                    const vocabularyUnlocks = JSON.parse(localStorage.getItem('vocabularyUnlocks') || '{}');
-                    vocabularyUnlocks[file.id] = true;
-                    localStorage.setItem('vocabularyUnlocks', JSON.stringify(vocabularyUnlocks));
+                    // 記錄已解鎖的檔案
+                    let unlockedFiles = JSON.parse(localStorage.getItem('unlockedFiles') || '[]');
+                    if (!unlockedFiles.includes(file.id)) {
+                        unlockedFiles.push(file.id);
+                        localStorage.setItem('unlockedFiles', JSON.stringify(unlockedFiles));
+                    }
                     
                     // 記錄解鎖歷史
                     this.starRewardHistory.push({
@@ -2179,16 +2000,6 @@
                         return;
                     }
                     
-                    // 檢查檔案是否有錯誤標記
-                    if (file.error) {
-                        this.message = `❌ 此檔案讀取失敗，無法下載`;
-                        this.messageClass = 'error-message';
-                        setTimeout(() => {
-                            this.message = '';
-                        }, 3000);
-                        return;
-                    }
-                    
                     this.downloading = file.id;
                     this.message = '';
                     
@@ -2203,8 +2014,8 @@
                         return;
                     }
                     
-                    // 使用 manifest 中的完整檔案路徑
-                    const fileUrl = file.file || `單字下載區/${encodeURIComponent(file.filename)}`;
+                    // 使用 encodeURIComponent 處理中文路徑
+                    const fileUrl = `單字下載區/${encodeURIComponent(file.filename)}`;
                     
                     // 先檢查檔案是否存在
                     fetch(fileUrl, {
@@ -2271,13 +2082,13 @@
                 },
                 
                 canUnlock(file) {
-                    const unlockCost = file.unlockCost || 50;
+                    const unlockCost = file.unlockCost || 10;
                     return this.getStars() >= unlockCost;
                 },
                 
                 isUnlocked(fileId) {
-                    const vocabularyUnlocks = JSON.parse(localStorage.getItem('vocabularyUnlocks') || '{}');
-                    return vocabularyUnlocks[fileId] === true;
+                    const unlockedFiles = JSON.parse(localStorage.getItem('unlockedFiles') || '[]');
+                    return unlockedFiles.includes(fileId);
                 },
                 
                 playUnlockSound() {
@@ -2367,14 +2178,6 @@
                 this.totalStars = this.getStars();
                 this.updateStarsDisplay();
                 
-                // 載入 vocabulary_manifest.json
-                this.loadVocabularyManifest();
-                
-                // 每30秒自動更新 manifest
-                this.manifestUpdateInterval = setInterval(() => {
-                    this.loadVocabularyManifest();
-                }, 30000);
-                
                 // 檢查是否通過HTTP服務器訪問
                 if (window.location.protocol === 'file:') {
                     this.message = `⚠️ 檢測到您直接打開了HTML檔案！\n\n為了正常下載檔案，請：\n1. 在終端機運行：python -m http.server 8000\n2. 訪問：http://localhost:8000/vocabulary_download.html\n\n這樣可以避免CORS錯誤。`;
@@ -2385,18 +2188,9 @@
                 }
                 
                 // 預設顯示第一個檔案的預覽
-                if (this.vocabularyFiles.length > 0) {
-                    this.selectedFile = this.vocabularyFiles[0];
-                }
+                this.selectedFile = this.vocabularyFiles[0];
                 
                 console.log('🌟 單字下載中心星星系統已初始化，當前星星:', this.totalStars);
-            },
-            
-            beforeUnmount() {
-                // 清理計時器
-                if (this.manifestUpdateInterval) {
-                    clearInterval(this.manifestUpdateInterval);
-                }
             }
         }).mount('#app');
     </script>

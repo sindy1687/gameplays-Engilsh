@@ -115,7 +115,7 @@ function createCardElement(card, index) {
   cardDiv.dataset.cardIndex = index;
   
   cardDiv.innerHTML = `
-    <img src="${card.image}" alt="${card.zh}" onerror="this.src='img/shop boss.png'">
+    <img src="${card.image}" alt="${card.zh}" onerror="this.src='img/card_back.jpeg'">
     <div class="label">
       <div class="chinese-text">${card.zh}</div>
       <div class="english-text">${card.word}</div>
@@ -171,7 +171,7 @@ function createTeamCardElement(card) {
   const expPercent = card.expToNext ? Math.min(100, (card.exp / card.expToNext) * 100) : 0;
   cardDiv.innerHTML = `
     <div style="position:absolute;top:4px;left:8px;font-size:0.9em;color:#ffd700;font-weight:bold;">Lv.${card.level||1}</div>
-    <img src="${card.image}" alt="${card.zh}" onerror="this.src='img/shop boss.png'">
+    <img src="${card.image}" alt="${card.zh}" onerror="this.src='img/card_back.jpeg'">
     <div class="label">
       <div class="chinese-text">${card.zh}</div>
       <div class="english-text">${card.word}</div>
