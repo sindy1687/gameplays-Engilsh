@@ -2,23 +2,23 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <title>填空挑戰 - 英打小英雄</title>
+  <title>憛怎征? - ?望?撠??/title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="responsive_enhanced.css">
   <style>
-    /* 防止水平滾動 */
+    /* ?脫迫瘞游像皛曉? */
     html {
       overflow-x: hidden;
     }
     
-    /* 確保所有元素都在視窗範圍內 */
+    /* 蝣箔????蝝?刻?蝒?? */
     * {
       box-sizing: border-box;
       max-width: 100%;
     }
     
-    /* ===== 基礎樣式 ===== */
+    /* ===== ?箇?璅?? ===== */
     body {
       margin: 0;
       padding: 0;
@@ -45,7 +45,7 @@
       font-size: 2.2rem;
     }
 
-    /* ===== 背景音樂控制按鈕樣式 ===== */
+    /* ===== ??單??批??璅?? ===== */
     #bgMusicControl {
       position: fixed;
       bottom: 20px;
@@ -81,7 +81,7 @@
       background: rgba(255, 255, 255, 0.5);
     }
 
-    /* ===== 按鈕樣式 ===== */
+    /* ===== ??璅?? ===== */
     .top-btns {
       position: fixed;
       top: 20px;
@@ -165,7 +165,7 @@
       background: #6fdc7f;
     }
 
-    /* ===== 顯示區塊樣式 ===== */
+    /* ===== 憿舐內?憛見撘?===== */
     #star-counter {
       display: flex;
       align-items: center;
@@ -207,7 +207,7 @@
       display: none;
     }
 
-    /* ===== 問題容器樣式 ===== */
+    /* ===== ??摰孵璅?? ===== */
     #question-container {
       background: rgba(30, 30, 40, 0.97);
       border-radius: 22px;
@@ -251,7 +251,7 @@
       font-size: 1.08rem;
     }
 
-    /* ===== 輸入框樣式 ===== */
+    /* ===== 頛詨獢見撘?===== */
     input {
       width: 92%;
       padding: 15px;
@@ -270,7 +270,7 @@
       border-color: #0ff;
     }
 
-    /* ===== 按鈕列樣式 ===== */
+    /* ===== ???見撘?===== */
     .btn-row {
       display: flex;
       justify-content: center;
@@ -279,7 +279,7 @@
       width: 100%;
     }
 
-    /* ===== 反饋樣式 ===== */
+    /* ===== ??璅?? ===== */
     #feedback {
       margin-top: 12px;
       font-size: 1.13rem;
@@ -314,7 +314,7 @@
       font-size: 1.25em;
     }
 
-    /* ===== 動畫效果 ===== */
+    /* ===== ??? ===== */
     .complete-anim {
       animation: pop 0.7s cubic-bezier(.68, -0.55, .27, 1.55) both;
     }
@@ -356,7 +356,7 @@
       }
     }
 
-    /* ===== 響應式設計優化 ===== */
+    /* ===== ?踵?撘身閮??===== */
     @media (max-width: 768px) {
       .top-btns {
         position: fixed;
@@ -472,7 +472,7 @@
       }
     }
 
-    /* ===== 遊戲結束畫面樣式 ===== */
+    /* ===== ?蝯??恍璅?? ===== */
     .modal {
       position: fixed;
       top: 0;
@@ -577,73 +577,73 @@
   </style>
 </head>
 <body>
-  <!-- 背景音樂控制按鈕 -->
-  <button id="bgMusicControl" onclick="toggleBackgroundMusic()" title="背景音樂控制">🎵</button>
+  <!-- ??單??批?? -->
+  <button id="bgMusicControl" onclick="toggleBackgroundMusic()" title="??單??批">?</button>
 
-  <!-- 在 body 適當位置加上背景音樂播放器（如尚未存在） -->
+  <!-- ??body ?拍雿蔭????單??剜?剁?憒??芸??剁? -->
   <audio id="backgroundMusic" loop>
-    <source src="sound/午後放鬆時光（純音樂）.mp3" type="audio/mpeg">
+    <source src="sound/???暸???嚗??單?嚗?mp3" type="audio/mpeg">
   </audio>
 
-  <!-- 星星數顯示區塊 -->
+  <!-- ???賊＊蝷箏?憛?-->
   <div id="starsDisplay">
-    ⭐<span id="totalStarsCount">0</span>
+    潃?span id="totalStarsCount">0</span>
   </div>
 
-  <!-- 頂部按鈕 -->
+  <!-- ??? -->
   <div class="top-btns">
-    <button onclick="location.href='atlas.html?tab=greek'" aria-label="回首頁">🏠 回首頁</button>
-    <button onclick="resetProgress()" aria-label="重新開始">🔄 重新開始</button>
-    <button onclick="showReviewModal()" aria-label="複習單字">📚 複習單字</button>
+    <button onclick="location.href='atlas.html?tab=greek'" aria-label="????>?? ????/button>
+    <button onclick="resetProgress()" aria-label="???">?? ???</button>
+    <button onclick="showReviewModal()" aria-label="銴??桀?">?? 銴??桀?</button>
   </div>
 
-  <h1>阿芙蘿黛蒂 Aphrodite - 填空挑戰</h1>
+  <h1>?輯??輸???Aphrodite - 憛怎征?</h1>
 
-  <!-- 本次星星顯示 -->
+  <!-- ?祆活??憿舐內 -->
   <div id="sessionStarsDisplay" style="margin-bottom:10px;color:#ffd700;font-weight:bold;font-size:1.08rem;">
-    本次已獲得 0 顆星星
+    ?祆活撌脩敺?0 憿???
   </div>
 
-  <!-- 進度顯示 -->
+  <!-- ?脣漲憿舐內 -->
   <div id="star-counter">
-    第 <span id="current-index">0</span> / <span id="total-questions">0</span> 題
+    蝚?<span id="current-index">0</span> / <span id="total-questions">0</span> 憿?
   </div>
 
-  <!-- 計時器 -->
+  <!-- 閮???-->
   <div id="timer" class="hidden">
-    ⏳ 倒數：<span id="time-left">0</span> 秒
+    ???嚗?span id="time-left">0</span> 蝘?
   </div>
 
-  <!-- 問題容器 -->
+  <!-- ??摰孵 -->
   <div id="question-container"></div>
 
-  <!-- 遊戲結束畫面 -->
+  <!-- ?蝯??恍 -->
   <div id="gameEndModal" class="modal" style="display: none;">
     <div class="modal-content">
-      <div class="end-icon">🎉</div>
-      <h2>遊戲完成！</h2>
+      <div class="end-icon">??</div>
+      <h2>?摰?嚗?/h2>
       <div class="end-stats">
-        <p>⭐ 本次獲得星星：<span id="endSessionStars">0</span></p>
-        <p>✅ 答對題數：<span id="endCorrectCount">0</span></p>
-        <p>❌ 答錯題數：<span id="endWrongCount">0</span></p>
-        <p>⭐ 累積總星星：<span id="endTotalStars">0</span></p>
+        <p>潃??祆活?脣???嚗?span id="endSessionStars">0</span></p>
+        <p>??蝑?憿嚗?span id="endCorrectCount">0</span></p>
+        <p>??蝑憿嚗?span id="endWrongCount">0</span></p>
+        <p>潃?蝝舐?蝮賣???<span id="endTotalStars">0</span></p>
       </div>
       <div class="end-buttons">
-        <button onclick="restartGame()">🔄 重新開始</button>
-        <button onclick="location.href='atlas.html?tab=greek'">🏠 返回首頁</button>
+        <button onclick="restartGame()">?? ???</button>
+        <button onclick="location.href='atlas.html?tab=greek'">?? 餈?擐?</button>
       </div>
     </div>
   </div>
 
-  <!-- 複習單字彈窗 -->
+  <!-- 銴??桀?敶? -->
   <div id="reviewModal" class="modal" style="display: none;">
     <div class="modal-content">
-      <div class="end-icon">📚</div>
-      <h2>單字複習</h2>
+      <div class="end-icon">??</div>
+      <h2>?桀?銴?</h2>
       
-      <!-- 分類選擇器 -->
+      <!-- ???豢???-->
       <div style="margin-bottom: 20px;">
-        <label for="categoryFilter" style="color: #ffd700; font-weight: bold; margin-right: 10px;">選擇分類：</label>
+        <label for="categoryFilter" style="color: #ffd700; font-weight: bold; margin-right: 10px;">?豢???嚗?/label>
         <select id="categoryFilter" style="
           background: #222;
           color: #fff;
@@ -653,20 +653,20 @@
           font-size: 1rem;
           cursor: pointer;
         ">
-          <option value="all">全部單字</option>
-          <option value="動作動詞">動作動詞</option>
-          <option value="身體健康">身體健康</option>
-          <option value="自然環境">自然環境</option>
-          <option value="家庭用品">家庭用品</option>
-          <option value="抽象概念">抽象概念</option>
-          <option value="數量分數">數量分數</option>
-          <option value="稱謂人際">稱謂人際</option>
-          <option value="場所位置">場所位置</option>
-          <option value="形容詞">形容詞</option>
+          <option value="all">?券?桀?</option>
+          <option value="????">????</option>
+          <option value="頨恍??亙熒">頨恍??亙熒</option>
+          <option value="?芰?啣?">?芰?啣?</option>
+          <option value="摰嗅滬?典?">摰嗅滬?典?</option>
+          <option value="?質情璁艙">?質情璁艙</option>
+          <option value="?賊??">?賊??</option>
+          <option value="蝔梯?鈭粹?">蝔梯?鈭粹?</option>
+          <option value="?湔?雿蔭">?湔?雿蔭</option>
+          <option value="敶Ｗ捆閰?>敶Ｗ捆閰?/option>
         </select>
       </div>
       
-      <!-- 統計資訊 -->
+      <!-- 蝯梯?鞈? -->
       <div id="vocabStats" style="
         background: rgba(255, 215, 0, 0.1);
         border: 1px solid #ffd700;
@@ -676,7 +676,7 @@
         color: #ffd700;
         font-size: 0.9rem;
       ">
-        總共 <span id="totalVocabCount">0</span> 個單字
+        蝮賢 <span id="totalVocabCount">0</span> ?摮?
         <button onclick="showVocabStats()" style="
           background: #0ff;
           color: #000;
@@ -686,7 +686,7 @@
           font-size: 0.8rem;
           margin-left: 10px;
           cursor: pointer;
-        ">📊 詳細統計</button>
+        ">?? 閰喟敦蝯梯?</button>
         <button onclick="exportVocabData()" style="
           background: #4caf50;
           color: #fff;
@@ -696,315 +696,313 @@
           font-size: 0.8rem;
           margin-left: 5px;
           cursor: pointer;
-        ">📥 匯出字庫</button>
+        ">? ?臬摮澈</button>
       </div>
       
       <div id="reviewWordsContainer" style="max-height: 400px; overflow-y: auto; margin: 20px 0;">
-        <!-- 單字列表將在這裡動態生成 -->
+        <!-- ?桀??”撠?ㄐ???? -->
       </div>
       <div class="end-buttons">
-        <button onclick="closeReviewModal()">關閉</button>
+        <button onclick="closeReviewModal()">??</button>
       </div>
     </div>
   </div>
 
-  <script src="js/stars.js"></script>
   <script src="js/gameDialogue.js"></script>
-<script src="js/greekScoreUpload.js"></script>
   <script>
-    // ===== 遊戲配置 =====
+    // ===== ??蔭 =====
     const GAME_CONFIG = {
       QUESTIONS_COUNT: 20,
       TIME_LIMIT: 30,
       MAX_ATTEMPTS: 3
     };
 
-    // ===== 題庫資料 =====
-    // ===== 題庫資料 (已更新為新的單字列表 P97 並增加分類) =====
+    // ===== 憿澈鞈? =====
+    // ===== 憿澈鞈? (撌脫?啁?啁??桀??” P97 銝血???憿? =====
 const VOCAB_DATA = [
-    {
-        "word": "cap",
-        "zh": "棒球帽；蓋子",
-        "en_sentence": "He put on a baseball cap before going out.",
-        "zh_sentence": "他出門前戴了一頂棒球帽。",
-        "category": "衣物/用品"
-    },
-    {
-        "word": "jeans",
-        "zh": "牛仔褲",
-        "en_sentence": "I usually wear jeans on weekends.",
-        "zh_sentence": "我週末通常穿牛仔褲。",
-        "category": "衣物/用品"
-    },
-    {
-        "word": "sweater",
-        "zh": "毛衣",
-        "en_sentence": "It's cold, so wear a warm sweater.",
-        "zh_sentence": "天氣很冷，所以穿一件暖和的毛衣。",
-        "category": "衣物/用品"
-    },
-    {
-        "word": "American",
-        "zh": "美國人；美國的",
-        "en_sentence": "She is an American student studying abroad.",
-        "zh_sentence": "她是一位在國外讀書的美國學生。",
-        "category": "國籍/身份"
-    },
-    {
-        "word": "waiter",
-        "zh": "男服務生",
-        "en_sentence": "The waiter took our order quickly.",
-        "zh_sentence": "男服務生很快地接了我們的點餐。",
-        "category": "職業/身份"
-    },
-    {
-        "word": "clerk",
-        "zh": "店員；職員",
-        "en_sentence": "The sales clerk helped me find the right size.",
-        "zh_sentence": "那位店員幫我找到正確的尺寸。",
-        "category": "職業/身份"
-    },
-    {
-        "word": "job",
-        "zh": "工作；職位",
-        "en_sentence": "She is looking for a new job in the city.",
-        "zh_sentence": "她正在城市裡尋找一份新工作。",
-        "category": "職業/名詞"
-    },
-    {
-        "word": "gray",
-        "zh": "灰色的",
-        "en_sentence": "He painted the room a light gray color.",
-        "zh_sentence": "他把房間漆成了淺灰色。",
-        "category": "顏色/形容詞"
-    },
-    {
-        "word": "purple",
-        "zh": "紫色的",
-        "en_sentence": "The sunset turned the sky purple and orange.",
-        "zh_sentence": "夕陽將天空染成紫色和橙色。",
-        "category": "顏色/形容詞"
-    },
-    {
-        "word": "airplane",
-        "zh": "飛機",
-        "en_sentence": "We saw a large airplane flying high.",
-        "zh_sentence": "我們看到一架大型飛機飛得很高。",
-        "category": "交通/名詞"
-    },
-    {
-        "word": "motorcycle",
-        "zh": "摩托車",
-        "en_sentence": "He rides his motorcycle to work every day.",
-        "zh_sentence": "他每天騎摩托車上班。",
-        "category": "交通/名詞"
-    },
-    {
-        "word": "street",
-        "zh": "街道",
-        "en_sentence": "The street is busy with cars and people.",
-        "zh_sentence": "這條街道上車水馬龍。",
-        "category": "地點/名詞"
-    },
-    {
-        "word": "town",
-        "zh": "城鎮",
-        "en_sentence": "I grew up in a small town near the coast.",
-        "zh_sentence": "我在一個靠近海岸的小城鎮長大。",
-        "category": "地點/名詞"
-    },
-    {
-        "word": "block",
-        "zh": "街區",
-        "en_sentence": "My house is just two blocks away from the school.",
-        "zh_sentence": "我家離學校只有兩個街區遠。",
-        "category": "地點/名詞"
-    },
-    {
-        "word": "city",
-        "zh": "城市",
-        "en_sentence": "New York is a famous large city.",
-        "zh_sentence": "紐約是一個著名的大城市。",
-        "category": "地點/名詞"
-    },
-    {
-        "word": "corner",
-        "zh": "角落；街角",
-        "en_sentence": "The bookstore is on the corner of the street.",
-        "zh_sentence": "書店在街道的街角。",
-        "category": "地點/名詞"
-    },
-    {
-        "word": "department store",
-        "zh": "百貨公司",
-        "en_sentence": "We bought a new TV at the department store.",
-        "zh_sentence": "我們在百貨公司買了一台新電視。",
-        "category": "地點/場所"
-    },
-    {
-        "word": "theater",
-        "zh": "劇院",
-        "en_sentence": "The play will be shown at the theater tonight.",
-        "zh_sentence": "這齣戲今晚將在劇院上演。",
-        "category": "地點/場所"
-    },
-    {
-        "word": "movie theater",
-        "zh": "電影院",
-        "en_sentence": "We watched the latest action film at the movie theater.",
-        "zh_sentence": "我們在電影院看了最新的動作片。",
-        "category": "地點/場所"
-    },
-    {
-        "word": "crazy",
-        "zh": "瘋狂的；著迷的",
-        "en_sentence": "The fans went crazy when the singer appeared.",
-        "zh_sentence": "當那位歌手出現時，歌迷們都瘋狂了。",
-        "category": "形容詞"
-    },
-    {
-        "word": "shop",
-        "zh": "商店；購物",
-        "en_sentence": "She went to the local shop to buy bread.",
-        "zh_sentence": "她去了當地商店買麵包。",
-        "category": "地點/動作"
-    },
-    {
-        "word": "flower shop",
-        "zh": "花店",
-        "en_sentence": "I bought a bouquet of roses at the flower shop.",
-        "zh_sentence": "我在花店買了一束玫瑰花。",
-        "category": "地點/場所"
-    },
-    {
-        "word": "station",
-        "zh": "車站；站",
-        "en_sentence": "We met him at the train station.",
-        "zh_sentence": "我們在火車站與他見面。",
-        "category": "地點/場所"
-    },
-    {
-        "word": "police station",
-        "zh": "警察局",
-        "en_sentence": "He reported the theft at the police station.",
-        "zh_sentence": "他在警察局報了案。",
-        "category": "地點/場所"
-    },
-    {
-        "word": "railway",
-        "zh": "鐵路",
-        "en_sentence": "The railway line connects the two cities.",
-        "zh_sentence": "這條鐵路線連接了這兩個城市。",
-        "category": "交通/名詞"
-    },
-    {
-        "word": "turn",
-        "zh": "轉彎；輪到",
-        "en_sentence": "Turn right at the next traffic light.",
-        "zh_sentence": "在下一個紅綠燈右轉。",
-        "category": "動詞/動作"
-    },
-    {
-        "word": "left",
-        "zh": "左邊；左轉",
-        "en_sentence": "My house is the third one on the left.",
-        "zh_sentence": "我家是左邊的第三棟房子。",
-        "category": "方向/方位"
-    },
-    {
-        "word": "right",
-        "zh": "右邊；正確的",
-        "en_sentence": "Please turn right after the bridge.",
-        "zh_sentence": "請在橋後右轉。",
-        "category": "方向/方位"
-    },
-    {
-        "word": "stamp",
-        "zh": "郵票；蓋章",
-        "en_sentence": "I need a stamp to mail this letter.",
-        "zh_sentence": "我需要一張郵票來寄這封信。",
-        "category": "物品/動作"
-    },
-    {
-        "word": "news",
-        "zh": "新聞",
-        "en_sentence": "Did you hear the latest news about the storm?",
-        "zh_sentence": "你聽到關於暴風雨的最新新聞了嗎？",
-        "category": "資訊/名詞"
-    },
-    {
-        "word": "blanket",
-        "zh": "毯子",
-        "en_sentence": "I covered myself with a thick blanket.",
-        "zh_sentence": "我用一條厚毯子蓋住自己。",
-        "category": "衣物/用品"
-    },
-    {
-        "word": "change",
-        "zh": "改變；零錢",
-        "en_sentence": "The weather is going to change soon.",
-        "zh_sentence": "天氣很快就會改變。",
-        "category": "動詞/名詞"
-    },
-    {
-        "word": "find",
-        "zh": "找到",
-        "en_sentence": "Did you find your lost keys?",
-        "zh_sentence": "你找到你丟失的鑰匙了嗎？",
-        "category": "動詞/動作"
-    },
-    {
-        "word": "lose",
-        "zh": "失去；迷失",
-        "en_sentence": "Don't lose your ticket before the game.",
-        "zh_sentence": "在比賽前不要弄丟你的票。",
-        "category": "動詞/動作"
-    },
-    {
-        "word": "stop",
-        "zh": "停止；站牌",
-        "en_sentence": "The bus will stop at the next corner.",
-        "zh_sentence": "公車將在下一個街角停下來。",
-        "category": "動詞/動作"
-    },
-    {
-        "word": "arrive",
-        "zh": "到達",
-        "en_sentence": "What time will the train arrive?",
-        "zh_sentence": "火車什麼時候會到達？",
-        "category": "動詞/動作"
-    },
-    {
-        "word": "bring",
-        "zh": "帶來",
-        "en_sentence": "Please bring your dictionary to class.",
-        "zh_sentence": "請帶你的字典來上課。",
-        "category": "動詞/動作"
-    },
-    {
-        "word": "spend",
-        "zh": "花費（金錢、時間）",
-        "en_sentence": "I like to spend time reading outdoors.",
-        "zh_sentence": "我喜歡花時間在戶外閱讀。",
-        "category": "動詞/動作"
-    },
-    {
-        "word": "pay",
-        "zh": "支付；付錢",
-        "en_sentence": "Don't forget to pay the rent this month.",
-        "zh_sentence": "不要忘了付這個月的房租。",
-        "category": "動詞/動作"
-    },
-    {
-        "word": "up",
-        "zh": "向上；起床",
-        "en_sentence": "Please look up at the ceiling.",
-        "zh_sentence": "請抬頭看看天花板。",
-        "category": "方位/副詞"
-    }
+? ? {
+? ? ? ? "word": "cap",
+? ? ? ? "zh": "璉?撣踝???",
+? ? ? ? "en_sentence": "He put on a baseball cap before going out.",
+? ? ? ? "zh_sentence": "隞??鈭????蜇??,
+? ? ? ? "category": "銵?/?典?"
+? ? },
+? ? {
+? ? ? ? "word": "jeans",
+? ? ? ? "zh": "??銴?,
+? ? ? ? "en_sentence": "I usually wear jeans on weekends.",
+? ? ? ? "zh_sentence": "?望?虜蝛輻?隞仆??,
+? ? ? ? "category": "銵?/?典?"
+? ? },
+? ? {
+? ? ? ? "word": "sweater",
+? ? ? ? "zh": "瘥﹝",
+? ? ? ? "en_sentence": "It's cold, so wear a warm sweater.",
+? ? ? ? "zh_sentence": "憭拇除敺嚗?隞亦忽銝隞嗆???瘥﹝??,
+? ? ? ? "category": "銵?/?典?"
+? ? },
+? ? {
+? ? ? ? "word": "American",
+? ? ? ? "zh": "蝢?鈭綽?蝢???,
+? ? ? ? "en_sentence": "She is an American student studying abroad.",
+? ? ? ? "zh_sentence": "憟寞銝雿??霈?貊?蝢?摮貊???,
+? ? ? ? "category": "??/頨思遢"
+? ? },
+? ? {
+? ? ? ? "word": "waiter",
+? ? ? ? "zh": "?瑟???",
+? ? ? ? "en_sentence": "The waiter took our order quickly.",
+? ? ? ? "zh_sentence": "?瑟???敺翰?唳鈭???暺???,
+? ? ? ? "category": "?瑟平/頨思遢"
+? ? },
+? ? {
+? ? ? ? "word": "clerk",
+? ? ? ? "zh": "摨嚗??,
+? ? ? ? "en_sentence": "The sales clerk helped me find the right size.",
+? ? ? ? "zh_sentence": "???摨撟急??曉甇?Ⅱ?偕撖詻?,
+? ? ? ? "category": "?瑟平/頨思遢"
+? ? },
+? ? {
+? ? ? ? "word": "job",
+? ? ? ? "zh": "撌乩?嚗雿?,
+? ? ? ? "en_sentence": "She is looking for a new job in the city.",
+? ? ? ? "zh_sentence": "憟寞迤?典?撣ㄐ撠銝隞賣撌乩???,
+? ? ? ? "category": "?瑟平/??"
+? ? },
+? ? {
+? ? ? ? "word": "gray",
+? ? ? ? "zh": "?啗??,
+? ? ? ? "en_sentence": "He painted the room a light gray color.",
+? ? ? ? "zh_sentence": "隞??輸?瞍?鈭滓?啗??,
+? ? ? ? "category": "憿/敶Ｗ捆閰?
+? ? },
+? ? {
+? ? ? ? "word": "purple",
+? ? ? ? "zh": "蝝怨??,
+? ? ? ? "en_sentence": "The sunset turned the sky purple and orange.",
+? ? ? ? "zh_sentence": "憭撠予蝛箸??換?脣?璈??,
+? ? ? ? "category": "憿/敶Ｗ捆閰?
+? ? },
+? ? {
+? ? ? ? "word": "airplane",
+? ? ? ? "zh": "憌?",
+? ? ? ? "en_sentence": "We saw a large airplane flying high.",
+? ? ? ? "zh_sentence": "???唬??嗅之??璈?敺?擃?,
+? ? ? ? "category": "鈭日???"
+? ? },
+? ? {
+? ? ? ? "word": "motorcycle",
+? ? ? ? "zh": "?拇?頠?,
+? ? ? ? "en_sentence": "He rides his motorcycle to work every day.",
+? ? ? ? "zh_sentence": "隞?憭拚??拇?頠??准?,
+? ? ? ? "category": "鈭日???"
+? ? },
+? ? {
+? ? ? ? "word": "street",
+? ? ? ? "zh": "銵?",
+? ? ? ? "en_sentence": "The street is busy with cars and people.",
+? ? ? ? "zh_sentence": "??銵?銝?瘞湧收樴?,
+? ? ? ? "category": "?圈?/??"
+? ? },
+? ? {
+? ? ? ? "word": "town",
+? ? ? ? "zh": "?",
+? ? ? ? "en_sentence": "I grew up in a small town near the coast.",
+? ? ? ? "zh_sentence": "?銝??餈絲撗貊?撠??桅憭扼?,
+? ? ? ? "category": "?圈?/??"
+? ? },
+? ? {
+? ? ? ? "word": "block",
+? ? ? ? "zh": "銵?",
+? ? ? ? "en_sentence": "My house is just two blocks away from the school.",
+? ? ? ? "zh_sentence": "?振?Ｗ飛?∪??????,
+? ? ? ? "category": "?圈?/??"
+? ? },
+? ? {
+? ? ? ? "word": "city",
+? ? ? ? "zh": "??",
+? ? ? ? "en_sentence": "New York is a famous large city.",
+? ? ? ? "zh_sentence": "蝝??臭?????憭批?撣?,
+? ? ? ? "category": "?圈?/??"
+? ? },
+? ? {
+? ? ? ? "word": "corner",
+? ? ? ? "zh": "閫嚗?閫?,
+? ? ? ? "en_sentence": "The bookstore is on the corner of the street.",
+? ? ? ? "zh_sentence": "?詨??刻???銵???,
+? ? ? ? "category": "?圈?/??"
+? ? },
+? ? {
+? ? ? ? "word": "department store",
+? ? ? ? "zh": "?曇疏?砍",
+? ? ? ? "en_sentence": "We bought a new TV at the department store.",
+? ? ? ? "zh_sentence": "??曇疏?砍鞎瑚?銝?唳?餉???,
+? ? ? ? "category": "?圈?/?湔?"
+? ? },
+? ? {
+? ? ? ? "word": "theater",
+? ? ? ? "zh": "?",
+? ? ? ? "en_sentence": "The play will be shown at the theater tonight.",
+? ? ? ? "zh_sentence": "?膛?脖????典??Ｖ?瞍?,
+? ? ? ? "category": "?圈?/?湔?"
+? ? },
+? ? {
+? ? ? ? "word": "movie theater",
+? ? ? ? "zh": "?餃蔣??,
+? ? ? ? "en_sentence": "We watched the latest action film at the movie theater.",
+? ? ? ? "zh_sentence": "??餃蔣?Ｙ?鈭??啁?????,
+? ? ? ? "category": "?圈?/?湔?"
+? ? },
+? ? {
+? ? ? ? "word": "crazy",
+? ? ? ? "zh": "?????蕙??,
+? ? ? ? "en_sentence": "The fans went crazy when the singer appeared.",
+? ? ? ? "zh_sentence": "?園雿???暹?嚗?餈瑕??鈭?,
+? ? ? ? "category": "敶Ｗ捆閰?
+? ? },
+? ? {
+? ? ? ? "word": "shop",
+? ? ? ? "zh": "??嚗頃??,
+? ? ? ? "en_sentence": "She went to the local shop to buy bread.",
+? ? ? ? "zh_sentence": "憟孵鈭?啣?摨眺暻萄???,
+? ? ? ? "category": "?圈?/??"
+? ? },
+? ? {
+? ? ? ? "word": "flower shop",
+? ? ? ? "zh": "?勗?",
+? ? ? ? "en_sentence": "I bought a bouquet of roses at the flower shop.",
+? ? ? ? "zh_sentence": "??勗?鞎瑚?銝??啗??,
+? ? ? ? "category": "?圈?/?湔?"
+? ? },
+? ? {
+? ? ? ? "word": "station",
+? ? ? ? "zh": "頠?嚗?",
+? ? ? ? "en_sentence": "We met him at the train station.",
+? ? ? ? "zh_sentence": "??怨?蝡?隞??Ｕ?,
+? ? ? ? "category": "?圈?/?湔?"
+? ? },
+? ? {
+? ? ? ? "word": "police station",
+? ? ? ? "zh": "霅血?撅",
+? ? ? ? "en_sentence": "He reported the theft at the police station.",
+? ? ? ? "zh_sentence": "隞霅血?撅?曹?獢?,
+? ? ? ? "category": "?圈?/?湔?"
+? ? },
+? ? {
+? ? ? ? "word": "railway",
+? ? ? ? "zh": "?菔楝",
+? ? ? ? "en_sentence": "The railway line connects the two cities.",
+? ? ? ? "zh_sentence": "???菔楝蝺?鈭??撣?,
+? ? ? ? "category": "鈭日???"
+? ? },
+? ? {
+? ? ? ? "word": "turn",
+? ? ? ? "zh": "頧?嚗憚??,
+? ? ? ? "en_sentence": "Turn right at the next traffic light.",
+? ? ? ? "zh_sentence": "?其?銝??蝬??唾???,
+? ? ? ? "category": "??/??"
+? ? },
+? ? {
+? ? ? ? "word": "left",
+? ? ? ? "zh": "撌阡?嚗椰頧?,
+? ? ? ? "en_sentence": "My house is the third one on the left.",
+? ? ? ? "zh_sentence": "?振?臬椰??蝚砌?璉摮?,
+? ? ? ? "category": "?孵?/?嫣?"
+? ? },
+? ? {
+? ? ? ? "word": "right",
+? ? ? ? "zh": "?喲?嚗迤蝣箇?",
+? ? ? ? "en_sentence": "Please turn right after the bridge.",
+? ? ? ? "zh_sentence": "隢璈??唾???,
+? ? ? ? "category": "?孵?/?嫣?"
+? ? },
+? ? {
+? ? ? ? "word": "stamp",
+? ? ? ? "zh": "?萇巨嚗?蝡?,
+? ? ? ? "en_sentence": "I need a stamp to mail this letter.",
+? ? ? ? "zh_sentence": "??閬?撘菟蟡其?撖?靽～?,
+? ? ? ? "category": "?拙?/??"
+? ? },
+? ? {
+? ? ? ? "word": "news",
+? ? ? ? "zh": "?啗?",
+? ? ? ? "en_sentence": "Did you hear the latest news about the storm?",
+? ? ? ? "zh_sentence": "雿?圈??潭憸券???唳????",
+? ? ? ? "category": "鞈?/??"
+? ? },
+? ? {
+? ? ? ? "word": "blanket",
+? ? ? ? "zh": "瘥臬?",
+? ? ? ? "en_sentence": "I covered myself with a thick blanket.",
+? ? ? ? "zh_sentence": "?銝璇?瘥臬????芸楛??,
+? ? ? ? "category": "銵?/?典?"
+? ? },
+? ? {
+? ? ? ? "word": "change",
+? ? ? ? "zh": "?寡?嚗??,
+? ? ? ? "en_sentence": "The weather is going to change soon.",
+? ? ? ? "zh_sentence": "憭拇除敺翰撠望??寡???,
+? ? ? ? "category": "??/??"
+? ? },
+? ? {
+? ? ? ? "word": "find",
+? ? ? ? "zh": "?曉",
+? ? ? ? "en_sentence": "Did you find your lost keys?",
+? ? ? ? "zh_sentence": "雿?唬?銝仃?????",
+? ? ? ? "category": "??/??"
+? ? },
+? ? {
+? ? ? ? "word": "lose",
+? ? ? ? "zh": "憭勗嚗蕙憭?,
+? ? ? ? "en_sentence": "Don't lose your ticket before the game.",
+? ? ? ? "zh_sentence": "?冽?鞈賢?銝?撘?雿?蟡具?,
+? ? ? ? "category": "??/??"
+? ? },
+? ? {
+? ? ? ? "word": "stop",
+? ? ? ? "zh": "?迫嚗???,
+? ? ? ? "en_sentence": "The bus will stop at the next corner.",
+? ? ? ? "zh_sentence": "?祈?撠銝???閫?銝???,
+? ? ? ? "category": "??/??"
+? ? },
+? ? {
+? ? ? ? "word": "arrive",
+? ? ? ? "zh": "?圈?",
+? ? ? ? "en_sentence": "What time will the train arrive?",
+? ? ? ? "zh_sentence": "?怨?隞暻潭????圈?嚗?,
+? ? ? ? "category": "??/??"
+? ? },
+? ? {
+? ? ? ? "word": "bring",
+? ? ? ? "zh": "撣嗡?",
+? ? ? ? "en_sentence": "Please bring your dictionary to class.",
+? ? ? ? "zh_sentence": "隢葆雿?摮靘?隤脯?,
+? ? ? ? "category": "??/??"
+? ? },
+? ? {
+? ? ? ? "word": "spend",
+? ? ? ? "zh": "?梯祥嚗??Ｕ???",
+? ? ? ? "en_sentence": "I like to spend time reading outdoors.",
+? ? ? ? "zh_sentence": "??甇∟???冽憭霈??,
+? ? ? ? "category": "??/??"
+? ? },
+? ? {
+? ? ? ? "word": "pay",
+? ? ? ? "zh": "?臭?嚗???,
+? ? ? ? "en_sentence": "Don't forget to pay the rent this month.",
+? ? ? ? "zh_sentence": "銝?敹?隞??蝘?,
+? ? ? ? "category": "??/??"
+? ? },
+? ? {
+? ? ? ? "word": "up",
+? ? ? ? "zh": "??嚗絲摨?,
+? ? ? ? "en_sentence": "Please look up at the ceiling.",
+? ? ? ? "zh_sentence": "隢?剔??予?望??,
+? ? ? ? "category": "?嫣?/?航?"
+? ? }
 ];
 
-    // ===== 遊戲狀態變數 =====
+    // ===== ??????=====
     let gameState = {
       data: [],
       currentIndex: 0,
@@ -1016,14 +1014,14 @@ const VOCAB_DATA = [
       sessionStars: 0
     };
 
-    // ===== 音效資源 =====
+    // ===== ?單?鞈? =====
     const SOUNDS = {
       correct: new Audio('audio/correct.mp3'),
       wrong: new Audio('audio/wrong.mp3'),
       type: new Audio('audio/type.mp3')
     };
 
-    // ===== 背景音樂控制 =====
+    // ===== ??單??批 =====
     let isMusicPlaying = false;
 
     function initBackgroundMusic() {
@@ -1031,7 +1029,7 @@ const VOCAB_DATA = [
       if (backgroundMusic) {
         backgroundMusic.volume = 0.3;
         
-        // 從localStorage讀取音樂狀態
+        // 敺ocalStorage霈?璅???
         const musicState = localStorage.getItem('bgMusicState');
         if (musicState === 'playing') {
           playBackgroundMusic();
@@ -1055,11 +1053,11 @@ const VOCAB_DATA = [
       if (backgroundMusic) {
         backgroundMusic.play().then(() => {
           isMusicPlaying = true;
-          document.getElementById('bgMusicControl').textContent = '🔊';
+          document.getElementById('bgMusicControl').textContent = '??';
           document.getElementById('bgMusicControl').classList.remove('paused');
           localStorage.setItem('bgMusicState', 'playing');
         }).catch(err => {
-          console.log('背景音樂播放失敗:', err);
+          console.log('??單??剜憭望?:', err);
         });
       }
     }
@@ -1069,13 +1067,13 @@ const VOCAB_DATA = [
       if (backgroundMusic) {
         backgroundMusic.pause();
         isMusicPlaying = false;
-        document.getElementById('bgMusicControl').textContent = '🔇';
+        document.getElementById('bgMusicControl').textContent = '??';
         document.getElementById('bgMusicControl').classList.add('paused');
         localStorage.setItem('bgMusicState', 'paused');
       }
     }
 
-    // ===== 工具函數 =====
+    // ===== 撌亙?賣 =====
     function escapeRegExp(s) {
       return s.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&');
     }
@@ -1085,7 +1083,7 @@ const VOCAB_DATA = [
       return arr.slice().sort(() => Math.random() - 0.5).slice(0, count);
     }
 
-    // ===== 資料初始化 =====
+    // ===== 鞈?????=====
     function initData() {
       const selected = getRandomQuestions(VOCAB_DATA, GAME_CONFIG.QUESTIONS_COUNT);
       gameState.data = selected.map(item => ({
@@ -1099,7 +1097,7 @@ const VOCAB_DATA = [
       document.getElementById('total-questions').textContent = gameState.data.length;
     }
 
-    // ===== 進度管理 =====
+    // ===== ?脣漲蝞∠? =====
     function saveProgress() {
       localStorage.setItem('fillIndex', gameState.currentIndex);
     }
@@ -1121,7 +1119,7 @@ const VOCAB_DATA = [
       document.getElementById('current-index').textContent = gameState.currentIndex + 1;
     }
 
-    // ===== 計時器功能 =====
+    // ===== 閮??典???=====
     function startTimer() {
       clearInterval(gameState.timerInterval);
       let timeLeft = GAME_CONFIG.TIME_LIMIT;
@@ -1142,7 +1140,7 @@ const VOCAB_DATA = [
       clearInterval(gameState.timerInterval);
     }
 
-    // ===== 語音功能 =====
+    // ===== 隤? =====
     function speak(text, rate = 1.0, callback) {
       if (!window.speechSynthesis) return;
       
@@ -1165,11 +1163,11 @@ const VOCAB_DATA = [
       });
     }
 
-    // ===== 答案處理 =====
+    // ===== 蝑??? =====
     function revealAnswer(autoNext = false) {
       gameState.attemptCount = Infinity;
       document.getElementById('feedback').innerHTML = 
-        '<span style="color:#f66;">⏰ 時間到！正確答案：<b>' + gameState.data[gameState.currentIndex].answer + '</b></span>';
+        '<span style="color:#f66;">?????堆?甇?Ⅱ蝑?嚗?b>' + gameState.data[gameState.currentIndex].answer + '</b></span>';
       document.getElementById('submit-btn').disabled = true;
       document.getElementById('user-input').disabled = true;
       
@@ -1196,16 +1194,16 @@ const VOCAB_DATA = [
       };
     }
 
-    // ===== 問題顯示 =====
+    // ===== ??憿舐內 =====
     function showQuestion() {
       if (!gameState.data || !Array.isArray(gameState.data) || gameState.data.length === 0) {
         document.getElementById('question-container').innerHTML = 
-          '<div style="color:#f66;font-size:1.2rem;">⚠️ 題庫沒有題目，請檢查資料！</div>';
+          '<div style="color:#f66;font-size:1.2rem;">?? 憿澈瘝?憿嚗?瑼Ｘ鞈?嚗?/div>';
         return;
       }
 
       if (gameState.currentIndex < 0 || gameState.currentIndex >= gameState.data.length) {
-        // 遊戲結束，顯示結束畫面
+        // ?蝯?嚗＊蝷箇????
         showGameEndScreen();
         return;
       }
@@ -1215,17 +1213,17 @@ const VOCAB_DATA = [
       const question = gameState.data[gameState.currentIndex];
 
       document.getElementById('question-container').innerHTML = 
-        '<div class="question-title">英文句子：</div>' +
+        '<div class="question-title">?望??亙?嚗?/div>' +
         '<div class="question-sentence">' + question.sentence.replace('___', '<span class="blank">___</span>') + '</div>' +
-        '<div class="question-zh">中文提示：' + (question.zh_sentence || question.zh) + '</div>' +
-        '<input id="user-input" placeholder="輸入答案…" autocomplete="off" />' +
+        '<div class="question-zh">銝剜??內嚗? + (question.zh_sentence || question.zh) + '</div>' +
+        '<input id="user-input" placeholder="頛詨蝑??? autocomplete="off" />' +
         '<div class="btn-row">' +
-          '<button id="submit-btn" onclick="checkAnswer()">送出</button>' +
-          '<button id="skip-btn" onclick="skipQuestion()">跳過</button>' +
-          '<button id="next-btn" onclick="nextQuestion()">下一題</button>' +
+          '<button id="submit-btn" onclick="checkAnswer()">?</button>' +
+          '<button id="skip-btn" onclick="skipQuestion()">頝喲?</button>' +
+          '<button id="next-btn" onclick="nextQuestion()">銝?憿?/button>' +
         '</div>' +
         '<div id="feedback"></div>' +
-        '<button id="speak-btn" onclick="speakQuestionAndWord(question)">🔊 朗讀</button>';
+        '<button id="speak-btn" onclick="speakQuestionAndWord(question)">?? ??</button>';
 
       const inputEl = document.getElementById('user-input');
       inputEl.focus();
@@ -1250,33 +1248,33 @@ const VOCAB_DATA = [
       document.getElementById('speak-btn').onclick = () => speakQuestionAndWord(question);
       window.answerStartTime = Date.now();
       
-      // 鎖定複習按鈕
+      // ??銴???
       lockReviewButton();
     }
 
-    // ===== 遊戲結束畫面 =====
+    // ===== ?蝯??恍 =====
     function showGameEndScreen() {
-      // 計算統計數據
+      // 閮?蝯梯??豢?
       const correctCount = gameState.answerLog.filter(log => log && log.correct === true).length;
       const wrongCount = gameState.answerLog.filter(log => log && log.correct === false).length;
       const totalStars = loadTotalStars();
 
-      // 更新結束畫面數據
+      // ?湔蝯??恍?豢?
       document.getElementById('endSessionStars').textContent = gameState.sessionStars;
       document.getElementById('endCorrectCount').textContent = correctCount;
       document.getElementById('endWrongCount').textContent = wrongCount;
       document.getElementById('endTotalStars').textContent = totalStars;
 
-      // 顯示結束畫面
+      // 憿舐內蝯??恍
       document.getElementById('gameEndModal').style.display = 'flex';
       
-      // 停止計時器
+      // ?迫閮???
       stopTimer();
       
-      // 解鎖複習按鈕
+      // 閫??銴???
       unlockReviewButton();
       
-      // 播放完成音效
+      // ?剜摰??單?
       try {
         SOUNDS.correct.currentTime = 0;
         SOUNDS.correct.play();
@@ -1284,29 +1282,29 @@ const VOCAB_DATA = [
     }
 
     function restartGame() {
-      // 隱藏結束畫面
+      // ?梯?蝯??恍
       document.getElementById('gameEndModal').style.display = 'none';
       
-      // 重置遊戲狀態
+      // ?蔭????
       gameState.currentIndex = 0;
       gameState.sessionStars = 0;
       gameState.answerLog = [];
       
-      // 重新初始化數據
+      // ??????
       initData();
       updateCounter();
       showQuestion();
       
-      // 更新本次星星顯示
-      document.getElementById('sessionStarsDisplay').textContent = '本次已獲得 0 顆星星';
+      // ?湔?祆活??憿舐內
+      document.getElementById('sessionStarsDisplay').textContent = '?祆活撌脩敺?0 憿???;
     }
 
-    // ===== 問題操作 =====
+    // ===== ???? =====
     function skipQuestion() {
       stopTimer();
       logAnswer(null, '');
       const feedback = document.getElementById('feedback');
-      if (feedback) feedback.innerHTML = '<span style="color:#bbb;">已跳過本題</span>';
+      if (feedback) feedback.innerHTML = '<span style="color:#bbb;">撌脰歲?憿?/span>';
       setTimeout(() => {
         gameState.currentIndex++;
         showQuestion();
@@ -1318,7 +1316,7 @@ const VOCAB_DATA = [
       if (!gameState.answerLog[gameState.currentIndex]) {
         logAnswer(false, document.getElementById('user-input')?.value || '');
         const feedback = document.getElementById('feedback');
-        if (feedback) feedback.innerHTML = '<span style="color:#bbb;">未作答</span>';
+        if (feedback) feedback.innerHTML = '<span style="color:#bbb;">?芯?蝑?/span>';
       }
       setTimeout(() => {
         gameState.currentIndex++;
@@ -1341,11 +1339,11 @@ const VOCAB_DATA = [
 
         const usedSeconds = (Date.now() - (window.answerStartTime || Date.now())) / 1000;
         let bonus = 0;
-        let feedbackMsg = '<div class="feedback-box feedback-correct">✅ 答對了！太棒了！';
+        let feedbackMsg = '<div class="feedback-box feedback-correct">??蝑?鈭?憭芣?鈭?';
         
         if (usedSeconds < 10) {
           bonus = 2;
-          feedbackMsg += ' <span class="feedback-bonus">BONUS! ⏱️ +2</span>';
+          feedbackMsg += ' <span class="feedback-bonus">BONUS! ?梧? +2</span>';
         }
         feedbackMsg += '</div>';
         
@@ -1362,7 +1360,7 @@ const VOCAB_DATA = [
         const addStars = 1 + bonus;
         addStarsToTotal(addStars);
         gameState.sessionStars += addStars;
-        document.getElementById('sessionStarsDisplay').textContent = '本次已獲得 ' + gameState.sessionStars + ' 顆星星';
+        document.getElementById('sessionStarsDisplay').textContent = '?祆活撌脩敺?' + gameState.sessionStars + ' 憿???;
         
         try {
           SOUNDS.correct.currentTime = 0;
@@ -1375,13 +1373,13 @@ const VOCAB_DATA = [
         }, 1300);
       } else {
         if (gameState.attemptCount < GAME_CONFIG.MAX_ATTEMPTS) {
-          feedback.innerHTML = '<div class="feedback-box feedback-wrong">❌ 再試一次！你可以的！</div>';
+          feedback.innerHTML = '<div class="feedback-box feedback-wrong">???岫銝甈∴?雿隞亦?嚗?/div>';
           try {
             SOUNDS.wrong.currentTime = 0;
             SOUNDS.wrong.play();
           } catch (e) {}
         } else {
-          feedback.innerHTML = '<div class="feedback-box feedback-wrong">❌ 正確答案：<b>' + gameState.data[gameState.currentIndex].answer + '</b><br>別氣餒，再接再厲！</div>';
+          feedback.innerHTML = '<div class="feedback-box feedback-wrong">??甇?Ⅱ蝑?嚗?b>' + gameState.data[gameState.currentIndex].answer + '</b><br>?交除擗???嚗?/div>';
           inputEl.disabled = true;
           document.getElementById('submit-btn').disabled = true;
           
@@ -1400,19 +1398,13 @@ const VOCAB_DATA = [
       }
     }
 
-    // ===== 星星系統 =====
+    // ===== ??蝟餌絞 =====
     function loadTotalStars() {
       const stars = localStorage.getItem('totalStars');
       return stars !== null ? parseInt(stars, 10) : 0;
     }
 
     function addStarsToTotal(stars) {
-      // 優先使用 StarSystem
-      if (typeof StarSystem !== 'undefined' && typeof StarSystem.addTotalStars === 'function') {
-        StarSystem.addTotalStars(stars, '阿佛洛狄忒遊戲獎勵');
-        updateStarsDisplay();
-        return;
-      }
       const currentStars = loadTotalStars();
       const newTotal = currentStars + stars;
       localStorage.setItem('totalStars', newTotal);
@@ -1423,22 +1415,22 @@ const VOCAB_DATA = [
       document.getElementById('totalStarsCount').textContent = loadTotalStars();
     }
 
-    // ===== 複習單字功能 =====
+    // ===== 銴??桀?? =====
     function showReviewModal() {
-      // 暫停遊戲計時器
+      // ?怠??閮???
       stopTimer();
       
       const container = document.getElementById('reviewWordsContainer');
       const categoryFilter = document.getElementById('categoryFilter');
       const totalVocabCount = document.getElementById('totalVocabCount');
       
-      // 更新總數統計
+      // ?湔蝮賣蝯梯?
       totalVocabCount.textContent = VOCAB_DATA.length;
       
-      // 顯示所有單字
+      // 憿舐內??摮?
       displayVocabByCategory('all');
       
-      // 添加分類篩選事件監聽器
+      // 瘛餃???蝭拚鈭辣????
       categoryFilter.onchange = function() {
         displayVocabByCategory(this.value);
       };
@@ -1450,19 +1442,19 @@ const VOCAB_DATA = [
       const container = document.getElementById('reviewWordsContainer');
       const totalVocabCount = document.getElementById('totalVocabCount');
       
-      // 清空容器
+      // 皜征摰孵
       container.innerHTML = '';
       
-      // 篩選單字
+      // 蝭拚?桀?
       let filteredVocab = VOCAB_DATA;
       if (category !== 'all') {
         filteredVocab = VOCAB_DATA.filter(item => item.category === category);
       }
       
-      // 更新統計資訊
+      // ?湔蝯梯?鞈?
       totalVocabCount.textContent = filteredVocab.length;
       
-      // 顯示分類標題
+      // 憿舐內??璅?
       if (category !== 'all') {
         const categoryTitle = document.createElement('div');
         categoryTitle.style.cssText = `
@@ -1475,11 +1467,11 @@ const VOCAB_DATA = [
           border-radius: 8px;
           text-align: center;
         `;
-        categoryTitle.textContent = `📂 ${category} (${filteredVocab.length}個單字)`;
+        categoryTitle.textContent = `?? ${category} (${filteredVocab.length}?摮?`;
         container.appendChild(categoryTitle);
       }
       
-      // 顯示單字
+      // 憿舐內?桀?
       filteredVocab.forEach((item, index) => {
         const wordDiv = document.createElement('div');
         wordDiv.style.cssText = `
@@ -1493,7 +1485,7 @@ const VOCAB_DATA = [
           transition: all 0.3s;
         `;
         
-        // 添加分類標籤
+        // 瘛餃???璅惜
         const categoryLabel = category === 'all' ? `<span style="color: #0ff; font-size: 0.8rem; background: rgba(0,255,255,0.2); padding: 2px 6px; border-radius: 4px; margin-left: 8px;">${item.category}</span>` : '';
         
         wordDiv.innerHTML = `
@@ -1523,11 +1515,11 @@ const VOCAB_DATA = [
               align-items: center;
               justify-content: center;
               transition: all 0.2s;
-              box-shadow: 0 2px 8px rgba(0,255,255,0.3);">🔊</button>
+              box-shadow: 0 2px 8px rgba(0,255,255,0.3);">??</button>
           </div>
         `;
         
-        // 添加懸停效果
+        // 瘛餃??詨???
         wordDiv.addEventListener('mouseenter', () => {
           wordDiv.style.background = 'rgba(255, 215, 0, 0.2)';
           wordDiv.style.transform = 'scale(1.02)';
@@ -1545,7 +1537,7 @@ const VOCAB_DATA = [
         container.appendChild(wordDiv);
       });
       
-      // 如果沒有單字，顯示提示
+      // 憒?瘝??桀?嚗＊蝷箸?蝷?
       if (filteredVocab.length === 0) {
         const noWordsDiv = document.createElement('div');
         noWordsDiv.style.cssText = `
@@ -1555,14 +1547,14 @@ const VOCAB_DATA = [
           padding: 40px;
           font-style: italic;
         `;
-        noWordsDiv.textContent = '此分類暫無單字';
+        noWordsDiv.textContent = '甇文?憿?∪摮?;
         container.appendChild(noWordsDiv);
       }
     }
 
     function closeReviewModal() {
       document.getElementById('reviewModal').style.display = 'none';
-      // 恢復遊戲計時器（如果遊戲還在進行中）
+      // ?Ｗ儔?閮??剁?憒????脰?銝哨?
       if (gameState.currentIndex < gameState.data.length && !gameState.answered) {
         startTimer();
       }
@@ -1581,7 +1573,7 @@ const VOCAB_DATA = [
       window.speechSynthesis.speak(utter);
     }
 
-    // ===== 複習按鈕鎖定功能 =====
+    // ===== 銴?????? =====
     function lockReviewButton() {
       const reviewBtn = document.querySelector('.top-btns button[onclick*="showReviewModal"]');
       if (reviewBtn) {
@@ -1589,7 +1581,7 @@ const VOCAB_DATA = [
         reviewBtn.style.background = '#555';
         reviewBtn.style.color = '#888';
         reviewBtn.style.cursor = 'not-allowed';
-        reviewBtn.title = '遊戲進行中，無法複習單字';
+        reviewBtn.title = '??脰?銝哨??⊥?銴??桀?';
       }
     }
 
@@ -1600,28 +1592,28 @@ const VOCAB_DATA = [
         reviewBtn.style.background = '#ffd700';
         reviewBtn.style.color = '#000';
         reviewBtn.style.cursor = 'pointer';
-        reviewBtn.title = '複習單字';
+        reviewBtn.title = '銴??桀?';
       }
     }
 
-    // ===== 字庫統計功能 =====
+    // ===== 摮澈蝯梯?? =====
     function showVocabStats() {
-      // 計算各分類的單字數量
+      // 閮???憿??桀??賊?
       const categoryStats = {};
       VOCAB_DATA.forEach(item => {
         categoryStats[item.category] = (categoryStats[item.category] || 0) + 1;
       });
       
-      // 創建統計彈窗
+      // ?萄遣蝯梯?敶?
       const statsModal = document.createElement('div');
       statsModal.className = 'modal';
       statsModal.style.display = 'flex';
       statsModal.innerHTML = `
         <div class="modal-content" style="max-width: 600px;">
-          <div class="end-icon">📊</div>
-          <h2>字庫統計</h2>
+          <div class="end-icon">??</div>
+          <h2>摮澈蝯梯?</h2>
           <div style="text-align: left; margin: 20px 0;">
-            <h3 style="color: #ffd700; margin-bottom: 15px;">📈 分類統計</h3>
+            <h3 style="color: #ffd700; margin-bottom: 15px;">?? ??蝯梯?</h3>
             ${Object.entries(categoryStats).map(([category, count]) => `
               <div style="
                 display: flex;
@@ -1631,7 +1623,7 @@ const VOCAB_DATA = [
                 border-bottom: 1px solid rgba(255, 215, 0, 0.3);
               ">
                 <span style="color: #fff;">${category}</span>
-                <span style="color: #0ff; font-weight: bold;">${count} 個單字</span>
+                <span style="color: #0ff; font-weight: bold;">${count} ?摮?/span>
               </div>
             `).join('')}
             <div style="
@@ -1643,17 +1635,17 @@ const VOCAB_DATA = [
               margin-top: 10px;
               font-weight: bold;
             ">
-              <span style="color: #ffd700;">總計</span>
-              <span style="color: #ffd700;">${VOCAB_DATA.length} 個單字</span>
+              <span style="color: #ffd700;">蝮質?</span>
+              <span style="color: #ffd700;">${VOCAB_DATA.length} ?摮?/span>
             </div>
           </div>
           <div class="end-buttons">
-            <button onclick="this.closest('.modal').remove()">關閉</button>
+            <button onclick="this.closest('.modal').remove()">??</button>
           </div>
         </div>
       `;
       
-      // 添加點擊外部關閉功能
+      // 瘛餃?暺?憭???
       statsModal.addEventListener('click', function(e) {
         if (e.target === statsModal) {
           statsModal.remove();
@@ -1663,11 +1655,11 @@ const VOCAB_DATA = [
       document.body.appendChild(statsModal);
     }
 
-    // ===== 字庫匯出功能 =====
+    // ===== 摮澈?臬? =====
     function exportVocabData() {
-      // 創建CSV格式的數據
+      // ?萄遣CSV?澆????
       const csvContent = [
-        ['單字', '中文', '英文例句', '中文例句', '分類'],
+        ['?桀?', '銝剜?', '?望?靘', '銝剜?靘', '??'],
         ...VOCAB_DATA.map(item => [
           item.word,
           item.zh,
@@ -1677,7 +1669,7 @@ const VOCAB_DATA = [
         ])
       ].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
       
-      // 創建下載連結
+      // ?萄遣銝????
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
       const url = URL.createObjectURL(blob);
@@ -1687,11 +1679,11 @@ const VOCAB_DATA = [
       document.body.appendChild(link);
       link.click();
       
-      // 顯示成功訊息
-      showNotification('✅ 字庫已成功匯出！', 'success');
+      // 憿舐內??閮
+      showNotification('??摮澈撌脫???綽?', 'success');
     }
 
-    // ===== 通知功能 =====
+    // ===== ?? =====
     function showNotification(message, type = 'info') {
       const notification = document.createElement('div');
       notification.style.cssText = `
@@ -1709,7 +1701,7 @@ const VOCAB_DATA = [
       `;
       notification.textContent = message;
       
-      // 添加動畫樣式
+      // 瘛餃??璅??
       const style = document.createElement('style');
       style.textContent = `
         @keyframes slideDown {
@@ -1721,14 +1713,14 @@ const VOCAB_DATA = [
       
       document.body.appendChild(notification);
       
-      // 3秒後自動移除
+      // 3蝘??芸?蝘駁
       setTimeout(() => {
         notification.remove();
         style.remove();
       }, 3000);
     }
 
-    // ===== 初始化 =====
+    // ===== ????=====
     let voices = [];
     function pickVoice() {
       voices = window.speechSynthesis.getVoices();
@@ -1752,21 +1744,21 @@ const VOCAB_DATA = [
 
     document.addEventListener('DOMContentLoaded', () => {
       updateStarsDisplay();
-      document.getElementById('sessionStarsDisplay').textContent = '本次已獲得 0 顆星星';
+      document.getElementById('sessionStarsDisplay').textContent = '?祆活撌脩敺?0 憿???;
       initData();
       gameState.currentIndex = 0;
       updateCounter();
       showQuestion();
       localStorage.removeItem('fillIndex');
       
-      // 初始化背景音樂
+      // ?????舫璅?
       initBackgroundMusic();
       
-      // 初始化時解鎖複習按鈕
+      // ????閫??銴???
       unlockReviewButton();
     });
 
-    // 點擊彈窗外也能關閉
+    // 暺?敶?憭??賡???
     document.addEventListener('DOMContentLoaded', function() {
       const reviewModal = document.getElementById('reviewModal');
       const gameEndModal = document.getElementById('gameEndModal');
@@ -1788,7 +1780,7 @@ const VOCAB_DATA = [
       }
     });
 
-    // 角色互動系統整合
+    // 閫鈭?蝟餌絞?游?
     let currentCharacter = localStorage.getItem('characterName') || 'zeus';
     if (window.GameDialogue) {
       window.GameDialogue.currentCharacter = currentCharacter;
@@ -1819,7 +1811,7 @@ const VOCAB_DATA = [
       }
     }
 
-    // 頁面載入時初始化
+    // ?頛??憪?
     document.addEventListener('DOMContentLoaded', function() {
       setTimeout(() => {
         if (window.GameDialogue) {
@@ -1828,31 +1820,31 @@ const VOCAB_DATA = [
       }, 1000);
     });
 
-    // 在遊戲開始時觸發
+    // ?券??脤?憪?閫貊
     function startGame() {
       // ... existing code ...
       showGameStartDialogue();
     }
 
-    // 在答對時觸發
+    // ?函?撠?閫貊
     function handleCorrectAnswer() {
       // ... existing code ...
       showCorrectAnswerDialogue();
     }
 
-    // 在答錯時觸發
+    // ?函??舀?閫貊
     function handleWrongAnswer() {
       // ... existing code ...
       showWrongAnswerDialogue();
     }
 
-    // 在遊戲勝利時觸發
+    // ?券??脣??拇?閫貊
     function handleGameVictory() {
       // ... existing code ...
       showGameVictoryDialogue();
     }
 
-    // 在遊戲失敗時觸發
+    // ?券??脣仃??閫貊
     function handleGameDefeat() {
       // ... existing code ...
       showGameDefeatDialogue();
@@ -1860,4 +1852,3 @@ const VOCAB_DATA = [
   </script>
 </body>
 </html>
-
