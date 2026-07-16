@@ -372,6 +372,22 @@
       border: 2px solid #ffd700;
       color: #000;
     }
+    .shard-count {
+      position: absolute;
+      bottom: 6px;
+      left: 6px;
+      background: rgba(0, 255, 255, 0.85);
+      color: #000;
+      padding: 3px 7px;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      box-shadow: 0 0 8px #00ffff;
+      font-weight: bold;
+    }
+    .card.unlocked .shard-count {
+      background: rgba(120, 255, 180, 0.85);
+      color: #003c00;
+    }
     .common { border: 2.5px solid #00ffff; }
     .rare   { border: 2.5px solid #a259ff; }
     .epic   { border: 2.5px solid #ffd700; box-shadow: 0 0 16px #ffd700; }
@@ -391,6 +407,90 @@
       backdrop-filter: blur(8px);
       z-index: 1000;
       font-family: 'JetBrains Mono', 'Inter', monospace;
+    }
+
+    #overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      z-index: 1400;
+    }
+    #modal {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: rgba(10, 20, 40, 0.98);
+      padding: 25px;
+      border-radius: 18px;
+      box-shadow: 0 0 40px #00ffff99, 0 0 100px #a259ff44 inset;
+      z-index: 1500;
+      transition: all 0.4s ease;
+      color: #fff;
+      max-width: 90%;
+      width: 450px;
+      box-sizing: border-box;
+      border: 3px solid #00ffff;
+      backdrop-filter: blur(12px);
+    }
+    #modal.show {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    #modal .modal-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #modal img {
+      width: 100%;
+      max-width: 250px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      box-shadow: 0 0 20px #00ffff88;
+      background: #000;
+      border: 2px solid #00ffff;
+    }
+    #modal h2 {
+      margin: 15px 0;
+      color: #00ffff;
+      font-size: 1.4rem;
+      text-shadow: 0 0 15px #00ffff, 0 0 35px #a259ff;
+      font-weight: 700;
+      font-family: 'Inter', 'Noto Sans TC', sans-serif;
+    }
+    #modal .description {
+      margin: 15px 0;
+      text-align: left;
+      line-height: 1.6;
+      font-size: 1rem;
+      max-height: 200px;
+      overflow-y: auto;
+      color: #e0e0e0;
+      text-shadow: 0 0 8px #000a;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      font-family: 'Inter', 'Noto Sans TC', sans-serif;
+    }
+    .sound-btn-modal {
+      background: linear-gradient(135deg, #00ffff 0%, #a259ff 100%);
+      color: #000;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      margin-top: 15px;
+      box-shadow: 0 0 15px #00ffff88;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      font-family: 'Inter', 'Noto Sans TC', sans-serif;
+    }
+    .sound-btn-modal:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #00ffffcc;
     }
 
     .gacha-animation {
@@ -1259,6 +1359,10 @@
         font-size: 0.8rem;
       }
       
+      .shard-count {
+        font-size: 0.7rem;
+        padding: 2px 5px;
+      }
     }
 
     /* 極小螢幕 */
@@ -1598,6 +1702,14 @@
       z-index: 10 !important;
     }
 
+    /* 碎片或解鎖提示不要壓到文字 */
+    #cardGrid .card .shard-count {
+      left: 7px !important;
+      bottom: 7px !important;
+      font-size: 0.68rem !important;
+      padding: 2px 5px !important;
+    }
+
     #cardGrid .card .unlock-status-icon {
       right: 7px !important;
       bottom: 7px !important;
@@ -1702,1862 +1814,9 @@
         max-height: 108px !important;
       }
     }
-
-    /* 抽卡次數整理區塊樣式 - 修正版面 */
-    .gacha-stats-panel {
-      width: 100%;
-      box-sizing: border-box;
-      margin-top: 16px;
-      padding: 16px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.82);
-      box-shadow: 0 12px 28px rgba(80, 70, 120, 0.12);
-      overflow: hidden;
-    }
-
-    .gacha-stats-header {
-      text-align: center;
-      margin-bottom: 12px;
-    }
-
-    .gacha-stats-header h2,
-    .gacha-stats-title {
-      margin: 0 0 10px;
-      font-size: 20px;
-      font-weight: 900;
-      color: #facc15;
-      text-align: center;
-    }
-
-    .gacha-stats-header p {
-      margin: 0 0 12px;
-      font-size: 13px;
-      color: #6b7280;
-      text-align: center;
-    }
-
-    .gacha-stats-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .gacha-stat-card {
-      min-width: 0;
-      box-sizing: border-box;
-      padding: 10px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #ffffff, #f8fafc);
-      border: 1px solid rgba(139, 92, 246, 0.16);
-      text-align: center;
-    }
-
-    .gacha-stat-label {
-      font-size: 12px;
-      color: #6b7280;
-      font-weight: 800;
-    }
-
-    .gacha-stat-value {
-      margin-top: 4px;
-      font-size: 18px;
-      color: #4c1d95;
-      font-weight: 900;
-      word-break: break-word;
-    }
-
-    .gacha-stat-note {
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 0.75rem;
-      margin-top: 4px;
-    }
-
-    /* 抽卡頁面美化樣式 - 修正版面跑版 */
-    html,
-    body {
-      max-width: 100%;
-      overflow-x: hidden;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    img {
-      max-width: 100%;
-    }
-
-    .gacha-page {
-      width: min(1180px, calc(100% - 32px));
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 24px 0 40px;
-      box-sizing: border-box;
-      overflow-x: hidden;
-    }
-
-    .gacha-hero {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 28px 24px;
-      margin: 0 auto 18px;
-      border-radius: 28px;
-      text-align: center;
-      background: linear-gradient(135deg, rgba(255, 248, 220, 0.95), rgba(255, 221, 235, 0.95), rgba(221, 231, 255, 0.95));
-      box-shadow: 0 18px 38px rgba(72, 52, 120, 0.18);
-    }
-
-    .gacha-hero-title {
-      margin: 0;
-      font-size: clamp(32px, 5vw, 52px);
-      line-height: 1.1;
-      font-weight: 900;
-      color: #5b2b86;
-    }
-
-    .gacha-hero-subtitle {
-      margin: 12px 0 0;
-      font-size: clamp(15px, 2vw, 20px);
-      font-weight: 800;
-      color: #6b4b7d;
-    }
-
-    .gacha-hero-badge {
-      display: inline-flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 16px;
-      padding: 8px 16px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.72);
-      color: #7c3aed;
-      font-weight: 900;
-      max-width: 100%;
-      box-sizing: border-box;
-    }
-
-    .gacha-layout {
-      display: grid;
-      grid-template-columns: 300px minmax(0, 1fr);
-      gap: 18px;
-      align-items: start;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    .gacha-left-panel,
-    .gacha-right-panel {
-      min-width: 0;
-      width: 100%;
-      box-sizing: border-box;
-      border-radius: 26px;
-      background: rgba(255, 255, 255, 0.82);
-      box-shadow: 0 16px 36px rgba(80, 70, 120, 0.16);
-      border: 1px solid rgba(255, 255, 255, 0.7);
-    }
-
-    .gacha-left-panel {
-      padding: 18px;
-    }
-
-    .gacha-right-panel {
-      padding: 18px;
-      overflow: hidden;
-    }
-
-    .gacha-pool-section {
-      padding: 16px;
-      border-radius: 22px;
-      background: rgba(255, 255, 255, 0.78);
-      margin-bottom: 14px;
-    }
-
-    .gacha-pool-title {
-      margin: 0 0 12px;
-      font-size: 20px;
-      font-weight: 900;
-      color: #4c1d95;
-      text-align: center;
-    }
-
-    /* 卡池 Grid 佈局 */
-    .gacha-pool-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 16px;
-    }
-
-    /* 響應式佈局 */
-    @media (min-width: 1200px) {
-      .gacha-pool-grid {
-        grid-template-columns: repeat(4, 1fr);
-      }
-    }
-
-    @media (min-width: 768px) and (max-width: 1199px) {
-      .gacha-pool-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    @media (min-width: 480px) and (max-width: 767px) {
-      .gacha-pool-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 479px) {
-      .gacha-pool-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* 卡池卡片樣式 */
-    .pool-card {
-      background: rgba(10, 20, 40, 0.85);
-      border: 2px solid #a259ff;
-      border-radius: 12px;
-      padding: 12px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      height: 200px;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .pool-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 8px 25px rgba(162, 89, 255, 0.4);
-      border-color: #c47aff;
-    }
-
-    .pool-card.active {
-      background: linear-gradient(135deg, rgba(162, 89, 255, 0.3), rgba(106, 17, 203, 0.3));
-      border-color: #00ffff;
-      box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
-    }
-
-    .pool-card-image {
-      height: 100px;
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 10px;
-      background: rgba(0, 0, 0, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .pool-card-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .pool-card-placeholder {
-      font-size: 40px;
-      color: #a259ff;
-    }
-
-    .pool-card-info {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .pool-card-name {
-      font-size: 0.95rem;
-      font-weight: bold;
-      color: #a259ff;
-      text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .pool-card-stats {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      font-size: 0.8rem;
-      color: #ccc;
-    }
-
-    .pool-card-count {
-      color: #ffd700;
-    }
-
-    .pool-card-tickets {
-      color: #00ffff;
-    }
-
-    .pool-card-action {
-      margin-top: auto;
-    }
-
-    .pool-card-btn {
-      width: 100%;
-      padding: 6px 12px;
-      background: linear-gradient(135deg, #a259ff, #6a11cb);
-      border: none;
-      border-radius: 6px;
-      color: white;
-      font-size: 0.85rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .pool-card-btn:hover {
-      background: linear-gradient(135deg, #c47aff, #8a2be2);
-      transform: translateY(-2px);
-    }
-
-    .pool-card-selected {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: #00ffff;
-      color: #000;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: bold;
-      display: none;
-    }
-
-    .pool-card.active .pool-card-selected {
-      display: block;
-    }
-
-    /* 分類按鈕樣式 */
-    .pool-category-btn {
-      padding: 8px 16px;
-      background: rgba(10, 20, 40, 0.85);
-      border: 2px solid #a259ff;
-      border-radius: 20px;
-      color: #a259ff;
-      font-size: 0.85rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .pool-category-btn:hover {
-      background: rgba(162, 89, 255, 0.2);
-      border-color: #c47aff;
-    }
-
-    .pool-category-btn.active {
-      background: linear-gradient(135deg, #a259ff, #6a11cb);
-      color: white;
-      border-color: #c47aff;
-    }
-
-    /* 搜尋框樣式 */
-    .pool-search-input {
-      background: rgba(10, 20, 40, 0.85);
-      border: 2px solid #a259ff;
-      border-radius: 8px;
-      color: white;
-      padding: 10px 14px;
-      font-size: 14px;
-      transition: all 0.3s ease;
-    }
-
-    .pool-search-input:focus {
-      outline: none;
-      border-color: #00ffff;
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
-    }
-
-    .pool-search-input::placeholder {
-      color: #888;
-    }
-
-    /* 卡池選單樣式 */
-    .pool-select {
-      background: rgba(10, 20, 40, 0.85);
-      border: 2px solid #a259ff;
-      border-radius: 8px;
-      color: white;
-      padding: 12px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .pool-select:focus {
-      outline: none;
-      border-color: #00ffff;
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
-    }
-
-    .pool-select option {
-      background: rgba(10, 20, 40, 0.95);
-      color: white;
-      padding: 10px;
-    }
-
-    /* 目前選中卡池資訊卡 */
-    .selected-pool-info {
-      background: rgba(10, 20, 40, 0.85);
-      border: 2px solid #a259ff;
-      border-radius: 12px;
-      padding: 16px;
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      position: relative;
-      transition: all 0.3s ease;
-    }
-
-    .selected-pool-info:hover {
-      border-color: #c47aff;
-      box-shadow: 0 8px 25px rgba(162, 89, 255, 0.3);
-    }
-
-    .pool-info-image {
-      width: 120px;
-      height: 120px;
-      border-radius: 8px;
-      overflow: hidden;
-      background: rgba(0, 0, 0, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .pool-info-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .pool-info-image video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .pool-info-placeholder {
-      font-size: 48px;
-      color: #a259ff;
-    }
-
-    .pool-info-details {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .pool-info-name {
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #a259ff;
-    }
-
-    .pool-info-stats {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      font-size: 0.9rem;
-      color: #ccc;
-    }
-
-    .pool-info-cards {
-      color: #ffd700;
-    }
-
-    .pool-info-tickets {
-      color: #00ffff;
-    }
-
-    .pool-favorite-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: rgba(162, 89, 255, 0.2);
-      border: 2px solid rgba(162, 89, 255, 0.4);
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      color: #ccc;
-    }
-
-    .pool-favorite-btn:hover {
-      background: rgba(162, 89, 255, 0.4);
-      border-color: #ffd700;
-      color: #ffd700;
-      transform: scale(1.1);
-    }
-
-    .pool-favorite-btn.favorited {
-      background: rgba(255, 215, 0, 0.3);
-      border-color: #ffd700;
-      color: #ffd700;
-    }
-
-    /* 手機版調整 */
-    @media (max-width: 768px) {
-      .selected-pool-info {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .pool-info-image {
-        width: 100%;
-        height: 150px;
-      }
-
-      .pool-info-stats {
-        align-items: center;
-      }
-
-      .pool-favorite-btn {
-        top: 8px;
-        right: 8px;
-      }
-    }
-
-    /* 快捷導航工具列樣式 */
-    .quick-nav-toolbar {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      z-index: 1000;
-      background: rgba(10, 20, 40, 0.85);
-      backdrop-filter: blur(10px);
-      border: 2px solid rgba(162, 89, 255, 0.5);
-      border-radius: 16px;
-      padding: 12px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    }
-
-    .quick-nav-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 60px;
-      height: 60px;
-      background: rgba(162, 89, 255, 0.2);
-      border: 2px solid rgba(162, 89, 255, 0.4);
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      color: white;
-      font-size: 24px;
-    }
-
-    .quick-nav-btn:hover {
-      background: rgba(162, 89, 255, 0.4);
-      border-color: #00ffff;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-      transform: scale(1.1);
-    }
-
-    .quick-nav-btn:active {
-      transform: scale(0.95);
-    }
-
-    .quick-nav-icon {
-      font-size: 24px;
-      line-height: 1;
-    }
-
-    .quick-nav-label {
-      font-size: 10px;
-      margin-top: 4px;
-      color: #ccc;
-      font-weight: bold;
-    }
-
-    .quick-nav-btn:hover .quick-nav-label {
-      color: #00ffff;
-    }
-
-    /* 手機版快捷工具列 */
-    @media (max-width: 768px) {
-      .quick-nav-toolbar {
-        top: auto;
-        bottom: 20px;
-        right: 20px;
-        flex-direction: row;
-        flex-wrap: wrap;
-        max-width: calc(100vw - 40px);
-        justify-content: center;
-      }
-
-      .quick-nav-btn {
-        width: 50px;
-        height: 50px;
-      }
-
-      .quick-nav-icon {
-        font-size: 20px;
-      }
-
-      .quick-nav-label {
-        font-size: 9px;
-      }
-    }
-
-    /* 舊樣式保留相容性 */
-    .gacha-pool-list {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    .pool-tab {
-      background: rgba(10, 20, 40, 0.85);
-      border: 2px solid #a259ff;
-      border-radius: 15px;
-      padding: 15px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-align: center;
-    }
-
-    .pool-tab:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(162, 89, 255, 0.3);
-    }
-
-    .pool-tab.active {
-      background: linear-gradient(135deg, rgba(162, 89, 255, 0.3), rgba(106, 17, 203, 0.3));
-      border-color: #c47aff;
-      box-shadow: 0 0 20px rgba(162, 89, 255, 0.5);
-    }
-
-    .pool-name {
-      font-size: 1rem;
-      font-weight: bold;
-      color: #a259ff;
-      margin-bottom: 5px;
-    }
-
-    .pool-desc {
-      font-size: 0.8rem;
-      color: #ccc;
-    }
-
-    .pool-ticket-count {
-      font-size: 0.85rem;
-      color: #00ffff;
-      margin-top: 5px;
-    }
-
-    .gacha-pool-card {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 12px 14px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #ffffff, #f7edff);
-      border: 2px solid rgba(168, 85, 247, 0.22);
-      color: #4c1d95;
-      font-weight: 900;
-      cursor: pointer;
-    }
-
-    .gacha-pool-card.active {
-      border-color: #8b5cf6;
-      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.16);
-    }
-
-    .gacha-pool-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 24px rgba(124, 58, 237, 0.18);
-    }
-
-    .gacha-player-wallet {
-      width: 100%;
-      box-sizing: border-box;
-      margin: 14px 0;
-      padding: 14px 16px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, #fff7df, #ffefb8);
-      border: 2px solid rgba(245, 158, 11, 0.28);
-    }
-
-    .gacha-star-box {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 170, 0, 0.1));
-      border: 2px solid #ffd700;
-      border-radius: 15px;
-      padding: 15px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 5px 20px rgba(255, 215, 0, 0.2);
-      transition: all 0.3s ease;
-    }
-
-    .gacha-star-box:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
-    }
-
-    .gacha-star-label {
-      font-size: 15px;
-      font-weight: 900;
-      color: #ffd700;
-      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-    }
-
-    .gacha-star-value {
-      margin-top: 4px;
-      font-size: 32px;
-      line-height: 1;
-      font-weight: 900;
-      color: #ffd700;
-      text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
-    }
-
-    /* 抽卡券專用樣式 */
-    .gacha-ticket-box {
-      background: linear-gradient(135deg, rgba(162, 89, 255, 0.1), rgba(226, 64, 236, 0.1));
-      border: 2px solid #a259ff;
-      box-shadow: 0 5px 20px rgba(162, 89, 255, 0.2);
-    }
-
-    .gacha-ticket-box:hover {
-      box-shadow: 0 8px 25px rgba(162, 89, 255, 0.3);
-    }
-
-    .gacha-ticket-label {
-      color: #a259ff;
-      text-shadow: 0 0 10px rgba(162, 89, 255, 0.5);
-    }
-
-    .gacha-ticket-value {
-      color: #a259ff;
-      text-shadow: 0 0 15px rgba(162, 89, 255, 0.7);
-    }
-
-    .gacha-action-area {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .gacha-draw-button {
-      width: 100%;
-      min-height: 72px;
-      box-sizing: border-box;
-      border: none;
-      border-radius: 18px;
-      padding: 12px 16px;
-      font-size: 18px;
-      line-height: 1.35;
-      font-weight: 900;
-      cursor: pointer;
-      text-align: center;
-    }
-
-    .gacha-draw-button:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.05);
-    }
-
-    .gacha-draw-button:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .gacha-draw-button.single {
-      background: linear-gradient(135deg, #8b3ff2, #db3ea9);
-      color: #ffffff;
-    }
-
-    .gacha-draw-button.ten {
-      background: linear-gradient(135deg, #ff7a18, #ffd21f);
-      color: #4a2500;
-    }
-
-    .gacha-draw-button.ticket {
-      background: linear-gradient(135deg, #a259ff, #e240ec);
-      color: #ffffff;
-      box-shadow: 0 5px 20px rgba(162, 89, 255, 0.3);
-      border: 2px solid #a259ff;
-    }
-
-    .gacha-draw-button.ticket:hover {
-      box-shadow: 0 8px 30px rgba(162, 89, 255, 0.5);
-      transform: translateY(-3px);
-    }
-
-    .gacha-machine {
-      position: relative;
-      width: 100%;
-      min-height: 220px;
-      height: auto;
-      box-sizing: border-box;
-      border-radius: 26px;
-      background: radial-gradient(circle at center, #fff8dc 0%, #ffd8f1 42%, #c7d2fe 100%);
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      margin-bottom: 18px;
-      border: 2px solid rgba(255, 255, 255, 0.75);
-    }
-
-    .gacha-machine-glow {
-      position: absolute;
-      width: 180px;
-      height: 180px;
-      max-width: 60%;
-      max-height: 60%;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.45);
-      filter: blur(10px);
-      animation: gachaPulse 2.4s ease-in-out infinite;
-    }
-
-    .gacha-machine-orb {
-      position: relative;
-      width: 110px;
-      height: 110px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 35% 30%, #ffffff, #fde68a, #f472b6, #8b5cf6);
-      box-shadow: 0 0 32px rgba(236, 72, 153, 0.42);
-      animation: gachaFloat 2.8s ease-in-out infinite;
-    }
-
-    .gacha-machine-text {
-      position: absolute;
-      bottom: 24px;
-      max-width: calc(100% - 32px);
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.75);
-      color: #5b21b6;
-      font-weight: 900;
-      text-align: center;
-    }
-
-    .gacha-result-section {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 18px;
-      border-radius: 24px;
-      background: rgba(255, 255, 255, 0.86);
-      overflow: hidden;
-    }
-
-    .gacha-result-title {
-      margin: 0 0 14px;
-      font-size: 22px;
-      font-weight: 900;
-      color: #4c1d95;
-      text-align: center;
-    }
-
-    .gacha-result-grid {
-      width: 100%;
-      box-sizing: border-box;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 14px;
-      align-items: stretch;
-    }
-
-    .gacha-result-empty {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 24px 16px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, #f8fafc, #f3e8ff);
-      border: 2px dashed rgba(139, 92, 246, 0.25);
-      color: #6d28d9;
-      font-weight: 900;
-      text-align: center;
-    }
-
-    .gacha-result-card {
-      min-width: 0;
-      width: 100%;
-      box-sizing: border-box;
-      border-radius: 18px;
-      padding: 10px;
-      background: #ffffff;
-      border: 2px solid #e5e7eb;
-      text-align: center;
-      overflow: hidden;
-      box-shadow: 0 10px 22px rgba(70, 60, 100, 0.12);
-      animation: gachaFadeIn 0.25s ease both;
-    }
-
-    .gacha-result-image {
-      display: block;
-      width: 100%;
-      aspect-ratio: 3 / 4;
-      object-fit: cover;
-      border-radius: 14px;
-      background: #f3f4f6;
-    }
-
-    .gacha-result-name {
-      margin-top: 8px;
-      font-size: 14px;
-      line-height: 1.25;
-      font-weight: 900;
-      color: #312e81;
-      word-break: break-word;
-    }
-
-    .gacha-result-rarity {
-      margin-top: 4px;
-      font-size: 13px;
-      font-weight: 900;
-    }
-
-    .gacha-result-card.ssr {
-      border-color: #facc15;
-      box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.25), 0 0 26px rgba(250, 204, 21, 0.42);
-    }
-
-    .gacha-result-card.sr {
-      border-color: #a855f7;
-      box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.18), 0 0 22px rgba(168, 85, 247, 0.28);
-    }
-
-    .gacha-result-card.n {
-      border-color: #cbd5e1;
-    }
-
-    /* 將現有 .card class 映射到新樣式 - 覆蓋舊版深色樣式 */
-    #cardGrid .card {
-      position: relative;
-      border-radius: 24px;
-      padding: 12px;
-      background: linear-gradient(180deg, #ffffff, #fffdf7) !important;
-      text-align: center;
-      border: 2px solid #eef2f7 !important;
-      box-shadow: 0 14px 28px rgba(93, 76, 130, 0.12) !important;
-      animation: freshCardIn 0.28s ease both;
-      width: 100% !important;
-      height: auto !important;
-      min-height: auto !important;
-      backdrop-filter: none !important;
-    }
-
-    #cardGrid .card::before {
-      content: "";
-      position: absolute;
-      inset: 8px;
-      border-radius: 18px;
-      pointer-events: none;
-      border: 1px solid rgba(255, 255, 255, 0.72);
-    }
-
-    #cardGrid .card img,
-    #cardGrid .card video {
-      width: 100%;
-      aspect-ratio: 3 / 4;
-      object-fit: cover;
-      border-radius: 18px;
-      background: #f6f7fb;
-      box-shadow: 0 10px 20px rgba(93, 76, 130, 0.1);
-      max-height: none !important;
-      height: auto !important;
-    }
-
-    #cardGrid .card.ssr {
-      border-color: #ffd166 !important;
-      box-shadow:
-        0 0 0 4px rgba(255, 209, 102, 0.22),
-        0 0 26px rgba(255, 209, 102, 0.42),
-        0 14px 28px rgba(93, 76, 130, 0.14) !important;
-    }
-
-    #cardGrid .card.sr {
-      border-color: #d9c8ff !important;
-      box-shadow:
-        0 0 0 4px rgba(217, 200, 255, 0.22),
-        0 0 26px rgba(156, 120, 220, 0.28),
-        0 14px 28px rgba(93, 76, 130, 0.14) !important;
-    }
-
-    #cardGrid .card.r {
-      border-color: #b56cff !important;
-      box-shadow:
-        0 0 0 4px rgba(181, 108, 255, 0.22),
-        0 0 26px rgba(147, 51, 234, 0.28),
-        0 14px 28px rgba(93, 76, 130, 0.14) !important;
-    }
-
-    #cardGrid .card.a {
-      border-color: #86d7ff !important;
-      box-shadow:
-        0 0 0 4px rgba(134, 215, 255, 0.24),
-        0 0 24px rgba(56, 189, 248, 0.26),
-        0 14px 28px rgba(93, 76, 130, 0.14) !important;
-    }
-
-    #cardGrid .card.n {
-      border-color: #d8dee9 !important;
-      box-shadow: 0 14px 28px rgba(93, 76, 130, 0.1) !important;
-    }
-
-    /* 卡片文字區樣式 - 增強可見度 */
-    #cardGrid .card .label {
-      margin-top: 10px;
-      padding: 10px 8px 8px;
-      border-radius: 16px;
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 253, 247, 0.96));
-      border: 1px solid rgba(216, 222, 233, 0.8);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8);
-      text-align: center;
-    }
-
-    #cardGrid .card .stars {
-      margin-bottom: 4px;
-      color: #f5b800 !important;
-      font-size: 18px;
-      line-height: 1;
-      font-weight: 950;
-      letter-spacing: 1px;
-      text-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.9),
-        0 2px 6px rgba(245, 184, 0, 0.35) !important;
-    }
-
-    #cardGrid .card .chinese-text {
-      margin-top: 4px;
-      color: #3b1f63 !important;
-      font-size: 18px;
-      line-height: 1.25;
-      font-weight: 950;
-      letter-spacing: 0.02em;
-      word-break: break-word;
-      text-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.9) !important;
-    }
-
-    #cardGrid .card .english-text {
-      margin-top: 3px;
-      color: #d18a00 !important;
-      font-size: 14px;
-      line-height: 1.2;
-      font-weight: 900;
-      word-break: break-word;
-    }
-
-    #cardGrid .card .category-tag {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      max-width: 100%;
-      margin-top: 7px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: rgba(255, 244, 199, 0.92) !important;
-      color: #8a5a00 !important;
-      font-size: 12px;
-      line-height: 1.2;
-      font-weight: 950;
-      word-break: break-word;
-      white-space: normal;
-      box-shadow: inset 0 0 0 1px rgba(245, 184, 0, 0.2);
-    }
-
-    /* 不同稀有度文字區背景 */
-    #cardGrid .card.ssr .label {
-      background: linear-gradient(180deg, #ffffff, #fff8d6);
-      border-color: rgba(255, 209, 102, 0.65);
-    }
-
-    #cardGrid .card.sr .label {
-      background: linear-gradient(180deg, #ffffff, #f5efff);
-      border-color: rgba(217, 200, 255, 0.75);
-    }
-
-    #cardGrid .card.r .label,
-    #cardGrid .card.a .label {
-      background: linear-gradient(180deg, #ffffff, #eef8ff);
-      border-color: rgba(158, 216, 255, 0.75);
-    }
-
-    #cardGrid .card.n .label {
-      background: linear-gradient(180deg, #ffffff, #f8fafc);
-      border-color: rgba(216, 222, 233, 0.85);
-    }
-
-    /* A 稀有度支援 */
-    #cardGrid .card.a {
-      border-color: #9ed8ff !important;
-      box-shadow:
-        0 0 0 4px rgba(158, 216, 255, 0.18),
-        0 14px 28px rgba(93, 76, 130, 0.12) !important;
-    }
-
-    /* 移動 X 按鈕到右上角，避免擋住文字 */
-    #cardGrid .card .remove-card,
-    #cardGrid .card .card-remove,
-    #cardGrid .card .result-remove,
-    #cardGrid .card .gacha-result-remove {
-      position: absolute;
-      right: 10px;
-      top: 10px;
-      bottom: auto;
-      width: 26px;
-      height: 26px;
-      border: none;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.86);
-      color: #7b6b91;
-      font-size: 16px;
-      font-weight: 950;
-      line-height: 1;
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      box-shadow: 0 8px 16px rgba(93, 76, 130, 0.16);
-      z-index: 5;
-    }
-
-    #cardGrid .card .remove-card:hover,
-    #cardGrid .card .card-remove:hover,
-    #cardGrid .card .result-remove:hover,
-    #cardGrid .card .gacha-result-remove:hover {
-      background: #ffe4e6;
-      color: #9f1239;
-    }
-
-    /* 稀有度標籤樣式 */
-    #cardGrid .card .rank-badge {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      min-width: 38px;
-      height: 26px;
-      padding: 0 9px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 950;
-      z-index: 4;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #cardGrid .card.ssr .rank-badge {
-      background: linear-gradient(135deg, #ffd166, #fff4a6);
-      color: #654100;
-    }
-
-    #cardGrid .card.sr .rank-badge {
-      background: linear-gradient(135deg, #b99cff, #d9c8ff);
-      color: #4c2a7a;
-    }
-
-    #cardGrid .card.r .rank-badge,
-    #cardGrid .card.a .rank-badge {
-      background: linear-gradient(135deg, #86d7ff, #cfefff);
-      color: #164e63;
-    }
-
-    #cardGrid .card.n .rank-badge {
-      background: #d8dee9;
-      color: #475569;
-    }
-
-    .gacha-message {
-      margin: 12px 0;
-      padding: 12px 14px;
-      border-radius: 16px;
-      font-weight: 800;
-    }
-
-    .gacha-message.success {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .gacha-message.warning {
-      background: #fef3c7;
-      color: #92400e;
-    }
-
-    .gacha-message.error {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    @keyframes gachaFloat {
-      0%, 100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-10px);
-      }
-    }
-
-    @keyframes gachaPulse {
-      0%, 100% {
-        transform: scale(1);
-        opacity: 0.55;
-      }
-      50% {
-        transform: scale(1.08);
-        opacity: 0.85;
-      }
-    }
-
-    @keyframes gachaFadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(8px) scale(0.98);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    @keyframes freshCardIn {
-      from {
-        opacity: 0;
-        transform: translateY(12px) scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    /* 清新可愛抽卡結果區樣式 */
-    .fresh-result-panel {
-      position: relative;
-      overflow: hidden;
-      padding: 22px;
-      border-radius: 30px;
-      background:
-        radial-gradient(circle at 12% 10%, rgba(255, 255, 255, 0.96), transparent 26%),
-        linear-gradient(135deg, rgba(255, 253, 247, 0.96), rgba(244, 255, 248, 0.96), rgba(239, 248, 255, 0.96));
-      border: 1px solid rgba(255, 255, 255, 0.86);
-      box-shadow: 0 18px 42px rgba(93, 76, 130, 0.13);
-    }
-
-    .fresh-result-title-area {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 16px;
-      text-align: left;
-    }
-
-    .fresh-result-title-area h2 {
-      margin: 0;
-      color: #4c2a7a;
-      font-size: 26px;
-      line-height: 1.15;
-      font-weight: 950;
-    }
-
-    .fresh-result-title-area p {
-      margin: 6px 0 0;
-      color: #7b6b91;
-      font-size: 14px;
-      font-weight: 800;
-    }
-
-    .fresh-result-stage {
-      width: 100%;
-      min-height: 220px;
-      padding: 20px;
-      border-radius: 26px;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.88), transparent 28%),
-        linear-gradient(135deg, rgba(255, 244, 199, 0.36), rgba(255, 220, 232, 0.34), rgba(207, 239, 255, 0.46));
-      border: 2px dashed rgba(139, 215, 174, 0.42);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.58);
-    }
-
-    .fresh-result-grid,
-    .gacha-result-grid {
-      width: 100%;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 18px;
-      align-items: stretch;
-    }
-
-    .fresh-result-grid.single-result,
-    .gacha-result-grid.single-result {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .fresh-result-grid.single-result .gacha-result-card,
-    .gacha-result-grid.single-result .gacha-result-card,
-    .fresh-result-grid.single-result .result-card,
-    .gacha-result-grid.single-result .result-card,
-    .fresh-result-grid.single-result .card-result,
-    .gacha-result-grid.single-result .card-result {
-      width: min(220px, 100%);
-    }
-
-    .fresh-empty-result {
-      grid-column: 1 / -1;
-      width: 100%;
-      padding: 36px 20px;
-      border-radius: 24px;
-      background: rgba(255, 255, 255, 0.72);
-      border: 2px dashed rgba(139, 215, 174, 0.5);
-      text-align: center;
-      color: #4c2a7a;
-    }
-
-    .fresh-empty-icon {
-      font-size: 42px;
-      margin-bottom: 8px;
-    }
-
-    .fresh-empty-result strong {
-      display: block;
-      font-size: 22px;
-      font-weight: 950;
-    }
-
-    .fresh-empty-result p {
-      margin: 8px 0 0;
-      color: #7b6b91;
-      font-weight: 800;
-    }
-
-    .gacha-result-card,
-    .result-card,
-    .card-result {
-      position: relative;
-      min-width: 0;
-      width: 100%;
-      padding: 12px;
-      border-radius: 24px;
-      background:
-        linear-gradient(180deg, #ffffff, #fffdf7);
-      border: 2px solid #eef2f7;
-      box-shadow: 0 14px 30px rgba(93, 76, 130, 0.14);
-      text-align: center;
-      overflow: hidden;
-      animation: freshCardIn 0.28s ease both;
-    }
-
-    .gacha-result-card::before,
-    .result-card::before,
-    .card-result::before {
-      content: "";
-      position: absolute;
-      inset: 8px;
-      border-radius: 18px;
-      pointer-events: none;
-      border: 1px solid rgba(255, 255, 255, 0.7);
-    }
-
-    .gacha-result-image,
-    .ssr-showcase-image {
-      display: block;
-      width: 100%;
-      aspect-ratio: 3 / 4;
-      object-fit: cover;
-      border-radius: 18px;
-      background: #f6f7fb;
-      box-shadow: 0 10px 20px rgba(93, 76, 130, 0.1);
-    }
-
-    .gacha-result-image-placeholder,
-    .ssr-showcase-placeholder {
-      width: 100%;
-      aspect-ratio: 3 / 4;
-      border-radius: 18px;
-      display: grid;
-      place-items: center;
-      background:
-        radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.9), transparent 24%),
-        linear-gradient(135deg, #fff4c7, #ffdce8, #cfefff);
-      color: #4c2a7a;
-      font-size: 42px;
-      font-weight: 950;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
-    }
-
-    .ssr-showcase-placeholder {
-      font-size: 52px;
-    }
-
-    .gacha-result-name,
-    .result-card-name,
-    .card-name {
-      margin-top: 10px;
-      color: #4c2a7a;
-      font-size: 15px;
-      line-height: 1.25;
-      font-weight: 950;
-      word-break: break-word;
-    }
-
-    .gacha-result-series,
-    .result-card-series,
-    .card-series {
-      margin-top: 4px;
-      color: #1f6f5b;
-      font-size: 12px;
-      font-weight: 900;
-      word-break: break-word;
-    }
-
-    .gacha-result-rarity,
-    .result-rarity,
-    .card-rarity {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 46px;
-      height: 28px;
-      padding: 0 10px;
-      border-radius: 999px;
-      color: #ffffff;
-      background: #9ca3af;
-      font-size: 12px;
-      font-weight: 950;
-      box-shadow: 0 8px 16px rgba(93, 76, 130, 0.16);
-    }
-
-    .gacha-result-card.ssr,
-    .result-card.ssr,
-    .card-result.ssr {
-      border-color: #ffd166;
-      box-shadow:
-        0 0 0 4px rgba(255, 209, 102, 0.22),
-        0 0 28px rgba(255, 209, 102, 0.34),
-        0 14px 30px rgba(93, 76, 130, 0.14);
-    }
-
-    .gacha-result-card.ssr .gacha-result-rarity,
-    .result-card.ssr .result-rarity,
-    .card-result.ssr .card-rarity {
-      background: linear-gradient(135deg, #ffd166, #fff4a6);
-      color: #654100;
-    }
-
-    .gacha-result-card.sr,
-    .result-card.sr,
-    .card-result.sr {
-      border-color: #d9c8ff;
-      box-shadow:
-        0 0 0 4px rgba(217, 200, 255, 0.28),
-        0 0 24px rgba(156, 120, 220, 0.22),
-        0 14px 30px rgba(93, 76, 130, 0.14);
-    }
-
-    .gacha-result-card.sr .gacha-result-rarity,
-    .result-card.sr .result-rarity,
-    .card-result.sr .card-rarity {
-      background: linear-gradient(135deg, #b99cff, #d9c8ff);
-      color: #4c2a7a;
-    }
-
-    .gacha-result-card.r,
-    .result-card.r,
-    .card-result.r {
-      border-color: #b56cff;
-      background: linear-gradient(180deg, #ffffff, #f3e8ff);
-      box-shadow:
-        0 0 0 4px rgba(181, 108, 255, 0.22),
-        0 0 26px rgba(147, 51, 234, 0.28),
-        0 14px 30px rgba(93, 76, 130, 0.14);
-    }
-
-    .gacha-result-card.r .gacha-result-rarity,
-    .result-card.r .result-rarity,
-    .card-result.r .card-rarity {
-      background: linear-gradient(135deg, #9333ea, #d8b4fe);
-      color: #ffffff;
-    }
-
-    .gacha-result-card.a,
-    .result-card.a,
-    .card-result.a {
-      border-color: #86d7ff;
-      background: linear-gradient(180deg, #ffffff, #eef8ff);
-      box-shadow:
-        0 0 0 4px rgba(134, 215, 255, 0.24),
-        0 0 24px rgba(56, 189, 248, 0.26),
-        0 14px 30px rgba(93, 76, 130, 0.14);
-    }
-
-    .gacha-result-card.a .gacha-result-rarity,
-    .result-card.a .result-rarity,
-    .card-result.a .card-rarity {
-      background: linear-gradient(135deg, #38bdf8, #cfefff);
-      color: #164e63;
-    }
-
-    .gacha-result-card.n,
-    .result-card.n,
-    .card-result.n {
-      border-color: #d8dee9;
-    }
-
-    .gacha-result-card.n .gacha-result-rarity,
-    .result-card.n .result-rarity,
-    .card-result.n .card-rarity {
-      background: #d8dee9;
-      color: #475569;
-    }
-
-    .gacha-result-remove,
-    .result-remove,
-    .card-remove,
-    .remove-card {
-      position: absolute;
-      right: 10px;
-      bottom: 10px;
-      width: 28px;
-      height: 28px;
-      border: none;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.82);
-      color: #7b6b91;
-      font-size: 18px;
-      font-weight: 950;
-      line-height: 1;
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      box-shadow: 0 8px 16px rgba(93, 76, 130, 0.16);
-      transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
-    }
-
-    .gacha-result-remove:hover,
-    .result-remove:hover,
-    .card-remove:hover,
-    .remove-card:hover {
-      transform: scale(1.08);
-      background: #ffe4e6;
-      color: #9f1239;
-    }
-
-    /* 安全圖片容器樣式 */
-    .safe-card-image-wrap {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 3 / 4;
-      border-radius: 18px;
-      overflow: hidden;
-      background: #f6f7fb;
-    }
-
-    .safe-card-image-wrap .gacha-result-image,
-    .safe-card-image-wrap .ssr-showcase-image {
-      width: 100%;
-      height: 100%;
-      aspect-ratio: auto;
-      object-fit: cover;
-      border-radius: 18px;
-      display: block;
-    }
-
-    .safe-card-image-wrap .gacha-result-image-placeholder,
-    .safe-card-image-wrap .ssr-showcase-placeholder {
-      width: 100%;
-      height: 100%;
-      aspect-ratio: auto;
-      border-radius: 18px;
-      display: grid;
-      place-items: center;
-    }
-
-    @media (max-width: 900px) {
-      .gacha-page {
-        width: calc(100% - 24px);
-        padding-top: 14px;
-      }
-
-      .gacha-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .gacha-left-panel,
-      .gacha-right-panel {
-        width: 100%;
-      }
-
-      .gacha-machine {
-        min-height: 200px;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .gacha-page {
-        width: calc(100% - 20px);
-        padding-bottom: 28px;
-      }
-
-      .gacha-hero {
-        padding: 22px 16px;
-        border-radius: 22px;
-      }
-
-      .gacha-hero-badge {
-        border-radius: 18px;
-      }
-
-      .gacha-left-panel,
-      .gacha-right-panel {
-        padding: 14px;
-        border-radius: 22px;
-      }
-
-      .gacha-result-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-      }
-
-      .gacha-stats-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .gacha-draw-button {
-        min-height: 64px;
-        font-size: 16px;
-      }
-    }
-
-    @media (max-width: 380px) {
-      .gacha-result-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .gacha-stats-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 760px) {
-      .fresh-result-panel {
-        padding: 18px;
-        border-radius: 26px;
-      }
-
-      .fresh-result-stage {
-        padding: 14px;
-        border-radius: 22px;
-      }
-
-      .fresh-result-grid,
-      .gacha-result-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-      }
-
-      .fresh-result-grid.single-result,
-      .gacha-result-grid.single-result {
-        display: flex;
-      }
-
-      .fresh-result-title-area {
-        text-align: left;
-      }
-    }
-
-    @media (max-width: 420px) {
-      .fresh-result-grid,
-      .gacha-result-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .fresh-result-grid.single-result .gacha-result-card,
-      .gacha-result-grid.single-result .gacha-result-card,
-      .fresh-result-grid.single-result .result-card,
-      .gacha-result-grid.single-result .result-card {
-        width: 100%;
-      }
-    }
-
-    @media (max-width: 760px) {
-      #cardGrid .card .chinese-text {
-        font-size: 16px;
-      }
-
-      #cardGrid .card .english-text {
-        font-size: 13px;
-      }
-
-      #cardGrid .card .category-tag {
-        font-size: 11px;
-      }
-    }
-
-    /* 全螢幕抽卡動畫稀有度顏色主題 */
-    .gacha-animation {
-      --gacha-main: #cbd5e1;
-      --gacha-light: rgba(203, 213, 225, 0.75);
-      --gacha-glow: rgba(148, 163, 184, 0.34);
-      --gacha-soft: rgba(203, 213, 225, 0.20);
-      --gacha-text: #475569;
-    }
-
-    .gacha-animation.ssr,
-    .gacha-animation[data-rarity="ssr"] {
-      --gacha-main: #ffd166;
-      --gacha-light: rgba(255, 209, 102, 0.92);
-      --gacha-glow: rgba(255, 209, 102, 0.62);
-      --gacha-soft: rgba(255, 244, 166, 0.35);
-      --gacha-text: #654100;
-    }
-
-    .gacha-animation.sr,
-    .gacha-animation[data-rarity="sr"] {
-      --gacha-main: #d9c8ff;
-      --gacha-light: rgba(217, 200, 255, 0.88);
-      --gacha-glow: rgba(156, 120, 220, 0.48);
-      --gacha-soft: rgba(217, 200, 255, 0.30);
-      --gacha-text: #4c2a7a;
-    }
-
-    .gacha-animation.r,
-    .gacha-animation[data-rarity="r"] {
-      --gacha-main: #b56cff;
-      --gacha-light: rgba(181, 108, 255, 0.88);
-      --gacha-glow: rgba(147, 51, 234, 0.56);
-      --gacha-soft: rgba(181, 108, 255, 0.30);
-      --gacha-text: #ffffff;
-    }
-
-    .gacha-animation.a,
-    .gacha-animation[data-rarity="a"] {
-      --gacha-main: #38bdf8;
-      --gacha-light: rgba(56, 189, 248, 0.90);
-      --gacha-glow: rgba(134, 215, 255, 0.58);
-      --gacha-soft: rgba(56, 189, 248, 0.30);
-      --gacha-text: #164e63;
-    }
-
-    .gacha-animation.n,
-    .gacha-animation[data-rarity="n"] {
-      --gacha-main: #cbd5e1;
-      --gacha-light: rgba(203, 213, 225, 0.75);
-      --gacha-glow: rgba(148, 163, 184, 0.34);
-      --gacha-soft: rgba(203, 213, 225, 0.20);
-      --gacha-text: #475569;
-    }
-
-    .gacha-animation .gacha-circle {
-      border-color: var(--gacha-main) !important;
-      box-shadow:
-        0 0 28px var(--gacha-light),
-        0 0 78px var(--gacha-glow),
-        0 0 130px var(--gacha-soft) !important;
-    }
-
-    .gacha-animation .gacha-rays {
-      background:
-        radial-gradient(circle, var(--gacha-light) 0%, var(--gacha-glow) 38%, transparent 72%) !important;
-    }
-
-    .gacha-animation .card-front,
-    .gacha-animation .card-back {
-      border-color: var(--gacha-main) !important;
-      box-shadow:
-        0 0 0 4px var(--gacha-soft),
-        0 0 36px var(--gacha-glow),
-        0 22px 52px rgba(0, 0, 0, 0.38) !important;
-    }
-
-    .gacha-animation.ssr .gacha-circle,
-    .gacha-animation[data-rarity="ssr"] .gacha-circle {
-      animation: ssrCirclePulse 1.25s ease-in-out infinite;
-    }
-
-    .gacha-animation.ssr .gacha-rays,
-    .gacha-animation[data-rarity="ssr"] .gacha-rays {
-      animation: ssrRaysPulse 1.25s ease-in-out infinite;
-    }
-
-    @keyframes ssrCirclePulse {
-      0%, 100% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
-      }
-      50% {
-        transform: translate(-50%, -50%) scale(1.42);
-        opacity: 0.72;
-      }
-    }
-
-    @keyframes ssrRaysPulse {
-      0%, 100% {
-        transform: translate(-50%, -50%) scale(0.8) rotate(0deg);
-        opacity: 0.18;
-      }
-      50% {
-        transform: translate(-50%, -50%) scale(1.55) rotate(16deg);
-        opacity: 0.58;
-      }
-    }
-
-    .gacha-animation.ssr .card-front,
-    .gacha-animation.ssr .card-back,
-    .gacha-animation[data-rarity="ssr"] .card-front,
-    .gacha-animation[data-rarity="ssr"] .card-back {
-      box-shadow:
-        0 0 0 5px rgba(255, 244, 166, 0.38),
-        0 0 42px rgba(255, 209, 102, 0.75),
-        0 0 88px rgba(255, 209, 102, 0.42),
-        0 24px 60px rgba(0, 0, 0, 0.42) !important;
-    }
   </style>
 </head>
 <body>
-  <!-- 快捷導航工具列 -->
-  <div class="quick-nav-toolbar">
-    <button class="quick-nav-btn" onclick="location.href='shop.html'" title="前往商城">
-      <span class="quick-nav-icon">🛒</span>
-      <span class="quick-nav-label">商城</span>
-    </button>
-    <button class="quick-nav-btn" onclick="location.href='cards.html'" title="卡片倉庫">
-      <span class="quick-nav-icon">🎴</span>
-      <span class="quick-nav-label">倉庫</span>
-    </button>
-    <button class="quick-nav-btn" onclick="location.href='atlas.html'" title="卡片圖鑑">
-      <span class="quick-nav-icon">📖</span>
-      <span class="quick-nav-label">圖鑑</span>
-    </button>
-    <button class="quick-nav-btn" onclick="location.href='dailyCheckCenter.html'" title="每日簽到">
-      <span class="quick-nav-icon">🎁</span>
-      <span class="quick-nav-label">簽到</span>
-    </button>
-    <button class="quick-nav-btn" onclick="location.href='index.html'" title="回首頁">
-      <span class="quick-nav-icon">🏠</span>
-      <span class="quick-nav-label">首頁</span>
-    </button>
-  </div>
-
   <header>
     <div style="display: flex; align-items: center; gap: 18px;">
       <a href="NEWCARDS.HTML" class="btn" style="background:linear-gradient(135deg,#00ffff 0%,#a259ff 100%);color:#222;font-weight:bold;box-shadow:0 0 12px #00ffff99;letter-spacing:1.2px;">
@@ -3599,125 +1858,48 @@
     <div id="currentWish" class="current-wish"></div>
   </div>
 
-  <!-- 抽卡頁面主容器 -->
-  <main class="gacha-page">
-    <!-- 抽卡主視覺區 -->
-    <section class="gacha-hero">
-      <h1 class="gacha-hero-title">夢幻抽卡屋</h1>
-      <p class="gacha-hero-subtitle">選擇喜歡的卡池，抽出你的專屬收藏卡片！</p>
-      <div class="gacha-hero-badge">
-        <span>✨ SSR 稀有卡登場</span>
-        <span>🎯 每日挑戰抽卡</span>
-        <span>📚 卡片收藏中</span>
-      </div>
-    </section>
-
-    <!-- 抽卡版面佈局 -->
-    <div class="gacha-layout">
-      <!-- 左側面板：卡池、星星、按鈕 -->
-      <div class="gacha-left-panel">
-        <!-- 卡池選擇區 -->
-        <div class="gacha-pool-section" style="padding: 20px; margin-bottom: 16px;">
-          <h3 style="margin: 0 0 14px; color: #4c1d95; font-weight: 900;">卡池選擇</h3>
-          
-          <!-- 搜尋與選單 -->
-          <div class="pool-selector-bar" style="margin-bottom: 16px;">
-            <input type="text" id="poolSearchInput" class="pool-search-input" placeholder="搜尋卡池..." style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; margin-bottom: 10px;">
-            <select id="poolSelect" class="pool-select" style="width: 100%; padding: 12px; border: 2px solid #a259ff; border-radius: 8px; font-size: 16px; background: rgba(10, 20, 40, 0.85); color: white; cursor: pointer;">
-              <option value="normal">全部卡池</option>
-            </select>
-          </div>
-
-          <!-- 目前選中卡池資訊卡 -->
-          <div id="selectedPoolInfo" class="selected-pool-info">
-            <div class="pool-info-image">
-              <div class="pool-info-placeholder">🎴</div>
-            </div>
-            <div class="pool-info-details">
-              <div class="pool-info-name">全部卡池</div>
-              <div class="pool-info-stats">
-                <span class="pool-info-cards">可抽: 全部卡片</span>
-                <span class="pool-info-tickets">🎫 <span id="poolTicketCount">0</span> 張</span>
-              </div>
-            </div>
-            <button class="pool-favorite-btn" onclick="togglePoolFavorite()" title="收藏卡池">⭐</button>
-          </div>
-        </div>
-
-        <!-- 星星餘額區 -->
-        <div class="gacha-player-wallet">
-          <div class="gacha-star-box">
-            <span class="gacha-star-label">⭐ 我的星星</span>
-            <span class="gacha-star-value" id="stars">0</span>
-          </div>
-          <div class="gacha-star-box gacha-ticket-box" style="margin-top: 8px;">
-            <span class="gacha-star-label gacha-ticket-label">🎫 普通抽卡券</span>
-            <span class="gacha-star-value gacha-ticket-value" id="gachaTickets">0</span>
-          </div>
-        </div>
-
-        <!-- 抽卡按鈕區 -->
-        <div class="gacha-action-area">
-          <button class="gacha-draw-button single" onclick="drawCard()">
-            單抽一次
-            <div style="font-size: 14px; font-weight: 700; margin-top: 4px;">消耗 ⭐150 星星</div>
-          </button>
-          <button class="gacha-draw-button ten" onclick="drawTen()">
-            十連抽
-            <div style="font-size: 14px; font-weight: 700; margin-top: 4px;">消耗 ⭐1500 星星</div>
-          </button>
-          <button class="gacha-draw-button ticket" onclick="drawCardWithTicket()">
-            普通抽卡券單抽
-            <div style="font-size: 14px; font-weight: 700; margin-top: 4px;">消耗 1 張普通抽卡券</div>
-          </button>
-          <button class="gacha-draw-button ticket" onclick="drawTenWithTicket()">
-            普通抽卡券十連抽
-            <div style="font-size: 14px; font-weight: 700; margin-top: 4px;">消耗 10 張普通抽卡券</div>
-          </button>
-        </div>
-
-        <!-- 抽卡次數整理區塊 -->
-        <section class="gacha-stats-panel" id="gachaStatsPanel" style="margin-top: 16px;">
-          <div class="gacha-stats-header">
-            <h2 style="font-size: 18px;">抽卡次數整理</h2>
-            <p style="font-size: 13px;">自動統計今天與累積抽卡紀錄</p>
-          </div>
-          <div class="gacha-stats-grid" id="gachaStatsGrid">
-            <!-- JS 動態產生 -->
-          </div>
-        </section>
-      </div>
-
-      <!-- 右側面板：抽卡機、結果 -->
-      <div class="gacha-right-panel">
-        <!-- 抽卡機視覺區 -->
-        <div class="gacha-machine">
-          <div class="gacha-machine-glow"></div>
-          <div class="gacha-machine-orb"></div>
-          <div class="gacha-machine-text">準備抽卡</div>
-        </div>
-
-        <!-- 抽卡結果區 -->
-        <section class="fresh-card fresh-result-panel">
-          <div class="fresh-section-title fresh-result-title-area">
-            <div>
-              <h2>抽卡結果</h2>
-              <p>抽到的卡片會顯示在這裡</p>
-            </div>
-          </div>
-
-          <div class="fresh-result-stage">
-            <div id="cardGridEmpty" class="fresh-empty-result">
-              <div class="fresh-empty-icon">🌸</div>
-              <strong>尚未抽卡</strong>
-              <p>選擇卡池後，點擊單抽或十連抽開始召喚。</p>
-            </div>
-            <div id="cardGrid" class="fresh-result-grid gacha-result-grid"></div>
-          </div>
-        </section>
-      </div>
+  <!-- 移除分頁按鈕 -->
+  <main>
+    <h2 id="drawCardHint" style="
+      font-size:2.2rem;
+      font-weight:900;
+      background: linear-gradient(90deg,#ff2d55 0%,#111 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+      text-shadow: 0 0 18px #ff2d55, 0 0 32px #111, 0 0 8px #fff;
+      letter-spacing:3px;
+      animation: hintGlow 2.5s infinite alternate;
+      margin-bottom: 30px;
+    ">點擊按鈕開始抽卡！</h2>
+    <style>
+    @keyframes hintGlow {
+      0% { text-shadow: 0 0 18px #ff2d55, 0 0 32px #111, 0 0 8px #fff; }
+      50% { text-shadow: 0 0 32px #111, 0 0 48px #ff2d55, 0 0 18px #fff; }
+      100% { text-shadow: 0 0 18px #ff2d55, 0 0 32px #111, 0 0 8px #fff; }
+    }
+    </style>
+    <!-- 新增：分類分頁按鈕區塊 -->
+    <div id="categoryTabs" style="margin-bottom: 18px;"></div>
+    <div style="margin-bottom: 32px;">
+      <button class="btn" onclick="drawCard()">🔮 抽一張（需 20 星）</button>
+      <button class="btn" onclick="drawTen()">🌟 十連抽（需 200 星）</button>
     </div>
+    <div id="cardGrid"></div>
+    <div id="starCount">⭐<span id="stars">0</span></div>
   </main>
+
+  <div id="overlay"></div>
+  <div id="modal">
+    <div class="modal-content">
+      <div class="close-btn" onclick="closeModal()">✕</div>
+      <img id="modalImg" src="" alt="卡片圖片">
+      <h2 id="modalTitle">卡片標題</h2>
+      <div class="description" id="modalDesc">卡片描述</div>
+      <button class="sound-btn-modal" onclick="playModalAudio()">🔊 播放</button>
+    </div>
+  </div>
 
   <!-- 新增全螢幕抽卡動畫 -->
   <div id="gachaAnimation" class="gacha-animation">
@@ -3743,12 +1925,10 @@
   <audio id="ssrSound" src="sound/shine.mp3" preload="auto"></audio> <!-- 超稀有(SSR)卡音效 -->
 
   <script src="js/cards.js"></script>
-  <script src="js/stars.js"></script>
   <script src="js/userData.js"></script>
   <script src="js/starRewardSystem.js"></script>
   <script src="js/autoSaveSystem.js"></script>
   <script src="js/contextMenuSystem.js"></script>
-  <script src="js/seriesGacha.js"></script>
   <script>
     // 頁面載入時自動檢查每日簽到獎勵
     document.addEventListener('DOMContentLoaded', function() {
@@ -3784,167 +1964,7 @@
       // 頁面載入時不自動播放背景音樂，等使用者點擊音樂按鈕或互動時才播放
       musicToggleBtn.textContent = '🔇';
       isMusicPlaying = false;
-
-      // 初始化抽卡統計
-      loadGachaStats();
-      renderGachaStats();
     });
-
-    // ====== 抽卡統計系統 ======
-    
-    // 取得今天日期 YYYY-MM-DD
-    function getTodayKey() {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const day = String(now.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
-    }
-
-    // 載入抽卡統計資料
-    function loadGachaStats() {
-      const today = getTodayKey();
-      let stats = localStorage.getItem('gachaStats');
-      
-      if (stats) {
-        try {
-          stats = JSON.parse(stats);
-        } catch (e) {
-          console.error('解析 gachaStats 失敗:', e);
-          stats = null;
-        }
-      }
-      
-      // 如果沒有資料或資料不完整，建立預設資料
-      if (!stats || typeof stats !== 'object') {
-        stats = {
-          totalDraws: 0,
-          todayDraws: 0,
-          singleDraws: 0,
-          tenDraws: 0,
-          rarityCounts: {
-            SSR: 0,
-            A: 0,
-            R: 0
-          },
-          lastDrawTime: '',
-          lastDrawDate: '',
-          currentPoolName: ''
-        };
-      } else {
-        // 補齊缺少的欄位
-        if (typeof stats.totalDraws !== 'number') stats.totalDraws = 0;
-        if (typeof stats.todayDraws !== 'number') stats.todayDraws = 0;
-        if (typeof stats.singleDraws !== 'number') stats.singleDraws = 0;
-        if (typeof stats.tenDraws !== 'number') stats.tenDraws = 0;
-        if (!stats.rarityCounts || typeof stats.rarityCounts !== 'object') {
-          stats.rarityCounts = { SSR: 0, A: 0, R: 0 };
-        } else {
-          if (typeof stats.rarityCounts.SSR !== 'number') stats.rarityCounts.SSR = 0;
-          if (typeof stats.rarityCounts.A !== 'number') stats.rarityCounts.A = 0;
-          if (typeof stats.rarityCounts.R !== 'number') stats.rarityCounts.R = 0;
-        }
-        if (typeof stats.lastDrawTime !== 'string') stats.lastDrawTime = '';
-        if (typeof stats.lastDrawDate !== 'string') stats.lastDrawDate = '';
-        if (typeof stats.currentPoolName !== 'string') stats.currentPoolName = '';
-        
-        // 檢查日期，如果不是今天，今日抽卡次數歸零
-        if (stats.lastDrawDate && stats.lastDrawDate !== today) {
-          stats.todayDraws = 0;
-        }
-      }
-      
-      return stats;
-    }
-
-    // 儲存抽卡統計資料
-    function saveGachaStats(stats) {
-      try {
-        localStorage.setItem('gachaStats', JSON.stringify(stats));
-      } catch (e) {
-        console.error('儲存 gachaStats 失敗:', e);
-      }
-    }
-
-    // 記錄抽卡結果
-    function recordGachaDraw(results, drawType) {
-      const stats = loadGachaStats();
-      const today = getTodayKey();
-      const now = new Date();
-      const timeString = now.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
-      
-      // 確保 results 是陣列
-      const cards = Array.isArray(results) ? results : [results];
-      
-      // 更新抽卡次數
-      if (drawType === 'single') {
-        stats.totalDraws += 1;
-        stats.todayDraws += 1;
-        stats.singleDraws += 1;
-      } else if (drawType === 'ten') {
-        stats.totalDraws += 10;
-        stats.todayDraws += 10;
-        stats.tenDraws += 1;
-      }
-      
-      // 更新稀有度統計
-      cards.forEach(card => {
-        if (card && card.rarity) {
-          const rarity = card.rarity || card.rank || card.type || card.level || '普通';
-
-          // 支援中文和英文稀有度
-          if (rarity === '超稀有' || rarity === 'SSR') {
-            stats.rarityCounts.SSR += 1;
-          } else if (rarity === '稀有' || rarity === 'R') {
-            stats.rarityCounts.R += 1;
-          } else if (rarity === '普通' || rarity === 'A') {
-            stats.rarityCounts.A += 1;
-          } else {
-            // 其他情況預設為 A
-            stats.rarityCounts.A += 1;
-          }
-        }
-      });
-      
-      // 更新時間和卡池名稱
-      stats.lastDrawTime = timeString;
-      stats.lastDrawDate = today;
-      
-      // 嘗試取得目前卡池名稱
-      stats.currentPoolName = '全部卡池';
-      
-      // 儲存並重新渲染
-      saveGachaStats(stats);
-      renderGachaStats();
-    }
-
-    // 渲染抽卡統計版面
-    function renderGachaStats() {
-      const stats = loadGachaStats();
-      const grid = document.getElementById('gachaStatsGrid');
-      
-      if (!grid) return;
-      
-      const statItems = [
-        { label: '今日抽卡', value: stats.todayDraws, note: '次' },
-        { label: '累積抽卡', value: stats.totalDraws, note: '次' },
-        { label: '單抽次數', value: stats.singleDraws, note: '次' },
-        { label: '十連抽', value: stats.tenDraws, note: '次' },
-        { label: 'SSR', value: stats.rarityCounts.SSR, note: '張' },
-        { label: 'R', value: stats.rarityCounts.R, note: '張' },
-        { label: 'A', value: stats.rarityCounts.A, note: '張' },
-        { label: '最近抽卡', value: stats.lastDrawTime || '尚未抽卡', note: '' },
-        { label: '目前卡池', value: stats.currentPoolName || '全部卡池', note: '' }
-      ];
-      
-      grid.innerHTML = statItems.map(item => `
-        <div class="gacha-stat-card">
-          <div class="gacha-stat-label">${item.label}</div>
-          <div class="gacha-stat-value">${item.value}</div>
-          ${item.note ? `<div class="gacha-stat-note">${item.note}</div>` : ''}
-        </div>
-      `).join('');
-    }
 
     // 背景音樂狀態管理
     let bgmWasPlaying = false; // 記錄抽卡前背景音樂是否在播放
@@ -3997,80 +2017,7 @@
     // 新增：許願池系統
     let currentWishCard = null;
 
-    // 抽卡動畫鎖定狀態
-    let isGachaAnimating = false;
-    let isSSRAnimationPlaying = false;
-
-    // 鎖定抽卡按鈕函式
-    function setGachaControlsLocked(locked) {
-      const buttons = [
-        document.getElementById('singleDrawButton'),
-        document.getElementById('tenDrawButton'),
-        document.getElementById('drawSingleButton'),
-        document.getElementById('drawTenButton'),
-        document.querySelector('.gacha-draw-button.single'),
-        document.querySelector('.gacha-draw-button.ten')
-      ].filter(Boolean);
-
-      buttons.forEach(button => {
-        button.disabled = locked;
-        button.classList.toggle('is-locked', locked);
-      });
-    }
-
-    // SSR 動畫播放 Promise
-    function playSSRAnimationAndWait(card) {
-      return new Promise(resolve => {
-        isGachaAnimating = true;
-        isSSRAnimationPlaying = true;
-        setGachaControlsLocked(true);
-
-        const animation = document.getElementById('gachaAnimation');
-        const skipButton = document.getElementById('skipAnimationButton') || document.querySelector('.skip-animation-button');
-
-        if (skipButton) {
-          skipButton.style.display = 'none';
-        }
-
-        // 顯示 SSR 全螢幕動畫
-        if (typeof showCard === 'function') {
-          showCard(card, false, {
-            forceSSR: true,
-            disableSkip: true,
-            autoClose: false
-          });
-        }
-
-        const SSR_ANIMATION_DURATION = 3600;
-
-        setTimeout(() => {
-          if (animation) {
-            animation.style.display = 'none';
-          }
-
-          if (skipButton) {
-            skipButton.style.display = '';
-          }
-
-          isSSRAnimationPlaying = false;
-          isGachaAnimating = false;
-          setGachaControlsLocked(false);
-
-          resolve();
-        }, SSR_ANIMATION_DURATION);
-      });
-    }
-
-    const rankMap = {
-      '普通': 'A',
-      '稀有': 'R',
-      '超稀有': 'SSR',
-      'A': 'A',
-      'R': 'R',
-      'SR': 'SR',
-      'SSR': 'SSR',
-      'N': 'N'
-    };
+    const rankMap = { '普通': 'A', '稀有': 'R', '超稀有': 'SSR' };
 
     // 保底計數器和設定
     let pityCounter = 0; // 一般保底計數器（50抽必得SSR）
@@ -4205,333 +2152,14 @@
       LinkageSystem.stars.updateDisplay();
     }
 
-    // 資料遷移：將舊的複雜抽卡券結構轉換為簡單的普通抽卡券整數
-    function migrateTicketData() {
-      try {
-        const ticketsData = localStorage.getItem('gachaTickets');
-        if (!ticketsData) return;
-
-        // 檢查是否為舊的複雜物件結構
-        if (ticketsData.startsWith('{')) {
-          const oldTickets = JSON.parse(ticketsData);
-          if (typeof oldTickets === 'object' && oldTickets !== null) {
-            // 計算總抽卡券數量
-            let totalTickets = 0;
-            
-            // 加總各類型抽卡券
-            if (oldTickets.normal) totalTickets += parseInt(oldTickets.normal) || 0;
-            if (oldTickets.rare) totalTickets += parseInt(oldTickets.rare) || 0;
-            if (oldTickets.premium) totalTickets += parseInt(oldTickets.premium) || 0;
-            if (oldTickets.ssr) totalTickets += parseInt(oldTickets.ssr) || 0;
-            if (oldTickets.limited) totalTickets += parseInt(oldTickets.limited) || 0;
-            
-            // 加總主題抽卡券
-            if (oldTickets.theme && typeof oldTickets.theme === 'object') {
-              Object.values(oldTickets.theme).forEach(count => {
-                totalTickets += parseInt(count) || 0;
-              });
-            }
-            
-            // 轉換為簡單整數
-            localStorage.setItem('gachaTickets', totalTickets.toString());
-            console.log('抽卡券資料遷移完成，轉換為普通抽卡券數量:', totalTickets);
-          }
-        }
-      } catch (e) {
-        console.error('抽卡券資料遷移失敗:', e);
-        // 如果遷移失敗，確保至少有預設值
-        if (!localStorage.getItem('gachaTickets')) {
-          localStorage.setItem('gachaTickets', '0');
-        }
-      }
-    }
-
-    // 更新抽卡券顯示
-    function updateGachaTicketsDisplay() {
-      // 確保資料已遷移
-      migrateTicketData();
-      
-      const gachaTickets = parseInt(localStorage.getItem('gachaTickets') || '0');
-      const ticketsElement = document.getElementById('gachaTickets');
-      if (ticketsElement) {
-        ticketsElement.textContent = gachaTickets;
-      }
-    }
-
-    // 當前選中的抽卡池
-    let currentPool = 'normal';
-    let currentSeries = null;
-    let favoritePools = JSON.parse(localStorage.getItem('favoritePools') || '[]');
-
-    // 初始化卡池選單
-    function initPoolSelector() {
-      if (typeof SeriesGachaSystem === 'undefined') {
-        console.warn('SeriesGachaSystem 未載入');
-        return;
-      }
-
-      const poolSelect = document.getElementById('poolSelect');
-      if (!poolSelect) return;
-
-      const allSeries = SeriesGachaSystem.getAllSeries();
-      const ticketsData = SeriesGachaSystem.getGachaTicketsData();
-
-      // 清空選單
-      poolSelect.innerHTML = '<option value="normal">全部卡池</option>';
-
-      // 新增我的最愛分組
-      const favoriteSeries = allSeries.filter(series => favoritePools.includes(series));
-      if (favoriteSeries.length > 0) {
-        const favoriteGroup = document.createElement('optgroup');
-        favoriteGroup.label = '⭐ 我的最愛';
-        favoriteSeries.forEach(seriesName => {
-          const option = document.createElement('option');
-          option.value = seriesName;
-          option.textContent = seriesName + ' (' + (ticketsData.series[seriesName] || 0) + ' 張)';
-          favoriteGroup.appendChild(option);
-        });
-        poolSelect.appendChild(favoriteGroup);
-      }
-
-      // 新增其他系列
-      const otherSeries = allSeries.filter(series => !favoritePools.includes(series));
-      if (otherSeries.length > 0) {
-        const otherGroup = document.createElement('optgroup');
-        otherGroup.label = '其他系列';
-        otherSeries.forEach(seriesName => {
-          const option = document.createElement('option');
-          option.value = seriesName;
-          option.textContent = seriesName + ' (' + (ticketsData.series[seriesName] || 0) + ' 張)';
-          otherGroup.appendChild(option);
-        });
-        poolSelect.appendChild(otherGroup);
-      }
-
-      // 綁定選單變更事件
-      poolSelect.addEventListener('change', function() {
-        selectPool(this.value);
-      });
-    }
-
-    // 更新卡池資訊卡
-    function updatePoolInfoCard(poolType, seriesName = null) {
-      const poolInfoImage = document.querySelector('.pool-info-image');
-      const poolInfoName = document.querySelector('.pool-info-name');
-      const poolInfoCards = document.querySelector('.pool-info-cards');
-      const poolTicketCount = document.getElementById('poolTicketCount');
-      const favoriteBtn = document.querySelector('.pool-favorite-btn');
-
-      if (poolType === 'normal') {
-        poolInfoName.textContent = '全部卡池';
-        poolInfoCards.textContent = '可抽: 全部卡片';
-        poolTicketCount.textContent = localStorage.getItem('gachaTickets') || '0';
-        poolInfoImage.innerHTML = '<div class="pool-info-placeholder">🎴</div>';
-        favoriteBtn.style.display = 'none';
-      } else if (seriesName && typeof SeriesGachaSystem !== 'undefined') {
-        const seriesCards = SeriesGachaSystem.getSeriesCards(seriesName);
-        const cardCount = seriesCards.length;
-        const ticketCount = SeriesGachaSystem.getSeriesTicketCount(seriesName);
-
-        poolInfoName.textContent = seriesName;
-        poolInfoCards.textContent = '可抽: ' + cardCount + ' 張卡片';
-        poolTicketCount.textContent = ticketCount;
-
-        // 獲取封面圖片
-        const ssrCard = seriesCards.find(card => card.rarity === '超稀有');
-        const firstCard = ssrCard || seriesCards[0];
-        if (firstCard && firstCard.image) {
-          if (firstCard.image.endsWith('.mp4')) {
-            poolInfoImage.innerHTML = '<video src="' + firstCard.image + '" autoplay loop muted playsinline></video>';
-          } else {
-            poolInfoImage.innerHTML = '<img src="' + firstCard.image + '" alt="' + seriesName + '">';
-          }
-        } else {
-          poolInfoImage.innerHTML = '<div class="pool-info-placeholder">🎴</div>';
-        }
-
-        // 更新收藏按鈕狀態
-        favoriteBtn.style.display = 'flex';
-        if (favoritePools.includes(seriesName)) {
-          favoriteBtn.classList.add('favorited');
-        } else {
-          favoriteBtn.classList.remove('favorited');
-        }
-      }
-    }
-
-    // 切換收藏狀態
-    function togglePoolFavorite() {
-      if (currentPool !== 'series' || !currentSeries) return;
-
-      const index = favoritePools.indexOf(currentSeries);
-      if (index > -1) {
-        favoritePools.splice(index, 1);
-      } else {
-        favoritePools.push(currentSeries);
-      }
-
-      localStorage.setItem('favoritePools', JSON.stringify(favoritePools));
-      initPoolSelector();
-      updatePoolInfoCard(currentPool, currentSeries);
-    }
-
-    // 篩選卡池選單
-    function filterPoolOptions(searchValue) {
-      const poolSelect = document.getElementById('poolSelect');
-      if (!poolSelect) return;
-
-      const options = poolSelect.querySelectorAll('option');
-      options.forEach(option => {
-        if (option.value === 'normal') return;
-        const seriesName = option.value.toLowerCase();
-        if (searchValue && !seriesName.includes(searchValue)) {
-          option.style.display = 'none';
-        } else {
-          option.style.display = '';
-        }
-      });
-    }
-
-    // 渲染系列抽卡池標籤（保留舊函式以相容）
-    function renderSeriesPoolTabs() {
-      if (typeof SeriesGachaSystem === 'undefined') {
-        console.warn('SeriesGachaSystem 未載入');
-        return;
-      }
-
-      const seriesPoolTabs = document.getElementById('seriesPoolTabs');
-      if (!seriesPoolTabs) return;
-
-      const allSeries = SeriesGachaSystem.getAllSeries();
-      const ticketsData = SeriesGachaSystem.getGachaTicketsData();
-      const searchValue = document.getElementById('poolSearchInput')?.value.toLowerCase() || '';
-      const activeCategory = document.querySelector('.pool-category-btn.active')?.dataset.category || 'all';
-
-      let html = '';
-      
-      allSeries.forEach(seriesName => {
-        const seriesCards = SeriesGachaSystem.getSeriesCards(seriesName);
-        const cardCount = seriesCards.length;
-        
-        // 如果該系列沒有卡片，不顯示
-        if (cardCount === 0) return;
-        
-        // 搜尋篩選
-        if (searchValue && !seriesName.toLowerCase().includes(searchValue)) return;
-        
-        // 分類篩選（簡化版，實際需要根據系列類別）
-        if (activeCategory !== 'all' && !seriesName.includes(activeCategory)) return;
-        
-        const ticketCount = ticketsData.series[seriesName] || 0;
-        
-        // 獲取封面圖片（第一張SSR或第一張卡）
-        let coverImage = '';
-        const ssrCard = seriesCards.find(card => card.rarity === '超稀有');
-        const firstCard = ssrCard || seriesCards[0];
-        if (firstCard && firstCard.image) {
-          coverImage = '<img src="' + firstCard.image + '" alt="' + seriesName + '">';
-        } else {
-          coverImage = '<div class="pool-card-placeholder">🎴</div>';
-        }
-
-        html += '<div class="pool-card" data-pool="series" data-series="' + seriesName + '" onclick="selectPool(\'series\', \'' + seriesName + '\')">';
-        html += '<div class="pool-card-image">' + coverImage + '</div>';
-        html += '<div class="pool-card-info">';
-        html += '<div class="pool-card-name">' + seriesName + '</div>';
-        html += '<div class="pool-card-stats">';
-        html += '<span class="pool-card-count">' + cardCount + ' 張</span>';
-        html += '<span class="pool-card-tickets">🎫' + ticketCount + '</span>';
-        html += '</div>';
-        html += '</div>';
-        html += '<div class="pool-card-action">';
-        html += '<button class="pool-card-btn">進入抽卡</button>';
-        html += '</div>';
-        html += '<div class="pool-card-selected">✓ 已選擇</div>';
-        html += '</div>';
-      });
-
-      seriesPoolTabs.innerHTML = html;
-    }
-
-    // 選擇抽卡池
-    function selectPool(poolValue) {
-      if (poolValue === 'normal') {
-        currentPool = 'normal';
-        currentSeries = null;
-        updatePoolInfoCard('normal');
-        updateDrawButtonsForNormalPool();
-      } else {
-        currentPool = 'series';
-        currentSeries = poolValue;
-        updatePoolInfoCard('series', poolValue);
-        updateDrawButtonsForSeriesPool(poolValue);
-      }
-    }
-
-    // 更新抽卡按鈕為普通池
-    function updateDrawButtonsForNormalPool() {
-      const buttons = document.querySelectorAll('.gacha-draw-button');
-      if (buttons.length >= 4) {
-        buttons[0].onclick = drawCard;
-        buttons[0].innerHTML = '單抽一次<div style="font-size: 14px; font-weight: 700; margin-top: 4px;">消耗 ⭐150 星星</div>';
-        
-        buttons[1].onclick = drawTen;
-        buttons[1].innerHTML = '十連抽<div style="font-size: 14px; font-weight: 700; margin-top: 4px;">消耗 ⭐1500 星星</div>';
-        
-        buttons[2].onclick = drawCardWithTicket;
-        buttons[2].innerHTML = '普通抽卡券單抽<div style="font-size: 14px; font-weight: 700; margin-top: 4px;">消耗 1 張普通抽卡券</div>';
-        
-        buttons[3].onclick = drawTenWithTicket;
-        buttons[3].innerHTML = '普通抽卡券十連抽<div style="font-size: 14px; font-weight: 700; margin-top: 4px;">消耗 10 張普通抽卡券</div>';
-      }
-    }
-
-    // 更新抽卡按鈕為系列池
-    function updateDrawButtonsForSeriesPool(seriesName) {
-      const buttons = document.querySelectorAll('.gacha-draw-button');
-      if (buttons.length >= 4) {
-        // 禁用星星抽卡（系列池只能用抽卡券）
-        buttons[0].disabled = true;
-        buttons[0].innerHTML = '單抽一次<div style="font-size: 14px; font-weight: 700; margin-top: 4px;">系列池僅支援抽卡券</div>';
-        
-        buttons[1].disabled = true;
-        buttons[1].innerHTML = '十連抽<div style="font-size: 14px; font-weight: 700; margin-top: 4px;">系列池僅支援抽卡券</div>';
-        
-        buttons[2].disabled = false;
-        buttons[2].onclick = function() { drawSeriesCardWithTicket(seriesName); };
-        buttons[2].innerHTML = seriesName + '單抽<div style="font-size: 14px; font-weight: 700; margin-top: 4px;">消耗 1 張' + seriesName + '抽卡券</div>';
-        
-        buttons[3].disabled = false;
-        buttons[3].onclick = function() { drawSeriesTenWithTicket(seriesName); };
-        buttons[3].innerHTML = seriesName + '十連抽<div style="font-size: 14px; font-weight: 700; margin-top: 4px;">消耗 10 張' + seriesName + '抽卡券</div>';
-      }
-    }
-
     // 頁面載入時初始化
     window.addEventListener("load", () => {
       // 載入星星數量
       stars = LinkageSystem.stars.get();
       updateStars();
 
-      // 載入抽卡券數量
-      updateGachaTicketsDisplay();
-
-      // 載入系列抽卡池
-      if (typeof SeriesGachaSystem !== 'undefined') {
-        initPoolSelector();
-        updatePoolInfoCard('normal');
-      }
-
       // 載入保底計數器
       loadPityCounters();
-
-      // 綁定搜尋框事件
-      const poolSearchInput = document.getElementById('poolSearchInput');
-      if (poolSearchInput) {
-        poolSearchInput.addEventListener('input', function() {
-          filterPoolOptions(this.value.toLowerCase());
-        });
-      }
 
       // 載入許願卡片設定
       const savedWishCard = localStorage.getItem('currentWishCard');
@@ -4698,32 +2326,28 @@
       console.log('drawCard 函數被調用');
       console.log('allCards:', allCards);
       console.log('stars:', stars);
-
-      if (isGachaAnimating || isSSRAnimationPlaying) {
-        return LinkageSystem.notifications.show('抽卡動畫播放中，請稍候。', 'warning');
-      }
-
+      
       if (!Array.isArray(allCards) || allCards.length === 0) {
         console.log('卡片資料未載入或為空');
         return LinkageSystem.notifications.show("卡片資料尚未載入，請稍後再試。", 'warning');
       }
-      if (stars < 150) {
+      if (stars < 20) {
         console.log('星星不足，當前星星:', stars);
-        return LinkageSystem.notifications.show("星星不足，單抽需要 150 星星", 'warning');
+        return LinkageSystem.notifications.show("星星不足！（需要 20 顆）", 'warning');
       }
-
+      
       // 暫停背景音樂並記錄狀態
       pauseBGM();
-
+      
       // 播放抽卡背景音樂
       const gachaBg = document.getElementById('gachaBg');
       if (gachaBg) {
         gachaBg.currentTime = 0;
         gachaBg.play().catch(e => console.error("無法播放抽卡背景音樂:", e));
       }
-
-      console.log('開始抽卡，扣除 150 星星');
-      LinkageSystem.stars.subtract(150);
+      
+      console.log('開始抽卡，扣除 20 星星');
+      LinkageSystem.stars.subtract(20);
       stars = LinkageSystem.stars.get();
 
       let selectedCard; // 將變數宣告移到函數開頭
@@ -4773,536 +2397,47 @@
       }
 
       console.log('最終選中的卡片:', selectedCard);
-
-      // 處理抽卡結果
-      const result = processDraw(selectedCard);
-      handleSingleDrawResult(result);
-
-      // 記錄抽卡統計
-      recordGachaDraw(selectedCard, 'single');
-
-      // 根據稀有度決定動畫流程
-      if (isSSRCard(selectedCard)) {
-        // SSR：播放專屬動畫，不能跳過
-        (async () => {
-          await playSSRAnimationAndWait(selectedCard);
-          showCard(selectedCard, isWishSuccess);
-        })();
-      } else {
-        // 非 SSR：正常動畫
-        showCard(selectedCard, isWishSuccess);
-      }
-
-      // 抽卡完成後恢復原本的背景音樂
+      
+      // 傳遞許願成功狀態給動畫函數
+      showCard(selectedCard, isWishSuccess);
+      
+      // 在動畫播放後處理結果（調整延遲時間以配合新的動畫節奏）
       setTimeout(() => {
-        // 停止抽卡背景音樂
-        const gachaBg = document.getElementById('gachaBg');
-        if (gachaBg) {
-          gachaBg.pause();
-        }
-        // 恢復原本的背景音樂
-        resumeBGM();
-      }, 1000);
-    }
-
-    // 使用抽卡券抽卡
-    function drawCardWithTicket() {
-      console.log('drawCardWithTicket 函數被調用');
-      console.log('allCards:', allCards);
-      
-      // 讀取抽卡券數量
-      const gachaTickets = parseInt(localStorage.getItem('gachaTickets') || '0');
-      console.log('抽卡券數量:', gachaTickets);
-
-      if (isGachaAnimating || isSSRAnimationPlaying) {
-        return LinkageSystem.notifications.show('抽卡動畫播放中，請稍候。', 'warning');
-      }
-
-      if (!Array.isArray(allCards) || allCards.length === 0) {
-        console.log('卡片資料未載入或為空');
-        return LinkageSystem.notifications.show("卡片資料尚未載入，請稍後再試。", 'warning');
-      }
-      
-      if (gachaTickets < 1) {
-        console.log('普通抽卡券不足，當前抽卡券:', gachaTickets);
-        return LinkageSystem.notifications.show("普通抽卡券不足！（需要 1 張普通抽卡券）", 'warning');
-      }
-      
-      // 暫停背景音樂並記錄狀態
-      pauseBGM();
-      
-      // 播放抽卡背景音樂
-      const gachaBg = document.getElementById('gachaBg');
-      if (gachaBg) {
-        gachaBg.currentTime = 0;
-        gachaBg.play().catch(e => console.error("無法播放抽卡背景音樂:", e));
-      }
-      
-      console.log('開始抽卡，扣除 1 張抽卡券');
-      // 扣除抽卡券
-      localStorage.setItem('gachaTickets', (gachaTickets - 1).toString());
-      // 更新顯示
-      updateGachaTicketsDisplay();
-
-      let selectedCard;
-      let isWishSuccess = false;
-
-      // 保底檢查：優先檢查許願保底（70抽必得許願SSR）
-      if (wishPityCounter >= WISH_PITY_THRESHOLD && currentWishCard) {
-        selectedCard = currentWishCard;
-        isWishSuccess = true;
-        resetWishPityCounter();
-        console.log('🎯 許願保底觸發！70抽必得許願SSR:', selectedCard.zh);
-      }
-      // 一般保底檢查（50抽必得SSR）
-      else if (pityCounter >= PITY_THRESHOLD) {
-        const ssrCards = allCards.filter(card => card.rarity === '超稀有');
-        selectedCard = ssrCards.length ? ssrCards[Math.floor(Math.random() * ssrCards.length)] : allCards[Math.floor(Math.random() * allCards.length)];
-        resetPityCounters();
-        console.log('⭐ 一般保底觸發！50抽必得SSR:', selectedCard.zh);
-      }
-      // 檢查是否抽中許願卡片（2%機率）
-      else if (checkWishCard() && currentWishCard) {
-        selectedCard = currentWishCard;
-        isWishSuccess = true;
-        resetWishPityCounter();
-        console.log('✨ 許願成功，抽中:', selectedCard.zh);
-      }
-      // 正常抽卡邏輯
-      else {
-        const random = Math.random() * 100;
-        console.log('隨機數:', random);
+        const result = processDraw(selectedCard);
+        handleSingleDrawResult(result);
         
-        if (random < 3) { // 3% 機率抽到 SSR
-          const ssrCards = allCards.filter(card => card.rarity === '超稀有');
-          selectedCard = ssrCards.length ? ssrCards[Math.floor(Math.random() * ssrCards.length)] : allCards[Math.floor(Math.random() * allCards.length)];
-          console.log('抽中 SSR:', selectedCard.zh);
-        } else {
-          const nonSsrCards = allCards.filter(card => card.rarity !== '超稀有');
-          selectedCard = nonSsrCards.length ? nonSsrCards[Math.floor(Math.random() * nonSsrCards.length)] : allCards[Math.floor(Math.random() * allCards.length)];
-          console.log('抽中普通/稀有卡:', selectedCard.zh);
-        }
-      }
-      
-      // 增加保底計數器（除了保底觸發的情況）
-      if (!isWishSuccess && selectedCard.rarity !== '超稀有') {
-        incrementPityCounters();
-      }
-
-      console.log('最終選中的卡片:', selectedCard);
-
-      // 處理抽卡結果
-      const result = processDraw(selectedCard);
-      handleSingleDrawResult(result);
-
-      // 記錄抽卡統計
-      recordGachaDraw(selectedCard, 'single');
-
-      // 根據稀有度決定動畫流程
-      if (isSSRCard(selectedCard)) {
-        (async () => {
-          await playSSRAnimationAndWait(selectedCard);
-          showCard(selectedCard, isWishSuccess);
-        })();
-      } else {
-        showCard(selectedCard, isWishSuccess);
-      }
-
-      // 抽卡完成後恢復原本的背景音樂
-      setTimeout(() => {
-        const gachaBg = document.getElementById('gachaBg');
-        if (gachaBg) {
-          gachaBg.pause();
-        }
-        resumeBGM();
-      }, 1000);
-    }
-
-    // 系列抽卡券單抽
-    function drawSeriesCardWithTicket(seriesName) {
-      if (typeof SeriesGachaSystem === 'undefined') {
-        return LinkageSystem.notifications.show('系列抽卡系統尚未載入', 'error');
-      }
-
-      // 檢查系列抽卡券數量
-      const ticketCount = SeriesGachaSystem.getSeriesTicketCount(seriesName);
-      if (ticketCount < 1) {
-        return LinkageSystem.notifications.show(seriesName + '抽卡券不足！（需要 1 張）', 'warning');
-      }
-
-      if (isGachaAnimating || isSSRAnimationPlaying) {
-        return LinkageSystem.notifications.show('抽卡動畫播放中，請稍候。', 'warning');
-      }
-
-      // 獲取該系列的卡片
-      const seriesCards = SeriesGachaSystem.getSeriesCards(seriesName);
-      if (!Array.isArray(seriesCards) || seriesCards.length === 0) {
-        return LinkageSystem.notifications.show('該系列沒有可抽的卡片', 'warning');
-      }
-
-      // 暫停背景音樂並記錄狀態
-      pauseBGM();
-      
-      // 播放抽卡背景音樂
-      const gachaBg = document.getElementById('gachaBg');
-      if (gachaBg) {
-        gachaBg.currentTime = 0;
-        gachaBg.play().catch(e => console.error("無法播放抽卡背景音樂:", e));
-      }
-
-      // 扣除系列抽卡券
-      SeriesGachaSystem.deductSeriesTicket(seriesName, 1);
-
-      // 從系列卡片中隨機抽取一張
-      const selectedCard = seriesCards[Math.floor(Math.random() * seriesCards.length)];
-
-      // 檢查是否為許願卡（系列池不支援許願）
-      const isWishSuccess = false;
-
-      // 將卡片加入玩家背包
-      const isOwned = LinkageSystem.cards.isCardOwned(selectedCard.word);
-      if (!isOwned) {
-        LinkageSystem.cards.addCard(selectedCard.word);
-        addNewCard(selectedCard.word);
-      } else {
-        // 已擁有，給星星獎勵
-        let starReward = 0;
-        switch(selectedCard.rarity) {
-          case '超稀有': starReward = 50; break;
-          case '稀有': starReward = 20; break;
-          case '普通': starReward = 5; break;
-          default: starReward = 10;
-        }
-        LinkageSystem.stars.add(starReward);
-      }
-
-      // 記錄系列抽卡紀錄
-      SeriesGachaSystem.recordSeriesGachaHistory(seriesName, 1, selectedCard);
-
-      // 更新系列抽卡池標籤顯示
-      renderSeriesPoolTabs();
-
-      // 顯示抽卡結果
-      if (isSSRCard(selectedCard)) {
-        (async () => {
-          await playSSRAnimationAndWait(selectedCard);
-          showCard(selectedCard, isWishSuccess);
-        })();
-      } else {
-        showCard(selectedCard, isWishSuccess);
-      }
-
-      // 抽卡完成後恢復原本的背景音樂
-      setTimeout(() => {
-        const gachaBg = document.getElementById('gachaBg');
-        if (gachaBg) {
-          gachaBg.pause();
-        }
-        resumeBGM();
-      }, 1000);
-    }
-
-    // 系列抽卡券十連抽
-    function drawSeriesTenWithTicket(seriesName) {
-      if (typeof SeriesGachaSystem === 'undefined') {
-        return LinkageSystem.notifications.show('系列抽卡系統尚未載入', 'error');
-      }
-
-      // 檢查系列抽卡券數量
-      const ticketCount = SeriesGachaSystem.getSeriesTicketCount(seriesName);
-      if (ticketCount < 10) {
-        return LinkageSystem.notifications.show(seriesName + '抽卡券不足！（需要 10 張）', 'warning');
-      }
-
-      if (isGachaAnimating || isSSRAnimationPlaying) {
-        return LinkageSystem.notifications.show('抽卡動畫播放中，請稍候。', 'warning');
-      }
-
-      // 獲取該系列的卡片
-      const seriesCards = SeriesGachaSystem.getSeriesCards(seriesName);
-      if (!Array.isArray(seriesCards) || seriesCards.length === 0) {
-        return LinkageSystem.notifications.show('該系列沒有可抽的卡片', 'warning');
-      }
-
-      // 暫停背景音樂並記錄狀態
-      pauseBGM();
-      
-      // 播放抽卡背景音樂
-      const gachaBg = document.getElementById('gachaBg');
-      if (gachaBg) {
-        gachaBg.currentTime = 0;
-        gachaBg.play().catch(e => console.error("無法播放抽卡背景音樂:", e));
-      }
-
-      // 扣除系列抽卡券
-      SeriesGachaSystem.deductSeriesTicket(seriesName, 10);
-
-      // 從系列卡片中隨機抽取十張
-      const drawnCards = [];
-      for (let i = 0; i < 10; i++) {
-        const selectedCard = seriesCards[Math.floor(Math.random() * seriesCards.length)];
-        drawnCards.push({
-          card: selectedCard,
-          isWishSuccess: false
-        });
-        
-        // 將卡片加入玩家背包
-        const isOwned = LinkageSystem.cards.isCardOwned(selectedCard.word);
-        if (!isOwned) {
-          LinkageSystem.cards.addCard(selectedCard.word);
-          addNewCard(selectedCard.word);
-        } else {
-          // 已擁有，給星星獎勵
-          let starReward = 0;
-          switch(selectedCard.rarity) {
-            case '超稀有': starReward = 50; break;
-            case '稀有': starReward = 20; break;
-            case '普通': starReward = 5; break;
-            default: starReward = 10;
-          }
-          LinkageSystem.stars.add(starReward);
-        }
-        
-        // 記錄系列抽卡紀錄
-        SeriesGachaSystem.recordSeriesGachaHistory(seriesName, 1, selectedCard);
-      }
-
-      // 更新系列抽卡池標籤顯示
-      renderSeriesPoolTabs();
-
-      // 顯示十連抽結果
-      (async () => {
-        const newCards = [];
-        const duplicateCardsLog = {};
-        let totalBonusStars = 0;
-
-        for (const item of drawnCards) {
-          const card = item.card;
-          
-          // 檢查是否為新卡片
-          const isNewCard = !LinkageSystem.cards.isCardOwned(card.word);
-          if (isNewCard) {
-            newCards.push(card.zh);
-          } else {
-            // 重複卡片獎勵星星
-            let bonusStars = 0;
-            switch(card.rarity) {
-              case '超稀有': bonusStars = 10; break;
-              case '稀有': bonusStars = 5; break;
-              case '普通': bonusStars = 2; break;
-              default: bonusStars = 5;
-            }
-            totalBonusStars += bonusStars;
-            
-            if (!duplicateCardsLog[card.zh]) {
-              duplicateCardsLog[card.zh] = { count: 0, rarity: card.rarity };
-            }
-            duplicateCardsLog[card.zh].count++;
-          }
-
-          await showCardAsync(card, item.isWishSuccess);
-        }
-
-        // 顯示摘要通知
-        let summaryMessage = '<h3 style="margin-top:0; margin-bottom:10px; border-bottom:1px solid #ffd70044; padding-bottom:5px;color:#00ffff;text-shadow:0 0 8px #00ffff;">' + seriesName + '十連抽結果</h3>';
-        if (newCards.length > 0) {
-          summaryMessage += '<p style="margin:4px 0; color:#ff2d55;font-weight:bold;text-shadow:0 0 8px #fff,0 0 16px #ff2d55;">🎉 新解鎖: ' + newCards.join(', ') + '</p>';
-        }
-        if (Object.keys(duplicateCardsLog).length > 0) {
-          let dupText = Object.entries(duplicateCardsLog).map(function(entry) { return entry[0] + ' x' + entry[1].count; }).join(', ');
-          summaryMessage += '<p style="margin:4px 0; color:#ffd700;font-weight:bold;text-shadow:0 0 8px #fff,0 0 16px #ffd700;">⭐ 重複: ' + dupText + '</p>';
-        }
-        if (totalBonusStars > 0) {
-          summaryMessage += '<p style="margin:4px 0; color:#00ff00;font-weight:bold;text-shadow:0 0 8px #fff,0 0 16px #00ff00;">💎 獲得星星: ' + totalBonusStars + '</p>';
-        }
-        
-        LinkageSystem.notifications.show(summaryMessage, 'success');
-      
-        // 十連抽完成後恢復原本的背景音樂
+        // 抽卡完成後恢復原本的背景音樂
         setTimeout(() => {
+          // 停止抽卡背景音樂
           const gachaBg = document.getElementById('gachaBg');
           if (gachaBg) {
             gachaBg.pause();
           }
+          // 恢復原本的背景音樂
           resumeBGM();
         }, 1000);
-      })();
-    }
-
-    // 使用抽卡券十連抽
-    function drawTenWithTicket() {
-      console.log('drawTenWithTicket 函數被調用');
-      
-      // 讀取抽卡券數量
-      const gachaTickets = parseInt(localStorage.getItem('gachaTickets') || '0');
-      console.log('抽卡券數量:', gachaTickets);
-
-      if (isGachaAnimating || isSSRAnimationPlaying) {
-        return LinkageSystem.notifications.show('抽卡動畫播放中，請稍候。', 'warning');
-      }
-
-      if (!Array.isArray(allCards) || allCards.length === 0) {
-        return LinkageSystem.notifications.show("卡片資料尚未載入，請稍後再試。", 'warning');
-      }
-      
-      if (gachaTickets < 10) {
-        console.log('普通抽卡券不足，當前抽卡券:', gachaTickets);
-        return LinkageSystem.notifications.show("普通抽卡券不足！（需要 10 張普通抽卡券）", 'warning');
-      }
-      
-      // 暫停背景音樂並記錄狀態
-      pauseBGM();
-      
-      // 播放抽卡背景音樂
-      const gachaBg = document.getElementById('gachaBg');
-      if (gachaBg) {
-        gachaBg.currentTime = 0;
-        gachaBg.play().catch(e => console.error("無法播放抽卡背景音樂:", e));
-      }
-      
-      console.log('開始十連抽，扣除 10 張普通抽卡券');
-      // 扣除抽卡券
-      localStorage.setItem('gachaTickets', (gachaTickets - 10).toString());
-      // 更新顯示
-      updateGachaTicketsDisplay();
-      
-      stars = LinkageSystem.stars.get();
-      
-      const drawnCards = [];
-      let hasWishCard = false; // 記錄十連抽中是否有許願卡
-      
-      // 十連抽：使用保底邏輯
-      for (let i = 0; i < 10; i++) {
-        let selectedCard;
-        let isWishSuccess = false;
-        
-        // 保底檢查：優先檢查許願保底（70抽必得許願SSR）
-        if (wishPityCounter >= WISH_PITY_THRESHOLD && currentWishCard) {
-          selectedCard = currentWishCard;
-          isWishSuccess = true;
-          hasWishCard = true;
-          resetWishPityCounter();
-          console.log('🎯 十連抽許願保底觸發！70抽必得許願SSR:', selectedCard.zh);
-        }
-        // 一般保底檢查（50抽必得SSR）
-        else if (pityCounter >= PITY_THRESHOLD) {
-          const ssrCards = allCards.filter(card => card.rarity === '超稀有');
-          selectedCard = ssrCards.length ? ssrCards[Math.floor(Math.random() * ssrCards.length)] : allCards[Math.floor(Math.random() * allCards.length)];
-          resetPityCounters();
-          console.log('⭐ 十連抽一般保底觸發！50抽必得SSR:', selectedCard.zh);
-        }
-        // 檢查是否抽中許願卡片（2%機率）
-        else if (checkWishCard() && currentWishCard && !hasWishCard) {
-          selectedCard = currentWishCard;
-          isWishSuccess = true;
-          hasWishCard = true;
-          resetWishPityCounter();
-          console.log('✨ 十連抽許願成功，抽中:', selectedCard.zh);
-        }
-        // 正常抽卡邏輯
-        else {
-          const random = Math.random() * 100;
-          console.log('隨機數:', random);
-          
-          if (random < 3) { // 3% 機率抽到 SSR
-            const ssrCards = allCards.filter(card => card.rarity === '超稀有');
-            selectedCard = ssrCards.length ? ssrCards[Math.floor(Math.random() * ssrCards.length)] : allCards[Math.floor(Math.random() * allCards.length)];
-            console.log('抽中 SSR:', selectedCard.zh);
-          } else {
-            const nonSsrCards = allCards.filter(card => card.rarity !== '超稀有');
-            selectedCard = nonSsrCards.length ? nonSsrCards[Math.floor(Math.random() * nonSsrCards.length)] : allCards[Math.floor(Math.random() * allCards.length)];
-            console.log('抽中普通/稀有卡:', selectedCard.zh);
-          }
-        }
-        
-        // 增加保底計數器（除了保底觸發的情況）
-        if (!isWishSuccess && selectedCard.rarity !== '超稀有') {
-          incrementPityCounters();
-        }
-        
-        drawnCards.push({ card: selectedCard, isWishSuccess: isWishSuccess });
-      }
-
-      const drawSequence = async () => {
-        let newCards = [];
-        let totalBonusStars = 0;
-        let duplicateCardsLog = {};
-        
-        for (let i = 0; i < drawnCards.length; i++) {
-          const item = drawnCards[i];
-          const card = item.card;
-          const result = processDraw(card);
-
-          if (result.type === 'duplicate') {
-            totalBonusStars += result.stars;
-            if (!duplicateCardsLog[result.card.zh]) {
-              duplicateCardsLog[result.card.zh] = { count: 0, rarity: result.card.rarity };
-            }
-            duplicateCardsLog[result.card.zh].count++;
-          } else if (result.type === 'new') {
-            newCards.push(result.card.zh);
-          }
-
-          await showCardAsync(card, item.isWishSuccess);
-        }
-
-        // 顯示摘要通知
-        let summaryMessage = `<h3 style="margin-top:0; margin-bottom:10px; border-bottom:1px solid #ffd70044; padding-bottom:5px;color:#00ffff;text-shadow:0 0 8px #00ffff;">十連抽結果</h3>`;
-        if (newCards.length > 0) {
-            summaryMessage += `<p style="margin:4px 0; color:#ff2d55;font-weight:bold;text-shadow:0 0 8px #fff,0 0 16px #ff2d55;">🎉 新解鎖: ${newCards.join(', ')}</p>`;
-        }
-        if (Object.keys(duplicateCardsLog).length > 0) {
-            let dupText = Object.entries(duplicateCardsLog).map(([name, info]) => `${name} x${info.count}`).join(', ');
-            summaryMessage += `<p style="margin:4px 0; color:#ffd700;font-weight:bold;text-shadow:0 0 8px #fff,0 0 16px #ffd700;">⭐ 重複: ${dupText}</p>`;
-        }
-        if (totalBonusStars > 0) {
-            summaryMessage += `<p style="margin:4px 0; color:#00ff00;font-weight:bold;text-shadow:0 0 8px #fff,0 0 16px #00ff00;">💎 獲得星星: ${totalBonusStars}</p>`;
-        }
-        
-        LinkageSystem.notifications.show(summaryMessage, 'success');
-        
-        // 記錄十連抽統計
-        const cardsForStats = drawnCards.map(item => item.card);
-        recordGachaDraw(cardsForStats, 'ten');
-      
-      // 十連抽完成後恢復原本的背景音樂
-      setTimeout(() => {
-        // 停止抽卡背景音樂
-        const gachaBg = document.getElementById('gachaBg');
-        if (gachaBg) {
-          gachaBg.pause();
-        }
-        // 恢復原本的背景音樂
-        resumeBGM();
-      }, 1000);
-      }
-      
-      drawSequence();
+      }, 2500);
     }
 
     function drawTen() {
-      if (isGachaAnimating || isSSRAnimationPlaying) {
-        return LinkageSystem.notifications.show('抽卡動畫播放中，請稍候。', 'warning');
-      }
-
       if (!Array.isArray(allCards) || allCards.length === 0) {
         return LinkageSystem.notifications.show("卡片資料尚未載入，請稍後再試。", 'warning');
       }
-      if (stars < 1500) {
-        return LinkageSystem.notifications.show("星星不足，十連抽需要 1500 星星", 'warning');
+      if (stars < 200) {
+        return LinkageSystem.notifications.show("星星不足！（十連抽需要 200 顆）", 'warning');
       }
-
+      
       // 暫停背景音樂並記錄狀態
       pauseBGM();
-
+      
       // 播放抽卡背景音樂
       const gachaBg = document.getElementById('gachaBg');
       if (gachaBg) {
         gachaBg.currentTime = 0;
         gachaBg.play().catch(e => console.error("無法播放抽卡背景音樂:", e));
       }
-
-      LinkageSystem.stars.subtract(1500);
+      
+      LinkageSystem.stars.subtract(200);
       stars = LinkageSystem.stars.get();
       
       const drawnCards = [];
@@ -5363,16 +2498,10 @@
         
         for (let i = 0; i < drawnCards.length; i++) {
           const { card, isWishSuccess } = drawnCards[i];
-
-          // 根據稀有度決定動畫流程
-          if (isSSRCard(card)) {
-            // SSR：播放專屬動畫，不能跳過
-            await playSSRAnimationAndWait(card);
-          } else {
-            // 非 SSR：正常動畫
-            await showCardAsync(card, isWishSuccess);
-          }
-
+          
+          // 使用可等待的動畫函數，傳遞許願成功狀態
+          await showCardAsync(card, isWishSuccess);
+          
           const result = processDraw(card);
 
           if (result.type === 'duplicate') {
@@ -5414,10 +2543,6 @@
         }
         
         LinkageSystem.notifications.show(summaryMessage, 'success');
-        
-        // 記錄十連抽統計
-        const cardsForStats = drawnCards.map(item => item.card);
-        recordGachaDraw(cardsForStats, 'ten');
       
       // 十連抽完成後恢復原本的背景音樂
       setTimeout(() => {
@@ -5435,10 +2560,7 @@
     }
 
     // 新增：可等待的動畫函數（用於十連抽）
-    function showCardAsync(card, isWishSuccess = false, options = {}) {
-      const disableSkip = options.disableSkip === true;
-      const forceSSR = options.forceSSR === true;
-
+    function showCardAsync(card, isWishSuccess = false) {
       return new Promise((resolve) => {
         const gachaAnimation = document.getElementById('gachaAnimation');
         const cardInner = gachaAnimation.querySelector('.card-inner');
@@ -5446,73 +2568,10 @@
 
         // 1. 重設狀態
         gachaAnimation.style.display = 'flex';
-        gachaAnimation.className = 'gacha-animation';
+        gachaAnimation.className = 'gacha-animation'; // 重設稀有度 class
         cardInner.classList.remove('is-flipped');
         cardInner.style.transition = 'transform 0.8s cubic-bezier(0.7, 0, 0.3, 1)';
-
-        ensureGachaAnimationStyleOnce();
-
-        // 套用稀有度主題顏色
-        const theme = getRarityTheme(card);
-        const rarityClass = theme.className;
-        const rarityClasses = ['ssr', 'sr', 'r', 'a', 'n', 'common', 'rare', 'epic'];
-
-        gachaAnimation.classList.remove(...rarityClasses);
-        gachaAnimation.classList.add(rarityClass);
-        gachaAnimation.dataset.rarity = rarityClass;
-
-        const circle = gachaAnimation.querySelector('.gacha-circle');
-        const rays = gachaAnimation.querySelector('.gacha-rays');
-        const gachaCard = gachaAnimation.querySelector('.gacha-card');
-        const cardBack = gachaAnimation.querySelector('.card-back');
-
-        [gachaAnimation, circle, rays, gachaCard, cardFront, cardBack].forEach(el => {
-          if (!el) return;
-          el.classList.remove(...rarityClasses);
-          el.classList.add(rarityClass);
-          el.dataset.rarity = rarityClass;
-        });
-
-        gachaAnimation.style.setProperty('--gacha-main', theme.main);
-        gachaAnimation.style.setProperty('--gacha-light', theme.light);
-        gachaAnimation.style.setProperty('--gacha-glow', theme.glow);
-        gachaAnimation.style.setProperty('--gacha-soft', theme.soft);
-        gachaAnimation.style.setProperty('--gacha-text', theme.text);
-
-        if (circle) {
-          circle.style.borderColor = theme.main;
-          circle.style.boxShadow = `
-            0 0 28px ${theme.light},
-            0 0 78px ${theme.glow},
-            0 0 130px ${theme.soft}
-          `;
-        }
-
-        if (rays) {
-          rays.style.background = `
-            radial-gradient(circle, ${theme.light} 0%, ${theme.glow} 38%, transparent 72%)
-          `;
-        }
-
-        if (cardFront) {
-          cardFront.style.borderColor = theme.main;
-          cardFront.style.boxShadow = `
-            0 0 0 4px ${theme.soft},
-            0 0 36px ${theme.glow},
-            0 22px 52px rgba(0, 0, 0, 0.38)
-          `;
-        }
-
-        if (cardBack) {
-          cardBack.style.borderColor = theme.main;
-          cardBack.style.boxShadow = `
-            0 0 0 4px ${theme.soft},
-            0 0 34px ${theme.glow}
-          `;
-        }
-
-        console.log('抽卡動畫稀有度：', getCardRarity(card), rarityClass);
-
+        
         // 2. 如果是許願成功，在動畫開始時顯示通知
         if (isWishSuccess) {
           LinkageSystem.notifications.show(`🎯 許願成功！抽中 ${card.zh}！`, 'success');
@@ -5558,10 +2617,15 @@
           // 清空並重新創建卡片內容
           cardFront.innerHTML = `
             <div class="card-front-content">
-              <div class="card-front-title">${card.zh || card.name || card.cardName || '未知卡片'} (${card.word || card.en || card.english || ''})</div>
-              <div class="card-front-info">${card.category || card.series || ''} | ${getRarityLabel(card)}</div>
+              <div class="card-front-title">${card.zh} (${card.word})</div>
+              <div class="card-front-info">${card.category} | ${card.rarity}</div>
             </div>
           `;
+        }
+        
+        const rarityClass = getRarityClass(card.rarity);
+        if (rarityClass) {
+          gachaAnimation.classList.add(rarityClass);
         }
 
               // 5. 檢查卡片是否已解鎖
@@ -5666,35 +2730,46 @@
         });
         
         // 添加脈衝動畫效果
-        if (disableSkip || isSSRAnimationPlaying) {
-          skipButton.style.display = 'none';
-        } else {
-          skipButton.style.animation = 'skipPulse 2s ease-in-out infinite';
-        }
+        skipButton.style.animation = 'skipPulse 2s ease-in-out infinite';
+        
+        // 創建脈衝動畫樣式
+        const pulseStyle = document.createElement('style');
+        pulseStyle.textContent = `
+          @keyframes skipPulse {
+            0% { 
+              box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+              transform: scale(1);
+            }
+            50% { 
+              box-shadow: 0 6px 25px rgba(255, 107, 107, 0.7);
+              transform: scale(1.05);
+            }
+            100% { 
+              box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+              transform: scale(1);
+            }
+          }
+        `;
+        document.head.appendChild(pulseStyle);
         
         // skip 按鈕點擊事件
         skipButton.addEventListener('click', (e) => {
           e.stopPropagation(); // 防止觸發加速動畫
           e.preventDefault(); // 防止預設行為
           if (animationAccelerated) return;
-
-          if (isSSRAnimationPlaying) {
-            LinkageSystem.notifications.show('SSR 動畫播放中，請等待播放完成。', 'warning');
-            return;
-          }
-
+          
           animationAccelerated = true;
           console.log('⏭️ 玩家點擊 SKIP 按鈕！');
           console.log('⏭️ 按鈕元素:', skipButton);
           console.log('⏭️ 事件對象:', e);
-
+          
           // 清除原有的定時器
           if (flipTimeout) clearTimeout(flipTimeout);
           if (closeTimeout) clearTimeout(closeTimeout);
-
+          
           // 立即執行翻面
           cardInner.classList.add('is-flipped');
-
+          
           // 立即完成動畫
           setTimeout(() => {
             finishAnimation();
@@ -5778,34 +2853,21 @@
 
           div.className = `card ${getRarityClass(card.rarity)}${isUnlocked ? " unlocked" : ""}`;
 
-          const revealRarity = getCardRarity(card);
-          if (revealRarity === 'SSR') {
-            div.style.background = 'linear-gradient(135deg, rgba(255, 209, 102, 0.16), rgba(255, 244, 166, 0.08))';
-          } else if (revealRarity === 'R') {
-            div.style.background = 'linear-gradient(135deg, rgba(181, 108, 255, 0.16), rgba(147, 51, 234, 0.08))';
-          } else if (revealRarity === 'A') {
-            div.style.background = 'linear-gradient(135deg, rgba(56, 189, 248, 0.16), rgba(134, 215, 255, 0.08))';
-          } else if (revealRarity === 'SR') {
-            div.style.background = 'linear-gradient(135deg, rgba(217, 200, 255, 0.16), rgba(156, 120, 220, 0.08))';
-          } else {
-            div.style.background = 'linear-gradient(135deg, rgba(203, 213, 225, 0.16), rgba(148, 163, 184, 0.08))';
-          }
+          if (card.rarity === "普通") div.style.background = 'linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(0, 255, 255, 0.05))';
+          else if (card.rarity === "稀有") div.style.background = 'linear-gradient(135deg, rgba(162, 89, 255, 0.1), rgba(162, 89, 255, 0.05))';
+          else if (card.rarity === "超稀有") div.style.background = 'linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05))';
 
-          const starIcons = getRarityStars(card);
+          let starIcons = "";
+          if (card.rarity === "普通") starIcons = "★";
+          else if (card.rarity === "稀有") starIcons = "★★";
+          else if (card.rarity === "超稀有") starIcons = "★★★";
 
-          // 支援MP4顯示，如果沒有圖片顯示佔位符
+          // 支援MP4顯示
           let cardMedia = '';
           if (card.image && card.image.endsWith('.mp4')) {
             cardMedia = `<video src="${card.image}" autoplay loop muted playsinline style="width:100%;height:120px;object-fit:cover;border-radius:10px;"></video>`;
           } else {
-            const imageUrl = getCardImageUrl(card);
-            cardMedia = createSafeCardImageHtml(
-              imageUrl,
-              card.word,
-              'gacha-result-image',
-              'gacha-result-image-placeholder',
-              '🌸'
-            );
+            cardMedia = `<img src="${card.image}" alt="${card.word}">`;
           }
 
           div.innerHTML = `
@@ -5828,22 +2890,9 @@
               // 2.5秒後自動移除亮光
               setTimeout(()=>div.classList.remove('new-card-glow'), 2500);
             }
+            div.onclick = (e) => openModal(card);
           }
           grid.prepend(div);
-          
-          // 隱藏空狀態提示
-          const emptyState = document.getElementById('cardGridEmpty');
-          if (emptyState) {
-            emptyState.style.display = 'none';
-          }
-          
-          // 單抽結果置中：如果只有一張卡片，加上 single-result class
-          const cardCount = grid.children.length;
-          if (cardCount === 1) {
-            grid.classList.add('single-result');
-          } else {
-            grid.classList.remove('single-result');
-          }
           
           // 解析 Promise
           resolve();
@@ -5851,83 +2900,17 @@
       });
     }
 
-    function showCard(card, isWishSuccess = false, options = {}) {
-      const disableSkip = options.disableSkip === true;
-      const forceSSR = options.forceSSR === true;
-
+    function showCard(card, isWishSuccess = false) {
       const gachaAnimation = document.getElementById('gachaAnimation');
       const cardInner = gachaAnimation.querySelector('.card-inner');
       const cardFront = gachaAnimation.querySelector('.card-front');
 
       // 1. 重設狀態
       gachaAnimation.style.display = 'flex';
-      gachaAnimation.className = 'gacha-animation';
+      gachaAnimation.className = 'gacha-animation'; // 重設稀有度 class
       cardInner.classList.remove('is-flipped');
       cardInner.style.transition = 'transform 0.8s cubic-bezier(0.7, 0, 0.3, 1)';
-
-      ensureGachaAnimationStyleOnce();
-
-      // 套用稀有度主題顏色
-      const theme = getRarityTheme(card);
-      const rarityClass = theme.className;
-      const rarityClasses = ['ssr', 'sr', 'r', 'a', 'n', 'common', 'rare', 'epic'];
-
-      gachaAnimation.classList.remove(...rarityClasses);
-      gachaAnimation.classList.add(rarityClass);
-      gachaAnimation.dataset.rarity = rarityClass;
-
-      const circle = gachaAnimation.querySelector('.gacha-circle');
-      const rays = gachaAnimation.querySelector('.gacha-rays');
-      const gachaCard = gachaAnimation.querySelector('.gacha-card');
-      const cardBack = gachaAnimation.querySelector('.card-back');
-
-      [gachaAnimation, circle, rays, gachaCard, cardFront, cardBack].forEach(el => {
-        if (!el) return;
-        el.classList.remove(...rarityClasses);
-        el.classList.add(rarityClass);
-        el.dataset.rarity = rarityClass;
-      });
-
-      gachaAnimation.style.setProperty('--gacha-main', theme.main);
-      gachaAnimation.style.setProperty('--gacha-light', theme.light);
-      gachaAnimation.style.setProperty('--gacha-glow', theme.glow);
-      gachaAnimation.style.setProperty('--gacha-soft', theme.soft);
-      gachaAnimation.style.setProperty('--gacha-text', theme.text);
-
-      if (circle) {
-        circle.style.borderColor = theme.main;
-        circle.style.boxShadow = `
-          0 0 28px ${theme.light},
-          0 0 78px ${theme.glow},
-          0 0 130px ${theme.soft}
-        `;
-      }
-
-      if (rays) {
-        rays.style.background = `
-          radial-gradient(circle, ${theme.light} 0%, ${theme.glow} 38%, transparent 72%)
-        `;
-      }
-
-      if (cardFront) {
-        cardFront.style.borderColor = theme.main;
-        cardFront.style.boxShadow = `
-          0 0 0 4px ${theme.soft},
-          0 0 36px ${theme.glow},
-          0 22px 52px rgba(0, 0, 0, 0.38)
-        `;
-      }
-
-      if (cardBack) {
-        cardBack.style.borderColor = theme.main;
-        cardBack.style.boxShadow = `
-          0 0 0 4px ${theme.soft},
-          0 0 34px ${theme.glow}
-        `;
-      }
-
-      console.log('抽卡動畫稀有度：', getCardRarity(card), rarityClass);
-
+      
       // 2. 如果是許願成功，在動畫開始時顯示通知
       if (isWishSuccess) {
         LinkageSystem.notifications.show(`🎯 許願成功！抽中 ${card.zh}！`, 'success');
@@ -5973,10 +2956,15 @@
         // 清空並重新創建卡片內容
         cardFront.innerHTML = `
           <div class="card-front-content">
-            <div class="card-front-title">${card.zh || card.name || card.cardName || '未知卡片'} (${card.word || card.en || card.english || ''})</div>
-            <div class="card-front-info">${card.category || card.series || ''} | ${getRarityLabel(card)}</div>
+            <div class="card-front-title">${card.zh} (${card.word})</div>
+            <div class="card-front-info">${card.category} | ${card.rarity}</div>
           </div>
         `;
+      }
+      
+      const rarityClass = getRarityClass(card.rarity);
+      if (rarityClass) {
+        gachaAnimation.classList.add(rarityClass);
       }
 
       // 5. 檢查卡片是否已解鎖
@@ -6081,32 +3069,43 @@
       });
       
       // 添加脈衝動畫效果 (第二個 showCard 函數)
-      if (disableSkip || isSSRAnimationPlaying) {
-        skipButton.style.display = 'none';
-      } else {
-        skipButton.style.animation = 'skipPulse 2s ease-in-out infinite';
-      }
-
+      skipButton.style.animation = 'skipPulse 2s ease-in-out infinite';
+      
+      // 創建脈衝動畫樣式 (第二個 showCard 函數)
+      const pulseStyle2 = document.createElement('style');
+      pulseStyle2.textContent = `
+        @keyframes skipPulse {
+          0% { 
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            transform: scale(1);
+          }
+          50% { 
+            box-shadow: 0 6px 25px rgba(255, 107, 107, 0.7);
+            transform: scale(1.05);
+          }
+          100% { 
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            transform: scale(1);
+          }
+        }
+      `;
+      document.head.appendChild(pulseStyle2);
+      
       // skip 按鈕點擊事件
       skipButton.addEventListener('click', (e) => {
         e.stopPropagation(); // 防止觸發加速動畫
         e.preventDefault(); // 防止預設行為
         if (animationAccelerated) return;
-
-        if (isSSRAnimationPlaying) {
-          LinkageSystem.notifications.show('SSR 動畫播放中，請等待播放完成。', 'warning');
-          return;
-        }
-
+        
         animationAccelerated = true;
         console.log('⏭️ 玩家點擊 SKIP 按鈕！');
         console.log('⏭️ 按鈕元素:', skipButton);
         console.log('⏭️ 事件對象:', e);
-
+        
         // 清除原有的定時器
         if (flipTimeout) clearTimeout(flipTimeout);
         if (closeTimeout) clearTimeout(closeTimeout);
-
+        
         // 立即執行翻面
         cardInner.classList.add('is-flipped');
         
@@ -6194,34 +3193,21 @@
 
         div.className = `card ${getRarityClass(card.rarity)}${isUnlocked ? " unlocked" : ""}`;
 
-        const revealRarity = getCardRarity(card);
-        if (revealRarity === 'SSR') {
-          div.style.background = 'linear-gradient(135deg, rgba(255, 209, 102, 0.16), rgba(255, 244, 166, 0.08))';
-        } else if (revealRarity === 'R') {
-          div.style.background = 'linear-gradient(135deg, rgba(181, 108, 255, 0.16), rgba(147, 51, 234, 0.08))';
-        } else if (revealRarity === 'A') {
-          div.style.background = 'linear-gradient(135deg, rgba(56, 189, 248, 0.16), rgba(134, 215, 255, 0.08))';
-        } else if (revealRarity === 'SR') {
-          div.style.background = 'linear-gradient(135deg, rgba(217, 200, 255, 0.16), rgba(156, 120, 220, 0.08))';
-        } else {
-          div.style.background = 'linear-gradient(135deg, rgba(203, 213, 225, 0.16), rgba(148, 163, 184, 0.08))';
-        }
+        if (card.rarity === "普通") div.style.background = 'linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(0, 255, 255, 0.05))';
+        else if (card.rarity === "稀有") div.style.background = 'linear-gradient(135deg, rgba(162, 89, 255, 0.1), rgba(162, 89, 255, 0.05))';
+        else if (card.rarity === "超稀有") div.style.background = 'linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05))';
 
-        const starIcons = getRarityStars(card);
+        let starIcons = "";
+        if (card.rarity === "普通") starIcons = "★";
+        else if (card.rarity === "稀有") starIcons = "★★";
+        else if (card.rarity === "超稀有") starIcons = "★★★";
 
-                  // 支援MP4顯示，如果沒有圖片顯示佔位符
+                  // 支援MP4顯示
           let cardMedia = '';
           if (card.image && card.image.endsWith('.mp4')) {
             cardMedia = `<video src="${card.image}" autoplay loop muted playsinline style="width:100%;height:120px;object-fit:cover;border-radius:10px;"></video>`;
           } else {
-            const imageUrl = getCardImageUrl(card);
-            cardMedia = createSafeCardImageHtml(
-              imageUrl,
-              card.word,
-              'gacha-result-image',
-              'gacha-result-image-placeholder',
-              '🌸'
-            );
+            cardMedia = `<img src="${card.image}" alt="${card.word}">`;
           }
 
           div.innerHTML = `
@@ -6244,152 +3230,75 @@
             // 2.5秒後自動移除亮光
             setTimeout(()=>div.classList.remove('new-card-glow'), 2500);
           }
+          div.onclick = (e) => openModal(card);
         }
         grid.prepend(div);
-        
-        // 隱藏空狀態提示
-        const emptyState = document.getElementById('cardGridEmpty');
-        if (emptyState) {
-          emptyState.style.display = 'none';
+      }
+    }
+
+    function getRarityClass(r) {
+      return r === "普通" ? "common" : r === "稀有" ? "rare" : "epic";
+    }
+
+    function openModal(card) {
+      document.getElementById("overlay").style.display = "block";
+      const modal = document.getElementById("modal");
+      const modalImg = document.getElementById("modalImg");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalDesc = document.getElementById("modalDesc");
+      const soundBtn = document.querySelector(".sound-btn-modal");
+      // 顯示大圖
+      modalImg.src = card.image;
+      // 顯示名稱
+      modalTitle.textContent = `${card.zh} (${card.word})`;
+      // 顯示描述+類別+稀有度+碎片數量
+      const required = getRequiredShards(card.rarity);
+      const haveShards = LinkageSystem.cards.getShardCount(card.word);
+      const isUnlocked = LinkageSystem.cards.isCardOwned(card.word);
+      let shardInfo = '';
+      if (isUnlocked) {
+        if (haveShards > 0) {
+          shardInfo = `<div style='color:#ffd700;margin-top:8px;'>多餘碎片：${haveShards}</div>`;
+        } else {
+          shardInfo = `<div style='color:#00ff99;margin-top:8px;'>已解鎖</div>`;
         }
-        
-        // 十連抽結果：移除 single-result class，使用 grid 排列
-        grid.classList.remove('single-result');
+      } else {
+        shardInfo = `<div style='color:#00ffff;margin-top:8px;'>碎片進度：${haveShards}/${required}</div>`;
       }
-    }
-
-    function getCardRarity(cardOrRarity) {
-      if (typeof cardOrRarity === 'string') {
-        const value = cardOrRarity.trim();
-
-        if (value === '超稀有' || value.toUpperCase() === 'SSR') return 'SSR';
-        if (value === '稀有' || value.toUpperCase() === 'R') return 'R';
-        if (value === '普通' || value.toUpperCase() === 'A') return 'A';
-        if (value.toUpperCase() === 'SR') return 'SR';
-        if (value.toUpperCase() === 'N') return 'N';
-
-        return 'N';
-      }
-
-      const rarity =
-        cardOrRarity?.rarity ||
-        cardOrRarity?.rank ||
-        cardOrRarity?.type ||
-        cardOrRarity?.level ||
-        'N';
-
-      return getCardRarity(String(rarity));
-    }
-
-    function getRarityClass(cardOrRarity) {
-      const rarity = getCardRarity(cardOrRarity);
-
-      if (rarity === 'SSR') return 'ssr';
-      if (rarity === 'SR') return 'sr';
-      if (rarity === 'R') return 'r';
-      if (rarity === 'A') return 'a';
-
-      return 'n';
-    }
-
-    function getRarityLabel(cardOrRarity) {
-      return getCardRarity(cardOrRarity);
-    }
-
-    function getRarityStars(cardOrRarity) {
-      const rarity = getCardRarity(cardOrRarity);
-
-      if (rarity === 'SSR') return '★★★';
-      if (rarity === 'SR') return '★★';
-      if (rarity === 'R') return '★★';
-      if (rarity === 'A') return '★';
-
-      return '★';
-    }
-
-    function getRarityTheme(cardOrRarity) {
-      const rarity = getCardRarity(cardOrRarity);
-
-      const themes = {
-        SSR: {
-          className: 'ssr',
-          main: '#ffd166',
-          light: 'rgba(255, 209, 102, 0.92)',
-          glow: 'rgba(255, 209, 102, 0.62)',
-          soft: 'rgba(255, 244, 166, 0.35)',
-          text: '#654100'
-        },
-        SR: {
-          className: 'sr',
-          main: '#d9c8ff',
-          light: 'rgba(217, 200, 255, 0.88)',
-          glow: 'rgba(156, 120, 220, 0.48)',
-          soft: 'rgba(217, 200, 255, 0.30)',
-          text: '#4c2a7a'
-        },
-        R: {
-          className: 'r',
-          main: '#b56cff',
-          light: 'rgba(181, 108, 255, 0.88)',
-          glow: 'rgba(147, 51, 234, 0.56)',
-          soft: 'rgba(181, 108, 255, 0.30)',
-          text: '#ffffff'
-        },
-        A: {
-          className: 'a',
-          main: '#38bdf8',
-          light: 'rgba(56, 189, 248, 0.9)',
-          glow: 'rgba(134, 215, 255, 0.58)',
-          soft: 'rgba(56, 189, 248, 0.30)',
-          text: '#164e63'
-        },
-        N: {
-          className: 'n',
-          main: '#cbd5e1',
-          light: 'rgba(203, 213, 225, 0.75)',
-          glow: 'rgba(148, 163, 184, 0.34)',
-          soft: 'rgba(203, 213, 225, 0.20)',
-          text: '#475569'
-        }
-      };
-
-      return themes[rarity] || themes.N;
-    }
-
-    function getCardImageUrl(card) {
-      const url =
-        card?.image ||
-        card?.img ||
-        card?.imageUrl ||
-        card?.cover ||
-        card?.picture ||
-        card?.photo ||
-        card?.url ||
-        '';
-      return String(url).trim();
-    }
-
-    function createSafeCardImageHtml(imageUrl, altText, imageClass, placeholderClass, placeholderIcon = '🌸') {
-      const safeAlt = altText || '卡片圖片';
-
-      if (!imageUrl) {
-        return `<div class="${placeholderClass}">${placeholderIcon}</div>`;
-      }
-
-      return `
-        <div class="safe-card-image-wrap">
-          <img
-            class="${imageClass}"
-            src="${imageUrl}"
-            alt="${safeAlt}"
-            loading="lazy"
-            onerror="this.style.display='none'; const p=this.parentElement.querySelector('.${placeholderClass}'); if(p) p.style.display='grid';"
-          >
-          <div class="${placeholderClass}" style="display:none;">${placeholderIcon}</div>
-        </div>
+      modalDesc.innerHTML = `
+        <div style='margin-bottom:8px;'>${card.description || ''}</div>
+        <div style='color:#ffd700;'>類別：${card.category}　|　稀有度：${card.rarity}</div>
+        ${shardInfo}
       `;
+      // 音效
+      if (card.audio) {
+        const modalAudio = document.getElementById("modalAudio");
+        modalAudio.src = card.audio;
+        soundBtn.onclick = playModalAudio;
+      } else {
+        soundBtn.onclick = () => {
+          SoundSystem.speech.speakWord(card.word);
+          setTimeout(() => {
+            SoundSystem.speech.speak(card.zh, { lang: 'zh-TW' });
+          }, 500);
+        };
+      }
+      soundBtn.style.display = "inline-flex";
+      modal.classList.add("show");
     }
 
+    function closeModal() {
+      document.getElementById("modal").classList.remove("show");
+      document.getElementById("overlay").style.display = "none";
+      speechSynthesis.cancel();
+    }
+
+    function playModalAudio() {
+      const audioElem = document.getElementById("modalAudio");
+      if (audioElem && audioElem.src) {
+        audioElem.play();
+      }
+    }
 
     // 添加新卡片標記功能
     function addNewCard(word) {
@@ -6915,6 +3824,7 @@
             <span class="unlock-status-icon">✔</span>
             ${isNewCard ? '<span style="position:absolute;top:8px;left:8px;background:#ff2d55;color:#fff;font-size:0.95em;padding:2px 8px;border-radius:10px;z-index:10;font-weight:bold;box-shadow:0 0 8px #ff2d55;letter-spacing:1px;">新卡</span>' : ''}
           `;
+          div.onclick = (e) => openModal(card);
           grid.appendChild(div);
         });
       });
@@ -6983,106 +3893,6 @@
     // ... existing code ...
     // 在頁面載入、抽卡、許願設定等需要時呼叫 renderCardGrid();
     // ... existing code ...
-
-    // ========== SSR 特別顯示功能 ==========
-
-    function isSSRCard(card) {
-      return getCardRarity(card) === 'SSR';
-    }
-
-    function ensureGachaAnimationStyleOnce() {
-      if (document.getElementById('gachaAnimationDynamicStyle')) return;
-
-      const style = document.createElement('style');
-      style.id = 'gachaAnimationDynamicStyle';
-      style.textContent = `
-        @keyframes skipPulse {
-          0% {
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
-            transform: scale(1);
-          }
-          50% {
-            box-shadow: 0 6px 25px rgba(255, 107, 107, 0.7);
-            transform: scale(1.05);
-          }
-          100% {
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
-            transform: scale(1);
-          }
-        }
-
-        @keyframes fadeInOut {
-          0% { opacity: 0; }
-          20% { opacity: 1; }
-          80% { opacity: 1; }
-          100% { opacity: 0; }
-        }
-      `;
-      document.head.appendChild(style);
-    }
-
-    function getSSRResults(results) {
-      const cards = Array.isArray(results) ? results : (results ? [results] : []);
-      return cards.filter(card => isSSRCard(card));
-    }
-
-    // 取得卡片媒體網址（支援多種欄位名稱）
-    function getCardMediaUrl(card) {
-      const safeCard = card || {};
-
-      const candidates = [
-        safeCard.mp4,
-        safeCard.video,
-        safeCard.videoUrl,
-        safeCard.media,
-        safeCard.mediaUrl,
-        safeCard.animation,
-        safeCard.animationUrl,
-        safeCard.image,
-        safeCard.img,
-        safeCard.imageUrl,
-        safeCard.cover,
-        safeCard.coverUrl,
-        safeCard.picture,
-        safeCard.photo,
-        safeCard.thumbnail,
-        safeCard.thumb,
-        safeCard.poster,
-        safeCard.url,
-        safeCard.src,
-        safeCard.file,
-        safeCard.fileUrl
-      ];
-
-      const found = candidates.find(value => {
-        return typeof value === 'string' && value.trim();
-      });
-
-      return String(found || '').trim();
-    }
-
-    // 正常化媒體網址
-    function normalizeMediaUrl(url) {
-      const value = String(url || '').trim();
-      if (!value) return '';
-
-      if (
-        value.startsWith('http://') ||
-        value.startsWith('https://') ||
-        value.startsWith('data:') ||
-        value.startsWith('blob:') ||
-        value.startsWith('/') ||
-        value.startsWith('./') ||
-        value.startsWith('../')
-      ) {
-        return value;
-      }
-
-      return value;
-    }
-
-    // ========== END SSR 特別顯示功能 ==========
   </script>
-
 </body>
 </html>

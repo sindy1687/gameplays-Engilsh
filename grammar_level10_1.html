@@ -524,7 +524,6 @@
     </div>
 
     <script src="js/userData.js"></script>
-    <script src="js/stars.js"></script>
     <script src="js/grammarLevel10_1_questions.js"></script>
     <script src="js/starRewardSystem.js"></script>
     <script src="js/gemSystem.js"></script>
@@ -635,10 +634,8 @@
         // 載入用戶數據
         function loadUserData() {
             try {
-                // 優先使用 StarSystem 載入星星數據
-                if (typeof StarSystem !== 'undefined' && typeof StarSystem.getTotalStars === 'function') {
-                    gameState.stars = StarSystem.getTotalStars();
-                } else if (typeof LinkageSystem !== 'undefined' && LinkageSystem.stars) {
+                // 從LinkageSystem載入星星數據
+                if (typeof LinkageSystem !== 'undefined' && LinkageSystem.stars) {
                     gameState.stars = LinkageSystem.stars.get();
                 } else {
                     // 備用方案：從localStorage載入
@@ -669,10 +666,8 @@
         // 保存用戶數據
         function saveUserData() {
             try {
-                // 優先使用 StarSystem 保存星星數據
-                if (typeof StarSystem !== 'undefined' && typeof StarSystem.setTotalStars === 'function') {
-                    StarSystem.setTotalStars(gameState.stars);
-                } else if (typeof LinkageSystem !== 'undefined' && LinkageSystem.stars) {
+                // 同步星星數據到LinkageSystem
+                if (typeof LinkageSystem !== 'undefined' && LinkageSystem.stars) {
                     LinkageSystem.stars.set(gameState.stars);
                 } else {
                     // 備用方案：直接保存到localStorage

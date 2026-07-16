@@ -88,6 +88,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
+      position: relative;
     }
     
     header::before {
@@ -1529,6 +1530,10 @@
       box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
       pointer-events: auto; /* Modal 中可以操作 */
     }
+    #modal .card iframe.card-media::-webkit-media-controls {
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 8px;
+    }
 
     /* ====== 影片按鈕樣式 ====== */
     .video-button {
@@ -1583,170 +1588,12 @@
       object-fit: cover;
       object-position: center center;
       border-radius: 0;
-    }
-
-    /* 卡片上架教學區塊樣式 - 遊戲風 */
-    .card-listing-guide {
-      background: linear-gradient(135deg, rgba(30, 20, 60, 0.85) 0%, rgba(40, 30, 80, 0.75) 100%);
-      border: 2px solid transparent;
-      border-image: linear-gradient(135deg, #00ffff 0%, #a259ff 100%);
-      border-image-slice: 1;
-      border-radius: 22px;
-      padding: 25px 30px;
-      margin: 20px auto;
-      max-width: 1200px;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3), 0 0 30px rgba(162, 89, 255, 0.2), 0 8px 25px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
-    }
-
-    .guide-header {
-      text-align: center;
-      margin-bottom: 25px;
-    }
-
-    .guide-title {
-      color: var(--glow-gold);
-      font-size: 1.5rem;
-      margin: 0 0 8px 0;
-      font-weight: bold;
-      text-shadow: 0 0 15px rgba(255, 215, 0, 0.6), 0 0 30px rgba(255, 215, 0, 0.3);
-    }
-
-    .guide-subtitle {
-      color: #a0a0ff;
-      font-size: 0.95rem;
+      display: block;
+      background: #0f172a;
+      padding: 0;
       margin: 0;
-      font-weight: normal;
     }
-
-    .guide-steps-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-
-    .listing-guide-step {
-      background: linear-gradient(135deg, rgba(0, 255, 255, 0.08) 0%, rgba(162, 89, 255, 0.08) 100%);
-      border: 1px solid rgba(0, 255, 255, 0.2);
-      border-radius: 16px;
-      padding: 15px;
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      transition: all 0.3s ease;
-      cursor: default;
-    }
-
-    .listing-guide-step:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 5px 20px rgba(0, 255, 255, 0.2);
-      border-color: rgba(0, 255, 255, 0.4);
-    }
-
-    .step-number {
-      background: linear-gradient(135deg, #00ffff 0%, #a259ff 100%);
-      color: #000;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 0.9rem;
-      flex-shrink: 0;
-      box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
-    }
-
-    .step-content {
-      flex: 1;
-    }
-
-    .step-title {
-      color: #fff;
-      font-size: 1rem;
-      font-weight: bold;
-      margin-bottom: 4px;
-    }
-
-    .step-desc {
-      color: #ccc;
-      font-size: 0.85rem;
-      line-height: 1.4;
-    }
-
-    .listing-guide-note {
-      background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 215, 0, 0.1) 100%);
-      border: 1px solid rgba(255, 107, 107, 0.3);
-      border-radius: 12px;
-      padding: 12px 18px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .note-icon {
-      font-size: 1.2rem;
-    }
-
-    .note-text {
-      color: #ffcc99;
-      font-size: 0.9rem;
-    }
-
-    /* 手機版相容 */
-    @media (max-width: 768px) {
-      .card-listing-guide {
-        padding: 20px;
-        margin: 15px auto;
-        border-radius: 18px;
-      }
-
-      .guide-title {
-        font-size: 1.3rem;
-      }
-
-      .guide-subtitle {
-        font-size: 0.85rem;
-      }
-
-      .guide-steps-container {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-
-      .listing-guide-step {
-        padding: 12px;
-      }
-
-      .step-number {
-        width: 28px;
-        height: 28px;
-        font-size: 0.85rem;
-      }
-
-      .step-title {
-        font-size: 0.95rem;
-      }
-
-      .step-desc {
-        font-size: 0.8rem;
-      }
-
-      .listing-guide-note {
-        padding: 10px 14px;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
-      }
-
-      .note-text {
-        font-size: 0.85rem;
-      }
-    }
-
+    
     /* 新增：影片播放指示器 */
     .video-play-indicator {
       position: absolute;
@@ -2222,62 +2069,6 @@
     <div class="tab-container">
       <button class="tab-btn active" data-filter="all">全部卡片</button>
       <button class="tab-btn" data-filter="owned">📦 我的收藏</button>
-    </div>
-  </div>
-
-  <!-- 卡片上架教學 -->
-  <div class="card-listing-guide">
-    <div class="guide-header">
-      <h3 class="guide-title">🏷️ 卡片上架教學</h3>
-      <p class="guide-subtitle">學會把自己的卡片放到商城販售</p>
-    </div>
-    <div class="guide-steps-container">
-      <div class="listing-guide-step">
-        <div class="step-number">1</div>
-        <div class="step-content">
-          <div class="step-title">確認卡片</div>
-          <div class="step-desc">到卡片倉庫查看已擁有卡片</div>
-        </div>
-      </div>
-      <div class="listing-guide-step">
-        <div class="step-number">2</div>
-        <div class="step-content">
-          <div class="step-title">選擇卡片</div>
-          <div class="step-desc">選出想要販售的卡片</div>
-        </div>
-      </div>
-      <div class="listing-guide-step">
-        <div class="step-number">3</div>
-        <div class="step-content">
-          <div class="step-title">前往商城</div>
-          <div class="step-desc">到商城或交易市場點選上架</div>
-        </div>
-      </div>
-      <div class="listing-guide-step">
-        <div class="step-number">4</div>
-        <div class="step-content">
-          <div class="step-title">設定價格</div>
-          <div class="step-desc">輸入想販售的星星價格</div>
-        </div>
-      </div>
-      <div class="listing-guide-step">
-        <div class="step-number">5</div>
-        <div class="step-content">
-          <div class="step-title">確認上架</div>
-          <div class="step-desc">確認後其他玩家就能看到</div>
-        </div>
-      </div>
-      <div class="listing-guide-step">
-        <div class="step-number">6</div>
-        <div class="step-content">
-          <div class="step-title">成交更新</div>
-          <div class="step-desc">成交後星星與卡片狀態會同步更新</div>
-        </div>
-      </div>
-    </div>
-    <div class="listing-guide-note">
-      <span class="note-icon">⚠️</span>
-      <span class="note-text">提醒：上架前請確認價格，成交後卡片狀態會同步更新。</span>
     </div>
   </div>
 
@@ -3362,7 +3153,10 @@
       });
     }
 
-    // -------- 7. 新卡片系統相關函數 --------
+    // -------- 7. 碎片系統相關函數 --------
+    // 已刪除 toggleShardInfo 函數，因為不再需要切換說明顯示
+
+    // -------- 8. 新卡片系統相關函數 --------
     function clearNewCardMarkers() {
       // 清除最近獲得的卡片標記
       localStorage.removeItem('recentlyObtainedCards');
@@ -3668,6 +3462,14 @@
 
     console.log('allCards 長度:', window.allCards.length);
 
+    // 移除重複的初始化邏輯，避免多次呼叫 initializePage()
+    // if (!window.allCards || window.allCards.length === 0) {
+    //   console.error('警告：allCards 為空陣列，可能是 cards.js 載入失敗');
+    //   waitForAllCards();
+    // } else {
+    //   initializePage();
+    // }
+
     function initializePage() {
       // 初始化音效系統
       if (typeof SoundSystem !== 'undefined') {
@@ -3748,6 +3550,7 @@
       renderCards();
       updateCardStats(); // 確保星星數同步
       updateCategoryStats(); // 初始化分類統計
+      // updateShardStats(); // 已移除碎片系統
       
       // 設置 Modal 事件
       setupModalEvents();
@@ -3873,6 +3676,10 @@
       return card.rarity === '超稀有' || card.rarity === '節日限定';
     }
 
+    // 碎片轉換星星功能已移除（碎片系統已移除）
+
+
+
     // 顯示生日設定右鍵選單
     function showBirthdayContextMenu(e, card) {
       // 移除現有的右鍵選單
@@ -3931,6 +3738,14 @@
     });
 
     console.log('allCards 長度:', window.allCards.length);
+
+    // 移除重複的初始化邏輯
+    // if (!window.allCards || window.allCards.length === 0) {
+    //   console.error('警告：allCards 為空陣列，可能是 cards.js 載入失敗');
+    //   waitForAllCards();
+    // } else {
+    //   initializePage();
+    // }
 
     // 清理無效的 ownedCards 資料
     function cleanOwnedCards() {

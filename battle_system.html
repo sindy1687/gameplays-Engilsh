@@ -1700,13 +1700,13 @@
                 cardDiv.setAttribute('draggable', 'false');
             }
 
-            const imageSrc = card.image || 'img/shop boss.png';
+            const imageSrc = card.image || 'img/card_back.jpeg';
             let mediaContent = '';
             
             if (card.image && card.image.endsWith('.mp4')) {
                 mediaContent = `<video class="card-media" is-video src="${card.image}" muted preload="metadata" playsinline loop></video>`;
             } else {
-                mediaContent = `<img class="card-media" src="${imageSrc}" alt="${card.zh}" onerror="this.src='img/shop boss.png'">`;
+                mediaContent = `<img class="card-media" src="${imageSrc}" alt="${card.zh}" onerror="this.src='img/card_back.jpeg'">`;
             }
 
             // 稀有度標籤
@@ -1849,13 +1849,13 @@
                 
                 if (index < gameState.playerTeam.length) {
                     const card = gameState.playerTeam[index];
-                    const imageSrc = card.image || 'img/shop boss.png';
+                    const imageSrc = card.image || 'img/card_back.jpeg';
                     
                     let mediaContent = '';
                     if (card.image && card.image.endsWith('.mp4')) {
                         mediaContent = `<video class="card-media" is-video src="${card.image}" muted preload="metadata" playsinline loop></video>`;
                     } else {
-                        mediaContent = `<img class="card-media" src="${imageSrc}" alt="${card.zh}" onerror="this.src='img/shop boss.png'">`;
+                        mediaContent = `<img class="card-media" src="${imageSrc}" alt="${card.zh}" onerror="this.src='img/card_back.jpeg'">`;
                     }
                     // 稀有度標籤
                     const rarityLabel = getRarityLabel(card.rarity);
@@ -2198,13 +2198,13 @@
                 cardDiv.classList.add('being-attacked');
             }
             
-            const imageSrc = card.image || 'img/shop boss.png';
+            const imageSrc = card.image || 'img/card_back.jpeg';
             let mediaContent = '';
             
             if (card.image && card.image.endsWith('.mp4')) {
                 mediaContent = `<video class="card-media" is-video src="${card.image}" muted preload="metadata" playsinline loop></video>`;
             } else {
-                mediaContent = `<img class="card-media" src="${imageSrc}" alt="${card.zh}" onerror="this.src='img/shop boss.png'">`;
+                mediaContent = `<img class="card-media" src="${imageSrc}" alt="${card.zh}" onerror="this.src='img/card_back.jpeg'">`;
             }
             // 稀有度標籤
             const rarityLabel = getRarityLabel(card.rarity);
@@ -3506,7 +3506,7 @@ ${card.zh}
                         <div style="text-align:center; margin-bottom:20px;">
                             ${card.image && card.image.endsWith('.mp4') ? 
                                 `<video src="${card.image}" style="width:200px;height:280px;object-fit:cover;border-radius:12px;box-shadow:0 0 20px #00ffff99;" muted autoplay loop playsinline></video>` :
-                                `<img src="${card.image || 'img/shop boss.png'}" alt="${card.zh}" style="width:200px;height:280px;object-fit:cover;border-radius:12px;box-shadow:0 0 20px #00ffff99;">`
+                                `<img src="${card.image || 'img/card_back.jpeg'}" alt="${card.zh}" style="width:200px;height:280px;object-fit:cover;border-radius:12px;box-shadow:0 0 20px #00ffff99;">`
                             }
                         </div>
                         
@@ -3641,7 +3641,7 @@ ${card.zh}
             if (card.image && card.image.endsWith('.mp4')) {
                 mediaDiv.innerHTML = `<video src="${card.image}" style="width:160px;height:220px;object-fit:cover;border-radius:12px;box-shadow:0 0 12px #00ffff99;" muted autoplay loop playsinline></video>`;
             } else {
-                const imgSrc = card.image || 'img/shop boss.png';
+                const imgSrc = card.image || 'img/card_back.jpeg';
                 mediaDiv.innerHTML = `<img src="${imgSrc}" alt="${card.zh}" style="width:160px;height:220px;object-fit:cover;border-radius:12px;box-shadow:0 0 12px #00ffff99;">`;
             }
             modal.style.display = 'flex';

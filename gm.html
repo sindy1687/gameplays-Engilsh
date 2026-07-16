@@ -87,7 +87,6 @@
         <button type="button" data-gm-tab="cards">卡片</button>
         <button type="button" data-gm-tab="market">商城交易</button>
         <button type="button" data-gm-tab="gacha">抽卡</button>
-        <button type="button" data-gm-tab="tasks">每日任務</button>
         <button type="button" data-gm-tab="settings">設定</button>
         <button type="button" data-gm-tab="backup">備份</button>
         <button type="button" data-gm-tab="inspector">資料檢查器</button>
@@ -257,25 +256,6 @@
         </div>
 
         <div id="gmGachaList" class="gm-list"></div>
-
-        <h3 style="margin-top: 30px;">系列抽卡池管理</h3>
-        <p>管理系列抽卡券與系列抽卡紀錄。</p>
-
-        <div class="gm-filter-row">
-          <select id="gmSeriesSelect">
-            <option value="">請選擇系列</option>
-          </select>
-          <input type="number" id="gmSeriesTicketInput" placeholder="抽卡券數量" min="0">
-          <button type="button" id="gmSetSeriesTicketBtn">設定抽卡券</button>
-          <button type="button" id="gmAddSeriesTicketBtn">+1 抽卡券</button>
-        </div>
-
-        <div class="gm-card-bulk-actions">
-          <button type="button" id="gmClearSeriesGachaBtn" class="danger">清除系列抽卡紀錄</button>
-          <button type="button" id="gmRefreshSeriesBtn">重新載入系列</button>
-        </div>
-
-        <div id="gmSeriesList" class="gm-list"></div>
       </section>
 
       <section class="gm-tab-panel" id="gmTabSettings" hidden>
@@ -340,8 +320,6 @@
   </main>
 
   <script src="js/cards.js"></script>
-  <script src="js/stars.js"></script>
-  <script src="js/seriesGacha.js"></script>
   <script src="js/gm.js"></script>
 </body>
 </html>

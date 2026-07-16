@@ -60,7 +60,6 @@
       margin: 0;
       font-size: 2.5rem;
       background: linear-gradient(45deg, var(--glow-cyan), var(--glow-magenta), var(--glow-gold));
-      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
@@ -186,145 +185,342 @@
 
     .history li:last-child { border-bottom: none; }
 
-    .exchange-rate-badge {
-      padding: 8px 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 215, 0, 0.3);
-      background: rgba(255, 215, 0, 0.1);
-      color: #cbd5e1;
-      font-size: 0.85rem;
-      text-align: center;
+    .gacha-machine {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      margin: 12px auto 0;
+      border-radius: 18px;
+      border: 1px solid rgba(0,255,255,.22);
+      background: linear-gradient(180deg, rgba(225, 245, 252, 0.22), rgba(10,20,40,.25));
+      box-shadow: 0 0 22px rgba(0,255,255,.14);
+      overflow: hidden;
+      cursor: pointer;
+      user-select: none;
+      transform: translateZ(0);
     }
 
-    /* 機率顯示樣式 */
-    .probability-display {
-      margin-top: 12px;
+    .gacha-machine::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,0));
+    }
+
+    .gacha-machine.locked {
+      opacity: 0.6;
+      cursor: not-allowed;
+      filter: grayscale(0.35);
+    }
+
+    .gacha-machine:focus-visible {
+      outline: 2px solid rgba(0,255,255,.55);
+      outline-offset: 3px;
+    }
+
+    .gacha-top {
+      padding: 14px 14px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .gacha-cabinet {
+      margin: 0 14px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(10, 20, 40, 0.20);
+      display: grid;
+      grid-template-columns: 1fr 155px;
+      gap: 12px;
       padding: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      background: rgba(0, 0, 0, 0.2);
     }
 
-    .probability-title {
-      font-weight: 700;
-      color: var(--glow-cyan);
-      margin-bottom: 10px;
+    .gacha-panel {
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.12);
+      padding: 10px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .gacha-slot {
+      position: relative;
+      height: 34px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.10));
+      overflow: hidden;
+    }
+
+    .gacha-slot::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 72px;
+      height: 10px;
+      transform: translate(-50%, -50%);
+      border-radius: 999px;
+      background: rgba(0,0,0,.30);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+    }
+
+    .gacha-knob {
+      width: 86px;
+      height: 86px;
+      border-radius: 999px;
+      margin: 0 auto;
+      border: 1px solid rgba(255,255,255,.16);
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), rgba(120, 220, 235, .22));
+      box-shadow: 0 0 18px rgba(0,255,255,.10);
+      position: relative;
+      transform: translateZ(0);
+    }
+
+    .gacha-knob::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 12px;
+      width: 8px;
+      height: 18px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: rgba(0,0,0,.28);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.10);
+    }
+
+    .gacha-machine.phase-spin .gacha-knob {
+      animation: gachaKnobTurn 1.05s ease-in-out 1;
+    }
+
+    @keyframes gachaKnobTurn {
+      0% { transform: rotate(0deg); }
+      40% { transform: rotate(70deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    .gacha-base {
+      margin: 0 14px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(10, 20, 40, 0.22);
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .gacha-base-left {
+      color: #cbd5e1;
       font-size: 0.9rem;
     }
 
-    .probability-list {
+    .gacha-stars {
       display: flex;
-      flex-direction: column;
-      gap: 6px;
+      gap: 8px;
+      align-items: center;
+      opacity: 0.8;
     }
 
-    .probability-item {
+    .gacha-star {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.60);
+      box-shadow: 0 0 10px rgba(255,255,255,.22);
+    }
+
+    .gacha-title {
+      font-weight: 900;
+      letter-spacing: 0.4px;
+      color: #fff;
+      text-shadow: 0 0 14px rgba(0,255,255,.18);
+    }
+
+    .gacha-sub {
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      margin-top: 2px;
+    }
+
+    .gacha-badge {
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      font-family: 'Roboto Mono', monospace;
+      color: #e5e7eb;
+      white-space: nowrap;
+    }
+
+    .gacha-window {
+      position: relative;
+      height: 150px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.22), rgba(0,0,0,.12));
+      overflow: hidden;
+    }
+
+    .gacha-bubbles {
+      position: absolute;
+      inset: -20px;
+      opacity: 0.75;
+      background:
+        radial-gradient(circle at 15% 25%, rgba(255,190,220,.45) 0 18px, transparent 19px),
+        radial-gradient(circle at 35% 55%, rgba(190,255,235,.40) 0 20px, transparent 21px),
+        radial-gradient(circle at 65% 30%, rgba(210,210,255,.40) 0 22px, transparent 23px),
+        radial-gradient(circle at 80% 68%, rgba(255,235,190,.35) 0 18px, transparent 19px),
+        radial-gradient(circle at 55% 78%, rgba(255,210,255,.30) 0 16px, transparent 17px);
+      filter: blur(0.2px);
+      transform: translateZ(0);
+    }
+
+    .gacha-capsule {
+      position: absolute;
+      left: 50%;
+      top: 56%;
+      width: 92px;
+      height: 56px;
+      transform: translate(-50%, -50%);
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: linear-gradient(90deg, rgba(255,255,255,.62), rgba(255,190,220,.46));
+      box-shadow: 0 0 18px rgba(255,255,255,.16);
+      overflow: hidden;
+    }
+
+    .gacha-capsule::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 2px;
+      height: 100%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,.10);
+    }
+
+    .gacha-capsule.open {
+      background: linear-gradient(90deg, rgba(255,255,255,.68), rgba(200,255,240,.46));
+    }
+
+    .gacha-controls {
+      padding: 0 14px 14px;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 10px;
-      font-size: 0.85rem;
+    }
+
+    .gacha-hint {
       color: #cbd5e1;
+      font-size: 0.9rem;
     }
 
-    .rarity-badge {
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-weight: 900;
-      font-size: 0.75rem;
-      min-width: 30px;
-      text-align: center;
-    }
-
-    .rarity-badge.UR {
-      background: linear-gradient(135deg, #ff6b6b, #ffd93d);
-      color: #fff;
-      box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
-    }
-
-    .rarity-badge.SSR {
-      background: linear-gradient(135deg, #a855f7, #ec4899);
-      color: #fff;
-      box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
-    }
-
-    .rarity-badge.SR {
-      background: linear-gradient(135deg, #3b82f6, #06b6d4);
-      color: #fff;
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-    }
-
-    .rarity-badge.R {
-      background: linear-gradient(135deg, #22c55e, #84cc16);
-      color: #fff;
-      box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
-    }
-
-    .rarity-badge.N {
-      background: linear-gradient(135deg, #6b7280, #9ca3af);
-      color: #fff;
-      box-shadow: 0 0 10px rgba(107, 114, 128, 0.5);
-    }
-
-    .rarity-name {
-      flex: 1;
-    }
-
-    .rarity-rate {
-      font-weight: 700;
-      color: var(--glow-gold);
-    }
-
-    /* Toast 訊息樣式 */
-    .toast-container {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 10000;
-    }
-
-    .toast {
-      padding: 16px 24px;
+    .gacha-action {
+      padding: 10px 12px;
       border-radius: 12px;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      background: rgba(10, 20, 40, 0.95);
+      border: 1px solid rgba(0,255,255,.30);
+      background: rgba(0,255,255,.10);
       color: #fff;
-      font-weight: 700;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(10px);
-      animation: toastSlideIn 0.3s ease-out;
-      margin-bottom: 10px;
-      min-width: 280px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s ease;
+      box-shadow: 0 0 18px rgba(0,255,255,.14);
     }
 
-    .toast.success {
-      border-color: var(--glow-green);
-      box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+    .gacha-action:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
     }
 
-    .toast.error {
-      border-color: var(--glow-red);
-      box-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+    .gacha-action:not(:disabled):hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 26px rgba(0,255,255,.18);
     }
 
-    .toast.warning {
-      border-color: var(--glow-gold);
-      box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+    .gacha-sparkle {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      background:
+        radial-gradient(circle at 20% 25%, rgba(255,255,255,.45) 0 12px, transparent 13px),
+        radial-gradient(circle at 80% 35%, rgba(255,255,255,.35) 0 10px, transparent 11px),
+        radial-gradient(circle at 55% 70%, rgba(255,255,255,.30) 0 14px, transparent 15px);
+      filter: blur(0.2px);
     }
 
-    .toast.info {
-      border-color: var(--glow-cyan);
-      box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+    .gacha-machine.phase-sparkle .gacha-sparkle {
+      animation: gachaSparkle 0.9s ease-in-out 1;
     }
 
-    @keyframes toastSlideIn {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
+    @keyframes gachaSparkle {
+      0% { opacity: 0; }
+      35% { opacity: 0.9; }
+      100% { opacity: 0; }
+    }
+
+    .gacha-coin {
+      position: absolute;
+      right: 64px;
+      top: -20px;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.78), rgba(255,215,0,.72));
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 0 14px rgba(255,215,0,.25);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .gacha-machine.phase-coin .gacha-coin {
+      animation: gachaCoinDrop 0.8s cubic-bezier(.2,.8,.2,1) 1;
+    }
+
+    @keyframes gachaCoinDrop {
+      0% { transform: translateY(-10px) rotate(0deg); opacity: 0; }
+      15% { opacity: 1; }
+      100% { transform: translateY(220px) rotate(140deg); opacity: 0; }
+    }
+
+    .gacha-machine.phase-spin .gacha-capsule {
+      animation: gachaCapsuleSpin 1.05s ease-in-out 1;
+    }
+
+    @keyframes gachaCapsuleSpin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      50% { transform: translate(-50%, -50%) rotate(40deg); }
+      100% { transform: translate(-50%, -50%) rotate(0deg); }
+    }
+
+    .gacha-burst {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      background: radial-gradient(circle at 50% 55%, rgba(255,255,255,.55), transparent 60%);
+    }
+
+    .gacha-machine.phase-open .gacha-burst {
+      animation: gachaBurst 1.2s ease-out 1;
+    }
+
+    @keyframes gachaBurst {
+      0% { opacity: 0; transform: scale(0.98); }
+      35% { opacity: 0.75; transform: scale(1.02); }
+      100% { opacity: 0; transform: scale(1.06); }
     }
 
     .modal-overlay {
@@ -346,6 +542,56 @@
       box-shadow: 0 0 28px rgba(0,255,255,.12);
       overflow: hidden;
       animation: modalIn .18s ease-out 1;
+    }
+
+    .modal.jackpot {
+      box-shadow: 0 0 42px rgba(255, 215, 0, .18), 0 0 28px rgba(0,255,255,.12);
+      border-color: rgba(255, 215, 0, .22);
+      animation: modalIn .18s ease-out 1, jackpotPulse 1.6s ease-in-out 1;
+    }
+
+    @keyframes jackpotPulse {
+      0% { transform: translateY(0) scale(1); }
+      40% { transform: translateY(-1px) scale(1.01); }
+      100% { transform: translateY(0) scale(1); }
+    }
+
+    .jackpot-confetti {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(255,215,0,.30) 0 6px, transparent 7px),
+        radial-gradient(circle at 32% 26%, rgba(0,255,255,.22) 0 5px, transparent 6px),
+        radial-gradient(circle at 70% 20%, rgba(255,120,200,.20) 0 6px, transparent 7px),
+        radial-gradient(circle at 82% 34%, rgba(255,255,255,.22) 0 4px, transparent 5px),
+        radial-gradient(circle at 22% 62%, rgba(190,255,235,.18) 0 6px, transparent 7px),
+        radial-gradient(circle at 65% 70%, rgba(255,235,190,.18) 0 5px, transparent 6px);
+      filter: blur(0.2px);
+    }
+
+    .modal.jackpot .jackpot-confetti {
+      animation: confettiFloat 1.8s ease-out 1;
+    }
+
+    @keyframes confettiFloat {
+      0% { opacity: 0; transform: translateY(-6px); }
+      20% { opacity: 0.9; }
+      100% { opacity: 0; transform: translateY(10px); }
+    }
+
+    .jackpot-badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,215,0,.28);
+      background: rgba(255,215,0,.10);
+      color: #fff;
+      font-weight: 900;
+      letter-spacing: 0.4px;
+      text-shadow: 0 0 14px rgba(255,215,0,.18);
+      margin-bottom: 10px;
     }
 
     @keyframes modalIn {
@@ -693,6 +939,18 @@
       opacity: 0.6;
     }
 
+    .game-button.locked {
+      background: linear-gradient(45deg, #666, #999);
+      color: #ccc;
+      cursor: not-allowed;
+      opacity: 0.8;
+    }
+
+    .game-button.locked:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
     /* 嵌入式遊戲容器樣式 */
     .embedded-game-container {
       position: fixed;
@@ -858,10 +1116,6 @@
       animation: starsUpdate 0.5s ease-in-out;
     }
 
-    .large-modal {
-      width: min(860px, 96vw);
-    }
-
     @keyframes starsUpdate {
       0% { transform: scale(1); }
       50% { transform: scale(1.05); box-shadow: 0 0 50px rgba(255, 215, 0, 0.6); }
@@ -903,11 +1157,11 @@
       .lobby-grid {
         grid-template-columns: 1fr;
       }
-
+      
       .header h1 {
         font-size: 2rem;
       }
-
+      
       .container {
         padding: 10px;
       }
@@ -916,1149 +1170,494 @@
         padding: 20px;
       }
     }
-
-    /* Adventure Modal Styles */
-    .adventure-modal-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      display: grid;
-      place-items: center;
-      padding: 18px;
-      background: rgba(0, 0, 0, 0.68);
-      backdrop-filter: blur(8px);
-    }
-
-    .adventure-modal {
-      width: min(440px, 94vw);
-      padding: 26px;
-      border-radius: 24px;
-      text-align: center;
-      color: #ffffff;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(0, 255, 255, 0.18), transparent 34%),
-        linear-gradient(135deg, rgba(8, 18, 42, 0.96), rgba(30, 18, 64, 0.96));
-      border: 1px solid rgba(0, 255, 255, 0.35);
-      box-shadow:
-        0 0 38px rgba(0, 255, 255, 0.22),
-        inset 0 0 24px rgba(255, 255, 255, 0.05);
-    }
-
-    .adventure-icon {
-      font-size: 3.4rem;
-      margin-bottom: 10px;
-      filter: drop-shadow(0 0 18px rgba(0, 255, 255, 0.45));
-    }
-
-    .adventure-modal h2 {
-      margin: 0;
-      font-size: 2rem;
-      color: #00ffff;
-      text-shadow: 0 0 14px rgba(0, 255, 255, 0.35);
-    }
-
-    .adventure-modal p {
-      margin: 14px 0 20px;
-      color: #e5e7eb;
-      line-height: 1.7;
-    }
-
-    .adventure-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .adventure-primary-btn,
-    .adventure-secondary-btn {
-      min-height: 46px;
-      border-radius: 14px;
-      font-weight: 900;
-      cursor: pointer;
-      border: none;
-    }
-
-    .adventure-primary-btn {
-      color: #06101f;
-      background: linear-gradient(135deg, #00ffff, #ffd700);
-      box-shadow: 0 0 22px rgba(0, 255, 255, 0.22);
-    }
-
-    .adventure-secondary-btn {
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.10);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-    }
-
-    @media (max-width: 520px) {
-      .adventure-actions {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* New Game Center Layout Styles */
-    .game-center-page {
-      width: min(1180px, 100%);
-      margin: 0 auto;
-      padding: 80px 18px 32px;
-    }
-
-    .hero-section {
-      display: grid;
-      grid-template-columns: 1.4fr 0.8fr;
-      gap: 20px;
-      align-items: center;
-      padding: 28px;
-      border-radius: 28px;
-      background:
-        radial-gradient(circle at 15% 20%, rgba(0,255,255,0.18), transparent 34%),
-        radial-gradient(circle at 85% 30%, rgba(162,89,255,0.22), transparent 35%),
-        linear-gradient(135deg, rgba(10,20,40,0.95), rgba(26,20,58,0.92));
-      border: 1px solid rgba(0,255,255,0.28);
-      box-shadow: 0 0 36px rgba(0,255,255,0.14);
-    }
-
-    .hero-kicker,
-    .section-kicker {
-      color: var(--glow-cyan);
-      font-weight: 900;
-      letter-spacing: 2px;
-      font-size: 0.82rem;
-      margin-bottom: 8px;
-    }
-
-    .hero-section h1 {
-      font-size: clamp(2rem, 5vw, 4rem);
-      margin: 0;
-      background: linear-gradient(45deg, var(--glow-cyan), var(--glow-magenta), var(--glow-gold));
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero-section p {
-      color: #cbd5e1;
-      line-height: 1.7;
-      margin-top: 12px;
-      font-size: 1.05rem;
-    }
-
-    .hero-badges {
-      display: grid;
-      gap: 14px;
-    }
-
-    .hero-badge {
-      padding: 18px;
-      border-radius: 22px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.12);
-      text-align: center;
-    }
-
-    .hero-badge span {
-      font-size: 2rem;
-    }
-
-    .hero-badge strong {
-      display: block;
-      margin-top: 6px;
-      font-size: 2rem;
-      color: var(--glow-gold);
-    }
-
-    .hero-badge small {
-      color: #cbd5e1;
-    }
-
-    .wallet-section {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-top: 18px;
-    }
-
-    .wallet-card {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      padding: 16px;
-      border-radius: 20px;
-      background: rgba(10,20,40,0.82);
-      border: 1px solid rgba(0,255,255,0.18);
-      box-shadow: 0 0 22px rgba(0,255,255,0.08);
-    }
-
-    .wallet-icon {
-      width: 48px;
-      height: 48px;
-      display: grid;
-      place-items: center;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.08);
-      font-size: 1.6rem;
-    }
-
-    .wallet-label {
-      color: #cbd5e1;
-      font-size: 0.9rem;
-    }
-
-    .wallet-value {
-      color: var(--glow-gold);
-      font-size: 1.5rem;
-      font-weight: 900;
-      margin-top: 4px;
-    }
-
-    .exchange-section,
-    .games-section,
-    .guide-section {
-      margin-top: 28px;
-      padding: 22px;
-      border-radius: 26px;
-      background: rgba(10,20,40,0.82);
-      border: 1px solid rgba(255,255,255,0.10);
-      box-shadow: 0 0 28px rgba(0,255,255,0.08);
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: end;
-      margin-bottom: 18px;
-    }
-
-    .section-header h2 {
-      margin: 0;
-      color: #ffffff;
-      font-size: 1.8rem;
-    }
-
-    .section-header p {
-      margin: 8px 0 0;
-      color: #cbd5e1;
-    }
-
-    .section-pill {
-      padding: 10px 14px;
-      border-radius: 999px;
-      color: #06101f;
-      background: linear-gradient(135deg, var(--glow-cyan), var(--glow-gold));
-      font-weight: 900;
-      white-space: nowrap;
-    }
-
-    .exchange-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .exchange-card {
-      padding: 18px;
-      border-radius: 22px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.12);
-    }
-
-    .exchange-card-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .exchange-icon {
-      width: 52px;
-      height: 52px;
-      display: grid;
-      place-items: center;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.08);
-      font-size: 1.4rem;
-    }
-
-    .exchange-card h3 {
-      margin: 0;
-      color: #ffffff;
-    }
-
-    .exchange-rate {
-      margin: 14px 0;
-      padding: 10px 12px;
-      border-radius: 14px;
-      color: #ffd700;
-      background: rgba(255,215,0,0.10);
-      border: 1px solid rgba(255,215,0,0.25);
-      font-weight: 900;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .exchange-rate-icon {
-      flex-shrink: 0;
-      font-size: 1.1rem;
-      line-height: 1;
-    }
-
-    .exchange-rate-text {
-      flex: 1;
-      line-height: 1.2;
-    }
-
-    .exchange-input {
-      width: 100%;
-      padding: 13px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(0,255,255,0.30);
-      background: rgba(0,0,0,0.22);
-      color: #ffffff;
-      font-size: 1rem;
-      outline: none;
-    }
-
-    .exchange-preview {
-      margin: 12px 0;
-      color: #cbd5e1;
-    }
-
-    .exchange-btn,
-    .game-start-btn {
-      width: 100%;
-      min-height: 46px;
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(135deg, var(--glow-cyan), var(--glow-magenta));
-      color: #06101f;
-      font-weight: 900;
-      cursor: pointer;
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
-    }
-
-    .exchange-btn:not(:disabled):hover,
-    .game-start-btn:not(:disabled):hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 24px rgba(0,255,255,0.24);
-    }
-
-    .exchange-btn:disabled,
-    .game-start-btn:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-      filter: grayscale(0.6);
-    }
-
-    .games-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-    }
-
-    .game-card {
-      display: flex;
-      flex-direction: column;
-      min-height: 240px;
-      padding: 20px;
-      border-radius: 22px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(0,255,255,0.16);
-      box-shadow: 0 0 22px rgba(0,255,255,0.08);
-      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
-      text-align: center;
-    }
-
-    .game-card:not(.locked):hover {
-      transform: translateY(-6px);
-      border-color: rgba(0,255,255,0.42);
-      box-shadow: 0 0 30px rgba(0,255,255,0.16);
-    }
-
-    .game-card:not(.locked):hover .game-icon {
-      transform: scale(1.08);
-    }
-
-    .game-card.locked {
-      opacity: 0.68;
-      border-color: rgba(255,107,107,0.35);
-    }
-
-    .game-card.locked:hover {
-      transform: none;
-    }
-
-    .game-card.locked:hover .game-icon {
-      transform: none;
-    }
-
-    .game-icon {
-      width: 80px;
-      height: 80px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 20px;
-      font-size: 2.5rem;
-      background: rgba(255,255,255,0.08);
-      margin: 0 auto 18px;
-      transition: transform 0.18s ease;
-    }
-
-    .game-icon img {
-      width: auto;
-      height: auto;
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
-
-    .game-status {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      color: #ffffff;
-      background: rgba(255,107,107,0.20);
-      border: 1px solid rgba(255,107,107,0.35);
-      font-size: 0.82rem;
-      font-weight: 900;
-    }
-
-    .game-status.available {
-      background: rgba(0,255,136,0.14);
-      border-color: rgba(0,255,136,0.30);
-    }
-
-    .game-card h3 {
-      margin: 0 0 8px;
-      color: var(--glow-cyan);
-      font-size: 1.4rem;
-      font-weight: 700;
-      line-height: 1.3;
-      text-align: center;
-    }
-
-    .game-subtitle {
-      color: var(--glow-gold);
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 8px;
-      font-size: 0.95rem;
-      opacity: 0.9;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .game-description {
-      color: #cbd5e1;
-      line-height: 1.5;
-      margin: 0 0 12px;
-      font-size: 0.9rem;
-      text-align: center;
-      flex: 1;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .game-features {
-      display: grid;
-      gap: 6px;
-      margin: 0 0 16px;
-    }
-
-    .game-features div {
-      color: #e5e7eb;
-      font-size: 0.85rem;
-      text-align: center;
-    }
-
-    .game-features div::before {
-      content: '✓';
-      color: var(--glow-green);
-      margin-right: 6px;
-      font-weight: 900;
-    }
-
-    .game-footer {
-      margin-top: auto;
-      display: grid;
-      gap: 10px;
-    }
-
-    .game-cost {
-      padding: 8px 12px;
-      border-radius: 12px;
-      text-align: center;
-      color: #ffd700;
-      background: rgba(255,215,0,0.10);
-      border: 1px solid rgba(255,215,0,0.24);
-      font-weight: 900;
-      font-size: 0.9rem;
-    }
-
-    .guide-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
-
-    .guide-card {
-      padding: 16px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.12);
-    }
-
-    .guide-number {
-      width: 42px;
-      height: 42px;
-      display: grid;
-      place-items: center;
-      border-radius: 999px;
-      color: #06101f;
-      background: linear-gradient(135deg, var(--glow-cyan), var(--glow-gold));
-      font-weight: 900;
-    }
-
-    .guide-card h3 {
-      color: #ffffff;
-      margin: 12px 0 8px;
-    }
-
-    .guide-card p {
-      color: #cbd5e1;
-      line-height: 1.6;
-    }
-
-    @media (max-width: 900px) {
-      .hero-section {
-        grid-template-columns: 1fr;
-      }
-
-      .wallet-section {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .exchange-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .guide-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .section-header {
-        align-items: start;
-        flex-direction: column;
-      }
-
-      .section-pill {
-        width: 100%;
-        text-align: center;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .games-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-
-      .game-icon {
-        width: 64px;
-        height: 64px;
-        font-size: 2rem;
-        margin-bottom: 14px;
-      }
-
-      .game-card h3 {
-        font-size: 1.2rem;
-      }
-
-      .game-subtitle {
-        font-size: 0.9rem;
-      }
-
-      .game-description {
-        font-size: 0.85rem;
-      }
-    }
-
-    @media (max-width: 520px) {
-      .game-center-page {
-        padding: 72px 12px 24px;
-      }
-
-      .hero-section,
-      .exchange-section,
-      .games-section,
-      .guide-section {
-        padding: 16px;
-        border-radius: 20px;
-      }
-
-      .wallet-section {
-        grid-template-columns: 1fr;
-      }
-
-      .games-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .game-card {
-        min-height: auto;
-      }
-
-      .back-button {
-        top: 12px;
-        left: 12px;
-        padding: 9px 12px;
-      }
-    }
-
-    body {
-      overflow-x: hidden;
-    }
   </style>
 </head>
 <body>
   <div id="app">
     <button class="back-button" @click="goHome">
-      🏠 返回首頁
+      <i class="material-icons">home</i> 返回首頁
     </button>
 
-    <!-- Toast 訊息 -->
-    <div class="toast-container">
-      <div class="toast" :class="toastType" v-if="showToast">
-        {{ toastMessage }}
+         <div class="header">
+                     <h1>🎮 八大遊戲中心</h1>
+     </div>
+
+    <div class="container">
+      <div class="modal-overlay" v-if="showLotteryModal" @click.self="closeLotteryModal" @keydown.esc.window="closeLotteryModal">
+        <div class="modal" :class="{ jackpot: jackpotActive }" role="dialog" aria-modal="true" aria-label="抽獎結果">
+          <div class="jackpot-confetti"></div>
+          <div class="modal-header">
+            <div class="modal-title">🎁 抽獎結果清單</div>
+            <button class="modal-close" @click="closeLotteryModal" aria-label="關閉">✕</button>
+          </div>
+          <div class="modal-body">
+            <div class="jackpot-badge" v-if="jackpotActive">🏆 大獎！{{ jackpotText }}</div>
+            <div class="reward-hero">
+              <div class="reward-hero-title">本次獲得</div>
+              <div class="modal-result">{{ lotteryModalText }}</div>
+              <div class="hint" style="margin:6px 0 0;" v-if="lotteryModalBonusText">額外獎勵：<b style="color: var(--glow-gold);">{{ lotteryModalBonusText }}</b></div>
+              <div class="hint" style="margin:8px 0 0;">消耗：🪙 {{ lotteryCost }}</div>
+            </div>
+
+            <div class="hint" style="margin:0 0 8px;">最近紀錄</div>
+            <ul class="reward-list">
+              <li class="reward-item" v-for="(row, idx) in lotteryHistoryParsed.slice(0, 10)" :key="idx" :class="{ main: idx===0 }">
+                <div>
+                  <div class="reward-text">{{ row.text }}</div>
+                  <div class="reward-meta">{{ row.time }}</div>
+                </div>
+                <div class="reward-pill">🪙 {{ row.cost }}</div>
+              </li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <div class="modal-footer-left">
+              <div>🎁 寶箱：{{ lotteryChestCount }}</div>
+              <button class="mini-btn" @click="openChest" :disabled="lotteryChestCount<=0">開啟寶箱</button>
+            </div>
+            <button class="mini-btn" @click="closeLotteryModal">知道了</button>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <main class="game-center-page">
-      <section class="hero-section">
-        <div class="hero-content">
-          <div class="hero-kicker">GAME ARCADE</div>
-          <h1>🎮 星幣遊戲中心</h1>
-          <p>用星星兌換金幣，選擇喜歡的遊戲開始挑戰。</p>
-        </div>
+      <!-- 歡迎訊息 -->
+      <div class="welcome-message">
+        <div class="welcome-title">歡迎來到遊戲中心！</div>
+                               <div class="welcome-text">
+            這裡有我們精心設計的八個精彩遊戲，每個遊戲都有獨特的玩法和挑戰。
+            選擇你喜歡的遊戲開始冒險吧！
+              </div>
+      </div>
 
-        <div class="hero-badges">
-          <div class="hero-badge star">
-            <span>⭐</span>
-            <strong>{{ totalStars }}</strong>
-            <small>星星</small>
+             <!-- 星星顯示區域 -->
+       <div class="stars-display" :class="{ 'stars-update': starsAnimation }">
+         <div class="stars-title">你的星星</div>
+         <div class="stars-count">{{ totalStars }}</div>
+         <div class="stars-icon">⭐</div>
+         <div class="stars-subtitle">收集星星，解鎖更多遊戲！</div>
+         
+         <!-- 星星詳細資訊 -->
+         <div style="margin-top: 15px; padding: 10px; background: rgba(255, 215, 0, 0.1); border-radius: 8px;">
+           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem;">
+             <div>
+               <div style="color: var(--glow-green);">獲得: {{ totalStarsEarned }}</div>
+               <div style="color: var(--glow-red);">花費: {{ starsSpent }}</div>
+             </div>
+             <div>
+               <div style="color: var(--glow-cyan);">等級: {{ playerLevel }}</div>
+               <div style="color: var(--glow-gold);">進度: {{ levelProgressPercentage }}%</div>
+             </div>
+           </div>
+         </div>
+         
+                   <div style="color: #999; font-size: 0.8rem; margin-top: 5px;">💡 提示：遊玩其他遊戲可以獲得星星</div>
+          <div style="color: var(--glow-cyan); font-size: 0.8rem; margin-top: 3px;">🔄 星星系統已與首頁同步</div>
+       </div>
+
+      <!-- 統計面板 -->
+      <div class="stats-panel">
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-value">{{ availableGames }}/{{ totalGames }}</div>
+            <div class="stat-label">可用遊戲</div>
           </div>
-
-          <div class="hero-badge coin">
-            <span>🪙</span>
-            <strong>{{ goldCoins }}</strong>
-            <small>金幣</small>
+          <div class="stat-item">
+            <div class="stat-value">{{ completedGames }}</div>
+            <div class="stat-label">已完成</div>
           </div>
-        </div>
-      </section>
-
-      <section class="wallet-section">
-        <div class="wallet-card">
-          <div class="wallet-icon">⭐</div>
-          <div>
-            <div class="wallet-label">目前星星</div>
-            <div class="wallet-value">{{ totalStars }}</div>
+          <div class="stat-item" style="background: rgba(255, 215, 0, 0.15); border-color: var(--glow-gold);">
+            <div class="stat-value" style="color: var(--glow-gold); text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">⭐ {{ totalStars }}</div>
+            <div class="stat-label" style="color: var(--glow-gold);">總星星</div>
           </div>
-        </div>
-
-        <div class="wallet-card">
-          <div class="wallet-icon">🪙</div>
-          <div>
-            <div class="wallet-label">目前金幣</div>
-            <div class="wallet-value">{{ goldCoins }}</div>
+          <div class="stat-item" style="background: rgba(255, 215, 0, 0.10); border-color: var(--glow-cyan);">
+            <div class="stat-value" style="color: var(--glow-cyan); text-shadow: 0 0 10px rgba(0, 255, 255, 0.35);">🪙 {{ goldCoins }}</div>
+            <div class="stat-label" style="color: var(--glow-cyan);">金幣</div>
           </div>
-        </div>
-
-        <div class="wallet-card">
-          <div class="wallet-icon">🏆</div>
-          <div>
-            <div class="wallet-label">玩家等級</div>
-            <div class="wallet-value">{{ playerLevel }}</div>
+          <div class="stat-item">
+            <div class="stat-value">{{ playerLevel }}</div>
+            <div class="stat-label">玩家等級</div>
           </div>
-        </div>
-
-        <div class="wallet-card">
-          <div class="wallet-icon">📊</div>
-          <div>
-            <div class="wallet-label">完成率</div>
-            <div class="wallet-value">{{ completionRate }}%</div>
-          </div>
-        </div>
-      </section>
-
-      <section class="exchange-section">
-        <div class="section-header">
-          <div>
-            <div class="section-kicker">EXCHANGE CENTER</div>
-            <h2>💱 兌換中心</h2>
-            <p>把星星換成金幣，或用大量金幣換回星星。</p>
+          <div class="stat-item">
+            <div class="stat-value">{{ completionRate }}%</div>
+            <div class="stat-label">完成率</div>
           </div>
         </div>
+      </div>
 
-        <div class="exchange-grid">
-          <div class="exchange-card star-to-coin">
-            <div class="exchange-card-header">
-              <div class="exchange-icon">⭐ → 🪙</div>
-              <h3>星星換金幣</h3>
+      <!-- 遊戲大廳功能區 -->
+      <div class="lobby-grid">
+        <div class="lobby-card">
+          <h3>💱 星星／金幣雙向兌換</h3>
+          <div class="hint">
+            匯率：<b style="color: var(--glow-gold);">{{ exchangeRate }}</b> ⭐ = <b style="color: var(--glow-cyan);">{{ exchangeCoinsPerRate }}</b> 🪙。
+            你目前有 ⭐ {{ totalStars }} / 🪙 {{ goldCoins }}。
+          </div>
+
+          <div style="margin-top:12px; padding:12px; border:1px solid rgba(255,255,255,0.1); border-radius:10px;">
+            <div style="font-weight:700; color:var(--glow-gold); margin-bottom:6px;">⭐ 換 🪙</div>
+            <div class="form-row">
+              <input class="input" type="number" min="1" step="1" v-model.number="exchangeStarsAmount" placeholder="輸入要兌換的星星數量" />
+              <button class="mini-btn" @click="exchangeStarsForCoins" :disabled="exchangeStarsAmount<=0 || totalStars < exchangeStarsAmount">兌換</button>
             </div>
-
-            <div class="exchange-rate">
-              <span class="exchange-rate-icon">⭐</span>
-              <span class="exchange-rate-text">1 星星 = 100 金幣</span>
+            <div class="hint" style="margin-top:8px;">
+              估計可得：🪙 {{ previewCoins }}
             </div>
-
-            <input
-              class="exchange-input"
-              type="number"
-              min="1"
-              step="1"
-              v-model.number="exchangeStarsAmount"
-              placeholder="輸入星星數量"
-            >
-
-            <div class="exchange-preview">
-              預估可得：🪙 {{ previewCoins }}
-            </div>
-
-            <button
-              class="exchange-btn"
-              @click="exchangeStarsForCoins"
-              :disabled="exchangeStarsAmount <= 0 || totalStars < exchangeStarsAmount"
-            >
-              立即兌換
-            </button>
           </div>
 
-          <div class="exchange-card coin-to-star">
-            <div class="exchange-card-header">
-              <div class="exchange-icon">🪙 → ⭐</div>
-              <h3>金幣換星星</h3>
+          <div style="margin-top:16px; padding:12px; border:1px solid rgba(255,255,255,0.1); border-radius:10px;">
+            <div style="font-weight:700; color:var(--glow-cyan); margin-bottom:6px;">🪙 換 ⭐</div>
+            <div class="form-row">
+              <input class="input" type="number" min="10000000" step="10000000" v-model.number="exchangeCoinsAmount" placeholder="輸入要兌換的金幣數量" />
+              <button class="mini-btn" @click="exchangeCoinsForStars" :disabled="exchangeCoinsAmount<=0 || goldCoins < exchangeCoinsAmount">兌換</button>
             </div>
-
-            <div class="exchange-rate">
-              <span class="exchange-rate-icon">⭐</span>
-              <span class="exchange-rate-text">10,000,000 金幣 = 1 星星</span>
+            <div class="hint" style="margin-top:8px;">
+              估計可得：⭐ {{ previewStars }}
             </div>
-
-            <input
-              class="exchange-input"
-              type="number"
-              min="10000000"
-              step="10000000"
-              v-model.number="exchangeCoinsAmount"
-              placeholder="輸入金幣數量"
-            >
-
-            <div class="exchange-preview">
-              預估可得：⭐ {{ previewStars }}
-            </div>
-
-            <button
-              class="exchange-btn"
-              @click="exchangeCoinsForStars"
-              :disabled="exchangeCoinsAmount <= 0 || goldCoins < exchangeCoinsAmount || previewStars <= 0"
-            >
-              立即兌換
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section class="games-section">
-        <div class="section-header">
-          <div>
-            <div class="section-kicker">GAME LIST</div>
-            <h2>🕹️ 遊戲入口</h2>
-            <p>每次遊玩會隨機消耗 300 / 500 / 1000 金幣。</p>
-          </div>
-
-          <div class="section-pill">
-            可用遊戲：{{ availableGames }} / {{ totalGames }}
           </div>
         </div>
 
-        <div class="games-grid">
-          <!-- Word Melody -->
-          <div class="game-card" :class="{ locked: !canPlayWordMelody }">
-            <div class="game-card-top">
-              <div class="game-icon">🎵</div>
-              <div class="game-status" v-if="!canPlayWordMelody">金幣不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
+        <div class="lobby-card">
+          <h3>🎰 金幣抽獎（轉蛋）</h3>
+          <div class="hint">
+            每次抽獎消耗 <b style="color: var(--glow-gold);">🪙 {{ effectiveLotteryCost }}</b> 金幣。
+            可能抽到：金幣、星星、寶箱、稱號。
+            也有機會抽到<b style="color: var(--glow-red);">壞獎勵</b>（扣金幣 / 扣星星 / 空轉）。
+          </div>
+          <div class="gacha-machine"
+          <div
+            class="gacha-machine"
+            :class="[
+              (goldCoins < effectiveLotteryCost || gachaAnimating) ? 'locked' : '',
+              gachaPhase ? ('phase-' + gachaPhase) : ''
+            ]"
+            role="button"
+            tabindex="0"
+            @click="startGacha"
+            @keydown.enter.prevent="startGacha"
+            @keydown.space.prevent="startGacha"
+            :aria-disabled="(goldCoins < effectiveLotteryCost || gachaAnimating) ? 'true' : 'false'"
+          >
+            <div class="gacha-sparkle"></div>
+            <div class="gacha-burst"></div>
+            <div class="gacha-coin"></div>
+
+            <div class="gacha-top">
+              <div>
+                <div class="gacha-title">轉蛋機</div>
+                <div class="gacha-sub">點一下開始抽獎（不刺激特效）</div>
+              </div>
+              <div class="gacha-badge">🪙 {{ goldCoins }}</div>
             </div>
 
-            <h3>Word Melody</h3>
-            <div class="game-subtitle">Little Fox 英文遊戲</div>
-            <p class="game-description">連到 Little Fox 的 Word Melody 遊戲頁面。</p>
+            <div class="gacha-cabinet">
+              <div class="gacha-window">
+                <div class="gacha-bubbles"></div>
+                <div class="gacha-capsule" :class="{ open: gachaPhase==='open' }"></div>
+              </div>
 
-            <div class="game-features">
-              <div>外部網站遊戲</div>
-              <div>練習英文單字與聽力</div>
+              <div class="gacha-panel">
+                <div class="gacha-slot"></div>
+                <div class="gacha-knob"></div>
+                <button class="gacha-action" @click.stop="startGacha" :disabled="goldCoins < effectiveLotteryCost || gachaAnimating">投幣抽一次</button>
+              </div>
             </div>
 
-            <div class="game-footer">
-              <div class="game-cost">🪙 300 / 500 / 1000</div>
-              <button
-                class="game-start-btn"
-                @click="openWordMelody"
-                :disabled="!canPlayWordMelody"
-              >
-                {{ canPlayWordMelody ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
-              </button>
+            <div class="gacha-base">
+              <div class="gacha-base-left">
+                每次消耗 🪙 {{ effectiveLotteryCost }}｜本次：{{ gachaAnimating ? '抽獎中…' : '可點擊' }}
+                <div class="hint" style="margin:6px 0 0;">累積抽獎：{{ lotterySpinCount }} 次｜寶箱：{{ lotteryChestCount }}</div>
+              </div>
+              <div class="gacha-stars" aria-hidden="true">
+                <div class="gacha-star"></div>
+                <div class="gacha-star"></div>
+                <div class="gacha-star"></div>
+              </div>
             </div>
           </div>
 
-          <!-- Scratch 遊戲 -->
-          <div class="game-card" :class="{ locked: !canPlayScratchGame }">
-            <div class="game-card-top">
-              <div class="game-icon">🕹️</div>
-              <div class="game-status" v-if="!canPlayScratchGame">金幣不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>Scratch 遊戲</h3>
-            <div class="game-subtitle">嵌入式小遊戲</div>
-            <p class="game-description">Scratch 平台的互動遊戲，點擊後開啟本地嵌入頁面開始遊玩。</p>
-
-            <div class="game-features">
-              <div>Scratch 嵌入</div>
-              <div>支援手機/電腦自適應</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">🪙 300 / 500 / 1000</div>
-              <button
-                class="game-start-btn"
-                @click="openScratchGame"
-                :disabled="!canPlayScratchGame"
-              >
-                {{ canPlayScratchGame ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- 刮刮樂 -->
-          <div class="game-card" :class="{ locked: !canPlayScratchCard }">
-            <div class="game-card-top">
-              <div class="game-icon">🪙</div>
-              <div class="game-status" v-if="!canPlayScratchCard">金幣不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>刮刮樂</h3>
-            <div class="game-subtitle">刮開銀漆抽獎</div>
-            <p class="game-description">刮開銀漆揭曉獎項，支援滑鼠與觸控。</p>
-
-            <div class="game-features">
-              <div>Canvas 刮開效果</div>
-              <div>刮到一定比例自動揭曉</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">🪙 300 / 500 / 1000</div>
-              <button
-                class="game-start-btn"
-                @click="openScratchCard"
-                :disabled="!canPlayScratchCard"
-              >
-                {{ canPlayScratchCard ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- Skywire -->
-          <div class="game-card" :class="{ locked: !canPlayLittleWheel }">
-            <div class="game-card-top">
-              <div class="game-icon">🛞</div>
-              <div class="game-status" v-if="!canPlayLittleWheel">金幣不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>Skywire</h3>
-            <div class="game-subtitle">古怪又刺激的纜車闖關</div>
-            <p class="game-description">操控纜車穿越危險軌道，避開陷阱與敵人，把乘客安全送到終點。</p>
-
-            <div class="game-features">
-              <div>外部網站遊戲</div>
-              <div>反應與操作挑戰</div>
-              <div>躲避陷阱・闖關到終點</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">🪙 300 / 500 / 1000</div>
-              <button
-                class="game-start-btn"
-                @click="openLittleWheel"
-                :disabled="!canPlayLittleWheel"
-              >
-                {{ canPlayLittleWheel ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- Papas Pastaria -->
-          <div class="game-card" :class="{ locked: !canPlayPapasPastaria }">
-            <div class="game-card-top">
-              <div class="game-icon">🍝</div>
-              <div class="game-status" v-if="!canPlayPapasPastaria">金幣不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>Papas Pastaria</h3>
-            <div class="game-subtitle">義大利麵餐廳經營</div>
-            <p class="game-description">經營你的義大利麵餐廳：接單、煮麵、加醬配料並準時出餐，挑戰你的速度與手忙腳亂的管理能力。</p>
-
-            <div class="game-features">
-              <div>外部網站遊戲</div>
-              <div>餐廳經營＋時間管理</div>
-              <div>接單、烹飪、擺盤一手包辦</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">🪙 300 / 500 / 1000</div>
-              <button
-                class="game-start-btn"
-                @click="openPapasPastaria"
-                :disabled="!canPlayPapasPastaria"
-              >
-                {{ canPlayPapasPastaria ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- Billiards -->
-          <div class="game-card" :class="{ locked: !canPlayBilliards }">
-            <div class="game-card-top">
-              <div class="game-icon">🎱</div>
-              <div class="game-status" v-if="!canPlayBilliards">金幣不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>Billiards</h3>
-            <div class="game-subtitle">桌球／撞球挑戰</div>
-            <p class="game-description">來一局撞球：瞄準、控制力道與角度，把球打進洞，挑戰你的準度與策略。</p>
-
-            <div class="game-features">
-              <div>外部網站遊戲</div>
-              <div>瞄準與力道控制</div>
-              <div>休閒對戰／闖關風格</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">🪙 300 / 500 / 1000</div>
-              <button
-                class="game-start-btn"
-                @click="openBilliards"
-                :disabled="!canPlayBilliards"
-              >
-                {{ canPlayBilliards ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- Papas Sushiria -->
-          <div class="game-card" :class="{ locked: !canPlayPapasSushiria }">
-            <div class="game-card-top">
-              <div class="game-icon">🍣</div>
-              <div class="game-status" v-if="!canPlayPapasSushiria">金幣不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>Papas Sushiria</h3>
-            <div class="game-subtitle">壽司店經營</div>
-            <p class="game-description">經營你的壽司店：接單、捏飯配料、切卷擺盤，準時把壽司送到客人手上。</p>
-
-            <div class="game-features">
-              <div>外部網站遊戲</div>
-              <div>餐廳經營＋時間管理</div>
-              <div>製作壽司、切卷、擺盤出餐</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">🪙 300 / 500 / 1000</div>
-              <button
-                class="game-start-btn"
-                @click="openPapasSushiria"
-                :disabled="!canPlayPapasSushiria"
-              >
-                {{ canPlayPapasSushiria ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- Bloom Defender -->
-          <div class="game-card" :class="{ locked: !canPlayBloomDefender }">
-            <div class="game-card-top">
-              <div class="game-icon">🌸</div>
-              <div class="game-status" v-if="!canPlayBloomDefender">金幣不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>Bloom Defender</h3>
-            <div class="game-subtitle">花園塔防守護戰</div>
-            <p class="game-description">花園塔防遊戲：配置防禦、升級火力，守住一波波敵人。</p>
-
-            <div class="game-features">
-              <div>外部網站遊戲</div>
-              <div>塔防策略＋升級強化</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">🪙 300 / 500 / 1000</div>
-              <button
-                class="game-start-btn"
-                @click="openBloomDefender"
-                :disabled="!canPlayBloomDefender"
-              >
-                {{ canPlayBloomDefender ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- Stealing the Diamond -->
-          <div class="game-card" :class="{ locked: !canPlayStealingTheDiamond }">
-            <div class="game-card-top">
-              <div class="game-icon">💎</div>
-              <div class="game-status" v-if="!canPlayStealingTheDiamond">金幣不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>Stealing the Diamond</h3>
-            <div class="game-subtitle">爆笑互動式選擇劇情</div>
-            <p class="game-description">選擇你的行動路線，看看能不能成功偷走鑽石！（新分頁開啟）</p>
-
-            <div class="game-features">
-              <div>外部網站遊戲</div>
-              <div>選擇分支・多種結局</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">🪙 300 / 500 / 1000</div>
-              <button
-                class="game-start-btn"
-                @click="openStealingTheDiamond"
-                :disabled="!canPlayStealingTheDiamond"
-              >
-                {{ canPlayStealingTheDiamond ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- 拉霸機遊戲 -->
-          <div class="game-card" :class="{ locked: !canPlaySlotMachine }">
-            <div class="game-card-top">
-              <div class="game-icon">🎰</div>
-              <div class="game-status" v-if="!canPlaySlotMachine">金幣不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>拉霸機遊戲</h3>
-            <div class="game-subtitle">經典三連線遊戲</div>
-            <p class="game-description">經典的拉霸機遊戲，轉動拉霸機獲得三個相同圖案即可獲勝。</p>
-
-            <div class="game-features">
-              <div>經典拉霸機玩法</div>
-              <div>三連線獲勝機制</div>
-              <div>華麗視覺效果</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">🪙 300 / 500 / 1000</div>
-              <button
-                class="game-start-btn"
-                @click="toggleSlotMachine"
-                :disabled="!canPlaySlotMachine"
-              >
-                {{ canPlaySlotMachine ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- 卡牌對戰系統 -->
-          <div class="game-card" :class="{ locked: !canPlayBattleSystem }">
-            <div class="game-card-top">
-              <div class="game-icon">⚔️</div>
-              <div class="game-status" v-if="!canPlayBattleSystem">金幣不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>卡牌對戰系統</h3>
-            <div class="game-subtitle">史詩級卡牌戰鬥</div>
-            <p class="game-description">完整的卡牌對戰系統，包含攻擊、防禦、特殊技能等多種戰鬥機制。</p>
-
-            <div class="game-features">
-              <div>完整戰鬥系統</div>
-              <div>多種卡牌類型</div>
-              <div>特殊技能效果</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">🪙 300 / 500 / 1000</div>
-              <button
-                class="game-start-btn"
-                @click="openBattleSystem"
-                :disabled="!canPlayBattleSystem"
-              >
-                {{ canPlayBattleSystem ? '開始遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
-              </button>
-            </div>
-          </div>
+          <div class="hint" style="margin-top:10px;" v-if="lastLotteryResult">本次結果：<b style="color: var(--glow-cyan);">{{ lastLotteryResult }}</b></div>
         </div>
-      </section>
 
-      <section class="guide-section">
-        <div class="section-header">
-          <div>
-            <div class="section-kicker">HOW TO PLAY</div>
-            <h2>📘 使用說明</h2>
+        <div class="lobby-card">
+          <h3>🧾 抽獎紀錄</h3>
+          <div class="hint">最近 20 筆</div>
+          <ul class="history">
+            <li v-if="lotteryHistory.length===0">（尚無紀錄）</li>
+            <li v-for="(item,idx) in lotteryHistory" :key="idx">{{ item }}</li>
+          </ul>
+          <div class="form-row">
+            <div></div>
+            <button class="mini-btn" @click="clearLotteryHistory" :disabled="lotteryHistory.length===0">清空紀錄</button>
           </div>
         </div>
 
-        <div class="guide-grid">
-          <div class="guide-card">
-            <div class="guide-number">1</div>
-            <h3>累積星星</h3>
-            <p>完成主要學習遊戲或任務可以獲得星星。</p>
+        <div class="lobby-card">
+          <h3>🏷️ 稱號系統</h3>
+          <div class="hint">
+            你可以啟用一個稱號獲得加成。抽到稱號會自動加入收藏。
           </div>
-
-          <div class="guide-card">
-            <div class="guide-number">2</div>
-            <h3>兌換金幣</h3>
-            <p>使用星星兌換金幣，再用金幣進入遊戲中心挑戰。</p>
+          <div class="hint" style="margin-top:10px;">目前啟用：<b style="color: var(--glow-gold);">{{ activeTitle || '（未啟用）' }}</b></div>
+          <div class="form-row" style="margin-top:10px;">
+            <select class="input" v-model="activeTitle" :disabled="ownedTitles.length===0" style="min-height: 44px;">
+              <option value="">（未啟用）</option>
+              <option v-for="t in ownedTitles" :key="t" :value="t">{{ t }}</option>
+            </select>
+            <button class="mini-btn" @click="saveTitles" :disabled="ownedTitles.length===0">保存</button>
           </div>
-
-          <div class="guide-card">
-            <div class="guide-number">3</div>
-            <h3>開始遊戲</h3>
-            <p>選擇遊戲卡片，金幣足夠就可以開始遊玩。</p>
+          <div class="hint" style="margin-top:10px;" v-if="activeTitle">
+            加成：<b style="color: var(--glow-cyan);">{{ titleBonusText }}</b>
           </div>
+          <div class="hint" style="margin-top:10px;">已擁有：{{ ownedTitles.length ? ownedTitles.join('、') : '（尚無）' }}</div>
         </div>
-      </section>
-    </main>
+      </div>
 
-    <!-- 開始冒險 Modal -->
-    <div class="adventure-modal-overlay" v-if="showAdventureModal" @click.self="showAdventureModal=false">
-      <div class="adventure-modal">
-        <div class="adventure-icon">🚀</div>
-        <h2>開始冒險</h2>
-        <p>{{ adventureMessage }}</p>
+      <!-- 遊戲卡片 -->
+      <div class="games-grid">
+                 <!-- Little Fox - Word Melody -->
+        <div class="game-card" :class="{ locked: !canPlayWordMelody }" @click="openWordMelody">
+          <div class="game-icon">🎵</div>
+          <div class="game-title">Word Melody</div>
+          <div class="game-subtitle">Little Fox 英文遊戲</div>
+          <div class="game-description">
+            連到 Little Fox 的 Word Melody 遊戲頁面。
+          </div>
+          <div class="game-features">
+            <div class="feature-item">外部網站遊戲（新分頁開啟）</div>
+            <div class="feature-item">適合練習英文單字與聽力</div>
+            <div class="feature-item" style="color: var(--glow-gold); font-weight: bold;">🪙 隨機消耗 300 / 500 / 1000 金幣 / 每次</div>
+          </div>
 
-        <div class="adventure-actions">
-          <button class="adventure-primary-btn" @click="startAdventureAgain">
-            開始冒險
+          <div class="guide">
+            <div class="guide-title">
+              <div class="hint" style="margin:0;">玩法解說（跟圖片教學同風格）</div>
+              <button class="mini-btn" @click.stop="toggleWordMelodyGuide">{{ showWordMelodyGuide ? '收合' : '展開' }}</button>
+            </div>
+            <ul class="guide-steps" v-if="showWordMelodyGuide">
+              <li class="guide-step">
+                <div class="step-badge">1</div>
+                <div class="step-text">
+                  到 <b>My Stage</b> 可以查看每個關卡（Stage）的進度；完成所有 Stage 後也能在獎狀/獎勵區查看成果。
+                </div>
+              </li>
+              <li class="guide-step">
+                <div class="step-badge">2</div>
+                <div class="step-text">
+                  每個 Stage 分兩種：<b>Practice</b>（練習）與 <b>Game</b>（挑戰）。想闖關就選 Game，通常要完成 Play 1 才能進下一個 Play。
+                </div>
+              </li>
+              <li class="guide-step">
+                <div class="step-badge">3</div>
+                <div class="step-text">
+                  遊戲中會出現泡泡題：在時間內依提示（字母名/發音/單字）找出對應的泡泡並點破，速度越快越容易拿高分。
+                </div>
+              </li>
+              <li class="guide-step">
+                <div class="step-badge">4</div>
+                <div class="step-text">
+                  連續答對會有 <b>Bonus</b> 加成；答錯會扣分。建議先做 Practice 熟悉後再進 Game 衝分。
+                </div>
+              </li>
+              <li class="guide-step">
+                <div class="step-badge">5</div>
+                <div class="step-text">
+                  結算畫面會顯示 Correct/Incorrect/Bonus 等分數組成；點 <b>My Result</b> 可以查看每題答對/答錯的狀況。
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <button class="game-button" :class="{ locked: !canPlayWordMelody }" @click.stop="openWordMelody" :disabled="!canPlayWordMelody">
+            {{ canPlayWordMelody ? '開始 Word Melody' : `需要至少 ${gameCoinCostMax} 金幣` }}
           </button>
+        </div>
 
-          <button class="adventure-secondary-btn" @click="showAdventureModal=false">
-            留在遊戲中心
+        <div class="game-card" :class="{ locked: !canPlayScratchGame }" @click="openScratchGame">
+          <div class="game-icon">🕹️</div>
+          <div class="game-title">Scratch 遊戲</div>
+          <div class="game-subtitle">嵌入式小遊戲</div>
+          <div class="game-description">
+            Scratch 平台的互動遊戲，點擊後開啟本地嵌入頁面開始遊玩。
+          </div>
+          <div class="game-features">
+            <div class="feature-item">Scratch 嵌入（在新分頁開啟）</div>
+            <div class="feature-item">支援手機/電腦自適應</div>
+            <div class="feature-item" style="color: var(--glow-gold); font-weight: bold;">🪙 隨機消耗 300 / 500 / 1000 金幣 / 每次</div>
+          </div>
+          <button class="game-button" :class="{ locked: !canPlayScratchGame }" @click.stop="openScratchGame" :disabled="!canPlayScratchGame">
+            {{ canPlayScratchGame ? '開始 Scratch 遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
+          </button>
+        </div>
+
+        <div class="game-card" :class="{ locked: !canPlayScratchCard }" @click="openScratchCard">
+          <div class="game-icon">🪙</div>
+          <div class="game-title">刮刮樂</div>
+          <div class="game-subtitle">刮開銀漆抽獎</div>
+          <div class="game-description">
+            刮開銀漆揭曉獎項，支援滑鼠與觸控。
+          </div>
+          <div class="game-features">
+            <div class="feature-item">Canvas 刮開效果</div>
+            <div class="feature-item">刮到一定比例自動揭曉</div>
+            <div class="feature-item" style="color: var(--glow-gold); font-weight: bold;">🪙 隨機消耗 300 / 500 / 1000 金幣 / 每次</div>
+          </div>
+          <button class="game-button" :class="{ locked: !canPlayScratchCard }" @click.stop="openScratchCard" :disabled="!canPlayScratchCard">
+            {{ canPlayScratchCard ? '開始刮刮樂' : `需要至少 ${gameCoinCostMax} 金幣` }}
+          </button>
+        </div>
+
+        <!-- Little Wheel -->
+        <div class="game-card" :class="{ locked: !canPlayLittleWheel }" @click="openLittleWheel">
+          <div class="game-icon">🛞</div>
+          <div class="game-title">Skywire</div>
+          <div class="game-subtitle">古怪又刺激的纜車闖關</div>
+          <div class="game-description">
+            操控纜車穿越危險軌道，避開陷阱與敵人，把乘客安全送到終點。
+          </div>
+          <div class="game-features">
+            <div class="feature-item">外部網站遊戲（新分頁開啟）</div>
+            <div class="feature-item">反應與操作挑戰</div>
+            <div class="feature-item">躲避陷阱・闖關到終點</div>
+            <div class="feature-item" style="color: var(--glow-gold); font-weight: bold;">🪙 隨機消耗 300 / 500 / 1000 金幣 / 每次</div>
+          </div>
+          <button class="game-button" :class="{ locked: !canPlayLittleWheel }" @click.stop="openLittleWheel" :disabled="!canPlayLittleWheel">
+            {{ canPlayLittleWheel ? '開始 Skywire' : `需要至少 ${gameCoinCostMax} 金幣` }}
+          </button>
+        </div>
+
+        <!-- Papas Pastaria -->
+        <div class="game-card" :class="{ locked: !canPlayPapasPastaria }" @click="openPapasPastaria">
+          <div class="game-icon">🍝</div>
+          <div class="game-title">Papas Pastaria</div>
+          <div class="game-subtitle">義大利麵餐廳經營</div>
+          <div class="game-description">
+            經營你的義大利麵餐廳：接單、煮麵、加醬配料並準時出餐，挑戰你的速度與手忙腳亂的管理能力。
+          </div>
+          <div class="game-features">
+            <div class="feature-item">外部網站遊戲（新分頁開啟）</div>
+            <div class="feature-item">餐廳經營＋時間管理</div>
+            <div class="feature-item">接單、烹飪、擺盤一手包辦</div>
+            <div class="feature-item" style="color: var(--glow-gold); font-weight: bold;">🪙 隨機消耗 300 / 500 / 1000 金幣 / 每次</div>
+          </div>
+          <button class="game-button" :class="{ locked: !canPlayPapasPastaria }" @click.stop="openPapasPastaria" :disabled="!canPlayPapasPastaria">
+            {{ canPlayPapasPastaria ? '開始 Papas Pastaria' : `需要至少 ${gameCoinCostMax} 金幣` }}
+          </button>
+        </div>
+
+        <!-- Billiards -->
+        <div class="game-card" :class="{ locked: !canPlayBilliards }" @click="openBilliards">
+          <div class="game-icon">🎱</div>
+          <div class="game-title">Billiards</div>
+          <div class="game-subtitle">桌球／撞球挑戰</div>
+          <div class="game-description">
+            來一局撞球：瞄準、控制力道與角度，把球打進洞，挑戰你的準度與策略。
+          </div>
+          <div class="game-features">
+            <div class="feature-item">外部網站遊戲（新分頁開啟）</div>
+            <div class="feature-item">瞄準與力道控制</div>
+            <div class="feature-item">休閒對戰／闖關風格</div>
+            <div class="feature-item" style="color: var(--glow-gold); font-weight: bold;">🪙 隨機消耗 300 / 500 / 1000 金幣 / 每次</div>
+          </div>
+          <button class="game-button" :class="{ locked: !canPlayBilliards }" @click.stop="openBilliards" :disabled="!canPlayBilliards">
+            {{ canPlayBilliards ? '開始 Billiards' : `需要至少 ${gameCoinCostMax} 金幣` }}
+          </button>
+        </div>
+
+        <!-- Papas Sushiria -->
+        <div class="game-card" :class="{ locked: !canPlayPapasSushiria }" @click="openPapasSushiria">
+          <div class="game-icon">🍣</div>
+          <div class="game-title">Papas Sushiria</div>
+          <div class="game-subtitle">壽司店經營</div>
+          <div class="game-description">
+            經營你的壽司店：接單、捏飯配料、切卷擺盤，準時把壽司送到客人手上。
+          </div>
+          <div class="game-features">
+            <div class="feature-item">外部網站遊戲（新分頁開啟）</div>
+            <div class="feature-item">餐廳經營＋時間管理</div>
+            <div class="feature-item">製作壽司、切卷、擺盤出餐</div>
+            <div class="feature-item" style="color: var(--glow-gold); font-weight: bold;">🪙 隨機消耗 300 / 500 / 1000 金幣 / 每次</div>
+          </div>
+          <button class="game-button" :class="{ locked: !canPlayPapasSushiria }" @click.stop="openPapasSushiria" :disabled="!canPlayPapasSushiria">
+            {{ canPlayPapasSushiria ? '開始 Papas Sushiria' : `需要至少 ${gameCoinCostMax} 金幣` }}
+          </button>
+        </div>
+
+        <!-- Bloom Defender -->
+        <div class="game-card" :class="{ locked: !canPlayBloomDefender }" @click="openBloomDefender">
+          <div class="game-icon">🌸</div>
+          <div class="game-title">Bloom Defender</div>
+          <div class="game-subtitle">花園塔防守護戰</div>
+          <div class="game-description">
+            花園塔防遊戲：配置防禦、升級火力，守住一波波敵人。
+          </div>
+          <div class="game-features">
+            <div class="feature-item">外部網站遊戲（新分頁開啟）</div>
+            <div class="feature-item">塔防策略＋升級強化</div>
+            <div class="feature-item" style="color: var(--glow-gold); font-weight: bold;">🪙 隨機消耗 300 / 500 / 1000 金幣 / 每次</div>
+          </div>
+          <button class="game-button" :class="{ locked: !canPlayBloomDefender }" @click.stop="openBloomDefender" :disabled="!canPlayBloomDefender">
+            {{ canPlayBloomDefender ? '開始 Bloom Defender' : `需要至少 ${gameCoinCostMax} 金幣` }}
+          </button>
+        </div>
+
+        <!-- Stealing the Diamond -->
+        <div class="game-card" :class="{ locked: !canPlayStealingTheDiamond }" @click="openStealingTheDiamond">
+          <div class="game-icon">💎</div>
+          <div class="game-title">Stealing the Diamond</div>
+          <div class="game-subtitle">爆笑互動式選擇劇情</div>
+          <div class="game-description">
+            選擇你的行動路線，看看能不能成功偷走鑽石！（新分頁開啟）
+          </div>
+          <div class="game-features">
+            <div class="feature-item">外部網站遊戲（新分頁開啟）</div>
+            <div class="feature-item">選擇分支・多種結局</div>
+            <div class="feature-item" style="color: var(--glow-gold); font-weight: bold;">🪙 隨機消耗 300 / 500 / 1000 金幣 / 每次</div>
+          </div>
+          <button class="game-button" :class="{ locked: !canPlayStealingTheDiamond }" @click.stop="openStealingTheDiamond" :disabled="!canPlayStealingTheDiamond">
+            {{ canPlayStealingTheDiamond ? '開始 Stealing the Diamond' : `需要至少 ${gameCoinCostMax} 金幣` }}
+          </button>
+        </div>
+
+                 <!-- 拉霸機遊戲 -->
+         <div class="game-card" :class="{ locked: !canPlaySlotMachine }" @click="toggleSlotMachine">
+           <div class="game-icon">🎰</div>
+           <div class="game-title">拉霸機遊戲</div>
+           <div class="game-subtitle">經典三連線遊戲</div>
+           <div class="game-description">
+             經典的拉霸機遊戲，轉動拉霸機獲得三個相同圖案即可獲勝。
+             遊戲包含華麗的視覺效果和動畫，讓您體驗真正的拉霸機樂趣。
+           </div>
+           <div class="game-features">
+             <div class="feature-item">經典拉霸機玩法</div>
+             <div class="feature-item">三連線獲勝機制</div>
+             <div class="feature-item">華麗視覺效果</div>
+             <div class="feature-item">動態動畫效果</div>
+             <div class="feature-item">分數統計系統</div>
+            <div class="feature-item" style="color: var(--glow-gold); font-weight: bold;">🪙 隨機消耗 300 / 500 / 1000 金幣 / 每次</div>
+           </div>
+           <button class="game-button" :class="{ locked: !canPlaySlotMachine }" @click.stop="toggleSlotMachine" :disabled="!canPlaySlotMachine">
+            {{ canPlaySlotMachine ? '開始拉霸機遊戲' : `需要至少 ${gameCoinCostMax} 金幣` }}
+          </button>
+        </div>
+
+        <!-- 卡牌對戰 -->
+        <div class="game-card" :class="{ locked: !canPlayBattleSystem }" @click="openBattleSystem">
+          <div class="game-icon">⚔️</div>
+          <div class="game-title">卡牌對戰系統</div>
+          <div class="game-subtitle">史詩級卡牌戰鬥</div>
+          <div class="game-description">
+            完整的卡牌對戰系統，包含攻擊、防禦、特殊技能等多種戰鬥機制。
+            收集強大卡牌，組建你的牌組，在激烈的對戰中證明你的實力！
+          </div>
+          <div class="game-features">
+            <div class="feature-item">完整戰鬥系統</div>
+            <div class="feature-item">多種卡牌類型</div>
+            <div class="feature-item">特殊技能效果</div>
+            <div class="feature-item">動態戰鬥動畫</div>
+            <div class="feature-item">牌組管理系統</div>
+            <div class="feature-item" style="color: var(--glow-gold); font-weight: bold;">🪙 隨機消耗 300 / 500 / 1000 金幣 / 每次</div>
+          </div>
+          <button class="game-button" :class="{ locked: !canPlayBattleSystem }" @click.stop="openBattleSystem" :disabled="!canPlayBattleSystem">
+            {{ canPlayBattleSystem ? '開始卡牌對戰' : `需要至少 ${gameCoinCostMax} 金幣` }}
           </button>
         </div>
       </div>
@@ -2073,6 +1672,30 @@
   </div>
 
   <!-- 音效元素 -->
+  <audio id="typingSound" preload="auto">
+    <source src="sound/type.mp3" type="audio/mpeg">
+  </audio>
+
+  <audio id="gachaCoinSfx" preload="auto">
+    <source src="sound/click.mp3" type="audio/mpeg">
+  </audio>
+
+  <audio id="gachaSpinSfx" preload="auto">
+    <source src="sound/clock-ticking-sound.mp3" type="audio/mpeg">
+  </audio>
+
+  <audio id="gachaOpenSfx" preload="auto">
+    <source src="sound/shine-7-268909.mp3" type="audio/mpeg">
+  </audio>
+
+  <audio id="chestOpenSfx" preload="auto">
+    <source src="sound/unlock.mp3" type="audio/mpeg">
+  </audio>
+
+  <audio id="jackpotSfx" preload="auto">
+    <source src="sound/winning-82808.mp3" type="audio/mpeg">
+  </audio>
+
   <audio id="backgroundMusic" loop>
     <source src="sound/午後放鬆時光（純音樂）.mp3" type="audio/mpeg">
   </audio>
@@ -2083,8 +1706,8 @@
     const app = createApp({
       data() {
         return {
-          totalGames: 11,
-          availableGames: 11,
+          totalGames: 10,
+          availableGames: 10,
           completedGames: 0,
 
           totalStars: 0,
@@ -2092,31 +1715,34 @@
           playerLevel: 1,
           gameCoinCostOptions: [300, 500, 1000],
           gameCoinCostMax: 1000,
-          exchangeRate: 100,
-          exchangeCoinsPerRate: 10000000,
+          showWordMelodyGuide: false,
+          exchangeRate: 100, // 1星星 = 100金幣
+          exchangeCoinsPerRate: 10000000, // 10,000,000金幣 = 1星星
           exchangeStarsAmount: 1,
           exchangeCoinsAmount: 10000000,
-          starsAnimation: false,
-          totalStarsEarned: 0,
-          starsSpent: 0,
-          nextLevelStars: 100,
-          exchangeBusy: false,
-          gameLaunchBusy: false,
-          exchangeHistory: [],
-          toastMessage: '',
-          toastType: 'info',
-          showToast: false,
-          activeGameWindow: null,
-          activeGameTitle: '',
-          activeGameTimer: null,
-          activeReminderTimers: [],
-          activeReminderCount: 0,
-          gameSessionStartedAt: null,
-          showAdventureModal: false,
-          adventureMessage: '',
-          gameSessionMinutes: 10,
-          gameReminderGapSeconds: 10,
-          activeGameClosedChecker: null
+          lotteryCost: 50,
+          lastLotteryResult: '',
+          lotteryHistory: [],
+          gachaAnimating: false,
+          gachaPhase: '',
+          showLotteryModal: false,
+          lotteryModalText: '',
+          lotteryModalBonusText: '',
+          jackpotActive: false,
+          jackpotText: '',
+          ownedTitles: [],
+          activeTitle: '',
+          lastSpinCost: 0,
+          lotterySpinCount: 0,
+          lotteryChestCount: 0,
+          starsAnimation: false, // 星星動畫狀態
+          // 新增星星系統相關數據
+          starsEarned: 0, // 本局獲得的星星
+          totalStarsEarned: 0, // 總共獲得的星星
+          starsSpent: 0, // 花費的星星
+          achievements: [], // 成就列表
+          levelProgress: 0, // 等級進度
+          nextLevelStars: 100 // 下一等級需要的星星
         }
       },
       computed: {
@@ -2158,12 +1784,49 @@
         },
         previewCoins() {
           const stars = Math.max(0, Math.floor(Number(this.exchangeStarsAmount) || 0));
-          return stars * this.exchangeRate;
+          if (!stars) { return 0; }
+          // 1星星 = 100金幣
+          return Math.floor(stars * this.exchangeRate);
         },
         previewStars() {
           const coins = Math.max(0, Math.floor(Number(this.exchangeCoinsAmount) || 0));
+          if (!coins) { return 0; }
+          // 10,000,000金幣 = 1星星
           return Math.floor(coins / this.exchangeCoinsPerRate);
         },
+        effectiveLotteryCost() {
+          const base = Math.max(1, Math.floor(Number(this.lotteryCost) || 1));
+          if (this.activeTitle === '轉蛋之王') { return Math.max(1, base - 10); }
+          if (this.activeTitle === '省錢達人') { return Math.max(1, base - 5); }
+          return base;
+        },
+        titleBonusText() {
+          const t = this.activeTitle;
+          if (!t) { return '無'; }
+          if (t === '新手冒險家') { return '每次抽獎額外 +🪙 5（小補貼）'; }
+          if (t === '幸運玩家') { return '抽到金幣/星星時略為加成（小幅提升）'; }
+          if (t === '閃耀之星') { return '抽到星星時額外 +⭐ 1（含開寶箱）'; }
+          if (t === '轉蛋之王') { return '抽獎費用 -🪙 10'; }
+          if (t === '傳說收藏家') { return '開寶箱獎勵提升（大金幣/大星星更容易觸發大獎）'; }
+          if (t === '寶箱獵人') { return '抽獎更容易抽到寶箱（+機率）'; }
+          if (t === '金幣富翁') { return '抽到金幣回饋時再額外 +🪙 20%'; }
+          if (t === '星星守護者') { return '抽到星星時再額外 +⭐ 1（不含開寶箱）'; }
+          if (t === '省錢達人') { return '抽獎費用 -🪙 5'; }
+          if (t === '連勝之手') { return '抽到寶箱時有機會變成 x2'; }
+          return '特殊加成';
+        },
+        lotteryHistoryParsed() {
+          const rows = Array.isArray(this.lotteryHistory) ? this.lotteryHistory : [];
+          return rows.map((line) => {
+            const s = String(line || '');
+            const m = s.match(/^\[(.*?)\]\s*(.*?)(?:（消耗\s*🪙\s*(\d+)）)?$/);
+            const time = m ? (m[1] || '') : '';
+            const text = m ? (m[2] || s) : s;
+            const cost = m && m[3] ? Number(m[3]) : this.effectiveLotteryCost;
+            return { time, text, cost };
+          });
+        },
+        // 新增星星系統計算屬性
         levelProgressPercentage() {
           return Math.round((this.totalStars % this.nextLevelStars) / this.nextLevelStars * 100);
         },
@@ -2175,85 +1838,533 @@
         }
       },
       methods: {
-        exchangeStarsForCoins() {
-          if (this.exchangeBusy) return;
-
-          const stars = Math.max(0, Math.floor(Number(this.exchangeStarsAmount) || 0));
-
-          if (!stars) return;
-
-          if (this.totalStars < stars) {
-            alert('星星不足，無法兌換');
+                 toggleWordMelodyGuide() {
+           this.showWordMelodyGuide = !this.showWordMelodyGuide;
+         },
+                 spendRandomGameCoins() {
+           const maxCost = Math.max(0, Math.floor(Number(this.gameCoinCostMax) || 0));
+           if (this.goldCoins < maxCost) { return null; }
+           const options = Array.isArray(this.gameCoinCostOptions) ? this.gameCoinCostOptions : [];
+           const safeOptions = options.map(v => Math.floor(Number(v) || 0)).filter(v => v > 0);
+           if (safeOptions.length === 0) { return null; }
+           const cost = safeOptions[Math.floor(Math.random() * safeOptions.length)];
+           this.goldCoins -= cost;
+           this.saveEconomyData();
+           this.triggerStarsAnimation();
+           return cost;
+         },
+                 trySpendCoins(amount) {
+           const cost = Math.max(0, Math.floor(Number(amount) || 0));
+           if (!cost) { return true; }
+           if (this.goldCoins < cost) { return false; }
+           this.goldCoins -= cost;
+           this.saveEconomyData();
+           this.triggerStarsAnimation();
+           return true;
+         },
+                 openWordMelody() {
+           const spent = this.spendRandomGameCoins();
+           if (spent === null) {
+             alert(`❌ 金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩 Word Melody。\n\n目前金幣：${this.goldCoins}`);
+             return;
+           }
+           alert(`🎵 開始遊玩 Word Melody！\n\n本次扣除金幣：${spent}\n剩餘金幣：${this.goldCoins}`);
+           window.open('https://www.littlefox.com/tw/games/word_melody', '_blank');
+         },
+        openScratchGame() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`❌ 金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩 Scratch 遊戲。\n\n目前金幣：${this.goldCoins}`);
             return;
           }
-
-          const coinsToGet = Math.floor(stars * this.exchangeRate);
-
-          if (coinsToGet <= 0) {
-            alert('兌換數量太小');
+          alert(`🕹️ 開始遊玩 Scratch 遊戲！\n\n本次扣除金幣：${spent}\n剩餘金幣：${this.goldCoins}`);
+          this.openGame('scratch_game.html');
+        },
+        openScratchCard() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`❌ 金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩刮刮樂。\n\n目前金幣：${this.goldCoins}`);
             return;
           }
+          alert(`🪙 開始遊玩刮刮樂！\n\n本次扣除金幣：${spent}\n剩餘金幣：${this.goldCoins}`);
+          this.openGame('scratch_card.html');
+        },
+        openLittleWheel() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`❌ 金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩 Little Wheel。\n\n目前金幣：${this.goldCoins}`);
+            return;
+          }
+          alert(`🛞 開始遊玩 Little Wheel！\n\n本次扣除金幣：${spent}\n剩餘金幣：${this.goldCoins}`);
+          window.open('https://omiplay.com/zh/games/little-wheel/', '_blank');
+        },
+        openPapasPastaria() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`❌ 金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩 Papas Pastaria。\n\n目前金幣：${this.goldCoins}`);
+            return;
+          }
+          alert(`🍝 開始遊玩 Papas Pastaria！\n\n本次扣除金幣：${spent}\n剩餘金幣：${this.goldCoins}`);
+          window.open('https://omiplay.com/zh/games/play-papas-pastaria-online/', '_blank');
+        },
+        openBilliards() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`❌ 金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩 Billiards。\n\n目前金幣：${this.goldCoins}`);
+            return;
+          }
+          alert(`🎱 開始遊玩 Billiards！\n\n本次扣除金幣：${spent}\n剩餘金幣：${this.goldCoins}`);
+          window.open('https://omiplay.com/zh/games/billiards/', '_blank');
+        },
+        openPapasSushiria() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`❌ 金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩 Papas Sushiria。\n\n目前金幣：${this.goldCoins}`);
+            return;
+          }
+          alert(`🍣 開始遊玩 Papas Sushiria！\n\n本次扣除金幣：${spent}\n剩餘金幣：${this.goldCoins}`);
+          window.open('https://omiplay.com/zh/games/papas-sushiria/', '_blank');
+        },
+        openBloomDefender() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`❌ 金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩 Bloom Defender。\n\n目前金幣：${this.goldCoins}`);
+            return;
+          }
+          alert(`🌸 開始遊玩 Bloom Defender！\n\n本次扣除金幣：${spent}\n剩餘金幣：${this.goldCoins}`);
+          window.open('https://omiplay.com/zh/games/bloom-defender/', '_blank');
+        },
+        openStealingTheDiamond() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`❌ 金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩 Stealing the Diamond。\n\n目前金幣：${this.goldCoins}`);
+            return;
+          }
+          alert(`💎 開始遊玩 Stealing the Diamond！\n\n本次扣除金幣：${spent}\n剩餘金幣：${this.goldCoins}`);
+          window.open('https://omiplay.com/zh/games/stealing-the-diamond/', '_blank');
+        },
+        openBattleSystem() {
+          const spent = this.spendRandomGameCoins();
+          if (spent === null) {
+            alert(`❌ 金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩卡牌對戰系統。\n\n目前金幣：${this.goldCoins}`);
+            return;
+          }
+          alert(`⚔️ 開始遊玩卡牌對戰系統！\n\n本次扣除金幣：${spent}\n剩餘金幣：${this.goldCoins}`);
+          this.openGame('battle_system.html');
+        },
+        loadEconomyData() {
+          const coins = parseInt(localStorage.getItem('goldCoins') || '0', 10);
+          this.goldCoins = Number.isFinite(coins) ? coins : 0;
 
-          this.exchangeBusy = true;
+          const spinCount = parseInt(localStorage.getItem('lotterySpinCount_v1') || '0', 10);
+          this.lotterySpinCount = Number.isFinite(spinCount) ? spinCount : 0;
+          const chestCount = parseInt(localStorage.getItem('lotteryChestCount_v1') || '0', 10);
+          this.lotteryChestCount = Number.isFinite(chestCount) ? chestCount : 0;
 
           try {
-            this.totalStars -= stars;
-            this.goldCoins += coinsToGet;
-            this.starsSpent += stars;
-
-            this.savePlayerData();
-            this.saveEconomyData();
-            this.triggerStarsAnimation();
-
-            alert(`兌換成功！使用 ${stars} 顆星星，獲得 ${coinsToGet} 金幣。`);
-          } finally {
-            this.exchangeBusy = false;
+            const raw = localStorage.getItem('lotteryHistory_v1');
+            const parsed = raw ? JSON.parse(raw) : [];
+            this.lotteryHistory = Array.isArray(parsed) ? parsed : [];
+          } catch (e) {
+            this.lotteryHistory = [];
           }
+        },
+        loadTitles() {
+          try {
+            const raw = localStorage.getItem('ownedTitles_v1');
+            const parsed = raw ? JSON.parse(raw) : [];
+            this.ownedTitles = Array.isArray(parsed) ? parsed.filter(Boolean) : [];
+          } catch (e) {
+            this.ownedTitles = [];
+          }
+          const active = localStorage.getItem('activeTitle_v1') || '';
+          this.activeTitle = active;
+        },
+        saveEconomyData() {
+          localStorage.setItem('goldCoins', String(this.goldCoins));
+          localStorage.setItem('lotteryHistory_v1', JSON.stringify(this.lotteryHistory));
+          localStorage.setItem('lotterySpinCount_v1', String(this.lotterySpinCount));
+          localStorage.setItem('lotteryChestCount_v1', String(this.lotteryChestCount));
+        },
+        saveTitles() {
+          localStorage.setItem('ownedTitles_v1', JSON.stringify(this.ownedTitles));
+          localStorage.setItem('activeTitle_v1', String(this.activeTitle || ''));
+        },
+        unlockTitle(title) {
+          const t = String(title || '').trim();
+          if (!t) { return; }
+          if (!this.ownedTitles.includes(t)) {
+            this.ownedTitles.push(t);
+            this.saveTitles();
+            const time = new Date().toLocaleString();
+            this.lotteryHistory.unshift(`[${time}] 🏷️ 解鎖稱號：${t}`);
+            this.lotteryHistory = this.lotteryHistory.slice(0, 20);
+            this.saveEconomyData();
+          }
+          if (!this.activeTitle) {
+            this.activeTitle = t;
+            this.saveTitles();
+          }
+        },
+        exchangeStarsForCoins() {
+          const stars = Math.max(0, Math.floor(Number(this.exchangeStarsAmount) || 0));
+          if (!stars) { return; }
+          if (this.totalStars < stars) {
+            alert('❌ 星星不足，無法兌換');
+            return;
+          }
+          const coinsToGet = this.previewCoins;
+          if (coinsToGet <= 0) {
+            alert('❌ 兌換數量太小');
+            return;
+          }
+
+          this.totalStars -= stars;
+          this.goldCoins += coinsToGet;
+          this.starsSpent += stars;
+
+          localStorage.setItem('totalStars', this.totalStars.toString());
+          this.savePlayerData();
+          this.saveEconomyData();
+          this.triggerStarsAnimation();
+
+          alert(`✅ 兌換成功！\n\n使用星星：⭐ ${stars}\n獲得金幣：🪙 ${coinsToGet}\n\n目前星星：⭐ ${this.totalStars}\n目前金幣：🪙 ${this.goldCoins}`);
         },
         exchangeCoinsForStars() {
-          if (this.exchangeBusy) return;
-
           const coins = Math.max(0, Math.floor(Number(this.exchangeCoinsAmount) || 0));
-
-          if (!coins) return;
-
+          if (!coins) { return; }
           if (this.goldCoins < coins) {
-            alert('金幣不足，無法兌換');
+            alert('❌ 金幣不足，無法兌換');
             return;
           }
-
-          const starsToGet = Math.floor(coins / this.exchangeCoinsPerRate);
-
+          const starsToGet = this.previewStars;
           if (starsToGet <= 0) {
-            alert('金幣數量不足，至少需要 10,000,000 金幣才能兌換 1 顆星星。');
+            alert('❌ 兌換數量太小');
             return;
           }
 
-          this.exchangeBusy = true;
+          this.goldCoins -= coins;
+          this.totalStars += starsToGet;
 
-          try {
-            this.goldCoins -= coins;
-            this.totalStars += starsToGet;
-            this.totalStarsEarned += starsToGet;
+          localStorage.setItem('totalStars', this.totalStars.toString());
+          this.savePlayerData();
+          this.saveEconomyData();
+          this.triggerStarsAnimation();
 
+          alert(`✅ 兌換成功！\n\n使用金幣：🪙 ${coins}\n獲得星星：⭐ ${starsToGet}\n\n目前星星：⭐ ${this.totalStars}\n目前金幣：🪙 ${this.goldCoins}`);
+        },
+        startGacha() {
+          if (this.gachaAnimating) { return; }
+          if (this.goldCoins < this.effectiveLotteryCost) {
+            alert('❌ 金幣不足，無法抽獎');
+            return;
+          }
+
+          this.gachaAnimating = true;
+          this.gachaPhase = 'sparkle';
+
+          this.playSfx('gachaCoinSfx', 0.20);
+
+          window.setTimeout(() => {
+            this.gachaPhase = 'coin';
+            this.lastSpinCost = this.effectiveLotteryCost;
+            this.goldCoins -= this.lastSpinCost;
+            this.saveEconomyData();
+            this.playSfx('gachaCoinSfx', 0.25);
+          }, 250);
+
+          window.setTimeout(() => {
+            this.gachaPhase = 'spin';
+            this.playSfx('gachaSpinSfx', 0.12);
+          }, 720);
+
+          window.setTimeout(() => {
+            this.gachaPhase = 'open';
+            this.playSfx('gachaOpenSfx', 0.18);
+          }, 1400);
+
+          window.setTimeout(() => {
+            this.applyLotteryRoll();
+            this.gachaAnimating = false;
+            this.gachaPhase = '';
+          }, 2050);
+        },
+        applyLotteryRoll() {
+          const roll = Math.random();
+          let rewardText = '';
+          let bonusText = '';
+          
+          // 增加抽獎次數統計
+          this.lotterySpinCount += 1;
+          
+          if (roll < 0.35) {
+            // 金幣獎勵 (35%)
+            const coins = 20 + Math.floor(Math.random() * 81); // 20~100
+            let addCoins = coins;
+            
+            // 稱號加成
+            if (this.activeTitle === '金幣富翁') { addCoins = Math.floor(addCoins * 1.2); }
+            if (this.activeTitle === '傳說收藏家') { addCoins = Math.floor(addCoins * 1.1); }
+            
+            this.goldCoins += addCoins;
+            rewardText = `🎰 抽獎：🪙 金幣 +${coins}`;
+            if (addCoins > coins) {
+              bonusText = `稱號加成：+${addCoins - coins} 金幣`;
+            }
+            this.saveEconomyData();
+            
+            if (coins >= 90) {
+              this.triggerJackpot('金幣大獎');
+            }
+          } else if (roll < 0.65) {
+            // 星星獎勵 (30%)
+            const stars = 1 + Math.floor(Math.random() * 2); // 1~2
+            let addStars = stars;
+            
+            // 稱號加成
+            if (this.activeTitle === '閃耀之星') { addStars += 1; }
+            if (this.activeTitle === '星星守護者') { addStars += 1; }
+            if (this.activeTitle === '傳說收藏家' && stars >= 2) { addStars += 1; }
+            
+            this.totalStars += addStars;
+            this.totalStarsEarned += addStars;
+            localStorage.setItem('totalStars', this.totalStars.toString());
             this.savePlayerData();
             this.saveEconomyData();
             this.triggerStarsAnimation();
+            rewardText = `🎰 抽獎：⭐ 星星 +${stars}`;
+            if (addStars > stars) {
+              bonusText = `稱號加成：+${addStars - stars} 星星`;
+            }
+            
+            if (stars >= 2) {
+              this.triggerJackpot('星星大獎');
+            }
+          } else if (roll < 0.85) {
+            // 寶箱獎勵 (20%)
+            this.lotteryChestCount += 1;
+            rewardText = '🎰 抽獎：🧰 寶箱 +1';
+            this.saveEconomyData();
+            
+            // 連勝之手稱號有機率給雙倍寶箱
+            if (this.activeTitle === '連勝之手' && Math.random() < 0.3) {
+              this.lotteryChestCount += 1;
+              rewardText = '🎰 抽獎：🧰 寶箱 +2 (連勝之手加成)';
+              bonusText = '連勝之手稱號觸發雙倍寶箱！';
+              this.triggerJackpot('雙倍寶箱');
+            } else {
+              this.triggerJackpot('寶箱獎勵');
+            }
+          } else if (roll < 0.95) {
+            // 超級獎勵 (10%)
+            const superCoins = 100 + Math.floor(Math.random() * 101); // 100~200
+            const superStars = 3 + Math.floor(Math.random() * 3); // 3~5
+            
+            let addCoins = superCoins;
+            let addStars = superStars;
+            
+            // 稱號加成
+            if (this.activeTitle === '金幣富翁') { addCoins = Math.floor(addCoins * 1.2); }
+            if (this.activeTitle === '閃耀之星') { addStars += 1; }
+            if (this.activeTitle === '星星守護者') { addStars += 1; }
+            if (this.activeTitle === '傳說收藏家') { 
+              addCoins = Math.floor(addCoins * 1.15); 
+              addStars += 1;
+            }
+            
+            this.goldCoins += addCoins;
+            this.totalStars += addStars;
+            this.totalStarsEarned += addStars;
+            localStorage.setItem('totalStars', this.totalStars.toString());
+            this.savePlayerData();
+            this.saveEconomyData();
+            this.triggerStarsAnimation();
+            
+            rewardText = `🎰 抽獎超級大獎：🪙 ${superCoins} 金幣 + ⭐ ${superStars} 星星`;
+            if (addCoins > superCoins || addStars > superStars) {
+              const coinBonus = addCoins - superCoins;
+              const starBonus = addStars - superStars;
+              bonusText = `稱號加成：`;
+              if (coinBonus > 0) bonusText += `+${coinBonus} 金幣 `;
+              if (starBonus > 0) bonusText += `+${starBonus} 星星`;
+            }
+            
+            this.triggerJackpot('超級大獎');
+          } else {
+            // 幸運獎勵 (5%)
+            this.lotteryChestCount += 2;
+            const luckyCoins = 150;
+            const luckyStars = 8;
+            
+            let addCoins = luckyCoins;
+            let addStars = luckyStars;
+            
+            // 稱號加成
+            if (this.activeTitle === '金幣富翁') { addCoins = Math.floor(addCoins * 1.2); }
+            if (this.activeTitle === '閃耀之星') { addStars += 1; }
+            if (this.activeTitle === '星星守護者') { addStars += 1; }
+            if (this.activeTitle === '傳說收藏家') { 
+              addCoins = Math.floor(addCoins * 1.15); 
+              addStars += 2;
+            }
+            
+            this.goldCoins += addCoins;
+            this.totalStars += addStars;
+            this.totalStarsEarned += addStars;
+            localStorage.setItem('totalStars', this.totalStars.toString());
+            this.savePlayerData();
+            this.saveEconomyData();
+            this.triggerStarsAnimation();
+            
+            rewardText = `🎰 幸運大獎：🧰 寶箱 x2 + 🪙 ${luckyCoins} 金幣 + ⭐ ${luckyStars} 星星`;
+            if (addCoins > luckyCoins || addStars > luckyStars) {
+              const coinBonus = addCoins - luckyCoins;
+              const starBonus = addStars - luckyStars;
+              bonusText = `稱號加成：`;
+              if (coinBonus > 0) bonusText += `+${coinBonus} 金幣 `;
+              if (starBonus > 0) bonusText += `+${starBonus} 星星`;
+            }
+            
+            this.triggerJackpot('幸運大獎');
+          }
+          
+          // 記錄抽獎結果
+          const time = new Date().toLocaleString();
+          const log = `[${time}] ${rewardText}（消耗 🪙 ${this.lastSpinCost}）`;
+          this.lotteryHistory.unshift(log);
+          this.lotteryHistory = this.lotteryHistory.slice(0, 20);
+          this.lastLotteryResult = rewardText;
+          this.saveEconomyData();
+          
+          // 顯示結果
+          this.lotteryModalText = rewardText;
+          this.lotteryModalBonusText = bonusText;
+          this.showLotteryModal = true;
+        },
+        triggerJackpot(jackpotType) {
+          this.jackpotActive = true;
+          this.jackpotText = jackpotType;
+          
+          // 3秒後自動關閉大獎效果
+          setTimeout(() => {
+            this.jackpotActive = false;
+            this.jackpotText = '';
+          }, 3000);
+        },
+        closeLotteryModal() {
+          this.showLotteryModal = false;
+          this.lotteryModalText = '';
+          this.lotteryModalBonusText = '';
+          this.jackpotActive = false;
+          this.jackpotText = '';
+        },
+        openChest() {
+          if (this.lotteryChestCount <= 0) {
+            alert('目前沒有寶箱可開啟');
+            return;
+          }
 
-            alert(`兌換成功！使用 ${coins} 金幣，獲得 ${starsToGet} 顆星星。`);
-          } finally {
-            this.exchangeBusy = false;
+          this.lotteryChestCount -= 1;
+          this.playSfx('chestOpenSfx', 0.22);
+
+          const roll = Math.random();
+          let rewardText = '';
+
+          if (roll < 0.45) {
+            const coins = 30 + Math.floor(Math.random() * 91); // 30~120
+            let addCoins = coins;
+            if (this.activeTitle === '傳說收藏家') { addCoins = Math.floor(addCoins * 1.15); }
+            this.goldCoins += addCoins;
+            rewardText = `🧰 開啟寶箱：🪙 金幣 +${coins}`;
+            this.saveEconomyData();
+
+            if (coins >= 110) {
+              this.triggerJackpot('寶箱金幣大獎');
+            }
+          } else if (roll < 0.85) {
+            const stars = 1 + Math.floor(Math.random() * 3); // 1~3
+            let addStars = stars;
+            if (this.activeTitle === '閃耀之星') { addStars += 1; }
+            if (this.activeTitle === '傳說收藏家' && stars >= 4) { addStars += 1; }
+            this.totalStars += addStars;
+            this.totalStarsEarned += addStars;
+            localStorage.setItem('totalStars', this.totalStars.toString());
+            this.savePlayerData();
+            this.saveEconomyData();
+            this.triggerStarsAnimation();
+            rewardText = `🧰 開啟寶箱：⭐ 星星 +${stars}`;
+
+            if (stars >= 3) {
+              this.triggerJackpot('寶箱星星大獎');
+            }
+          } else if (roll < 0.95) {
+            // 選項 D：原本的文字獎勵改成「直接給寶箱」（但機率不要太高）
+            this.lotteryChestCount += 1;
+            rewardText = '🎁 驚喜：額外寶箱 +1';
+            this.saveEconomyData();
+            this.triggerJackpot('驚喜寶箱');
+          } else {
+            // 少量失敗結果，避免開寶箱期望值過高
+            const lose = 10 + Math.floor(Math.random() * 31); // 10~40
+            const actual = Math.min(this.goldCoins, lose);
+            this.goldCoins = Math.max(0, this.goldCoins - actual);
+            rewardText = `😵 寶箱陷阱：🪙 金幣 -${actual}`;
+            this.saveEconomyData();
+          }
+
+          const time = new Date().toLocaleString();
+          const log = `[${time}] ${rewardText}`;
+          this.lotteryHistory.unshift(log);
+          this.lotteryHistory = this.lotteryHistory.slice(0, 20);
+          this.saveEconomyData();
+
+          this.lotteryModalText = rewardText;
+          this.lotteryModalBonusText = '';
+          this.showLotteryModal = true;
+        },
+        playSfx(audioId, volume) {
+          try {
+            const el = document.getElementById(audioId);
+            if (!el) { return; }
+            el.pause();
+            el.currentTime = 0;
+            el.volume = Math.max(0, Math.min(1, Number(volume) || 0.2));
+            const p = el.play();
+            if (p && typeof p.catch === 'function') { p.catch(() => {}); }
+          } catch (e) {
+            // ignore
           }
         },
+        clearLotteryHistory() {
+          if (!confirm('確定要清空抽獎紀錄？')) { return; }
+          this.lotteryHistory = [];
+          this.lastLotteryResult = '';
+          this.saveEconomyData();
+        },
+                 openGame(gamePath) {
+           // 在新視窗中打開遊戲
+           window.open(gamePath, '_blank');
+           
+           // 模擬遊戲完成獲得星星（這裡可以根據實際遊戲結果調整）
+           setTimeout(() => {
+             const gameNames = {
+               'battle_system.html': '卡牌對戰系統',
+             };
+             
+             const gameName = gameNames[gamePath] || '遊戲';
+             this.simulateGameCompletion(gameName);
+           }, 2000); // 2秒後模擬遊戲完成
+         },
         goHome() {
+          // 返回首頁
           window.location.href = 'index.html';
         },
         loadPlayerData() {
-          const totalStars = typeof StarSystem !== 'undefined' && typeof StarSystem.getTotalStars === 'function'
-            ? StarSystem.getTotalStars()
-            : parseInt(localStorage.getItem('totalStars') || '0');
+          // 從localStorage讀取玩家數據，與首頁保持一致
+          const totalStars = parseInt(localStorage.getItem('totalStars') || '0');
           this.totalStars = totalStars;
-
+          
+          // 讀取其他玩家數據
           const playerData = localStorage.getItem('playerData');
           if (playerData) {
             const data = JSON.parse(playerData);
@@ -2262,494 +2373,381 @@
             this.starsSpent = data.starsSpent || 0;
             this.nextLevelStars = data.nextLevelStars || 100;
           } else {
+            // 如果沒有 playerData，初始化基本數據
             this.playerLevel = 1;
-            this.totalStarsEarned = totalStars;
+            this.totalStarsEarned = totalStars; // 假設所有星星都是獲得的
             this.starsSpent = 0;
             this.nextLevelStars = 100;
           }
-
+          
+          // 讀取遊戲完成狀態
           const gameProgress = localStorage.getItem('gameProgress');
           if (gameProgress) {
             const progress = JSON.parse(gameProgress);
             this.completedGames = progress.completedGames || 0;
           }
         },
-        savePlayerData() {
-          const data = {
-            level: this.playerLevel,
-            totalStarsEarned: this.totalStarsEarned,
-            starsSpent: this.starsSpent,
-            nextLevelStars: this.nextLevelStars
-          };
-          localStorage.setItem('playerData', JSON.stringify(data));
-        },
-        loadEconomyData() {
-          const coins = parseInt(localStorage.getItem('goldCoins') || '0', 10);
-          this.goldCoins = Number.isFinite(coins) ? coins : 0;
-          this.loadExchangeHistory();
-        },
-        saveEconomyData() {
-          localStorage.setItem('goldCoins', String(this.goldCoins));
-          this.saveExchangeHistory();
-        },
-        addExchangeHistory(type, spentType, spentAmount, receivedType, receivedAmount) {
-          const record = {
-            id: Date.now(),
-            type,
-            spentType,
-            spentAmount,
-            receivedType,
-            receivedAmount,
-            createdAt: new Date().toISOString()
-          };
-          this.exchangeHistory.unshift(record);
-          this.exchangeHistory = this.exchangeHistory.slice(0, 50);
-          this.saveExchangeHistory();
-        },
-        loadExchangeHistory() {
-          try {
-            const raw = localStorage.getItem('exchangeHistory_v1');
-            const parsed = raw ? JSON.parse(raw) : [];
-            this.exchangeHistory = Array.isArray(parsed) ? parsed : [];
-          } catch (e) {
-            this.exchangeHistory = [];
-          }
-        },
-        saveExchangeHistory() {
-          localStorage.setItem('exchangeHistory_v1', JSON.stringify(this.exchangeHistory));
-        },
-        clearExchangeHistory() {
-          if (!confirm('確定要清空兌換紀錄？')) { return; }
-          this.exchangeHistory = [];
-          this.saveExchangeHistory();
-        },
-        showToast(message, type = 'info') {
-          this.toastMessage = message;
-          this.toastType = type;
-          this.showToast = true;
-          setTimeout(() => {
-            this.showToast = false;
-          }, 3000);
-        },
-        formatExchangeDate(dateString) {
-          const date = new Date(dateString);
-          const year = date.getFullYear();
-          const month = String(date.getMonth() + 1).padStart(2, '0');
-          const day = String(date.getDate()).padStart(2, '0');
-          const hours = String(date.getHours()).padStart(2, '0');
-          const minutes = String(date.getMinutes()).padStart(2, '0');
-          return `${year}/${month}/${day} ${hours}:${minutes}`;
-        },
-        openGame(gamePath) {
-          const gameWindow = window.open(gamePath, '_blank');
-          return gameWindow;
-        },
-        openWordMelody() {
-          const spent = this.spendRandomGameCoins();
-          if (spent === null) {
-            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
-            return;
- }
-
-          const gameWindow = this.openGame('https://www.littlefox.com/p/word_melody_en');
-
-          if (!gameWindow) {
-            this.goldCoins += spent;
-            this.saveEconomyData();
-            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
-            return;
-          }
-
-          this.startGameSessionMonitor({ title: 'Word Melody', url: 'https://www.littlefox.com/p/word_melody_en' }, gameWindow, spent);
-
-          alert(`開始遊玩「Word Melody」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
-        },
-        openScratchGame() {
-          const spent = this.spendRandomGameCoins();
-          if (spent === null) {
-            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
-            return;
-          }
-
-          const gameWindow = this.openGame('scratch_game.html');
-
-          if (!gameWindow) {
-            this.goldCoins += spent;
-            this.saveEconomyData();
-            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
-            return;
-          }
-
-          this.startGameSessionMonitor({ title: 'Scratch 遊戲', url: 'scratch_game.html' }, gameWindow, spent);
-
-          alert(`開始遊玩「Scratch 遊戲」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
-        },
-        openScratchCard() {
-          const spent = this.spendRandomGameCoins();
-          if (spent === null) {
-            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
-            return;
-          }
-
-          const gameWindow = this.openGame('scratch_card.html');
-
-          if (!gameWindow) {
-            this.goldCoins += spent;
-            this.saveEconomyData();
-            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
-            return;
-          }
-
-          this.startGameSessionMonitor({ title: '刮刮樂', url: 'scratch_card.html' }, gameWindow, spent);
-
-          alert(`開始遊玩「刮刮樂」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
-        },
-        openLittleWheel() {
-          const spent = this.spendRandomGameCoins();
-          if (spent === null) {
-            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
-            return;
-          }
-
-          const gameWindow = this.openGame('https://www.nitrome.com/games/skywire');
-
-          if (!gameWindow) {
-            this.goldCoins += spent;
-            this.saveEconomyData();
-            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
-            return;
-          }
-
-          this.startGameSessionMonitor({ title: 'Skywire', url: 'https://www.nitrome.com/games/skywire' }, gameWindow, spent);
-
-          alert(`開始遊玩「Skywire」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
-        },
-        openPapasPastaria() {
-          const spent = this.spendRandomGameCoins();
-          if (spent === null) {
-            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
-            return;
-          }
-
-          const gameWindow = this.openGame('https://www.flipline.com/games/papas-pastaria');
-
-          if (!gameWindow) {
-            this.goldCoins += spent;
-            this.saveEconomyData();
-            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
-            return;
-          }
-
-          this.startGameSessionMonitor({ title: 'Papas Pastaria', url: 'https://www.flipline.com/games/papas-pastaria' }, gameWindow, spent);
-
-          alert(`開始遊玩「Papas Pastaria」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
-        },
-        openBilliards() {
-          const spent = this.spendRandomGameCoins();
-          if (spent === null) {
-            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
-            return;
-          }
-
-          const gameWindow = this.openGame('https://www.coolmathgames.com/0-billiards');
-
-          if (!gameWindow) {
-            this.goldCoins += spent;
-            this.saveEconomyData();
-            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
-            return;
-          }
-
-          this.startGameSessionMonitor({ title: 'Billiards', url: 'https://www.coolmathgames.com/0-billiards' }, gameWindow, spent);
-
-          alert(`開始遊玩「Billiards」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
-        },
-        openPapasSushiria() {
-          const spent = this.spendRandomGameCoins();
-          if (spent === null) {
-            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
-            return;
-          }
-
-          const gameWindow = this.openGame('https://www.flipline.com/games/papas-sushiria');
-
-          if (!gameWindow) {
-            this.goldCoins += spent;
-            this.saveEconomyData();
-            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
-            return;
-          }
-
-          this.startGameSessionMonitor({ title: 'Papas Sushiria', url: 'https://www.flipline.com/games/papas-sushiria' }, gameWindow, spent);
-
-          alert(`開始遊玩「Papas Sushiria」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
-        },
-        openBloomDefender() {
-          const spent = this.spendRandomGameCoins();
-          if (spent === null) {
-            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
-            return;
-          }
-
-          const gameWindow = this.openGame('https://www.nitrome.com/games/bloom-defender');
-
-          if (!gameWindow) {
-            this.goldCoins += spent;
-            this.saveEconomyData();
-            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
-            return;
-          }
-
-          this.startGameSessionMonitor({ title: 'Bloom Defender', url: 'https://www.nitrome.com/games/bloom-defender' }, gameWindow, spent);
-
-          alert(`開始遊玩「Bloom Defender」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
-        },
-        openStealingTheDiamond() {
-          const spent = this.spendRandomGameCoins();
-          if (spent === null) {
-            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
-            return;
-          }
-
-          const gameWindow = this.openGame('https://www.puffgames.com/stealing-the-diamond');
-
-          if (!gameWindow) {
-            this.goldCoins += spent;
-            this.saveEconomyData();
-            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
-            return;
-          }
-
-          this.startGameSessionMonitor({ title: 'Stealing the Diamond', url: 'https://www.puffgames.com/stealing-the-diamond' }, gameWindow, spent);
-
-          alert(`開始遊玩「Stealing the Diamond」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
-        },
-        toggleSlotMachine() {
-          const spent = this.spendRandomGameCoins();
-          if (spent === null) {
-            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
-            return;
-          }
-
-          const gameWindow = this.openGame('word_spin_game.html');
-
-          if (!gameWindow) {
-            this.goldCoins += spent;
-            this.saveEconomyData();
-            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
-            return;
-          }
-
-          this.startGameSessionMonitor({ title: '拉霸機遊戲', url: 'word_spin_game.html' }, gameWindow, spent);
-
-          alert(`開始遊玩「拉霸機遊戲」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
-        },
-        openBattleSystem() {
-          const spent = this.spendRandomGameCoins();
-          if (spent === null) {
-            alert(`金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩。`);
-            return;
-          }
-
-          const gameWindow = this.openGame('battle_system.html');
-
-          if (!gameWindow) {
-            this.goldCoins += spent;
-            this.saveEconomyData();
-            alert("瀏覽器阻擋了遊戲視窗，已退回本次扣除的金幣。請允許彈出視窗後再試一次。");
-            return;
-          }
-
-          this.startGameSessionMonitor({ title: '卡牌對戰系統', url: 'battle_system.html' }, gameWindow, spent);
-
-          alert(`開始遊玩「卡牌對戰系統」！本次扣除 ${spent} 金幣，剩餘 ${this.goldCoins} 金幣。\n\n提醒：遊玩 10 分鐘後會提醒關閉遊戲視窗。`);
-        },
-        spendRandomGameCoins() {
-          const maxCost = Math.max(0, Math.floor(Number(this.gameCoinCostMax) || 0));
-
-          if (this.goldCoins < maxCost) {
-            return null;
-          }
-
-          const options = Array.isArray(this.gameCoinCostOptions) ? this.gameCoinCostOptions : [];
-          const safeOptions = options.map(v => Math.floor(Number(v) || 0)).filter(v => v > 0);
-
-          if (safeOptions.length === 0) {
-            return null;
-          }
-
-          const cost = safeOptions[Math.floor(Math.random() * safeOptions.length)];
-
-          if (this.goldCoins < cost) {
-            return null;
-          }
-
-          this.goldCoins -= cost;
-          this.saveEconomyData();
-          this.triggerStarsAnimation();
-
-          return cost;
-        },
         saveGameProgress() {
+          // 保存遊戲進度
           const progress = {
             completedGames: this.completedGames,
             lastPlayed: new Date().toISOString()
           };
           localStorage.setItem('gameProgress', JSON.stringify(progress));
         },
+         toggleSlotMachine() {
+           const spent = this.spendRandomGameCoins();
+           if (spent === null) {
+             alert(`❌ 金幣不足！需要至少 ${this.gameCoinCostMax} 金幣才能遊玩拉霸機遊戲。\n\n目前金幣：${this.goldCoins} 金幣\n需要金幣：${this.gameCoinCostMax} 金幣`);
+             return;
+           }
+           
+           // 顯示扣除訊息
+           alert(`🎰 開始遊玩拉霸機遊戲！\n\n本次扣除金幣：${spent} 金幣\n剩餘金幣：${this.goldCoins} 金幣`);
+           
+           // 開啟遊戲
+           window.open('word_spin_game.html', '_blank');
+           
+           // 模擬遊戲完成獲得星星
+           setTimeout(() => {
+             this.simulateGameCompletion('拉霸機遊戲');
+           }, 2000); // 2秒後模擬遊戲完成
+         },
+        savePlayerData() {
+          // 保存星星到localStorage，與首頁保持一致
+          localStorage.setItem('totalStars', this.totalStars.toString());
+          
+          // 保存其他玩家數據到localStorage
+          const playerData = {
+            level: this.playerLevel,
+            totalStarsEarned: this.totalStarsEarned,
+            starsSpent: this.starsSpent,
+            nextLevelStars: this.nextLevelStars,
+            lastUpdated: new Date().toISOString()
+          };
+          localStorage.setItem('playerData', JSON.stringify(playerData));
+        },
         triggerStarsAnimation() {
+          // 觸發星星更新動畫
           this.starsAnimation = true;
           setTimeout(() => {
             this.starsAnimation = false;
           }, 500);
         },
-        clearGameSessionTimers() {
-          if (this.activeGameTimer) {
-            clearTimeout(this.activeGameTimer);
-            this.activeGameTimer = null;
+        // 新增星星系統方法
+        earnStars(amount) {
+          // 獲得星星，與首頁保持一致
+          const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
+          const newStars = currentStars + amount;
+          
+          // 更新本地數據
+          this.totalStars = newStars;
+          this.totalStarsEarned += amount;
+          this.starsEarned = amount;
+          
+          // 檢查是否可以升級
+          this.checkLevelUp();
+          
+          // 觸發動畫
+          this.triggerStarsAnimation();
+          
+          // 保存數據
+          this.savePlayerData();
+          
+          // 顯示獲得訊息
+          this.showStarsEarnedMessage(amount);
+        },
+        spendStars(amount) {
+          // 花費星星，與首頁保持一致
+          const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
+          
+          if (currentStars >= amount) {
+            const newStars = currentStars - amount;
+            
+            // 更新本地數據
+            this.totalStars = newStars;
+            this.starsSpent += amount;
+            
+            // 觸發動畫
+            this.triggerStarsAnimation();
+            
+            // 保存數據
+            this.savePlayerData();
+            
+            return true;
           }
-
-          if (Array.isArray(this.activeReminderTimers)) {
-            this.activeReminderTimers.forEach(timer => clearTimeout(timer));
-          }
-
-          this.activeReminderTimers = [];
-
-          if (this.activeGameClosedChecker) {
-            clearInterval(this.activeGameClosedChecker);
-            this.activeGameClosedChecker = null;
+          return false;
+        },
+        checkLevelUp() {
+          // 檢查是否可以升級
+          if (this.canLevelUp) {
+            this.playerLevel++;
+            this.nextLevelStars = this.playerLevel * 100;
+            
+            // 顯示升級訊息
+            this.showLevelUpMessage();
           }
         },
-        startGameSessionMonitor(game, gameWindow, spent) {
-          this.clearGameSessionTimers();
-
-          this.activeGameWindow = gameWindow;
-          this.activeGameTitle = game.title || '遊戲';
-          this.activeReminderCount = 0;
-          this.gameSessionStartedAt = new Date().toISOString();
-
-          const minutes = Math.max(1, Number(this.gameSessionMinutes) || 10);
-          const delay = minutes * 60 * 1000;
-
-          this.activeGameTimer = window.setTimeout(() => {
-            this.showGameCloseReminder();
-          }, delay);
-
-          this.activeGameClosedChecker = window.setInterval(() => {
-            if (this.activeGameWindow && this.activeGameWindow.closed) {
-              this.clearGameSessionTimers();
-
-              if (this.activeGameClosedChecker) {
-                clearInterval(this.activeGameClosedChecker);
-                this.activeGameClosedChecker = null;
-              }
-
-              this.adventureMessage = `你已關閉「${this.activeGameTitle}」，可以回到遊戲中心開始下一次冒險。`;
-              this.showAdventureModal = true;
-            }
-          }, 3000);
-
-          console.log('遊戲提醒計時開始：', {
-            gameTitle: this.activeGameTitle,
-            minutes,
-            spent,
-            startedAt: this.gameSessionStartedAt
-          });
+        showStarsEarnedMessage(amount) {
+          // 顯示獲得星星訊息
+          const message = `🎉 恭喜獲得 ${amount} 顆星星！\n\n當前星星：${this.totalStars} 顆`;
+          setTimeout(() => {
+            alert(message);
+          }, 100);
         },
-        showGameCloseReminder() {
-          this.activeReminderCount += 1;
-
-          const count = this.activeReminderCount;
-          const title = this.activeGameTitle || '遊戲';
-
-          let message = '';
-
-          if (count === 1) {
-            message = `提醒 1/3：你已經遊玩「${title}」10 分鐘，請準備關閉遊戲視窗。`;
-          } else if (count === 2) {
-            message = `提醒 2/3：請盡快結束「${title}」，系統即將自動關閉遊戲視窗。`;
-          } else {
-            message = `提醒 3/3：「${title}」遊戲時間已結束，系統將自動關閉遊戲視窗。`;
-          }
-
-          alert(message);
-
-          if (count >= 3) {
-            this.closeActiveGameWindowAndAdventure();
-            return;
-          }
-
-          const gapSeconds = Math.max(3, Number(this.gameReminderGapSeconds) || 10);
-
-          const timer = window.setTimeout(() => {
-            this.showGameCloseReminder();
-          }, gapSeconds * 1000);
-
-          this.activeReminderTimers.push(timer);
+        showLevelUpMessage() {
+          // 顯示升級訊息
+          const message = `🎊 恭喜升級！\n\n新等級：${this.playerLevel}\n\n繼續努力獲得更多星星！`;
+          setTimeout(() => {
+            alert(message);
+          }, 200);
         },
-        closeActiveGameWindowAndAdventure() {
-          const title = this.activeGameTitle || '遊戲';
-
-          try {
-            if (this.activeGameWindow && !this.activeGameWindow.closed) {
-              this.activeGameWindow.close();
-            }
-          } catch (error) {
-            console.warn('自動關閉遊戲視窗失敗：', error);
-          }
-
-          this.clearGameSessionTimers();
-
-          this.adventureMessage = `「${title}」遊戲時間結束，請回到遊戲中心，點擊開始冒險繼續挑戰。`;
-          this.showAdventureModal = true;
-
-          window.focus();
-
-          console.log('遊戲視窗已結束，進入開始冒險流程：', title);
+        // 模擬遊戲完成獲得星星
+        simulateGameCompletion(gameName) {
+          const starsReward = Math.floor(Math.random() * 50) + 10; // 10-60 顆星星
+          this.earnStars(starsReward);
+          
+          // 顯示遊戲完成訊息
+          setTimeout(() => {
+            alert(`🎮 ${gameName} 遊戲完成！\n\n獲得星星：${starsReward} 顆\n總星星：${this.totalStars} 顆`);
+          }, 300);
         },
-        startAdventureAgain() {
-          this.showAdventureModal = false;
-          this.adventureMessage = '';
-
-          const gamesSection = document.querySelector('.games-section');
-          if (gamesSection) {
-            gamesSection.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start'
-            });
+        
+        // 同步星星顯示，與首頁保持一致
+        syncStarsDisplay() {
+          // 從 localStorage 重新讀取星星數量
+          const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
+          this.totalStars = currentStars;
+          
+          // 觸發動畫
+          this.triggerStarsAnimation();
+        },
+        
+        // 檢查星星系統狀態
+        checkStarsSystem() {
+          const localStorageStars = parseInt(localStorage.getItem('totalStars') || '0');
+          const localStars = this.totalStars;
+          
+          console.log('🌟 星星系統檢查:');
+          console.log('  localStorage 星星:', localStorageStars);
+          console.log('  本地星星:', localStars);
+          console.log('  是否同步:', localStorageStars === localStars);
+          
+          if (localStorageStars !== localStars) {
+            console.log('⚠️ 星星不同步，正在修正...');
+            this.totalStars = localStorageStars;
+            this.triggerStarsAnimation();
           }
         }
       },
       mounted() {
+        // 從localStorage讀取玩家數據
         this.loadPlayerData();
+
+        // 讀取金幣 / 抽獎紀錄
         this.loadEconomyData();
 
-        // 背景音樂控制
-        const toggleMusicBtn = document.getElementById('toggleMusic');
-        const backgroundMusic = document.getElementById('backgroundMusic');
-        let isPlaying = false;
-
-        if (toggleMusicBtn && backgroundMusic) {
-          toggleMusicBtn.addEventListener('click', () => {
-            if (isPlaying) {
-              backgroundMusic.pause();
-              toggleMusicBtn.innerHTML = '<span class="material-icons">music_off</span>';
-            } else {
-              backgroundMusic.play().catch(() => {});
-              toggleMusicBtn.innerHTML = '<span class="material-icons">music_note</span>';
-            }
-            isPlaying = !isPlaying;
-          });
-        }
-
-        // 離開頁面前清理計時器
-        window.addEventListener('beforeunload', () => {
-          this.clearGameSessionTimers();
-        });
+        // 讀取稱號收藏與目前啟用稱號
+        this.loadTitles();
+        
+        // 初始化背景音樂系統
+        initBackgroundMusic();
+        
+        // 檢查星星系統狀態
+        this.checkStarsSystem();
+        
+        // 定期同步星星顯示，確保與首頁保持一致
+        setInterval(() => {
+          this.syncStarsDisplay();
+        }, 5000); // 每5秒同步一次
+        
+        // 定期檢查星星系統狀態
+        setInterval(() => {
+          this.checkStarsSystem();
+        }, 10000); // 每10秒檢查一次
       }
     });
 
-    app.mount('#app');
+    // 背景音樂控制系統 - 宣告在頂部避免初始化錯誤
+    var backgroundMusic = null;
+    var toggleMusicBtn = null;
+    var isMusicPlaying = false;
+
+    const vm = app.mount('#app');
+
+    function syncEconomyFromStorage() {
+      try {
+        const stars = parseInt(localStorage.getItem('totalStars') || '0', 10);
+        const coins = parseInt(localStorage.getItem('goldCoins') || '0', 10);
+        vm.totalStars = Number.isFinite(stars) ? stars : 0;
+        vm.goldCoins = Number.isFinite(coins) ? coins : 0;
+      } catch (e) {}
+    }
+
+    window.addEventListener('storage', (e) => {
+      if (!e) return;
+      if (e.key === 'totalStars' || e.key === 'goldCoins') {
+        syncEconomyFromStorage();
+      }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) return;
+      syncEconomyFromStorage();
+    });
+
+
+    // 背景音樂控制系統
+    // 播放背景音樂
+    function playBackgroundMusic() {
+      if (!backgroundMusic) return;
+      
+      // 檢查是否已經在播放
+      if (!backgroundMusic.paused) {
+        console.log('🎵 音樂已在播放中');
+        return;
+      }
+      
+      backgroundMusic.play().then(() => {
+        isMusicPlaying = true;
+        updateMusicButtonState();
+        localStorage.setItem('bgMusicState', 'playing');
+        console.log('🎵 背景音樂開始播放');
+      }).catch(err => {
+        console.error('❌ 背景音樂播放失敗:', err);
+        isMusicPlaying = false;
+        updateMusicButtonState();
+      });
+    }
+
+    // 暫停背景音樂
+    function pauseBackgroundMusic() {
+      if (!backgroundMusic) return;
+      
+      backgroundMusic.pause();
+      isMusicPlaying = false;
+      updateMusicButtonState();
+      localStorage.setItem('bgMusicState', 'paused');
+      console.log('🔇 背景音樂已暫停');
+    }
+
+    // 切換背景音樂
+    function toggleBackgroundMusic() {
+      if (isMusicPlaying) {
+        pauseBackgroundMusic();
+      } else {
+        playBackgroundMusic();
+      }
+    }
+
+    // 更新音樂按鈕狀態
+    function updateMusicButtonState() {
+      if (!toggleMusicBtn) return;
+      
+      if (isMusicPlaying) {
+        toggleMusicBtn.style.background = 'rgba(0, 255, 255, 0.2)';
+        toggleMusicBtn.innerHTML = '<span class="material-icons">🔊</span>';
+      } else {
+        toggleMusicBtn.style.background = 'rgba(10, 20, 40, 0.85)';
+        toggleMusicBtn.innerHTML = '<span class="material-icons">🔇</span>';
+      }
+    }
+
+    // 初始化背景音樂系統
+    function initBackgroundMusic() {
+      console.log('🎵 初始化遊戲中心背景音樂系統...');
+      
+      backgroundMusic = document.getElementById('backgroundMusic');
+      toggleMusicBtn = document.getElementById('toggleMusic');
+      
+      if (!backgroundMusic) {
+        console.error('❌ 找不到背景音樂元素');
+        return;
+      }
+      
+      if (!toggleMusicBtn) {
+        console.error('❌ 找不到音樂控制按鈕');
+        return;
+      }
+      
+      // 設定音樂屬性
+      backgroundMusic.volume = 0.3;
+      backgroundMusic.loop = true;
+      
+      // 預載入音樂檔案
+      backgroundMusic.load();
+      
+      // 檢查主頁面的音樂狀態
+      const musicState = localStorage.getItem('bgMusicState');
+      isMusicPlaying = musicState === 'playing';
+      console.log('🔗 主頁面音樂狀態:', isMusicPlaying);
+      
+      // 更新按鈕狀態
+      updateMusicButtonState();
+      
+      // 如果音樂應該播放，嘗試播放
+      if (isMusicPlaying) {
+        playBackgroundMusic();
+      }
+      
+      console.log('✅ 遊戲中心背景音樂系統初始化完成');
+    }
+
+    // 監聽音樂控制按鈕點擊
+    document.addEventListener('DOMContentLoaded', function() {
+      // 延遲初始化，確保所有元素都已載入
+      setTimeout(() => {
+        // 綁定按鈕事件
+        const musicBtn = document.getElementById('toggleMusic');
+        if (musicBtn) {
+          musicBtn.addEventListener('click', toggleBackgroundMusic);
+          console.log('🎵 音樂控制按鈕事件已綁定');
+        }
+        
+        // 添加用戶互動觸發音樂播放
+        let hasUserInteracted = false;
+        
+        function handleUserInteraction() {
+          if (!hasUserInteracted) {
+            hasUserInteracted = true;
+            console.log('👆 用戶首次互動，嘗試播放音樂');
+            
+            // 如果音樂應該播放但還沒開始，現在嘗試播放
+            if (isMusicPlaying && backgroundMusic && backgroundMusic.paused) {
+              playBackgroundMusic();
+            }
+            
+            // 移除事件監聽器
+            document.removeEventListener('click', handleUserInteraction);
+            document.removeEventListener('keydown', handleUserInteraction);
+            document.removeEventListener('touchstart', handleUserInteraction);
+          }
+        }
+        
+        // 監聽用戶互動事件
+        document.addEventListener('click', handleUserInteraction);
+        document.addEventListener('keydown', handleUserInteraction);
+        document.addEventListener('touchstart', handleUserInteraction);
+        
+      }, 500);
+    });
+
+    // 監聽頁面可見性變化，處理音樂暫停/恢復
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        // 頁面隱藏時暫停音樂
+        if (isMusicPlaying && backgroundMusic) {
+          backgroundMusic.pause();
+        }
+      } else {
+        // 頁面顯示時恢復音樂
+        if (isMusicPlaying && backgroundMusic && backgroundMusic.paused) {
+          backgroundMusic.play().catch(err => {
+            console.log('頁面恢復時音樂播放失敗:', err);
+          });
+        }
+      }
+    });
   </script>
 </body>
-</html>
+</html> 

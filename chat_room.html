@@ -1457,27 +1457,6 @@
         let lastMessageCount = 0;
         let isLoading = false;
         let apiConnectionStatus = 'connecting'; // 'online', 'offline', 'connecting'
-
-        // 取得已儲存的玩家名稱
-        function getSavedPlayerName() {
-          const keys = [
-            "playerName",
-            "username",
-            "userName",
-            "currentPlayer",
-            "gamePlayerName",
-            "chatUser"
-          ];
-
-          for (const key of keys) {
-            const value = localStorage.getItem(key);
-            if (value && value.trim()) {
-              return value.trim();
-            }
-          }
-
-          return "";
-        }
         
         // 音效系統變數
         let messageSound = null;
@@ -1489,15 +1468,12 @@
 
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
-            // 檢查是否已經登入（從多個可能的 localStorage 鍵讀取）
-            const savedUser = getSavedPlayerName();
+            // 檢查是否已經登入
+            const savedUser = localStorage.getItem('chatUser');
             if (savedUser) {
                 currentUser = savedUser;
-                localStorage.setItem('playerName', savedUser);
-                localStorage.setItem('chatUser', savedUser);
-                localStorage.setItem('userName', savedUser);
                 showChatRoom();
-
+                
                 // 如果已經登入，嘗試載入聊天訊息
                 setTimeout(() => {
                     loadChatMessages();
@@ -1869,7 +1845,13 @@
         }
 
         function getCurrentPlayerName() {
-            return getSavedPlayerName() || currentUser || "";
+            return (
+                localStorage.getItem("playerName") ||
+                localStorage.getItem("userName") ||
+                localStorage.getItem("currentUser") ||
+                localStorage.getItem("chatUser") ||
+                ""
+            ).trim();
         }
 
         function setChatStatus(message, type = "info") {

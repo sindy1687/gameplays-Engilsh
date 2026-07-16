@@ -752,7 +752,6 @@
   </div>
 
   <script src="js/utils.js"></script>
-  <script src="js/stars.js"></script>
   <script src="js/bgmController.js"></script>
   <script src="js/userData.js"></script>
   <script src="js/characterDialogue.js"></script>
@@ -1546,12 +1545,6 @@ const VOCAB_DATA = [
     }
 
     function addStarsToTotal(stars) {
-      // 優先使用 StarSystem
-      if (typeof StarSystem !== 'undefined' && typeof StarSystem.addTotalStars === 'function') {
-        StarSystem.addTotalStars(stars, '阿特拉斯遊戲獎勵');
-        updateStarsDisplay();
-        return;
-      }
       if (typeof StarRewardSystem !== 'undefined' && typeof StarRewardSystem.addStars === 'function') {
         StarRewardSystem.addStars(stars);
         updateStarsDisplay();

@@ -488,11 +488,9 @@
       // 讀取 localStorage 的 book_書名
       try {
         const arr = JSON.parse(localStorage.getItem('book_' + urlBookName) || '[]');
-        // 轉換成 {en, zh} 格式，並排除需要修正的單字
+        // 轉換成 {en, zh} 格式
         if (Array.isArray(arr) && arr.length > 0) {
-          customBookVocab = arr
-            .filter(v => !v.importNeedsReview)
-            .map(v => ({ en: v.word, zh: v.meaning }));
+          customBookVocab = arr.map(v => ({ en: v.word, zh: v.meaning }));
         }
       } catch {}
     }
