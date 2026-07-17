@@ -583,112 +583,6 @@
     }
 
     /*-------------------------
-      匯入預覽區樣式
-    -------------------------*/
-    .import-preview-area {
-      width: 100%;
-      max-width: 900px;
-      margin: 16px auto;
-      padding: 14px;
-      border-radius: 16px;
-      background: rgba(255,255,255,.92);
-      box-sizing: border-box;
-    }
-
-    .import-summary {
-      margin-bottom: 12px;
-      font-weight: 800;
-      color: #1f2937;
-    }
-
-    .import-word-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 420px;
-      overflow-y: auto;
-    }
-
-    .import-word-row {
-      display: grid;
-      grid-template-columns: 48px 1fr 1fr 220px;
-      gap: 8px;
-      align-items: center;
-      padding: 8px;
-      border-radius: 12px;
-      border: 2px solid transparent;
-    }
-
-    .import-word-row.valid {
-      background: #ecfdf5;
-      border-color: #86efac;
-    }
-
-    .import-word-row.invalid {
-      background: #fff7ed;
-      border-color: #fdba74;
-    }
-
-    .import-word-input,
-    .import-meaning-input {
-      width: 100%;
-      min-height: 38px;
-      padding: 8px 10px;
-      border-radius: 10px;
-      border: 1px solid #cbd5e1;
-      font-size: 15px;
-      box-sizing: border-box;
-    }
-
-    .import-status {
-      font-size: 13px;
-      font-weight: 800;
-      color: #7c2d12;
-    }
-
-    .import-number {
-      font-weight: 900;
-      text-align: center;
-      color: #334155;
-    }
-
-    .import-actions {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .import-actions button {
-      min-width: 140px;
-      min-height: 42px;
-      padding: 10px 14px;
-      border: none;
-      border-radius: 12px;
-      font-weight: 900;
-      cursor: pointer;
-    }
-
-    @media (max-width: 700px) {
-      .import-word-row {
-        grid-template-columns: 36px 1fr;
-      }
-
-      .import-meaning-input,
-      .import-status {
-        grid-column: 2 / 3;
-      }
-
-      .import-actions {
-        flex-direction: column;
-      }
-
-      .import-actions button {
-        width: 100%;
-      }
-    }
-
-    /*-------------------------
       搜尋單字 區塊
     -------------------------*/
     .search-group {
@@ -787,9 +681,6 @@
       <button onclick="importFile()">匯入檔案</button>
       <button onclick="exportCSV()">匯出 CSV</button>
     </div>
-
-    <!-- 匯入預覽區 -->
-    <div id="importPreviewArea" class="import-preview-area"></div>
     
     <!-- 檔案格式說明 -->
     <div class="format-info">
@@ -822,9 +713,6 @@
 
     <!-- 新增單字 -->
     <h2>➕ 新增單字</h2>
-    <p style="color: #ffd700; font-size: 14px; margin: 10px 0;">
-      ⚠️ 每本單字本至少需要 30 個有效英文單字，不能只輸入 a、b、c、d 這種單一字母。
-    </p>
     <div class="add-group">
       <input id="word" placeholder="英文單字">
       <input id="meaning" placeholder="中文解釋">
@@ -1110,422 +998,6 @@
     const storageKey = 'book_' + bookName;
     let vocab = [];
 
-    // 單字驗證函數
-    function normalizeWordText(value) {
-      return String(value || '').trim().replace(/\s+/g, ' ');
-    }
-
-    const meaningfulLetterCombos = new Set([
-      'AI',
-      'TV',
-      'OK',
-      'CD',
-      'ID',
-      'PE',
-      'QR',
-      'USA',
-      'UK',
-      'NBA',
-      'MLB',
-      'UFO',
-      'VIP',
-      'BBQ',
-      'GPS',
-      'USB',
-      'DVD',
-      'PDF',
-      'APP',
-      'ATM',
-      'CPU',
-      'CEO',
-      'DIY',
-      'KTV'
-    ]);
-
-    const meaninglessWords = new Set([
-      'AA',
-      'AAA',
-      'BB',
-      'BBB',
-      'CC',
-      'CCC',
-      'DD',
-      'DDD',
-      'QQ',
-      'QQQ',
-      'ZZ',
-      'ZZZ',
-      'ABC',
-      'ABCD',
-      'ASDF',
-      'QWER',
-      'TEST',
-      'WORD',
-      'WORD1',
-      'TEST1'
-    ]);
-
-    function isMeaningfulLetterCombo(word) {
-      const text = normalizeWordText(word).toUpperCase();
-
-      if (meaningfulLetterCombos.has(text)) {
-        return true;
-      }
-
-      // 允許 QR code 這種組合
-      if (text === 'QR CODE') {
-        return true;
-      }
-
-      return false;
-    }
-
-    function isValidEnglishWord(value) {
-      const word = normalizeWordText(value);
-
-      if (!word) return false;
-
-      // 禁止單一字母
-      if (/^[a-zA-Z]$/.test(word)) return false;
-
-      // 有意義的字母組合可以通過
-      if (isMeaningfulLetterCombo(word)) return true;
-
-      // 禁止明顯無意義測試字
-      if (meaninglessWords.has(word.toUpperCase())) return false;
-
-      // 禁止只有重複同一個字母，例如 aaa、bbb、qqq
-      if (/^([a-zA-Z])\1+$/.test(word)) return false;
-
-      // 禁止含數字的測試字，例如 word1、test123
-      if (/\d/.test(word)) return false;
-
-      // 只允許英文、空格、連字號、撇號
-      if (!/^[a-zA-Z\s\-']+$/.test(word)) return false;
-
-      // 至少要有 2 個英文字母
-      const letterCount = (word.match(/[a-zA-Z]/g) || []).length;
-      if (letterCount < 2) return false;
-
-      return true;
-    }
-
-    function validateWordBookWords(words) {
-      const errors = [];
-
-      if (!Array.isArray(words)) {
-        return {
-          valid: false,
-          errors: ['單字資料格式錯誤']
-        };
-      }
-
-      const cleanedWords = words
-        .map(item => {
-          if (typeof item === 'string') {
-            return {
-              word: normalizeWordText(item),
-              meaning: ''
-            };
-          }
-
-          return {
-            ...item,
-            word: normalizeWordText(item.word || item.english || item.en),
-            meaning: String(item.meaning || item.chinese || item.zh || '').trim()
-          };
-        })
-        .filter(item => item.word);
-
-      const seen = new Set();
-      const validWords = [];
-
-      cleanedWords.forEach((item, index) => {
-        const wordKey = item.word.toLowerCase();
-
-        if (!isValidEnglishWord(item.word)) {
-          errors.push(`第 ${index + 1} 個單字「${item.word || '空白'}」不是有效英文單字`);
-          return;
-        }
-
-        if (seen.has(wordKey)) {
-          errors.push(`單字「${item.word}」重複`);
-          return;
-        }
-
-        seen.add(wordKey);
-        validWords.push(item);
-      });
-
-      if (validWords.length < 30) {
-        errors.push(`單字本至少需要 30 個有效單字，目前只有 ${validWords.length} 個`);
-      }
-
-      return {
-        valid: errors.length === 0,
-        errors,
-        words: validWords
-      };
-    }
-
-    function getWordInvalidReason(value) {
-      const word = normalizeWordText(value);
-
-      if (!word) return '單字空白';
-      if (/^[a-zA-Z]$/.test(word)) return '單一字母不能作為單字';
-      if (/^([a-zA-Z])\1+$/.test(word)) return '重複字母組合可能不是有效單字';
-      if (/\d/.test(word)) return '單字不能包含數字';
-      if (!/^[a-zA-Z\s\-']+$/.test(word)) return '只能輸入英文、空格、連字號或撇號';
-
-      const letterCount = (word.match(/[a-zA-Z]/g) || []).length;
-      if (letterCount < 2) return '至少需要 2 個英文字母';
-
-      if (typeof isMeaningfulLetterCombo === 'function' && isMeaningfulLetterCombo(word)) {
-        return '';
-      }
-
-      return '請確認是否為有效英文單字或有意義的字母組合';
-    }
-
-    // Pending import words for preview mode
-    let pendingImportWords = [];
-
-    function escapeHTML(value) {
-      return String(value || '')
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
-    }
-
-    function checkImportedWords(importedWords) {
-      const seen = new Set();
-
-      return importedWords.map((item, index) => {
-        const word = normalizeWordText(item.word || item.english || item.en || '');
-        const meaning = String(item.meaning || item.chinese || item.zh || '').trim();
-        const wordKey = word.toLowerCase();
-
-        let valid = true;
-        let error = '';
-
-        // 匯入時只檢查是否有英文和中文，不使用嚴格的單字驗證
-        if (!word) {
-          valid = false;
-          error = '缺少英文';
-        }
-
-        if (!meaning) {
-          valid = false;
-          error = error ? error + '、缺少中文意思' : '缺少中文意思';
-        }
-
-        if (word && seen.has(wordKey)) {
-          valid = false;
-          error = error ? error + '、單字重複' : '單字重複';
-        }
-
-        if (word) {
-          seen.add(wordKey);
-        }
-
-        return {
-          ...item,
-          word,
-          meaning,
-          importIndex: index + 1,
-          valid,
-          error
-        };
-      });
-    }
-
-    function validateImportedWordPairs(words) {
-      const errors = [];
-      const seen = new Set();
-
-      if (!Array.isArray(words)) {
-        return {
-          valid: false,
-          errors: ['匯入資料格式錯誤'],
-          words: []
-        };
-      }
-
-      const checkedWords = words.map((item, index) => {
-        const word = normalizeWordText(item.word || item.english || item.en || '');
-        const meaning = String(item.meaning || item.chinese || item.zh || '').trim();
-
-        let valid = true;
-        let error = '';
-
-        if (!word) {
-          valid = false;
-          error = '缺少英文';
-        }
-
-        if (!meaning) {
-          valid = false;
-          error = error ? error + '、缺少中文意思' : '缺少中文意思';
-        }
-
-        const wordKey = word.toLowerCase();
-
-        if (word && seen.has(wordKey)) {
-          valid = false;
-          error = error ? error + '、單字重複' : '單字重複';
-        }
-
-        if (word) {
-          seen.add(wordKey);
-        }
-
-        return {
-          ...item,
-          word,
-          meaning,
-          importIndex: index + 1,
-          valid,
-          error
-        };
-      });
-
-      const validWords = checkedWords.filter(item => item.valid);
-
-      if (validWords.length < 30) {
-        errors.push(`匯入單字本至少需要 30 筆中英對照，目前有效資料只有 ${validWords.length} 筆`);
-      }
-
-      const invalidWords = checkedWords.filter(item => !item.valid);
-
-      if (invalidWords.length > 0) {
-        errors.push(`有 ${invalidWords.length} 筆資料缺少英文、中文或重複，請修正後再儲存`);
-      }
-
-      return {
-        valid: errors.length === 0,
-        errors,
-        words: checkedWords,
-        validWords,
-        invalidWords
-      };
-    }
-
-    function renderImportPreview(words) {
-      const area = document.getElementById('importPreviewArea');
-      if (!area) {
-        console.warn('找不到匯入預覽區 importPreviewArea');
-        return;
-      }
-
-      const validCount = words.filter(item => item.valid).length;
-      const invalidCount = words.length - validCount;
-
-      area.innerHTML = `
-        <div class="import-summary">
-          <strong>匯入預覽</strong>
-          <p>總共 ${words.length} 筆，有效 ${validCount} 筆，需要修正 ${invalidCount} 筆。</p>
-          <p>無效單字不會被刪除，請修正後再儲存。</p>
-        </div>
-
-        <div class="import-word-list">
-          ${words.map((item, index) => `
-            <div class="import-word-row ${item.valid ? 'valid' : 'invalid'}" data-index="${index}">
-              <span class="import-number">${item.importIndex}</span>
-
-              <input
-                class="import-word-input"
-                value="${escapeHTML(item.word)}"
-                data-index="${index}"
-                data-field="word"
-                placeholder="英文單字"
-              >
-
-              <input
-                class="import-meaning-input"
-                value="${escapeHTML(item.meaning)}"
-                data-index="${index}"
-                data-field="meaning"
-                placeholder="中文意思"
-              >
-
-              <span class="import-status">
-                ${item.valid ? '正常' : '需修正：' + escapeHTML(item.error)}
-              </span>
-            </div>
-          `).join('')}
-        </div>
-
-        <div class="import-actions">
-          <button id="recheckImportBtn">重新檢查</button>
-          <button id="confirmImportSaveBtn">確認儲存單字本</button>
-        </div>
-      `;
-
-      bindImportPreviewEvents();
-    }
-
-    function bindImportPreviewEvents() {
-      document.querySelectorAll('.import-word-input, .import-meaning-input').forEach(input => {
-        input.addEventListener('input', function () {
-          const index = Number(this.dataset.index);
-          const field = this.dataset.field;
-
-          if (!pendingImportWords[index]) return;
-
-          pendingImportWords[index][field] = this.value;
-        });
-      });
-
-      const recheckBtn = document.getElementById('recheckImportBtn');
-      if (recheckBtn) {
-        recheckBtn.addEventListener('click', function () {
-          pendingImportWords = checkImportedWords(pendingImportWords);
-          renderImportPreview(pendingImportWords);
-        });
-      }
-
-      const saveBtn = document.getElementById('confirmImportSaveBtn');
-      if (saveBtn) {
-        saveBtn.addEventListener('click', confirmSaveImportedWordBook);
-      }
-    }
-
-    function confirmSaveImportedWordBook() {
-      const result = validateImportedWordPairs(pendingImportWords);
-
-      pendingImportWords = result.words;
-
-      if (!result.valid) {
-        alert(result.errors.join('\n'));
-        renderImportPreview(pendingImportWords);
-        return;
-      }
-
-      saveImportedWordBook(result.validWords);
-    }
-
-    function saveImportedWordBook(validWords) {
-      vocab = validWords.map(item => ({
-        word: item.word,
-        meaning: item.meaning,
-        example: item.example || '',
-        exampleMeaning: item.exampleMeaning || ''
-      }));
-
-      saveVocab();
-      displayWords();
-
-      // Clear preview area
-      const area = document.getElementById('importPreviewArea');
-      if (area) {
-        area.innerHTML = '';
-      }
-
-      alert(`成功匯入 ${validWords.length} 個單字！`);
-    }
-
     async function loadDefaultVocabIfNeeded() {
       const localData = localStorage.getItem(storageKey);
       if (localData) {
@@ -1557,17 +1029,7 @@
     document.getElementById('bookNameDisplay').textContent = bookName;
 
     function saveVocab() {
-      const validation = validateWordBookWords(vocab);
-
-      if (!validation.valid) {
-        alert(validation.errors.slice(0, 5).join('\n'));
-        console.warn('單字本驗證失敗：', validation.errors);
-        return false;
-      }
-
-      vocab = validation.words;
       localStorage.setItem(storageKey, JSON.stringify(vocab));
-      return true;
     }
 
     function displayWords(filter = '') {
@@ -1644,14 +1106,8 @@
       const e = document.getElementById('example').value.trim();
       const em = document.getElementById('exampleMeaning').value.trim();
       if (!w || !m || !e) return alert('請至少輸入英文、中文和英文例句。');
-      
-      // 驗證英文單字
-      if (!isValidEnglishWord(w)) {
-        return alert('單字「' + w + '」不符合規則。\n\n單一字母（如 a、b、c）不可使用。\n有意義的字母組合（如 USA、NBA、TV、OK、AI）可以使用。\n無意義亂打（如 aaa、abc、test123）不可使用。');
-      }
-      
       vocab.push({ word: w, meaning: m, example: e, exampleMeaning: em });
-      if (!saveVocab()) return; // 如果儲存失敗（少於30字），不繼續
+      saveVocab();
       displayWords();
       document.getElementById('word').value = '';
       document.getElementById('meaning').value = '';
@@ -1665,7 +1121,7 @@
     function deleteWord(index) {
       if (!confirm('確定刪除這個單字？')) return;
       vocab.splice(index, 1);
-      saveVocab(); // 儲存但不檢查返回值，允許刪除後少於30字
+      saveVocab();
       // 保持目前的搜尋結果
       const searchTerm = document.getElementById('searchInput').value.trim();
       displayWords(searchTerm);
@@ -1720,7 +1176,9 @@
           let importedCount = 0;
           let skippedCount = 0;
           let duplicateCount = 0;
-          let importedWords = []; // 暫存所有匯入的單字
+          
+          // 建立現有單字的 Set 以加速查詢（不分大小寫）
+          const existingWords = new Set(vocab.map(v => v.word.toLowerCase()));
 
           // 更新總行數
           document.getElementById('totalLines').textContent = totalLines;
@@ -1790,14 +1248,20 @@
               
               // 如果成功解析且必要欄位都有值，則新增單字
               if (word && meaning && example) {
-                // 不再直接驗證和過濾，保留所有單字到暫存區
-                importedWords.push({
-                  word: word,
-                  meaning: meaning,
-                  example: example,
-                  exampleMeaning: exampleMeaning || ''
-                });
-                importedCount++;
+                // 檢查是否重複（不分大小寫）
+                if (!existingWords.has(word.toLowerCase())) {
+                  vocab.push({ 
+                    word: word, 
+                    meaning: meaning, 
+                    example: example, 
+                    exampleMeaning: exampleMeaning || '' 
+                  });
+                  // 將新單字加入 Set，以處理檔案內的重複
+                  existingWords.add(word.toLowerCase());
+                  importedCount++;
+                } else {
+                  duplicateCount++;
+                }
               } else {
                 skippedCount++;
               }
@@ -1815,16 +1279,25 @@
               setTimeout(() => processBatch(endIndex), 10); // 短暫延遲避免阻塞UI
             } else {
               // 完成處理
-              document.getElementById('importStatus').textContent = '解析完成，正在準備預覽...';
-
+              document.getElementById('importStatus').textContent = '正在儲存資料...';
+              
               setTimeout(() => {
+                saveVocab();
+                displayWords();
+                
                 // 移除進度視窗
                 document.body.removeChild(progressModal);
-
-                // 使用預覽模式處理匯入的單字
-                pendingImportWords = checkImportedWords(importedWords);
-                renderImportPreview(pendingImportWords);
-
+                
+                // 顯示結果
+                let resultMessage = `✅ 成功匯入 ${importedCount} 個單字`;
+                if (duplicateCount > 0) {
+                  resultMessage += `\n🔄 已忽略 ${duplicateCount} 個重複單字`;
+                }
+                if (skippedCount > 0) {
+                  resultMessage += `\n⚠️ 已跳過 ${skippedCount} 個無效行`;
+                }
+                alert(resultMessage);
+                
                 // 匯入成功後清空搜尋框
                 clearSearch();
               }, 100);
