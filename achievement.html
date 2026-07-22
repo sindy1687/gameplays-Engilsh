@@ -7,665 +7,447 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="responsive_enhanced.css">
   <style>
-    /* 響應式設計變數 */
-    :root {
-      --mobile-padding: 12px;
-      --tablet-padding: 16px;
-      --desktop-padding: 20px;
-      --mobile-font-size: 0.9rem;
-      --tablet-font-size: 1rem;
-      --desktop-font-size: 1.1rem;
+    /* ========== 可愛遊戲風格成就中心 ========== */
+    
+    * {
+      box-sizing: border-box;
     }
     
     body {
       margin: 0;
-      font-family: 'Orbitron', 'Microsoft JhengHei', '微軟正黑體', sans-serif;
-      background: url('https://wallpaperaccess.com/full/192936.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: #fff;
+      font-family: 'Microsoft JhengHei', '微軟正黑體', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      background-attachment: fixed;
+      color: #333;
       text-align: center;
       min-height: 100vh;
       line-height: 1.6;
-    }
-    header {
-      background: rgba(10, 20, 40, 0.9);
-      padding: 20px 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 0 30px 12px #00ffff88, 0 0 50px 0 #a259ff33 inset;
-      border-bottom: 3px solid #00ffff;
-      backdrop-filter: blur(8px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 2.4rem;
-      color: #00ffff;
-      letter-spacing: 3px;
-      text-shadow: 0 0 15px #00ffff, 0 0 35px #a259ff;
-      font-weight: 700;
-    }
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 24px;
+      padding: 20px;
     }
     
-    /* 總星星顯示樣式 */
-    .total-stars-display {
-      background: rgba(10, 20, 40, 0.85);
-      padding: 8px 16px;
-      border-radius: 20px;
-      color: #ffd700;
-      font-weight: bold;
-      box-shadow: 0 0 15px #ffd700, 0 0 30px #00ffff;
-      border: 2px solid #00ffff;
-      font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-right: 16px;
-      animation: starGlow 2s ease-in-out infinite alternate;
+    /* 頁面外層 */
+    .achievement-page {
+      max-width: 1200px;
+      margin: 0 auto;
     }
     
-    .total-stars-display .star-icon {
-      font-size: 1.2rem;
-      filter: drop-shadow(0 0 8px #ffd700);
-    }
-    
-    .total-stars-display .star-count {
-      font-family: 'Orbitron', 'Microsoft JhengHei', sans-serif;
-      text-shadow: 0 0 8px #ffd700;
-    }
-    
-    @keyframes starGlow {
-      0% { box-shadow: 0 0 15px #ffd700, 0 0 30px #00ffff; }
-      100% { box-shadow: 0 0 25px #ffd700, 0 0 40px #00ffff; }
-    }
-    .btn {
-      background: linear-gradient(135deg, #00ffff 0%, #a259ff 100%);
-      color: #000;
-      border: none;
-      padding: 12px 26px;
-      border-radius: 15px;
-      cursor: pointer;
-      font-weight: 700;
-      box-shadow: 0 0 20px #00ffff, 0 0 30px #a259ff99;
-      margin-left: 8px;
-      font-size: 1.2rem;
-      letter-spacing: 1.5px;
-      transition: all 0.3s ease;
-      font-family: 'Orbitron', 'Microsoft JhengHei', sans-serif;
-    }
-    .btn:hover {
-      transform: scale(1.08);
-      box-shadow: 0 0 35px #00ffff, 0 0 50px #a259ffcc;
-    }
-    .achievement-section {
-      background: rgba(10, 20, 40, 0.9);
-      border: 3px solid #00ffff;
-      border-radius: 20px;
-      max-width: 800px;
-      margin: 40px auto 0 auto;
-      padding: 30px 20px 40px 20px;
-      box-shadow: 0 0 40px #00ffff33, 0 0 100px #a259ff22 inset;
-      backdrop-filter: blur(8px);
-    }
-    .achievement-section h2 {
-      color: #ffd700;
-      margin-bottom: 25px;
-      text-shadow: 0 0 15px #ffd700, 0 0 35px #00ffff;
-      font-size: 2.2rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-    }
-    .achievement-badges {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      max-width: 100%;
-    }
-    .badge-row {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .badge {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: 2px solid;
-      position: relative;
-      margin-bottom: 4px;
-    }
-    .badge.locked {
-      background: rgba(128, 128, 128, 0.3);
-      border-color: #666;
-      color: #666;
-      cursor: default;
-      filter: grayscale(1);
-    }
-    .badge.unlocked {
-      cursor: pointer;
-      animation: badgeGlow 2s ease-in-out infinite alternate;
-    }
-    .badge.unlocked:hover {
-      transform: scale(1.2);
-      box-shadow: 0 0 20px currentColor;
-    }
-    @keyframes badgeGlow {
-      0% { box-shadow: 0 0 12px currentColor; }
-      100% { box-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
-    }
-    .badge-desc {
-      font-size: 0.85rem;
-      color: #ffd700;
-      margin-top: 2px;
-      text-shadow: 0 0 6px #ffd700, 0 0 12px #ffaa00;
-      min-width: 80px;
-      max-width: 120px;
-      margin-left: auto;
-      margin-right: auto;
-      word-break: break-all;
-    }
-    .reward-stars {
-      color: #ffd700;
-      font-weight: bold;
-      text-shadow: 0 0 8px #ffd700;
-      font-size: 0.9rem;
-    }
-    
-    /* 新增：成就解說樣式 */
-    .achievement-detail {
-      background: rgba(20, 40, 80, 0.95);
-      border: 2px solid #00ffff;
-      border-radius: 15px;
-      padding: 18px;
-      margin: 0;
-      box-shadow: 0 0 25px #00ffff33, 0 0 50px #a259ff22 inset;
-      backdrop-filter: blur(8px);
-      height: fit-content;
-      display: flex;
-      flex-direction: column;
-      transition: all 0.3s ease;
-    }
-    
-    .achievement-detail:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 35px #00ffff44, 0 0 60px #a259ff33 inset;
-    }
-    
+    /* 頁首區 */
     .achievement-header {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 12px;
-      position: relative;
-    }
-    
-    .achievement-icon {
-      font-size: 2rem;
-      filter: drop-shadow(0 0 12px currentColor);
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-    
-    .achievement-info {
-      flex: 1;
-      text-align: left;
-      min-width: 0;
-    }
-    
-    .achievement-name {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #00ffff;
-      margin-bottom: 5px;
-      text-shadow: 0 0 12px #00ffff;
-      line-height: 1.3;
-      letter-spacing: 1px;
-    }
-    
-    .achievement-description {
-      color: #e0e0e0;
-      font-size: 0.95rem;
-      margin-bottom: 10px;
-      line-height: 1.4;
-      letter-spacing: 0.5px;
-    }
-    
-    .progress-container {
-      background: rgba(0, 0, 0, 0.4);
-      border-radius: 10px;
-      padding: 3px;
-      margin: 8px 0;
-    }
-    
-    .progress-bar {
-      height: 8px;
-      border-radius: 6px;
-      background: linear-gradient(90deg, #00ffff, #a259ff);
-      transition: width 0.5s ease;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 30px;
+      padding: 30px 40px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
       position: relative;
       overflow: hidden;
     }
     
-    .progress-bar::after {
+    .achievement-header::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-      animation: shimmer 2s infinite;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: shimmer 3s infinite;
     }
     
     @keyframes shimmer {
-      0% { left: -100%; }
-      100% { left: 100%; }
+      0% { transform: translateX(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) rotate(45deg); }
     }
     
-    .progress-text {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      margin-top: 6px;
-      font-size: 0.9rem;
+    .achievement-title {
+      margin: 0 0 10px 0;
+      font-size: 2.5rem;
+      color: #667eea;
+      font-weight: 800;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .achievement-subtitle {
+      margin: 0 0 20px 0;
+      font-size: 1.2rem;
+      color: #764ba2;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .achievement-back-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1rem;
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .achievement-back-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+    }
+    
+    .achievement-back-btn:active {
+      transform: translateY(-1px);
+    }
+    
+    /* 玩家成就統計區 */
+    .achievement-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .achievement-summary-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 25px;
+      padding: 25px 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      border: 3px solid transparent;
+    }
+    
+    .achievement-summary-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .achievement-summary-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #667eea;
+      margin-bottom: 8px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .achievement-summary-label {
+      font-size: 1rem;
+      color: #764ba2;
       font-weight: 600;
     }
     
-    .progress-text .current-progress,
-    .progress-text .required-progress {
-      margin: 0 2px;
-      font-size: 1.1em;
-    }
-    
-    .progress-text span {
-      display: inline-block;
-    }
-    
-    .current-progress {
-      color: #00ffff;
-      font-weight: bold;
-      text-shadow: 0 0 6px #00ffff;
-    }
-    
-    .required-progress {
-      color: #ffd700;
-      text-shadow: 0 0 6px #ffd700;
-    }
-    
-    .reward-info {
+    /* 操作區 */
+    .achievement-actions {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 25px;
+      padding: 25px 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
       display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #ffd700;
-      font-weight: bold;
-      text-shadow: 0 0 8px #ffd700;
-      font-size: 0.95rem;
-      margin-top: 8px;
-    }
-    
-    .claimed-badge {
-      opacity: 0.6;
-      position: relative;
-    }
-    
-    .claimed-badge::after {
-      content: '✓';
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      background: #00ff00;
-      color: #000;
-      border-radius: 50%;
-      width: 16px;
-      height: 16px;
-      display: flex;
-      align-items: center;
       justify-content: center;
-      font-size: 10px;
-      font-weight: bold;
-      box-shadow: 0 0 8px #00ff00;
+      gap: 20px;
+      flex-wrap: wrap;
     }
     
-    .achievement-status {
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: bold;
-      margin-left: auto;
-      flex-shrink: 0;
-      text-shadow: 0 0 4px currentColor;
-    }
-    
-    .status-locked {
-      background: rgba(255, 0, 0, 0.3);
-      color: #ff6b6b;
-      border: 1px solid #ff6b6b;
-      box-shadow: 0 0 8px #ff6b6b33;
-    }
-    
-    .status-unlocked {
-      background: rgba(0, 255, 0, 0.3);
-      color: #00ff00;
-      border: 1px solid #00ff00;
-      box-shadow: 0 0 8px #00ff0033;
-    }
-    
-    .status-claimed {
-      background: rgba(255, 215, 0, 0.3);
-      color: #ffd700;
-      border: 1px solid #ffd700;
-      box-shadow: 0 0 8px #ffd70033;
-    }
-    
-    /* 可領取成就的特殊樣式 */
-    .claimable-achievement {
-      border: 3px solid #00ff00;
-      box-shadow: 0 0 25px #00ff00, 0 0 40px #00ff0044 inset;
-      animation: claimableGlow 2s ease-in-out infinite alternate;
-      position: relative;
-    }
-    
-    .claimable-achievement::before {
-      content: '🎁';
-      position: absolute;
-      top: -10px;
-      right: -10px;
-      font-size: 1.5rem;
-      animation: giftBounce 1s ease-in-out infinite alternate;
-      z-index: 10;
-    }
-    
-    @keyframes claimableGlow {
-      0% { box-shadow: 0 0 25px #00ff00, 0 0 40px #00ff0044 inset; }
-      100% { box-shadow: 0 0 35px #00ff00, 0 0 50px #00ff0066 inset; }
-    }
-    
-    @keyframes giftBounce {
-      0% { transform: scale(1) rotate(0deg); }
-      100% { transform: scale(1.2) rotate(10deg); }
-    }
-    
-    .toggle-details {
-      background: rgba(0, 255, 255, 0.15);
-      border: 2px solid #00ffff;
-      color: #00ffff;
-      padding: 8px 16px;
-      border-radius: 8px;
+    .achievement-claim-all-btn {
+      background: linear-gradient(135deg, #ffd93d, #ff6b6b);
+      color: white;
+      border: none;
+      padding: 16px 40px;
+      border-radius: 50px;
       cursor: pointer;
-      font-size: 0.9rem;
-      margin-top: 8px;
+      font-weight: 800;
+      font-size: 1.2rem;
+      box-shadow: 0 8px 25px rgba(255, 217, 61, 0.4);
       transition: all 0.3s ease;
-      font-weight: bold;
-      text-shadow: 0 0 6px #00ffff;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
     }
     
-    .toggle-details:hover {
-      background: rgba(0, 255, 255, 0.25);
-      box-shadow: 0 0 15px #00ffff;
-      transform: scale(1.02);
+    .achievement-claim-all-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 35px rgba(255, 217, 61, 0.5);
     }
     
-    .achievement-details {
-      display: none;
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px solid rgba(0, 255, 255, 0.4);
-      font-size: 0.85rem;
-      color: #e0e0e0;
-      line-height: 1.4;
+    .achievement-claim-all-btn:active {
+      transform: translateY(-1px) scale(0.98);
     }
     
-    .achievement-details.show {
-      display: block;
+    .achievement-refresh-btn {
+      background: linear-gradient(135deg, #a8e6cf, #88d8b0);
+      color: #2d5a4a;
+      border: none;
+      padding: 16px 30px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1.1rem;
+      box-shadow: 0 8px 25px rgba(168, 230, 207, 0.4);
+      transition: all 0.3s ease;
     }
     
-    /* 新增：分類篩選樣式 */
+    .achievement-refresh-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(168, 230, 207, 0.5);
+    }
+    
+    .achievement-refresh-btn:active {
+      transform: translateY(-1px);
+    }
+    
+    /* 分類篩選區 */
     .filter-section {
-      background: rgba(20, 40, 80, 0.9);
-      border: 2px solid #00ffff;
-      border-radius: 15px;
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 800px;
-      box-shadow: 0 0 25px #00ffff33;
-      backdrop-filter: blur(8px);
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 25px;
+      padding: 25px 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
     }
     
     .filter-title {
-      color: #00ffff;
-      font-size: 1.4rem;
-      font-weight: bold;
-      margin-bottom: 15px;
-      text-shadow: 0 0 12px #00ffff;
-      letter-spacing: 1px;
+      color: #667eea;
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
     }
     
     .filter-buttons {
       display: flex;
       flex-wrap: wrap;
-      gap: 15px;
+      gap: 12px;
       justify-content: center;
     }
     
     .filter-btn {
-      background: rgba(0, 255, 255, 0.15);
-      border: 2px solid #00ffff;
-      color: #00ffff;
-      padding: 12px 20px;
-      border-radius: 12px;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      color: #667eea;
+      border: 2px solid #667eea;
+      padding: 12px 24px;
+      border-radius: 50px;
       cursor: pointer;
-      font-size: 1.1rem;
+      font-size: 1rem;
+      font-weight: 700;
       transition: all 0.3s ease;
-      font-weight: bold;
-      letter-spacing: 1px;
-      text-shadow: 0 0 8px #00ffff;
-      position: relative;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
     }
     
     .filter-btn:hover {
-      background: rgba(0, 255, 255, 0.25);
-      box-shadow: 0 0 20px #00ffff;
-      transform: scale(1.05);
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
     }
     
     .filter-btn.active {
-      background: linear-gradient(90deg, #00ffff, #a259ff);
-      color: #000;
-      box-shadow: 0 0 25px #00ffff;
-      font-weight: 700;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
     }
     
     .filter-btn.all {
-      background: linear-gradient(90deg, #ffd700, #ffaa00);
-      color: #000;
-      border-color: #ffd700;
-      text-shadow: none;
+      background: linear-gradient(135deg, #ffd93d, #ff6b6b);
+      color: white;
+      border-color: #ff6b6b;
     }
     
     .filter-btn.all:hover {
-      box-shadow: 0 0 25px #ffd700;
+      box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
     }
     
-    .filter-btn.all.active {
-      background: linear-gradient(90deg, #ffd700, #ffaa00);
-      box-shadow: 0 0 30px #ffd700;
-    }
-    
-    /* 新增：成就數量泡泡樣式 */
-    .achievement-badge {
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      background: linear-gradient(135deg, #ff6b6b, #ff4757);
-      color: white;
-      border-radius: 50%;
-      min-width: 20px;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.75rem;
-      font-weight: bold;
-      box-shadow: 0 0 10px rgba(255, 107, 107, 0.6);
-      border: 2px solid white;
-      animation: badgePulse 2s ease-in-out infinite;
-      z-index: 10;
-    }
-    
-    @keyframes badgePulse {
-      0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 0 10px rgba(255, 107, 107, 0.6);
-      }
-      50% {
-        transform: scale(1.1);
-        box-shadow: 0 0 15px rgba(255, 107, 107, 0.8);
-      }
-    }
-    
-    .achievement-badge.hidden {
-      display: none;
-    }
-    
-    /* 新增：標題數字泡泡樣式 */
-    .achievement-title {
-      position: relative;
-      display: inline-block;
-    }
-    
-    .total-claimable-badge {
-      position: absolute;
-      top: -15px;
-      right: -25px;
-      background: linear-gradient(135deg, #ff6b6b, #ff4757);
-      color: white;
-      border-radius: 50%;
-      min-width: 28px;
-      height: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      font-weight: bold;
-      box-shadow: 0 0 15px rgba(255, 107, 107, 0.8);
-      border: 3px solid white;
-      animation: totalBadgePulse 2s ease-in-out infinite;
-      z-index: 10;
-    }
-    
-    @keyframes totalBadgePulse {
-      0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 0 15px rgba(255, 107, 107, 0.8);
-      }
-      50% {
-        transform: scale(1.15);
-        box-shadow: 0 0 25px rgba(255, 107, 107, 1);
-      }
-    }
-    
-    .stats-section {
-      background: rgba(20, 40, 80, 0.9);
-      border: 2px solid #ffd700;
-      border-radius: 15px;
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 800px;
-      box-shadow: 0 0 25px #ffd70033;
-      backdrop-filter: blur(8px);
-    }
-    
-    .stats-title {
-      color: #ffd700;
-      font-size: 1.4rem;
-      font-weight: bold;
-      margin-bottom: 15px;
-      text-shadow: 0 0 12px #ffd700;
-      letter-spacing: 1px;
-    }
-    
-    .stats-grid {
+    /* 成就列表區 */
+    .achievement-list {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 25px;
+      padding: 10px;
     }
     
-    .stat-item {
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid #ffd700;
-      border-radius: 10px;
-      padding: 15px;
-      text-align: center;
-      box-shadow: 0 0 15px #ffd70022;
-    }
-    
-    .stat-value {
-      font-size: 1.8rem;
-      font-weight: bold;
-      color: #ffd700;
-      text-shadow: 0 0 10px #ffd700;
-      margin-bottom: 5px;
-    }
-    
-    .stat-label {
-      font-size: 1rem;
-      color: #e0e0e0;
-      text-shadow: 0 0 6px #e0e0e0;
-    }
-    
-    .group-hidden {
-      display: none;
-    }
-    
-    .claim-btn {
-      background: linear-gradient(90deg, #00ff00, #00cc00);
-      color: #000;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 0.85rem;
-      margin-top: 6px;
-      box-shadow: 0 0 12px #00ff00;
+    /* 成就卡片 */
+    .achievement-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 25px;
+      padding: 25px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
       transition: all 0.3s ease;
+      border: 3px solid transparent;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
     }
     
-    .claim-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px #00ff00;
+    .achievement-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
     }
     
-    /* 新增：背景音樂按鈕樣式 */
+    /* 可領取成就 - 亮色外框 */
+    .achievement-card.claimable {
+      border-color: #ffd93d;
+      box-shadow: 0 8px 30px rgba(255, 217, 61, 0.3);
+      animation: claimablePulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes claimablePulse {
+      0%, 100% { box-shadow: 0 8px 30px rgba(255, 217, 61, 0.3); }
+      50% { box-shadow: 0 12px 40px rgba(255, 217, 61, 0.5); }
+    }
+    
+    /* 已領取成就 - 降低透明度 */
+    .achievement-card.claimed {
+      opacity: 0.6;
+      background: rgba(255, 255, 255, 0.7);
+    }
+    
+    /* 未完成成就 - 灰階效果 */
+    .achievement-card.locked {
+      filter: grayscale(0.8);
+      opacity: 0.7;
+    }
+    
+    .achievement-card-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      display: block;
+    }
+    
+    .achievement-card-content {
+      margin-bottom: 15px;
+    }
+    
+    .achievement-card-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #667eea;
+      margin-bottom: 8px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    .achievement-card-desc {
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    
+    .achievement-progress {
+      background: #f0f0f0;
+      border-radius: 15px;
+      height: 12px;
+      margin: 12px 0;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .achievement-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 15px;
+      transition: width 0.5s ease;
+    }
+    
+    .achievement-progress-text {
+      font-size: 0.85rem;
+      color: #764ba2;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+    
+    .achievement-reward {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #ffd93d;
+      margin-bottom: 12px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    .achievement-status {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    
+    .achievement-status-locked {
+      background: #e0e0e0;
+      color: #888;
+    }
+    
+    .achievement-status-claimable {
+      background: linear-gradient(135deg, #ffd93d, #ff6b6b);
+      color: white;
+      animation: statusGlow 2s ease-in-out infinite;
+    }
+    
+    @keyframes statusGlow {
+      0%, 100% { box-shadow: 0 0 10px rgba(255, 217, 61, 0.5); }
+      50% { box-shadow: 0 0 20px rgba(255, 217, 61, 0.8); }
+    }
+    
+    .achievement-status-claimed {
+      background: #a8e6cf;
+      color: #2d5a4a;
+    }
+    
+    .achievement-claim-btn {
+      background: linear-gradient(135deg, #ffd93d, #ff6b6b);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 1rem;
+      box-shadow: 0 5px 20px rgba(255, 217, 61, 0.4);
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+    
+    .achievement-claim-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 217, 61, 0.5);
+    }
+    
+    .achievement-claim-btn:active {
+      transform: translateY(0);
+    }
+    
+    /* 空狀態 */
+    .empty-state {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 25px;
+      padding: 60px 40px;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .empty-state-text {
+      font-size: 1.5rem;
+      color: #764ba2;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    
+    /* 背景音樂按鈕 */
     #muteToggle {
       position: fixed;
       bottom: 20px;
       right: 20px;
       z-index: 1001;
-      background: rgba(10, 20, 40, 0.85);
-      color: #fff;
-      border: 2px solid #00ffff;
-      width: 50px;
-      height: 50px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #667eea;
+      border: 3px solid #667eea;
+      width: 55px;
+      height: 55px;
       border-radius: 50%;
       font-size: 1.5rem;
       cursor: pointer;
-      box-shadow: 0 0 16px #00ffff;
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
       transition: all 0.3s ease;
       display: flex;
       align-items: center;
@@ -674,10 +456,10 @@
     
     #muteToggle:hover {
       transform: scale(1.1);
-      box-shadow: 0 0 32px #00ffff;
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
     }
-
-    /* 新增：成就達成彈窗樣式 */
+    
+    /* ========== 保留原本的成就彈窗樣式 ========== */
     .achievement-modal {
       position: fixed;
       top: 0;
@@ -776,13 +558,6 @@
       z-index: 1;
     }
     
-    @keyframes iconFloat {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      25% { transform: translateY(-8px) rotate(2deg); }
-      50% { transform: translateY(-15px) rotate(0deg); }
-      75% { transform: translateY(-8px) rotate(-2deg); }
-    }
-    
     .achievement-modal-title {
       font-size: 1.25rem;
       font-weight: 800;
@@ -837,17 +612,6 @@
       height: 200%;
       background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
       animation: shimmer 2s infinite;
-    }
-    
-    @keyframes rewardGlow {
-      from { 
-        box-shadow: 0 0 30px #ffd700, 0 0 40px #ffaa00;
-        transform: scale(1);
-      }
-      to { 
-        box-shadow: 0 0 40px #ffd700, 0 0 50px #ffaa00, 0 0 60px #ff8800;
-        transform: scale(1.02);
-      }
     }
     
     .achievement-modal-stars {
@@ -1025,40 +789,7 @@
       }
     }
 
-    /* 新增：影片按鈕樣式 */
-    .video-button {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      width: 32px;
-      height: 32px;
-      background: rgba(255, 0, 0, 0.8);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 15;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
-      border: 2px solid rgba(255, 255, 255, 0.3);
-    }
-    
-    .video-button:hover {
-      transform: scale(1.1);
-      background: rgba(255, 0, 0, 1);
-      box-shadow: 0 0 16px rgba(255, 0, 0, 0.8);
-      border-color: rgba(255, 255, 255, 0.8);
-    }
-    
-    .video-icon {
-      color: white;
-      font-size: 14px;
-      font-weight: bold;
-      text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
-    }
-
-    /* 新增：影片 Modal 樣式 */
+    /* 影片 Modal 樣式 */
     .video-modal {
       position: fixed;
       top: 0;
@@ -1074,41 +805,41 @@
     }
     
     .video-modal-content {
-      background: rgba(10, 20, 40, 0.95);
-      border: 2px solid #00ffff;
-      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 3px solid #667eea;
+      border-radius: 20px;
       width: 90%;
       max-width: 800px;
       max-height: 90vh;
       overflow: hidden;
-      box-shadow: 0 0 32px #00ffff, 0 0 48px #a259ffcc;
+      box-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
     }
     
     .video-modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 20px;
-      background: rgba(0, 255, 255, 0.1);
-      border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+      padding: 20px 25px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-bottom: 2px solid #667eea;
     }
     
     .video-modal-header h3 {
-      color: #00ffff;
+      color: white;
       margin: 0;
-      font-size: 1.2rem;
-      text-shadow: 0 0 8px #00ffff;
+      font-size: 1.3rem;
+      font-weight: 800;
     }
     
     .video-modal-close {
-      background: rgba(255, 0, 0, 0.8);
+      background: rgba(255, 255, 255, 0.3);
       color: white;
       border: none;
-      width: 32px;
-      height: 32px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: bold;
       transition: all 0.3s ease;
       display: flex;
@@ -1117,13 +848,12 @@
     }
     
     .video-modal-close:hover {
-      background: rgba(255, 0, 0, 1);
+      background: rgba(255, 255, 255, 0.5);
       transform: scale(1.1);
-      box-shadow: 0 0 12px rgba(255, 0, 0, 0.8);
     }
     
     .video-modal-body {
-      padding: 20px;
+      padding: 25px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -1134,9 +864,9 @@
     .video-modal-body video {
       width: 100%;
       height: 400px;
-      border-radius: 12px;
-      border: 2px solid rgba(0, 255, 255, 0.3);
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+      border-radius: 15px;
+      border: 2px solid #667eea;
+      box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
     }
     
     .video-modal-body iframe {
@@ -1146,332 +876,282 @@
     .video-modal-body video {
       background: #000;
     }
-
-    /* 新增：成就卡片中的影片按鈕 */
-    .achievement-detail .video-button {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      width: 28px;
-      height: 28px;
-      background: rgba(255, 0, 0, 0.8);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 15;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
-      border: 2px solid rgba(255, 255, 255, 0.3);
-    }
     
-    .achievement-detail .video-button:hover {
-      transform: scale(1.1);
-      background: rgba(255, 0, 0, 1);
-      box-shadow: 0 0 16px rgba(255, 0, 0, 0.8);
-      border-color: rgba(255, 255, 255, 0.8);
-    }
-    
-    .achievement-detail .video-icon {
-      color: white;
-      font-size: 12px;
-      font-weight: bold;
-      text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
-    }
-    
-    /* ========== 響應式設計 ========== */
+    /* ========== RWD 響應式設計 ========== */
     
     /* 平板設備 (768px - 1024px) */
     @media (max-width: 1024px) {
-      header {
-        padding: 16px 20px;
+      .achievement-header {
+        padding: 25px 30px;
       }
       
-      .total-stars-display {
-        padding: 6px 12px;
-        font-size: 1rem;
+      .achievement-title {
+        font-size: 2.2rem;
       }
       
-      header h1 {
-        font-size: 2rem;
+      .achievement-subtitle {
+        font-size: 1.1rem;
       }
       
-      .header-actions {
-        gap: 16px;
+      .achievement-summary {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
       }
       
-      .btn {
-        padding: 10px 20px;
-        font-size: 1rem;
+      .achievement-summary-number {
+        font-size: 2.2rem;
       }
       
-      .achievement-section {
-        max-width: 90%;
-        padding: 25px 15px 35px 15px;
-      }
-      
-      .achievement-section h2 {
-        font-size: 1.8rem;
-      }
-      
-      .achievement-badges {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 14px;
-      }
-      
-      .achievement-name {
-        font-size: 1.2rem;
-      }
-      
-      .achievement-description {
-        font-size: 0.9rem;
+      .achievement-list {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
       }
     }
     
     /* 手機設備 (480px - 768px) */
     @media (max-width: 768px) {
-      header {
-        padding: 12px 15px;
-        flex-direction: column;
-        gap: 15px;
-      }
-      
-      .total-stars-display {
-        padding: 5px 10px;
-        font-size: 0.9rem;
-        margin-right: 0;
-        margin-bottom: 10px;
-      }
-      
-      header h1 {
-        font-size: 1.6rem;
-        letter-spacing: 2px;
-      }
-      
-      .header-actions {
-        gap: 10px;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-      
-      .btn {
-        padding: 8px 16px;
-        font-size: 0.9rem;
-        margin-left: 4px;
-        margin-right: 4px;
-      }
-      
-      .achievement-section {
-        max-width: 95%;
-        margin: 20px auto 0 auto;
-        padding: 20px 12px 30px 12px;
-      }
-      
-      .achievement-section h2 {
-        font-size: 1.5rem;
-        margin-bottom: 20px;
-      }
-      
-      .achievement-badges {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 12px;
-      }
-      
-      .achievement-detail {
+      body {
         padding: 15px;
       }
       
       .achievement-header {
-        gap: 10px;
-        margin-bottom: 10px;
+        padding: 20px 25px;
+        border-radius: 25px;
       }
       
-      .achievement-icon {
-        font-size: 1.6rem;
+      .achievement-title {
+        font-size: 1.8rem;
       }
       
-      .achievement-name {
+      .achievement-subtitle {
+        font-size: 1rem;
+      }
+      
+      .achievement-back-btn {
+        padding: 10px 24px;
+        font-size: 0.95rem;
+      }
+      
+      .achievement-summary {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      
+      .achievement-summary-card {
+        padding: 20px 15px;
+      }
+      
+      .achievement-summary-number {
+        font-size: 2rem;
+      }
+      
+      .achievement-summary-label {
+        font-size: 0.9rem;
+      }
+      
+      .achievement-actions {
+        flex-direction: column;
+        gap: 12px;
+        padding: 20px 25px;
+      }
+      
+      .achievement-claim-all-btn {
+        width: 100%;
+        padding: 14px 30px;
         font-size: 1.1rem;
       }
       
-      .achievement-description {
-        font-size: 0.85rem;
+      .achievement-refresh-btn {
+        width: 100%;
+        padding: 14px 30px;
+        font-size: 1rem;
       }
       
-      .stats-section, .filter-section {
-        max-width: 95%;
-        margin: 15px auto;
-        padding: 15px 12px;
+      .filter-section {
+        padding: 20px 25px;
       }
       
-      .stats-title, .filter-title {
-        font-size: 1.2rem;
-      }
-      
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+      .filter-title {
+        font-size: 1.3rem;
       }
       
       .filter-buttons {
-        gap: 8px;
-        flex-wrap: wrap;
+        gap: 10px;
       }
       
       .filter-btn {
-        padding: 6px 12px;
-        font-size: 0.8rem;
+        padding: 10px 18px;
+        font-size: 0.9rem;
+      }
+      
+      .achievement-list {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 5px;
+      }
+      
+      .achievement-card {
+        padding: 20px;
+        border-radius: 20px;
+      }
+      
+      .achievement-card-icon {
+        font-size: 2.5rem;
+      }
+      
+      .achievement-card-title {
+        font-size: 1.2rem;
+      }
+      
+      .achievement-card-desc {
+        font-size: 0.9rem;
+      }
+      
+      .achievement-modal-content {
+        max-width: 380px;
+        width: 100%;
+      }
+      
+      .video-modal-content {
+        width: 95%;
+      }
+      
+      .video-modal-body iframe,
+      .video-modal-body video {
+        height: 300px;
       }
     }
     
     /* 小手機設備 (320px - 480px) */
     @media (max-width: 480px) {
-      header {
-        padding: 10px 12px;
-      }
-      
-      .total-stars-display {
-        padding: 4px 8px;
-        font-size: 0.8rem;
-      }
-      
-      header h1 {
-        font-size: 1.4rem;
-        letter-spacing: 1px;
-      }
-      
-      .header-actions {
-        gap: 6px;
-      }
-      
-      .btn {
-        padding: 6px 12px;
-        font-size: 0.8rem;
-        margin-left: 2px;
-        margin-right: 2px;
-      }
-      
-      .achievement-section {
-        max-width: 98%;
-        margin: 15px auto 0 auto;
-        padding: 15px 10px 25px 10px;
-      }
-      
-      .achievement-section h2 {
-        font-size: 1.3rem;
-        margin-bottom: 15px;
-      }
-      
-      .achievement-badges {
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-      
-      .achievement-detail {
-        padding: 12px;
+      body {
+        padding: 10px;
       }
       
       .achievement-header {
-        gap: 8px;
-        margin-bottom: 8px;
+        padding: 15px 20px;
+        border-radius: 20px;
       }
       
-      .achievement-icon {
-        font-size: 1.4rem;
+      .achievement-title {
+        font-size: 1.5rem;
       }
       
-      .achievement-name {
+      .achievement-subtitle {
+        font-size: 0.9rem;
+      }
+      
+      .achievement-back-btn {
+        padding: 8px 20px;
+        font-size: 0.9rem;
+      }
+      
+      .achievement-summary-card {
+        padding: 15px 12px;
+        border-radius: 20px;
+      }
+      
+      .achievement-summary-number {
+        font-size: 1.8rem;
+      }
+      
+      .achievement-summary-label {
+        font-size: 0.85rem;
+      }
+      
+      .achievement-actions {
+        padding: 15px 20px;
+        border-radius: 20px;
+      }
+      
+      .achievement-claim-all-btn {
+        padding: 12px 24px;
         font-size: 1rem;
       }
       
-      .achievement-description {
-        font-size: 0.8rem;
+      .achievement-refresh-btn {
+        padding: 12px 24px;
+        font-size: 0.95rem;
       }
       
-      .stats-section, .filter-section {
-        max-width: 98%;
-        margin: 10px auto;
-        padding: 12px 10px;
+      .filter-section {
+        padding: 15px 20px;
+        border-radius: 20px;
       }
       
-      .stats-title, .filter-title {
-        font-size: 1.1rem;
-      }
-      
-      .stats-grid {
-        grid-template-columns: 1fr;
-        gap: 8px;
-      }
-      
-      .filter-buttons {
-        gap: 6px;
+      .filter-title {
+        font-size: 1.2rem;
       }
       
       .filter-btn {
-        padding: 5px 10px;
-        font-size: 0.75rem;
+        padding: 8px 16px;
+        font-size: 0.85rem;
       }
       
-      .achievement-modal-content {
-        max-width: 420px;
-        width: 100%;
-        max-height: 85vh;
-        padding: 0;
+      .achievement-card {
+        padding: 15px;
+        border-radius: 18px;
       }
       
-      .achievement-modal-title {
-        font-size: 1.15rem;
+      .achievement-card-icon {
+        font-size: 2rem;
       }
       
-      .achievement-modal-description {
-        font-size: 0.98rem;
+      .achievement-card-title {
+        font-size: 1.1rem;
+      }
+      
+      .achievement-card-desc {
+        font-size: 0.85rem;
+      }
+      
+      .achievement-claim-btn {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+      }
+      
+      .video-modal-body iframe,
+      .video-modal-body video {
+        height: 250px;
       }
     }
     
     /* 橫向手機 (landscape) */
     @media (max-width: 768px) and (orientation: landscape) {
-      header {
+      .achievement-summary {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .achievement-actions {
         flex-direction: row;
-        padding: 8px 15px;
       }
       
-      .total-stars-display {
-        margin-right: 12px;
-        margin-bottom: 0;
-      }
-      
-      header h1 {
-        font-size: 1.4rem;
-      }
-      
-      .achievement-section {
-        margin: 10px auto 0 auto;
-        padding: 15px 12px 20px 12px;
-      }
-      
-      .achievement-badges {
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 10px;
+      .achievement-claim-all-btn,
+      .achievement-refresh-btn {
+        width: auto;
       }
     }
     
     /* 觸控設備優化 */
     @media (hover: none) and (pointer: coarse) {
-      .btn:hover, .achievement-detail:hover {
+      .achievement-card:hover,
+      .achievement-summary-card:hover,
+      .achievement-back-btn:hover,
+      .achievement-claim-all-btn:hover,
+      .achievement-refresh-btn:hover,
+      .filter-btn:hover,
+      .achievement-claim-btn:hover {
         transform: none;
       }
       
-      .btn:active, .achievement-detail:active {
+      .achievement-card:active,
+      .achievement-summary-card:active,
+      .achievement-back-btn:active,
+      .achievement-claim-all-btn:active,
+      .achievement-refresh-btn:active,
+      .filter-btn:active,
+      .achievement-claim-btn:active {
         transform: scale(0.95);
-      }
-      
-      .badge.unlocked:hover {
-        transform: none;
-      }
-      
-      .badge.unlocked:active {
-        transform: scale(1.1);
       }
     }
   </style>
@@ -1484,19 +1164,54 @@
   <audio id="bgm" src="sound/午後放鬆時光（純音樂）.mp3" loop></audio>
   <button id="muteToggle">🔇</button>
 
-  <header>
-    <h1>🏆 成就徽章</h1>
-    <div class="header-actions">
-      <div class="total-stars-display">
-        <span class="star-icon">⭐</span>
-        <span class="star-count" id="totalStarsDisplay">0</span>
-      </div>
-      <button class="btn" onclick="location.href='index.html'">🏠 首頁</button>
-      <button class="btn" onclick="location.href='cards.html'">📁 卡片倉庫</button>
-      <button class="btn" onclick="location.href='atlas.html'">🌠 星座圖鑑</button>
+  <div class="achievement-page">
+    <!-- 頁首區 -->
+    <div class="achievement-header">
+      <h1 class="achievement-title">🏆 成就中心</h1>
+      <p class="achievement-subtitle">完成任務，領取星星獎勵</p>
+      <button class="achievement-back-btn" onclick="location.href='index.html'">🏠 返回首頁</button>
     </div>
-  </header>
-  
+
+    <!-- 玩家成就統計區 -->
+    <div class="achievement-summary">
+      <div class="achievement-summary-card">
+        <div class="achievement-summary-number" id="summaryStars">0</div>
+        <div class="achievement-summary-label">⭐ 目前星星</div>
+      </div>
+      <div class="achievement-summary-card">
+        <div class="achievement-summary-number" id="summaryCompleted">0</div>
+        <div class="achievement-summary-label">✅ 已完成</div>
+      </div>
+      <div class="achievement-summary-card">
+        <div class="achievement-summary-number" id="summaryClaimable">0</div>
+        <div class="achievement-summary-label">🎁 可領取</div>
+      </div>
+      <div class="achievement-summary-card">
+        <div class="achievement-summary-number" id="summaryClaimed">0</div>
+        <div class="achievement-summary-label">✓ 已領取</div>
+      </div>
+    </div>
+
+    <!-- 操作區 -->
+    <div class="achievement-actions">
+      <button id="claimAllAchievementsBtn" class="achievement-claim-all-btn">🎁 一鍵領取所有可領取獎勵</button>
+      <button class="achievement-refresh-btn" onclick="location.reload()">🔄 重新整理成就</button>
+    </div>
+
+    <!-- 分類篩選區 -->
+    <div class="filter-section">
+      <div class="filter-title">🔍 分類篩選</div>
+      <div class="filter-buttons" id="filterButtons">
+        <!-- 篩選按鈕將由JavaScript動態生成 -->
+      </div>
+    </div>
+
+    <!-- 成就列表區 -->
+    <div class="achievement-list" id="achievementBadges">
+      <!-- 成就卡片將由JavaScript動態生成 -->
+    </div>
+  </div>
+
   <!-- 新增：成就達成彈窗 -->
   <div id="achievementModal" class="achievement-modal">
     <div class="achievement-modal-content">
@@ -1526,30 +1241,6 @@
       </div>
     </div>
   </div>
-  
-  <!-- 新增：統計資訊區域 -->
-  <div class="stats-section">
-    <div class="stats-title">📊 成就統計</div>
-    <div class="stats-grid" id="statsGrid">
-      <!-- 統計資訊將由JavaScript動態生成 -->
-    </div>
-  </div>
-  
-  <!-- 新增：分類篩選區域 -->
-  <div class="filter-section">
-    <div class="filter-title">🔍 分類篩選</div>
-    <div class="filter-buttons" id="filterButtons">
-      <!-- 篩選按鈕將由JavaScript動態生成 -->
-    </div>
-  </div>
-  
-  <div class="achievement-section">
-    <h2 class="achievement-title">
-      所有成就徽章
-      <span id="totalClaimableBadge" class="total-claimable-badge" style="display: none;">0</span>
-    </h2>
-    <div id="achievementBadges" class="achievement-badges"></div>
-  </div>
   <script src="js/cards.js"></script>
   <script src="js/userData.js"></script>
   <script>
@@ -1564,6 +1255,8 @@
 
     // 初始化成就頁面
     function initializeAchievementPage() {
+      // 清理每日簽到相關資料
+      migrateRemoveDailyCheckin();
       // 創建分類按鈕
       renderFilterButtons();
       // 渲染成就徽章
@@ -1587,19 +1280,12 @@
       { id: 'common_master', name: '普通卡大師', requirement: 50, reward: 20, icon: '📚', type: 'rarity', rarity: '普通', description: '收集50張普通卡片，掌握基礎詞彙' },
       { id: 'rare_master', name: '稀有卡大師', requirement: 30, reward: 40, icon: '🔮', type: 'rarity', rarity: '稀有', description: '收集30張稀有卡片，擴展詞彙範圍' },
       { id: 'epic_master', name: '超稀有大師', requirement: 20, reward: 80, icon: '🌟', type: 'rarity', rarity: '超稀有', description: '收集20張超稀有卡片，掌握高級詞彙' },
-      { id: 'shard_collector', name: '碎片收集者', requirement: 100, reward: 25, icon: '💎', type: 'shards', description: '收集100個碎片，開始碎片收集之路' },
-      { id: 'shard_hoarder', name: '碎片囤積者', requirement: 500, reward: 100, icon: '🏦', type: 'shards', description: '收集500個碎片，成為碎片囤積者' },
-      { id: 'shard_master', name: '碎片大師', requirement: 1000, reward: 200, icon: '💍', type: 'shards', description: '收集1000個碎片，成為碎片大師' },
       { id: 'first_card', name: '初學者', requirement: 1, reward: 1, icon: '🎯', type: 'special', description: '獲得第一張卡片，開始學習之旅' },
       { id: 'lucky_starter', name: '幸運新手', requirement: 5, reward: 5, icon: '🍀', type: 'special', description: '獲得5張卡片，展現你的幸運' },
       { id: 'dedicated', name: '專注學習者', requirement: 25, reward: 20, icon: '📖', type: 'special', description: '獲得25張卡片，展現你的專注' },
       { id: 'persistent', name: '堅持不懈', requirement: 75, reward: 60, icon: '💪', type: 'special', description: '獲得75張卡片，展現你的堅持' },
       { id: 'vocabulary_king', name: '詞彙之王', requirement: 150, reward: 150, icon: '👑', type: 'special', description: '獲得150張卡片，成為詞彙之王' },
       { id: 'language_legend', name: '語言傳奇', requirement: 300, reward: 300, icon: '🏆', type: 'special', description: '獲得300張卡片，成為語言傳奇' },
-      { id: 'daily_1', name: '每日簽到1天', requirement: 1, reward: 2, icon: '📅', type: 'daily', description: '連續簽到1天，養成好習慣' },
-      { id: 'daily_7', name: '每日簽到7天', requirement: 7, reward: 10, icon: '📆', type: 'daily', description: '連續簽到7天，堅持一週' },
-      { id: 'daily_30', name: '每日簽到30天', requirement: 30, reward: 50, icon: '🗓️', type: 'daily', description: '連續簽到30天，堅持一個月' },
-      { id: 'daily_100', name: '每日簽到100天', requirement: 100, reward: 200, icon: '📊', type: 'daily', description: '連續簽到100天，成為忠實用戶' },
       { id: 'star_collector', name: '星星收集者', requirement: 100, reward: 10, icon: '⭐', type: 'stars', description: '收集100顆星星，開始星星收集' },
       { id: 'star_hoarder', name: '星星囤積者', requirement: 500, reward: 50, icon: '✨', type: 'stars', description: '收集500顆星星，成為星星囤積者' },
       { id: 'star_master', name: '星星大師', requirement: 1000, reward: 100, icon: '🌟', type: 'stars', description: '收集1000顆星星，成為星星大師' },
@@ -1688,14 +1374,11 @@
     ];
     // 取得本地進度
     let ownedCards = JSON.parse(localStorage.getItem('ownedCards') || '{}');
-    let shards = JSON.parse(localStorage.getItem('cardShards') || '{}');
     // 各類型分組
     const groupTitles = {
       collection: '📚 收集進度',
       rarity: '🎯 稀有度專精',
-      shards: '💎 碎片系統',
       special: '🏆 特殊成就',
-      daily: '📅 每日簽到',
       stars: '⭐ 星星收集',
       performance: '⚡ 遊戲表現',
       fill: '📝 填空挑戰',
@@ -1864,34 +1547,22 @@
     
     // 新增：渲染統計資訊
     function renderStats() {
-      const statsGrid = document.getElementById('statsGrid');
       const claimed = getClaimedAchievements();
+      const totalStars = parseInt(localStorage.getItem('totalStars') || '0');
       
       const totalAchievements = achievements.length;
       const unlockedAchievements = achievements.filter(ach => checkAchievementUnlocked(ach)).length;
       const claimedAchievements = claimed.length;
-      const totalRewards = claimed.reduce((sum, id) => {
-        const ach = achievements.find(a => a.id === id);
-        return sum + (ach ? ach.reward : 0);
-      }, 0);
+      // 修正：直接計算可領取成就數量，避免出現負數
+      const claimableAchievements = achievements.filter(ach =>
+        checkAchievementUnlocked(ach) && !claimed.includes(ach.id)
+      ).length;
       
-      const stats = [
-        { number: totalAchievements, label: '總成就數' },
-        { number: unlockedAchievements, label: '已達成' },
-        { number: claimedAchievements, label: '已領取' },
-        { number: totalRewards, label: '總獎勵星星' }
-      ];
-      
-      statsGrid.innerHTML = '';
-      stats.forEach(stat => {
-        const statItem = document.createElement('div');
-        statItem.className = 'stat-item';
-        statItem.innerHTML = `
-          <div class="stat-value">${stat.number}</div>
-          <div class="stat-label">${stat.label}</div>
-        `;
-        statsGrid.appendChild(statItem);
-      });
+      // 更新統計區
+      document.getElementById('summaryStars').textContent = totalStars;
+      document.getElementById('summaryCompleted').textContent = unlockedAchievements;
+      document.getElementById('summaryClaimable').textContent = claimableAchievements;
+      document.getElementById('summaryClaimed').textContent = claimedAchievements;
     }
     
     // 新增：更新總星星顯示
@@ -2022,11 +1693,13 @@
       const titleBadge = document.getElementById('totalClaimableBadge');
       const totalCount = getUnclaimedAchievementsCount();
       
-      if (totalCount > 0) {
-        titleBadge.textContent = totalCount;
-        titleBadge.style.display = 'flex';
-      } else {
-        titleBadge.style.display = 'none';
+      if (titleBadge) {
+        if (totalCount > 0) {
+          titleBadge.textContent = totalCount;
+          titleBadge.style.display = 'flex';
+        } else {
+          titleBadge.style.display = 'none';
+        }
       }
     }
     
@@ -2072,9 +1745,6 @@
           break;
         case 'shards':
           current = Object.values(shards).reduce((sum, c) => sum + c, 0);
-          break;
-        case 'daily':
-          current = parseInt(localStorage.getItem('loginDays') || '0');
           break;
         case 'stars':
           current = parseInt(localStorage.getItem('totalStars') || '0');
@@ -2179,8 +1849,6 @@
           return getCardsByRarity(ach.rarity).length >= ach.requirement;
         case 'shards':
           return Object.values(shards).reduce((sum, c) => sum + c, 0) >= ach.requirement;
-        case 'daily':
-          return parseInt(localStorage.getItem('loginDays') || '0') >= ach.requirement;
         case 'stars':
           return parseInt(localStorage.getItem('totalStars') || '0') >= ach.requirement;
         case 'performance':
@@ -2365,135 +2033,107 @@
         const isClaimed = claimed.includes(ach.id);
         const currentProgress = getAchievementProgress(ach);
         const progressPercentage = getProgressPercentage(ach);
-        const achievementDetail = document.createElement('div');
-        achievementDetail.className = 'achievement-detail';
         
-        // 為可領取的成就添加特殊樣式
-        if (unlocked && !isClaimed) {
-          achievementDetail.classList.add('claimable-achievement');
-        }
+        // 創建成就卡片
+        const card = document.createElement('div');
+        card.className = 'achievement-card';
         
-        // 成就標題區域
-        const header = document.createElement('div');
-        header.className = 'achievement-header';
-        const icon = document.createElement('div');
-        icon.className = 'achievement-icon';
-        icon.textContent = ach.icon;
+        // 添加狀態 class
         if (isClaimed) {
-          icon.classList.add('claimed-badge');
+          card.classList.add('claimed');
+        } else if (unlocked) {
+          card.classList.add('claimable');
+        } else {
+          card.classList.add('locked');
         }
-        const info = document.createElement('div');
-        info.className = 'achievement-info';
-        const name = document.createElement('div');
-        name.className = 'achievement-name';
-        name.textContent = ach.name;
-        const description = document.createElement('div');
-        description.className = 'achievement-description';
-        description.textContent = ach.description;
-        info.appendChild(name);
-        info.appendChild(description);
         
-        // 新增：影片按鈕（如果成就有關聯影片）
-        if (ach.youtube) {
-          const videoButton = document.createElement('div');
-          videoButton.className = 'video-button';
-          videoButton.innerHTML = '<span class="video-icon">▶</span>';
-          videoButton.title = '觀看相關影片';
-          videoButton.onclick = (e) => {
-            e.stopPropagation();
-            showVideoModal(ach);
-          };
-          achievementDetail.appendChild(videoButton);
+        // 成就圖示
+        const icon = document.createElement('div');
+        icon.className = 'achievement-card-icon';
+        icon.textContent = ach.icon;
+        card.appendChild(icon);
+        
+        // 成就內容區
+        const content = document.createElement('div');
+        content.className = 'achievement-card-content';
+        
+        // 成就標題
+        const title = document.createElement('div');
+        title.className = 'achievement-card-title';
+        title.textContent = ach.name;
+        content.appendChild(title);
+        
+        // 成就說明
+        const desc = document.createElement('div');
+        desc.className = 'achievement-card-desc';
+        desc.textContent = ach.description;
+        content.appendChild(desc);
+        
+        // 進度條
+        const progress = document.createElement('div');
+        progress.className = 'achievement-progress';
+        const progressBar = document.createElement('div');
+        progressBar.className = 'achievement-progress-bar';
+        progressBar.style.width = progressPercentage + '%';
+        progress.appendChild(progressBar);
+        
+        const progressText = document.createElement('div');
+        progressText.className = 'achievement-progress-text';
+        progressText.textContent = `${currentProgress} / ${ach.requirement}`;
+        progress.appendChild(progressText);
+        content.appendChild(progress);
+        
+        // 獎勵星星
+        const reward = document.createElement('div');
+        reward.className = 'achievement-reward';
+        let rewardText = '';
+        if (ach.type === 'zodiac') {
+          if (isClaimed) {
+            rewardText = `${zodiacRewards[ach.id] || '?'} ⭐`;
+          } else {
+            const [min, max] = ach.rewardRange;
+            rewardText = `${min === max ? min : `${min}~${max}`} ⭐`;
+          }
+        } else if (ach.type === 'greek') {
+          if (isClaimed) {
+            rewardText = `${greekRewards[ach.id] || '?'} ⭐`;
+          } else {
+            const [min, max] = ach.rewardRange;
+            rewardText = `${min === max ? min : `${min}~${max}`} ⭐`;
+          }
+        } else {
+          rewardText = `${ach.reward} ⭐`;
         }
+        reward.textContent = rewardText;
+        content.appendChild(reward);
         
         // 狀態標籤
         const status = document.createElement('div');
         status.className = 'achievement-status';
-        if (isClaimed) status.classList.add('status-claimed');
-        else if (unlocked) status.classList.add('status-unlocked');
-        else status.classList.add('status-locked');
-        status.textContent = isClaimed ? '已領取' : unlocked ? '可領取' : '未達成';
-        
-        header.appendChild(icon);
-        header.appendChild(info);
-        header.appendChild(status);
-        achievementDetail.appendChild(header);
-        
-        // 進度條
-        const progressContainer = document.createElement('div');
-        progressContainer.className = 'progress-container';
-        const progressBar = document.createElement('div');
-        progressBar.className = 'progress-bar';
-        progressBar.style.width = progressPercentage + '%';
-        const progressText = document.createElement('div');
-        progressText.className = 'progress-text';
-        progressText.innerHTML = `<span class='current-progress'>${currentProgress}</span> / <span class='required-progress'>${ach.requirement}</span>`;
-        progressContainer.appendChild(progressBar);
-        progressContainer.appendChild(progressText);
-        
-        // 獎勵資訊
-        const rewardInfo = document.createElement('div');
-        rewardInfo.className = 'reward-info';
-        if (ach.type === 'zodiac') {
-          if (isClaimed) {
-            rewardInfo.innerHTML = `<span>⭐</span><span>獎勵: ${zodiacRewards[ach.id] || '?'} 星星</span>`;
-          } else {
-            const [min, max] = ach.rewardRange;
-            rewardInfo.innerHTML = `<span>⭐</span><span>獎勵: ${min === max ? min : `${min}~${max}`} 星星</span>`;
-          }
-        } else if (ach.type === 'greek') {
-          if (isClaimed) {
-            rewardInfo.innerHTML = `<span>⭐</span><span>獎勵: ${greekRewards[ach.id] || '?'} 星星</span>`;
-          } else {
-            const [min, max] = ach.rewardRange;
-            rewardInfo.innerHTML = `<span>⭐</span><span>獎勵: ${min === max ? min : `${min}~${max}`} 星星</span>`;
-          }
+        if (isClaimed) {
+          status.classList.add('achievement-status-claimed');
+          status.textContent = '✓ 已領取';
+        } else if (unlocked) {
+          status.classList.add('achievement-status-claimable');
+          status.textContent = '🎁 可領取';
         } else {
-          rewardInfo.innerHTML = `<span>⭐</span><span>獎勵: ${ach.reward} 星星</span>`;
+          status.classList.add('achievement-status-locked');
+          status.textContent = '🔒 未完成';
         }
+        content.appendChild(status);
         
-        // 詳細資訊切換按鈕
-        const toggleBtn = document.createElement('button');
-        toggleBtn.className = 'toggle-details';
-        toggleBtn.textContent = '查看詳細資訊';
-        toggleBtn.onclick = function() {
-          const details = this.nextElementSibling;
-          if (details.classList.contains('show')) {
-            details.classList.remove('show');
-            this.textContent = '查看詳細資訊';
-          } else {
-            details.classList.add('show');
-            this.textContent = '隱藏詳細資訊';
-          }
-        };
-        
-        // 詳細資訊區域
-        const details = document.createElement('div');
-        details.className = 'achievement-details';
-        const detailsContent = document.createElement('div');
-        detailsContent.innerHTML = `
-          <div style="margin-bottom: 8px;"><strong>達成條件：</strong>${ach.description}</div>
-          <div style="margin-bottom: 8px;"><strong>當前進度：</strong>${currentProgress} / ${ach.requirement} (${progressPercentage.toFixed(1)}%)</div>
-          <div style="margin-bottom: 8px;"><strong>獎勵內容：</strong>${ach.type === 'zodiac' ? (isClaimed ? (zodiacRewards[ach.id] || '?') : (ach.rewardRange[0] === ach.rewardRange[1] ? ach.rewardRange[0] : `${ach.rewardRange[0]}~${ach.rewardRange[1]}`)) : ach.type === 'greek' ? (isClaimed ? (greekRewards[ach.id] || '?') : (ach.rewardRange[0] === ach.rewardRange[1] ? ach.rewardRange[0] : `${ach.rewardRange[0]}-${ach.rewardRange[1]}隨機`)) : ach.reward} 顆星星</div>
-          <div><strong>成就類型：</strong>${groupTitles[ach.type]}</div>
-        `;
-        details.appendChild(detailsContent);
-        
-        achievementDetail.appendChild(progressContainer);
-        achievementDetail.appendChild(rewardInfo);
-        achievementDetail.appendChild(toggleBtn);
-        achievementDetail.appendChild(details);
+        card.appendChild(content);
         
         // 領獎按鈕
         if (unlocked && !isClaimed) {
           const claimBtn = document.createElement('button');
-          claimBtn.className = 'claim-btn';
+          claimBtn.className = 'achievement-claim-btn';
           claimBtn.textContent = '領取獎勵';
           claimBtn.onclick = () => claimAchievement(ach);
-          achievementDetail.appendChild(claimBtn);
+          card.appendChild(claimBtn);
         }
         
-        container.appendChild(achievementDetail);
+        container.appendChild(card);
       });
     }
     
@@ -2585,7 +2225,7 @@
       };
 
       // 靜態按鈕
-      document.querySelectorAll('.btn, #muteToggle, .achievement-modal-close').forEach(btn => {
+      document.querySelectorAll('.btn, #muteToggle, .achievement-modal-close, .claim-all-btn').forEach(btn => {
         btn.addEventListener('click', playClickSound);
       });
 
@@ -2655,6 +2295,12 @@
       renderBadges();
       updateTotalStarsDisplay();
       updateAllBadges(); // 確保泡泡數量正確顯示
+      
+      // 新增：一鍵領取按鈕事件監聽
+      const claimAllBtn = document.getElementById('claimAllAchievementsBtn');
+      if (claimAllBtn) {
+        claimAllBtn.addEventListener('click', claimAllUnlockedAchievements);
+      }
     });
 
     // 自動產生20個關卡成就（配合atlas.html的設計）
@@ -2742,6 +2388,29 @@
       
       // 移除點擊事件
       modal.onclick = null;
+    }
+    
+    // 清理每日簽到相關的 localStorage 資料
+    function migrateRemoveDailyCheckin() {
+      // 清理每日簽到相關的 localStorage keys
+      const dailyKeys = [
+        'loginDays',
+        'lastLoginDate',
+        'dailyReward',
+        'dailyLogin',
+        'checkInHistory',
+        'rewardHistory',
+        'dailyData'
+      ];
+      
+      dailyKeys.forEach(key => {
+        if (localStorage.getItem(key)) {
+          localStorage.removeItem(key);
+          console.log(`🗑️ 已移除每日簽到資料: ${key}`);
+        }
+      });
+      
+      console.log('✅ 每日簽到資料清理完成');
     }
     
     // 新增：為 SSR 卡片成就添加影片連結
