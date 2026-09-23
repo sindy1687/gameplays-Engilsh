@@ -1,0 +1,2910 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <script src="js/stars.js"></script>
+  <meta charset="UTF-8" />
+  <title>填空挑戰 - 希臘神祇</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="responsive_enhanced.css">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/greek-stage.css">
+  <link rel="stylesheet" href="css/greek-game-theme.css">
+  <link rel="stylesheet" href="css/greek-common.css">
+  <style>
+    /* 防止水平滾動 */
+    html { overflow-x: hidden; }
+    * { box-sizing: border-box; max-width: 100%; }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Arial, sans-serif, 'Orbitron', sans-serif;
+      background: radial-gradient(circle at 50% 25%, var(--god-glow, rgba(255, 215, 0, 0.15)) 0%, transparent 50%),
+                  linear-gradient(150deg, #080d19, #0b1020 50%, #050812);
+      color: #fff;
+      min-height: 100vh;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    /* 神祇主題色變數 */
+    body[data-god="zeus"] {
+      --god-primary: #ffd700;
+      --god-secondary: #00ffff;
+      --god-glow: rgba(255, 215, 0, 0.38);
+    }
+
+    body[data-god="poseidon"] {
+      --god-primary: #00bfff;
+      --god-secondary: #1e90ff;
+      --god-glow: rgba(0, 191, 255, 0.38);
+    }
+
+    body[data-god="athena"] {
+      --god-primary: #9370db;
+      --god-secondary: #ba55d3;
+      --god-glow: rgba(147, 112, 219, 0.38);
+    }
+
+    body[data-god="apollo"] {
+      --god-primary: #ff6347;
+      --god-secondary: #ffa500;
+      --god-glow: rgba(255, 99, 71, 0.38);
+    }
+
+    body[data-god="prometheus"] {
+      --god-primary: #ffad66;
+      --god-secondary: #ff5b48;
+      --god-glow: rgba(255, 105, 65, 0.38);
+    }
+
+    /* 主頁面容器 */
+    .greek-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HUD 頂部欄 */
+    .greek-topbar {
+      width: min(1180px, calc(100% - 32px));
+      min-height: 60px;
+      margin: 16px auto 0;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-radius: 22px;
+      background: rgba(8, 14, 28, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.32);
+    }
+
+    .hud-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hud-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      font-weight: 700;
+      font-size: 1rem;
+      min-height: 42px;
+    }
+
+    .stars-pill {
+      color: #ffd700;
+    }
+
+    .hearts-pill {
+      color: #ff6b6b;
+    }
+
+    .hud-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hud-icon-btn {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.055);
+      color: #fff;
+      cursor: pointer;
+      transition: 0.2s ease;
+      font-size: 1.1rem;
+    }
+
+    .hud-icon-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.10);
+      border-color: var(--god-primary, #ffd700);
+    }
+
+    /* 主內容區 */
+    .greek-main {
+      width: min(1000px, calc(100% - 30px));
+      margin: 0 auto;
+      padding: 20px 0 40px;
+    }
+
+    /* 神祇 Hero 區 */
+    .god-hero {
+      text-align: center;
+      padding: 22px 20px 12px;
+    }
+
+    .god-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 10px;
+      display: grid;
+      place-items: center;
+      border-radius: 20px;
+      font-size: 1.8rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid color-mix(in srgb, var(--god-primary, #ffd700) 42%, transparent);
+      box-shadow: 0 0 32px var(--god-glow, rgba(255, 215, 0, 0.38));
+    }
+
+    .god-name {
+      font-size: clamp(2rem, 3.2vw, 2.55rem);
+      font-weight: 900;
+      margin: 0;
+      color: #fff;
+    }
+
+    .god-name-en {
+      font-size: 1.2rem;
+      letter-spacing: 3px;
+      margin-top: 2px;
+      margin-bottom: 4px;
+      color: var(--god-primary, #ffd700);
+      font-weight: 700;
+    }
+
+    .god-title {
+      margin-top: 6px;
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.58);
+    }
+
+    /* 本局狀態卡片 */
+    .session-status {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin: 0 auto 12px;
+      max-width: 900px;
+    }
+
+    .session-stat {
+      min-height: 72px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid color-mix(in srgb, var(--god-primary, #ffd700) 20%, transparent);
+    }
+
+    .session-label {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.58);
+      margin-bottom: 5px;
+    }
+
+    .session-stat strong {
+      font-size: 1.15rem;
+      color: var(--god-primary, #ffd700);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
+
+    /* 題目主卡 */
+    .question-card {
+      position: relative;
+      padding: 20px 28px 24px;
+      border-radius: 26px;
+      background: linear-gradient(155deg, rgba(18, 28, 49, 0.96), rgba(7, 12, 23, 0.98));
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
+      overflow: hidden;
+      width: min(920px, 100%);
+      margin: 0 auto;
+    }
+
+    .question-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 12%;
+      right: 12%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--god-primary, #ffd700), transparent);
+      box-shadow: 0 0 22px var(--god-primary, #ffd700);
+      opacity: 0.75;
+    }
+
+    .question-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .question-label {
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: rgba(255, 255, 255, 0.48);
+    }
+
+    .question-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .question-count {
+      color: var(--god-primary, #ffd700);
+      font-size: 1rem;
+      font-weight: 900;
+    }
+
+    .question-timer {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      font-weight: 900;
+      font-size: 1rem;
+    }
+
+    .question-timer.warning {
+      color: #ffa500;
+      border-color: rgba(255, 165, 0, 0.3);
+    }
+
+    .question-timer.danger {
+      color: #ff4444;
+      border-color: rgba(255, 68, 68, 0.3);
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .question-progress-track {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.07);
+      overflow: hidden;
+      margin-top: 10px;
+      margin-bottom: 18px;
+    }
+
+    .question-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--god-primary, #ffd700), var(--god-secondary, #00ffff));
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* 題目內容區 */
+    .question-content {
+      margin: 8px 0;
+      min-height: auto;
+      padding: 24px 10px 18px;
+      text-align: center;
+    }
+
+    .question-text {
+      font-size: clamp(1.6rem, 3vw, 2rem);
+      font-weight: 800;
+      line-height: 1.5;
+      text-align: center;
+      margin: 8px 0 10px;
+    }
+
+    .question-zh {
+      margin-top: 8px;
+      margin-bottom: 24px;
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.58);
+      text-align: center;
+    }
+
+    /* 答案輸入區 */
+    .input-section {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .answer-input {
+      width: min(460px, 100%);
+      min-height: 58px;
+      margin: 12px auto 0;
+      display: block;
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-size: 1.1rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      text-align: center;
+    }
+
+    .answer-input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .answer-input:focus {
+      outline: none;
+      border-color: var(--god-primary, #ffd700);
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 0 3px rgba(0, 220, 255, 0.10), 0 0 18px rgba(0, 220, 255, 0.20);
+    }
+
+    /* 操作按鈕區 */
+    .question-actions {
+      margin-top: 18px;
+      padding-bottom: 4px;
+    }
+
+    .secondary-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .action-btn.secondary {
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      background: rgba(255, 255, 255, 0.13);
+      color: #fff;
+      font-weight: 800;
+      min-width: 130px;
+    }
+
+    #hintBtn {
+      min-width: 168px;
+      border-color: rgba(255, 215, 90, 0.20);
+    }
+
+    #skipBtn {
+      min-width: 100px;
+      opacity: 0.82;
+    }
+
+    .submit-answer-btn {
+      display: block;
+      width: min(460px, 100%);
+      min-height: 54px;
+      margin: 12px auto 0;
+      border: 0;
+      border-radius: 16px;
+      font-size: 1.08rem;
+      font-weight: 900;
+      color: #09111d;
+      background: linear-gradient(135deg, var(--god-primary), var(--god-secondary));
+      box-shadow: 0 10px 28px var(--god-glow);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .submit-answer-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+    }
+
+    .answer-actions .btn {
+      min-height: 48px;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--god-primary, #ffd700), var(--god-secondary, #00ffff));
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--god-primary, #ffd700);
+    }
+
+    /* Combo 顯示 */
+    .combo-display {
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin-bottom: 12px;
+      padding: 8px 16px;
+      border-radius: 12px;
+      animation: combo-pop 0.3s ease-out;
+    }
+
+    .combo-normal {
+      color: #00ffff;
+      text-shadow: 0 0 8px #00ffff, 0 0 16px #00ffff88;
+    }
+
+    .combo-hot {
+      color: #ff6b35;
+      text-shadow: 0 0 8px #ff6b35, 0 0 16px #ff6b3588;
+    }
+
+    .combo-godlike {
+      color: #ffd700;
+      text-shadow: 0 0 12px #ffd700, 0 0 24px #ffd70088;
+      font-size: 2.2rem;
+    }
+
+    @keyframes combo-pop {
+      0% {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* 事件 Banner */
+    .event-banner {
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      padding: 10px 20px;
+      border-radius: 12px;
+      background: rgba(255, 215, 0, 0.15);
+      border: 2px solid rgba(255, 215, 0, 0.5);
+      color: #ffd700;
+      text-shadow: 0 0 8px #ffd700;
+      animation: banner-flash 1.5s ease-out;
+    }
+
+    @keyframes banner-flash {
+      0% {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      20% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      80% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-5px);
+      }
+    }
+
+    /* Boss UI */
+    .boss-ui {
+      text-align: center;
+      margin-bottom: 16px;
+      padding: 12px 20px;
+      border-radius: 12px;
+      background: rgba(255, 0, 0, 0.15);
+      border: 2px solid rgba(255, 0, 0, 0.5);
+      animation: boss-pulse 1s ease-in-out infinite;
+    }
+
+    .boss-header {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: #ff4444;
+      text-shadow: 0 0 8px #ff0000;
+      margin-bottom: 8px;
+    }
+
+    .boss-hp {
+      font-size: 1.8rem;
+      letter-spacing: 4px;
+      margin-bottom: 4px;
+    }
+
+    .boss-info {
+      font-size: 0.9rem;
+      color: #ff6666;
+    }
+
+    @keyframes boss-pulse {
+      0%, 100% {
+        box-shadow: 0 0 16px rgba(255, 0, 0, 0.3);
+      }
+      50% {
+        box-shadow: 0 0 32px rgba(255, 0, 0, 0.6);
+      }
+    }
+
+    /* 復活挑戰 */
+    .revive-challenge {
+      text-align: center;
+      padding: 30px;
+      background: rgba(255, 100, 0, 0.1);
+      border-radius: 20px;
+      border: 2px solid rgba(255, 100, 0, 0.5);
+      animation: revive-glow 1.5s ease-in-out infinite;
+    }
+
+    .revive-content {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .revive-title {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #ff6600;
+      text-shadow: 0 0 12px #ff3300;
+      margin-bottom: 12px;
+    }
+
+    .revive-desc {
+      font-size: 1.1rem;
+      color: #ff9966;
+      margin-bottom: 20px;
+    }
+
+    .revive-question {
+      margin: 20px 0;
+    }
+
+    .revive-text {
+      font-size: 1.3rem;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .revive-zh {
+      font-size: 1rem;
+      color: #ffcc99;
+      margin-bottom: 16px;
+    }
+
+    @keyframes revive-glow {
+      0%, 100% {
+        box-shadow: 0 0 20px rgba(255, 100, 0, 0.3);
+      }
+      50% {
+        box-shadow: 0 0 40px rgba(255, 100, 0, 0.6);
+      }
+    }
+
+    /* 背景音樂控制按鈕 */
+    #bgMusicControl {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(255, 215, 0, 0.9);
+      color: #000;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 12;
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #bgMusicControl:hover {
+      background: rgba(255, 215, 0, 1);
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    }
+
+    #bgMusicControl.paused {
+      background: rgba(255, 255, 255, 0.3);
+      color: #fff;
+    }
+
+    /* 手機版響應式 */
+    @media (max-width: 600px) {
+      .greek-main {
+        width: calc(100% - 16px);
+        padding-top: 16px;
+      }
+
+      .greek-topbar {
+        width: calc(100% - 16px);
+        min-height: 56px;
+        margin: 12px auto 0;
+        padding: 8px 12px;
+      }
+
+      .hud-pill {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+      }
+
+      .hud-icon-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+      }
+
+      .god-hero {
+        padding: 18px 12px 12px;
+      }
+
+      .god-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.8rem;
+      }
+
+      .god-name {
+        font-size: 1.8rem;
+      }
+
+      .god-name-en {
+        font-size: 1rem;
+        letter-spacing: 2px;
+      }
+
+      .god-title {
+        font-size: 0.9rem;
+      }
+
+      .session-status {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+      }
+
+      .secondary-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      #skipBtn {
+        grid-column: 1 / -1;
+      }
+
+      .submit-answer-btn {
+        width: 100%;
+      }
+
+      .session-stat {
+        min-height: 56px;
+        padding: 10px 8px;
+      }
+
+      .session-label {
+        font-size: 0.7rem;
+      }
+
+      .session-stat strong {
+        font-size: 1rem;
+      }
+
+      .question-card {
+        padding: 18px 14px 22px;
+        border-radius: 20px;
+      }
+
+      .question-header {
+        margin-bottom: 8px;
+      }
+
+      .question-label {
+        font-size: 0.7rem;
+      }
+
+      .question-timer {
+        padding: 5px 10px;
+        font-size: 0.9rem;
+      }
+
+      .question-progress-track {
+        height: 4px;
+        margin-bottom: 16px;
+      }
+
+      .question-content {
+        min-height: 100px;
+      }
+
+      .question-text {
+        font-size: 1.3rem;
+      }
+
+      .question-zh {
+        font-size: 0.9rem;
+      }
+
+      .answer-input {
+        font-size: 1rem;
+        padding: 12px 14px;
+      }
+
+      .answer-actions {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .answer-actions .btn {
+        min-height: 44px;
+        font-size: 0.9rem;
+        padding: 8px 16px;
+      }
+
+      .btn-submit {
+        grid-column: 1 / -1;
+      }
+    }
+
+    .blank {
+      display: inline-block;
+      min-width: 100px;
+      border-bottom: 3px solid #ffd700;
+      padding: 0 10px;
+      color: #ffd700;
+      font-weight: bold;
+    }
+
+    .input-section {
+      margin: 20px 0;
+    }
+
+    .input-section input {
+      width: 100%;
+      max-width: 300px;
+      padding: 12px 20px;
+      font-size: 1.1rem;
+      border: 2px solid rgba(255, 215, 0, 0.5);
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      color: #fff;
+      text-align: center;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .input-section input:focus {
+      border-color: #ffd700;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #ffd700, #ffaa00);
+      color: #000;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .feedback-box {
+      margin: 15px 0;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 1.1rem;
+    }
+
+    .feedback-correct {
+      background: rgba(76, 175, 80, 0.3);
+      border: 1px solid #4caf50;
+      color: #4caf50;
+    }
+
+    .feedback-wrong {
+      background: rgba(244, 67, 54, 0.3);
+      border: 1px solid #f44336;
+      color: #f44336;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, #232526 0%, #414345 100%);
+      border: 2px solid #ffd700;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 90%;
+      width: 500px;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);
+    }
+
+    .end-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+
+    .end-stats {
+      margin: 20px 0;
+      font-size: 1.2rem;
+    }
+
+    .end-stats p {
+      margin: 10px 0;
+    }
+
+    .settlement-value.grade-S {
+      color: #ffd700;
+      font-size: 1.5rem;
+      font-weight: 900;
+      text-shadow: 0 0 12px #ffd700;
+    }
+
+    .settlement-value.grade-A {
+      color: #00ffff;
+      font-size: 1.4rem;
+      font-weight: 800;
+      text-shadow: 0 0 8px #00ffff;
+    }
+
+    .settlement-value.grade-B {
+      color: #4caf50;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .settlement-value.grade-C {
+      color: #ff9800;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .end-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    #loading {
+      text-align: center;
+      padding: 40px;
+      font-size: 1.5rem;
+      color: #ffd700;
+    }
+
+    #error {
+      text-align: center;
+      padding: 40px;
+      font-size: 1.2rem;
+      color: #f44336;
+    }
+
+    #categoryFilter {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .vocab-item {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: 10px;
+      padding: 15px;
+      margin: 10px 0;
+      text-align: left;
+    }
+
+    .vocab-item .word {
+      color: #ffd700;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .vocab-item .meaning {
+      color: #fff;
+      margin: 5px 0;
+    }
+
+    .vocab-item .sentence {
+      color: #00ffff;
+      font-style: italic;
+      margin: 5px 0;
+    }
+
+    .vocab-item .category {
+      color: #888;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- 主容器 -->
+  <div class="greek-page">
+    <!-- 頂部 HUD -->
+    <header class="greek-topbar">
+      <div class="hud-left">
+        <div class="global-stars-pill" data-global-stars>
+          <span class="global-star-icon">⭐</span>
+          <span class="global-stars-value" data-global-stars-value>0</span>
+        </div>
+        <div class="hud-pill hearts-pill">
+          ❤️ × <span id="lives">5</span>
+        </div>
+      </div>
+      <div class="hud-actions">
+        <button id="soundSettingsBtn" class="hud-icon-btn" aria-label="音效設定">🔊</button>
+        <button class="hud-icon-btn" onclick="location.href='atlas.html?tab=greek'" aria-label="回首頁">🏠</button>
+        <button class="hud-icon-btn" onclick="resetProgress()" aria-label="重新開始">🔄</button>
+        <button class="hud-icon-btn" onclick="showReviewModal()" aria-label="複習單字">📚</button>
+      </div>
+    </header>
+
+    <main class="greek-main">
+      <!-- 神祇 Hero 區塊 -->
+      <section class="god-hero">
+        <div class="god-icon" id="godIcon">⚡</div>
+        <h1 class="god-name" id="godName">宙斯</h1>
+        <div class="god-name-en" id="godNameEn">ZEUS</div>
+        <div class="god-title" id="godTitle">天空與雷霆之王</div>
+      </section>
+
+      <!-- 本局狀態卡片 -->
+      <section class="session-status">
+        <div class="session-stat">
+          <span class="session-label">本次獲得</span>
+          <strong id="sessionStarsDisplay">⭐ 0</strong>
+        </div>
+        <div class="session-stat">
+          <span class="session-label">生命</span>
+          <strong>❤️ × <span id="lives-display">5</span></strong>
+        </div>
+        <div class="session-stat">
+          <span class="session-label">進度</span>
+          <strong><span id="current-index">0</span> / <span id="total-questions">0</span></strong>
+        </div>
+      </section>
+
+      <!-- 題目主卡 -->
+      <section class="question-card">
+        <div class="question-header">
+          <span class="question-label">QUESTION</span>
+          <div class="question-meta">
+            <span class="question-count">
+              <span id="current-index">0</span> / <span id="total-questions">0</span>
+            </span>
+            <div class="question-timer">
+              ⏱ <span id="time-left">30</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="question-progress-track">
+          <div id="question-progress-fill" class="question-progress-fill"></div>
+        </div>
+
+        <!-- 問題容器 -->
+        <div id="question-container">
+          <div id="loading">載入中...</div>
+          <div id="error" style="display:none;"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- 遊戲結束畫面 -->
+  <div id="gameEndModal" class="modal" style="display: none;">
+    <div class="settlement-card">
+      <div class="end-icon" id="endIcon">🎉</div>
+      <h2 class="end-title" id="endTitle">挑戰完成</h2>
+      <div class="end-subtitle" id="endSubtitle">宙斯 - 天空與雷霆之王</div>
+      
+      <div class="settlement-grid">
+        <div class="settlement-item">
+          <div class="settlement-icon">⭐</div>
+          <div class="settlement-label">本次星星</div>
+          <div class="settlement-value" id="endSessionStars">0</div>
+        </div>
+        <div class="settlement-item">
+          <div class="settlement-icon">✅</div>
+          <div class="settlement-label">答對</div>
+          <div class="settlement-value" id="endCorrectCount">0</div>
+        </div>
+        <div class="settlement-item">
+          <div class="settlement-icon">❌</div>
+          <div class="settlement-label">答錯</div>
+          <div class="settlement-value" id="endWrongCount">0</div>
+        </div>
+        <div class="settlement-item">
+          <div class="settlement-icon">🎯</div>
+          <div class="settlement-label">正確率</div>
+          <div class="settlement-value" id="endAccuracy">0%</div>
+        </div>
+        <div class="settlement-item">
+          <div class="settlement-icon">⏱</div>
+          <div class="settlement-label">總時間</div>
+          <div class="settlement-value" id="endTotalTime">0s</div>
+        </div>
+        <div class="settlement-item">
+          <div class="settlement-icon">⭐</div>
+          <div class="settlement-label">累積星星</div>
+          <div class="settlement-value" id="endTotalStars">0</div>
+        </div>
+        <div class="settlement-item">
+          <div class="settlement-icon">🔥</div>
+          <div class="settlement-label">最高 Combo</div>
+          <div class="settlement-value" id="endMaxCombo">0</div>
+        </div>
+        <div class="settlement-item">
+          <div class="settlement-icon">✨</div>
+          <div class="settlement-label">Perfect</div>
+          <div class="settlement-value" id="endPerfectCount">0</div>
+        </div>
+        <div class="settlement-item">
+          <div class="settlement-icon">🎁</div>
+          <div class="settlement-label">寶箱</div>
+          <div class="settlement-value" id="endTreasureCount">0</div>
+        </div>
+        <div class="settlement-item">
+          <div class="settlement-icon">🏆</div>
+          <div class="settlement-label">評價</div>
+          <div class="settlement-value" id="endGrade">C</div>
+        </div>
+        <div class="settlement-item">
+          <div class="settlement-icon">⭐</div>
+          <div class="settlement-label">本次星等</div>
+          <div class="settlement-value" id="endStageStars">☆☆☆</div>
+        </div>
+        <div class="settlement-item">
+          <div class="settlement-icon">🌟</div>
+          <div class="settlement-label">最高星等</div>
+          <div class="settlement-value" id="endBestStars">☆☆☆</div>
+        </div>
+        <div class="settlement-item">
+          <div class="settlement-icon">🎁</div>
+          <div class="settlement-label">通關獎勵</div>
+          <div class="settlement-value" id="endClearReward">未通關</div>
+        </div>
+      </div>
+      
+      <div class="end-buttons">
+        <button onclick="restartGame()" class="btn btn-primary">🔄 重新開始</button>
+        <button onclick="location.href='atlas.html?tab=greek'" class="btn btn-secondary">🏠 返回首頁</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 複習單字彈窗 -->
+  <div id="reviewModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="end-icon">📚</div>
+      <h2>單字複習</h2>
+      
+      <div style="margin-bottom: 20px;">
+        <label for="categoryFilter" style="color: var(--god-primary); font-weight: bold; margin-right: 10px;">選擇分類：</label>
+        <select id="categoryFilter">
+          <option value="all">全部單字</option>
+        </select>
+      </div>
+      
+      <div id="vocabStats">
+        總共 <span id="totalVocabCount">0</span> 個單字
+      </div>
+      
+      <div id="reviewWordsContainer">
+        <!-- 單字列表將在這裡動態生成 -->
+      </div>
+      <div class="end-buttons">
+        <button onclick="closeReviewModal()" class="btn btn-primary">關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 音效設定 Modal -->
+  <div id="soundSettingsModal" class="modal" style="display: none;">
+    <div class="sound-settings-card">
+      <h2>🔊 音效設定</h2>
+      
+      <div class="sound-setting-row">
+        <span>遊戲音效</span>
+        <label class="switch">
+          <input id="sfxEnabledToggle" type="checkbox">
+          <span class="slider"></span>
+        </label>
+      </div>
+      
+      <div class="sound-setting-row">
+        <span>背景音樂</span>
+        <label class="switch">
+          <input id="bgmEnabledToggle" type="checkbox">
+          <span class="slider"></span>
+        </label>
+      </div>
+      
+      <div class="sound-setting-row sound-volume-row">
+        <span>音效音量</span>
+        <input id="sfxVolumeSlider" type="range" min="0" max="100" value="70">
+        <span id="sfxVolumeValue">70%</span>
+      </div>
+      
+      <div class="sound-setting-row sound-volume-row">
+        <span>背景音樂音量</span>
+        <input id="bgmVolumeSlider" type="range" min="0" max="100" value="40">
+        <span id="bgmVolumeValue">40%</span>
+      </div>
+      
+      <div class="sound-setting-row">
+        <span>單字語音</span>
+        <label class="switch">
+          <input id="speechEnabledToggle" type="checkbox">
+          <span class="slider"></span>
+        </label>
+      </div>
+      
+      <div class="sound-setting-actions">
+        <button id="testSoundBtn" class="btn btn-secondary">▶️ 測試音效</button>
+        <button id="closeSoundSettingsBtn" class="btn btn-primary">完成</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/stageProgress.js"></script>
+  <script src="js/starRewardSystem.js"></script>
+  <script src="js/bgmController.js"></script>
+  <script src="js/userData.js"></script>
+  <script src="js/characterDialogue.js"></script>
+  <script src="js/gameDialogue.js"></script>
+  <script src="js/apiConfig.js"></script>
+  <script src="js/greekScoreUpload.js"></script>
+  <script src="js/greekStageSystem.js"></script>
+  <script src="js/greekCommonConfig.js"></script>
+  <script src="js/sound.js"></script>
+  <script src="js/greekSoundManager.js"></script>
+  <script src="js/inventory.js"></script>
+  <script>
+    // ===== 遊戲配置 =====
+    const GAME_CONFIG = {
+      QUESTIONS_COUNT: 20,
+      TIME_LIMIT: 30,
+      MAX_ATTEMPTS: 3
+    };
+
+    // ===== 練習關卡遊戲化配置 =====
+    const PRACTICE_CONFIG = {
+      // 事件機率
+      treasureChance: 0.10,        // 寶箱題機率 10%
+      quickChance: 0.12,           // 快速挑戰機率 12%
+      doubleStarChance: 0.08,      // 雙倍星星機率 8%
+      trapChance: 0.08,             // 陷阱題機率 8%
+      
+      // Boss 設定
+      bossEvery: 10,               // 每 10 題出現 Boss
+      bossHp: 3,                   // Boss HP
+      
+      // Combo 獎勵倍率
+      comboMultiplier: {
+        2: 1.2,    // Combo x2: 星星 x1.2
+        3: 1.5,    // Combo x3: 星星 x1.5
+        5: 2.0     // Combo x5: 星星 x2.0
+      },
+      
+      // 快速挑戰設定
+      quickTimeLimit: 10,          // 快速挑戰時間限制 10 秒
+      quickBonus: 20,             // 快速挑戰成功獎勵 20 星
+      
+      // 寶箱獎勵
+      treasureRewards: [20, 30, 50], // 寶箱獎勵星星數
+      
+      // 復活設定
+      reviveEnabled: true,         // 啟用復活
+      reviveQuestion: 1,          // 復活題數
+      
+      // Perfect 獎勵
+      perfectBonus: 5,             // Perfect 答題獎勵 5 星
+      
+      // 功能開關
+      features: {
+        combo: true,
+        treasure: true,
+        boss: true,
+        quickChallenge: true,
+        doubleStar: true,
+        trap: true,
+        revive: true,
+        perfect: true
+      }
+    };
+
+    // ===== 練習關卡遊戲化狀態 =====
+    const practiceState = {
+      combo: 0,                    // 當前 Combo
+      maxCombo: 0,                 // 最高 Combo
+      perfectCount: 0,             // Perfect 答題次數
+      bossHp: 0,                   // Boss 當前 HP
+      bossActive: false,           // Boss 是否活躍
+      reviveUsed: false,           // 復活是否已使用
+      bonusMultiplier: 1,          // 當前獎勵倍率
+      currentEvent: null,          // 當前事件類型
+      treasureCount: 0,            // 寶箱獲得次數
+      quickChallengeActive: false, // 快速挑戰是否活躍
+      trapActive: false,           // 陷阱是否活躍
+      doubleStarActive: false,     // 雙倍星星是否活躍
+      missionProgress: 0,          // 任務進度
+      missionTarget: 0,            // 任務目標
+      missionType: null,           // 任務類型
+      completedMissions: 0         // 完成任務數
+    };
+
+    // ===== 全局變數 =====
+    let godKey = null;
+    let godConfig = null;
+    let vocabData = [];
+    let gameState = {
+      data: [],
+      currentIndex: 0,
+      attemptCount: 0,
+      answered: false,
+      timerInterval: null,
+      preferredVoice: null,
+      answerLog: [],
+      sessionStars: 0,
+      totalTimeUsed: 0,
+      questionStartTs: null
+    };
+    let lives = 5;
+
+    // ===== 從 URL 參數獲取神祇 =====
+    function getGodFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('god');
+    }
+
+    // ===== 取得目前神祇類別（中文名稱） =====
+    function getCurrentGreekCategory() {
+      const params = new URLSearchParams(window.location.search);
+      const key = params.get('god');
+      const config = GREEK_GOD_CONFIG?.[key];
+      
+      if (!config?.name) {
+        console.error('[Greek Upload] 找不到神祇', { key, config });
+        return '';
+      }
+      
+      return config.name;
+    }
+
+    // ===== 防止重複上傳 =====
+    let greekScoreSubmitted = false;
+
+    // ===== 提示系統 =====
+    let currentHintLevel = 0;
+    const HINT_COSTS = [5, 10, 15];
+
+    // ===== 字母提示函數 =====
+    function revealLetters(answer, count) {
+      const chars = Array.from(answer);
+      return chars.map((char, index) => {
+        if (char === ' ' || char === '-') {
+          return char;
+        }
+        if (index < count) {
+          return char;
+        }
+        return '_';
+      }).join(' ');
+    }
+
+    // ===== 扣星星函數 =====
+    function spendStarsForHint(amount) {
+      const totalStars = getTotalStars();
+      if (totalStars < amount) {
+        return false;
+      }
+      saveTotalStars(totalStars - amount);
+      updateGlobalStarsDisplay();
+      return true;
+    }
+
+    // ===== 更新提示按鈕 =====
+    function updateHintButton() {
+      const btn = document.getElementById('hintBtn');
+      if (!btn) return;
+
+      if (currentHintLevel >= HINT_COSTS.length) {
+        btn.textContent = '💡 已用完';
+        btn.disabled = true;
+        return;
+      }
+
+      btn.disabled = false;
+      btn.textContent = `💡 提示 -${HINT_COSTS[currentHintLevel]}⭐`;
+    }
+
+    // ===== 顯示提示 =====
+    function showHint() {
+      const question = gameState.data[gameState.currentIndex];
+      if (!question) {
+        console.warn('[Greek Hint] 找不到目前題目');
+        return;
+      }
+
+      const answer = String(question.answer || question.word || '').trim();
+      if (!answer) {
+        console.warn('[Greek Hint] 找不到答案');
+        return;
+      }
+
+      const hintBox = document.getElementById('hintBox');
+      if (!hintBox) {
+        console.warn('[Greek Hint] 找不到 #hintBox');
+        return;
+      }
+
+      // 檢查是否已用完提示
+      if (currentHintLevel >= HINT_COSTS.length) {
+        hintBox.textContent = '💡 已使用本題全部提示';
+        hintBox.style.display = 'block';
+        return;
+      }
+
+      // 檢查星星是否足夠
+      const cost = HINT_COSTS[currentHintLevel];
+      if (!spendStarsForHint(cost)) {
+        hintBox.textContent = '⭐ 星星不足，無法使用提示';
+        hintBox.style.display = 'block';
+        return;
+      }
+
+      currentHintLevel++;
+
+      if (currentHintLevel === 1) {
+        hintBox.textContent = '💡 提示：' + revealLetters(answer, 1);
+      } else if (currentHintLevel === 2) {
+        hintBox.textContent = '💡 提示：' + revealLetters(answer, 2);
+      } else {
+        const zh = question.zh_sentence || question.zh || question.translation || '請想想句子的意思。';
+        hintBox.textContent = '💡 中文提示：' + zh;
+      }
+
+      hintBox.style.display = 'block';
+      updateHintButton();
+      
+      // 播放提示音效
+      if (typeof window.GreekSoundManager !== 'undefined') {
+        window.GreekSoundManager.play('hint');
+      }
+    }
+
+    // ===== 從原始 HTML 頁面抽取題庫 =====
+    async function fetchVocabFromPage(pageUrl) {
+      try {
+        console.log(`[Greek Common] 正在從 ${pageUrl} 抓取題庫...`);
+        const response = await fetch(pageUrl, { cache: 'no-cache' });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        const htmlText = await response.text();
+        
+        // 使用 DOMParser 解析 HTML
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, 'text/html');
+        
+        // 優先從 application/json 標籤抽取
+        const jsonScript = doc.getElementById('greek-question-data');
+        if (jsonScript) {
+          try {
+            const jsonData = JSON.parse(jsonScript.textContent);
+            console.log(`[Greek Common] 從 JSON 標籤抽取到 ${jsonData.length} 個題目`);
+            return jsonData;
+          } catch (e) {
+            console.warn('[Greek Common] JSON 標籤解析失敗:', e);
+          }
+        }
+        
+        // 暫時相容舊格式：從 script 標籤抽取 VOCAB_DATA 或 rawData
+        const scripts = doc.querySelectorAll('script');
+        for (const script of scripts) {
+          const content = script.textContent;
+          
+          // 嘗試匹配 VOCAB_DATA
+          const vocabMatch = content.match(/const\s+VOCAB_DATA\s*=\s*(\[.*?\]);/s);
+          if (vocabMatch) {
+            try {
+              const vocabData = eval('(' + vocabMatch[1] + ')');
+              console.log(`[Greek Common] 從 VOCAB_DATA 抽取到 ${vocabData.length} 個題目`);
+              return vocabData;
+            } catch (e) {
+              console.warn('[Greek Common] VOCAB_DATA 解析失敗:', e);
+            }
+          }
+          
+          // 嘗試匹配 rawData (hera.html 特殊情況)
+          const rawMatch = content.match(/const\s+rawData\s*=\s*(\[.*?\]);/s);
+          if (rawMatch) {
+            try {
+              const rawData = eval('(' + rawMatch[1] + ')');
+              console.log(`[Greek Common] 從 rawData 抽取到 ${rawData.length} 個題目`);
+              return rawData;
+            } catch (e) {
+              console.warn('[Greek Common] rawData 解析失敗:', e);
+            }
+          }
+        }
+        
+        throw new Error('無法從頁面中抽取題庫資料');
+      } catch (error) {
+        console.error('[Greek Common] 抓取題庫失敗:', error);
+        throw error;
+      }
+    }
+
+    // ===== 初始化遊戲 =====
+    async function initGame() {
+      godKey = getGodFromURL();
+      
+      if (!godKey || !GREEK_GOD_CONFIG[godKey]) {
+        showError('無效的神祇參數，請從圖鑑頁面進入。');
+        return;
+      }
+      
+      godConfig = GREEK_GOD_CONFIG[godKey];
+      
+      // 設定神祇 Hero 區塊
+      setTextSafe('godIcon', godConfig.icon);
+      setTextSafe('godName', godConfig.name);
+      setTextSafe('godNameEn', godConfig.en);
+      setTextSafe('godTitle', godConfig.title);
+      
+      // 設定 body data-god 屬性以啟用主題色
+      document.body.setAttribute('data-god', godKey);
+      
+      document.title = `${godConfig.name} 填空挑戰 - 英打小英雄`;
+      
+      try {
+        vocabData = await fetchVocabFromPage(godConfig.page);
+        
+        if (!Array.isArray(vocabData) || vocabData.length === 0) {
+          throw new Error('題庫資料為空或格式錯誤');
+        }
+        
+        console.log(`[Greek Common] 成功載入 ${vocabData.length} 個題目`);
+        
+        // 初始化遊戲狀態
+        initData();
+        
+        // 初始化愛心系統
+        if (typeof GreekStageSystem !== 'undefined' && GreekStageSystem.initLives) {
+          GreekStageSystem.initLives();
+        }
+        
+        // 顯示第一題
+        showQuestion();
+        
+      } catch (error) {
+        console.error('[Greek Init] initGame failed:', error);
+        showError(`載入題庫失敗：${error.message}`);
+      }
+    }
+
+    // ===== 初始化題目資料 =====
+    function initData() {
+      const shuffled = vocabData.slice().sort(() => Math.random() - 0.5);
+      const selected = shuffled.slice(0, Math.min(GAME_CONFIG.QUESTIONS_COUNT, shuffled.length));
+      
+      gameState.data = selected.map(v => ({
+        answer: v.word,
+        zh: v.zh,
+        sentence: v.en_sentence.replace(new RegExp(v.word, 'gi'), '___'),
+        original: v.en_sentence,
+        zh_sentence: v.zh_sentence || '',
+        category: v.category || ''
+      }));
+      
+      gameState.currentIndex = 0;
+      gameState.answerLog = [];
+      gameState.sessionStars = 0;
+      gameState.totalTimeUsed = 0;
+      
+      updateQuestionProgress();
+      updateStatusGrid();
+    }
+
+    // ===== 更新題目進度 =====
+    function updateQuestionProgress() {
+      const currentEl = document.getElementById('current-index');
+      const totalEl = document.getElementById('total-questions');
+      
+      const total = Array.isArray(gameState?.data) ? gameState.data.length : 0;
+      const current = total > 0 ? Math.min(gameState.currentIndex + 1, total) : 0;
+      
+      if (currentEl) {
+        currentEl.textContent = String(current);
+      }
+      
+      if (totalEl) {
+        totalEl.textContent = String(total);
+      }
+      
+      updateQuestionProgressBar(current, total);
+    }
+
+    // ===== 更新進度條 =====
+    function updateQuestionProgressBar(current, total) {
+      const progressFill = document.getElementById('question-progress-fill');
+      if (!progressFill) {
+        return;
+      }
+      
+      const percent = total > 0 ? (current / total) * 100 : 0;
+      progressFill.style.width = `${Math.min(100, Math.max(0, percent))}%`;
+    }
+
+    // ===== 更新進度條 (舊版相容) =====
+    function updateProgressBar() {
+      const progressFill = document.getElementById('question-progress-fill');
+      if (progressFill && gameState.data.length > 0) {
+        const progress = (gameState.currentIndex / gameState.data.length) * 100;
+        progressFill.style.width = `${progress}%`;
+      }
+    }
+
+    // ===== 更新狀態列 =====
+    function updateStatusGrid() {
+      setTextSafe('statusSessionStars', gameState.sessionStars);
+      setTextSafe('statusTime', `${Math.floor(gameState.totalTimeUsed)}s`);
+      
+      const totalAnswered = gameState.answerLog.filter(log => log !== undefined).length;
+      const correctCount = gameState.answerLog.filter(log => log && log.correct).length;
+      const accuracy = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
+      setTextSafe('statusAccuracy', `${accuracy}%`);
+    }
+
+    // ===== Combo 系統 =====
+    function increaseCombo() {
+      if (!PRACTICE_CONFIG.features.combo) return;
+      
+      practiceState.combo++;
+      if (practiceState.combo > practiceState.maxCombo) {
+        practiceState.maxCombo = practiceState.combo;
+      }
+      
+      showComboDisplay();
+    }
+
+    function resetCombo() {
+      if (!PRACTICE_CONFIG.features.combo) return;
+      
+      practiceState.combo = 0;
+      hideComboDisplay();
+    }
+
+    function showComboDisplay() {
+      const comboEl = document.getElementById('combo-display');
+      if (!comboEl) return;
+      
+      let comboText = `COMBO ×${practiceState.combo}`;
+      let comboClass = 'combo-normal';
+      
+      if (practiceState.combo >= 5) {
+        comboText = '⚡ GODLIKE';
+        comboClass = 'combo-godlike';
+      } else if (practiceState.combo >= 3) {
+        comboText = '🔥 HOT STREAK';
+        comboClass = 'combo-hot';
+      }
+      
+      comboEl.textContent = comboText;
+      comboEl.className = `combo-display ${comboClass}`;
+      comboEl.style.display = 'block';
+      
+      // 動畫效果
+      comboEl.style.animation = 'none';
+      setTimeout(() => {
+        comboEl.style.animation = 'combo-pop 0.3s ease-out';
+      }, 10);
+      
+      // 2秒後淡出
+      setTimeout(() => {
+        if (practiceState.combo > 0) {
+          comboEl.style.opacity = '0.7';
+        }
+      }, 2000);
+    }
+
+    function hideComboDisplay() {
+      const comboEl = document.getElementById('combo-display');
+      if (comboEl) {
+        comboEl.style.display = 'none';
+      }
+    }
+
+    function getComboMultiplier() {
+      if (!PRACTICE_CONFIG.features.combo) return 1;
+      
+      if (practiceState.combo >= 5) {
+        return PRACTICE_CONFIG.comboMultiplier[5] || 2.0;
+      } else if (practiceState.combo >= 3) {
+        return PRACTICE_CONFIG.comboMultiplier[3] || 1.5;
+      } else if (practiceState.combo >= 2) {
+        return PRACTICE_CONFIG.comboMultiplier[2] || 1.2;
+      }
+      return 1;
+    }
+
+    // ===== Perfect 答題檢測 =====
+    function checkPerfectAnswer(timeUsed, usedHint) {
+      if (!PRACTICE_CONFIG.features.perfect) return false;
+      
+      // 第一次答對 + 沒用提示 + 時間 > 50%
+      const timePercent = timeUsed / GAME_CONFIG.TIME_LIMIT;
+      return !usedHint && timePercent > 0.5;
+    }
+
+    // ===== 隨機事件系統 =====
+    function determineQuestionEvent() {
+      if (!PRACTICE_CONFIG.features.quickChallenge && 
+          !PRACTICE_CONFIG.features.doubleStar && 
+          !PRACTICE_CONFIG.features.treasure) {
+        return null;
+      }
+      
+      const rand = Math.random();
+      
+      // 快速挑戰 (12%)
+      if (PRACTICE_CONFIG.features.quickChallenge && rand < PRACTICE_CONFIG.quickChance) {
+        return 'quick';
+      }
+      
+      // 雙倍星星 (8%)
+      if (PRACTICE_CONFIG.features.doubleStar && rand < PRACTICE_CONFIG.quickChance + PRACTICE_CONFIG.doubleStarChance) {
+        return 'double';
+      }
+      
+      // 寶箱題 (10%)
+      if (PRACTICE_CONFIG.features.treasure && rand < PRACTICE_CONFIG.quickChance + PRACTICE_CONFIG.doubleStarChance + PRACTICE_CONFIG.treasureChance) {
+        return 'treasure';
+      }
+      
+      return null;
+    }
+
+    function applyQuestionEvent(event) {
+      practiceState.currentEvent = event;
+      practiceState.quickChallengeActive = false;
+      practiceState.doubleStarActive = false;
+      
+      const banner = document.getElementById('event-banner');
+      if (!banner) return;
+      
+      switch (event) {
+        case 'quick':
+          practiceState.quickChallengeActive = true;
+          banner.textContent = '⚡ 快速挑戰！10秒內答對 +20⭐';
+          banner.style.display = 'block';
+          setTimeout(() => {
+            banner.style.display = 'none';
+          }, 1500);
+          break;
+          
+        case 'double':
+          practiceState.doubleStarActive = true;
+          banner.textContent = '⭐ 雙倍星星！本題星星 ×2';
+          banner.style.display = 'block';
+          setTimeout(() => {
+            banner.style.display = 'none';
+          }, 1500);
+          break;
+          
+        case 'treasure':
+          banner.textContent = '🎁 神秘寶箱！答對開啟寶箱';
+          banner.style.display = 'block';
+          setTimeout(() => {
+            banner.style.display = 'none';
+          }, 1500);
+          break;
+      }
+    }
+
+    function getQuestionTimeLimit() {
+      if (practiceState.quickChallengeActive) {
+        return PRACTICE_CONFIG.quickTimeLimit;
+      }
+      return GAME_CONFIG.TIME_LIMIT;
+    }
+
+    // ===== 復活機制 =====
+    function showReviveChallenge() {
+      practiceState.reviveUsed = true;
+      
+      const container = document.getElementById('question-container');
+      if (!container) return;
+      
+      // 建立復活挑戰 UI
+      const reviveUI = document.createElement('div');
+      reviveUI.className = 'revive-challenge';
+      reviveUI.innerHTML = `
+        <div class="revive-content">
+          <div class="revive-title">🔥 復活挑戰</div>
+          <div class="revive-desc">答對這題獲得 +1 ❤️</div>
+          <div class="revive-question">
+            <div class="revive-text">${gameState.data[gameState.currentIndex].sentence}</div>
+            <div class="revive-zh">${gameState.data[gameState.currentIndex].zh_sentence || gameState.data[gameState.currentIndex].zh}</div>
+            <input type="text" id="reviveInput" class="answer-input" placeholder="輸入答案" autocomplete="off" />
+          </div>
+          <button id="reviveSubmit" class="submit-answer-btn">送出答案</button>
+        </div>
+      `;
+      
+      container.innerHTML = '';
+      container.appendChild(reviveUI);
+      
+      const input = document.getElementById('reviveInput');
+      if (input) {
+        input.focus();
+        input.onkeydown = (e) => {
+          if (e.key === 'Enter') {
+            handleReviveAnswer(input.value.trim());
+          }
+        };
+      }
+      
+      const submitBtn = document.getElementById('reviveSubmit');
+      if (submitBtn) {
+        submitBtn.onclick = () => {
+          const input = document.getElementById('reviveInput');
+          if (input) {
+            handleReviveAnswer(input.value.trim());
+          }
+        };
+      }
+    }
+
+    function handleReviveAnswer(userAnswer) {
+      const correctAnswer = gameState.data[gameState.currentIndex].answer.toLowerCase();
+      
+      if (userAnswer.toLowerCase() === correctAnswer) {
+        // 復活成功
+        lives = 1;
+        updateLives();
+        
+        const banner = document.getElementById('event-banner');
+        if (banner) {
+          banner.textContent = '🔥 復活成功！+1❤️';
+          banner.style.display = 'block';
+          setTimeout(() => {
+            banner.style.display = 'none';
+          }, 1500);
+        }
+        
+        // 播放音效
+        if (typeof window.GreekSoundManager !== 'undefined' && window.GreekSoundManager.settings.sfxEnabled) {
+          if (typeof window.SoundSystem !== 'undefined') {
+            try {
+              window.SoundSystem.play('correct');
+            } catch (error) {
+              console.warn('[Greek Sound] 復活音效播放失敗:', error);
+            }
+          }
+        }
+        
+        // 繼續下一題
+        setTimeout(() => {
+          gameState.currentIndex++;
+          showQuestion();
+        }, 1500);
+      } else {
+        // 復活失敗，遊戲結束
+        endGame();
+      }
+    }
+
+    // ===== Boss 戰系統 =====
+    function shouldActivateBoss() {
+      if (!PRACTICE_CONFIG.features.boss) return false;
+      
+      // 每 bossEvery 題出現 Boss
+      const questionNumber = gameState.currentIndex + 1;
+      return questionNumber > 0 && questionNumber % PRACTICE_CONFIG.bossEvery === 0;
+    }
+
+    function activateBoss() {
+      if (!PRACTICE_CONFIG.features.boss) return;
+      
+      practiceState.bossActive = true;
+      practiceState.bossHp = PRACTICE_CONFIG.bossHp;
+      
+      const banner = document.getElementById('event-banner');
+      if (banner) {
+        banner.textContent = '👑 BOSS BATTLE！擊敗 Boss 獲得獎勵！';
+        banner.style.display = 'block';
+        setTimeout(() => {
+          banner.style.display = 'none';
+        }, 2000);
+      }
+      
+      showBossUI();
+    }
+
+    function showBossUI() {
+      // 建立 Boss UI
+      let bossUI = document.getElementById('boss-ui');
+      if (!bossUI) {
+        bossUI = document.createElement('div');
+        bossUI.id = 'boss-ui';
+        bossUI.className = 'boss-ui';
+        document.querySelector('.question-content').insertBefore(bossUI, document.querySelector('.question-text'));
+      }
+      
+      updateBossUI();
+    }
+
+    function updateBossUI() {
+      const bossUI = document.getElementById('boss-ui');
+      if (!bossUI || !practiceState.bossActive) {
+        if (bossUI) bossUI.remove();
+        return;
+      }
+      
+      const hpDisplay = '❤️'.repeat(practiceState.bossHp);
+      bossUI.innerHTML = `
+        <div class="boss-header">👑 BOSS BATTLE</div>
+        <div class="boss-hp">${hpDisplay}</div>
+        <div class="boss-info">答對 ${practiceState.bossHp} 題擊敗 Boss</div>
+      `;
+    }
+
+    function handleBossDefeat() {
+      if (!practiceState.bossActive) return;
+      
+      practiceState.bossActive = false;
+      
+      // Boss 擊敗獎勵
+      const bossReward = 100;
+      gameState.sessionStars += bossReward;
+      
+      const banner = document.getElementById('event-banner');
+      if (banner) {
+        banner.textContent = `💥 BOSS 擊敗！+${bossReward}⭐`;
+        banner.style.display = 'block';
+        setTimeout(() => {
+          banner.style.display = 'none';
+        }, 2000);
+      }
+      
+      // 移除 Boss UI
+      const bossUI = document.getElementById('boss-ui');
+      if (bossUI) bossUI.remove();
+      
+      updateSessionStars();
+    }
+
+    // ===== 顯示題目 =====
+    function showQuestion() {
+      if (gameState.currentIndex >= gameState.data.length) {
+        endGame();
+        return;
+      }
+      
+      // 更新題目進度
+      updateQuestionProgress();
+      
+      const question = gameState.data[gameState.currentIndex];
+      gameState.answered = false;
+      gameState.attemptCount = 0;
+      
+      // 重置提示狀態
+      currentHintLevel = 0;
+      
+      // 決定並應用隨機事件
+      const event = determineQuestionEvent();
+      if (event) {
+        applyQuestionEvent(event);
+      } else {
+        practiceState.currentEvent = null;
+      }
+      
+      // 檢查是否需要啟動 Boss
+      if (shouldActivateBoss()) {
+        activateBoss();
+      }
+      
+      const container = document.getElementById('question-container');
+      if (!container) {
+        console.error('[Greek Common] 找不到 question-container');
+        return;
+      }
+      
+      container.innerHTML = `
+        <div class="question-content">
+          <div id="combo-display" class="combo-display" style="display:none;"></div>
+          <div id="event-banner" class="event-banner" style="display:none;"></div>
+          <div class="question-text">${question.sentence}</div>
+          <div class="question-zh">${question.zh_sentence || question.zh}</div>
+          <div class="input-section">
+            <input type="text" id="answerInput" class="answer-input" placeholder="輸入答案" autocomplete="off" />
+          </div>
+          <div class="question-actions">
+            <div class="secondary-actions">
+              <button id="speak-btn" onclick="speakQuestion()" class="action-btn secondary">🔊 朗讀</button>
+              <button id="hintBtn" onclick="showHint()" class="action-btn secondary">💡 提示 -5⭐</button>
+              <button id="hintPotionBtn" onclick="useHintPotion()" class="action-btn secondary" title="三字母提示藥水">💡 3字提示</button>
+              <button id="timeFreezeBtn" onclick="useTimeFreezePotion()" class="action-btn secondary" title="時間暫停藥水" aria-label="時間暫停藥水">⏸️</button>
+              <button id="skip-btn" onclick="skipQuestion()" class="action-btn secondary">⏭ 跳過</button>
+            </div>
+            <button id="submit-btn" onclick="checkAnswer()" class="submit-answer-btn">送出答案</button>
+          </div>
+          <div id="feedback"></div>
+          <div id="hintBox" class="hint-box" style="display:none;"></div>
+        </div>
+      `;
+      
+      const input = document.getElementById('answerInput');
+      if (input) {
+        input.focus();
+        input.onkeydown = (e) => {
+          if (e.key === 'Enter') checkAnswer();
+        };
+      }
+      
+      // 更新提示按鈕
+      updateHintButton();
+      
+      startTimer();
+      
+      // 自動朗讀
+      setTimeout(() => speak(question.original), 500);
+    }
+
+    // ===== 檢查答案 =====
+    function checkAnswer() {
+      if (gameState.answered) return;
+      
+      const input = document.getElementById('answerInput');
+      if (!input) {
+        console.error('[Greek Answer] 找不到 #answerInput');
+        return;
+      }
+      
+      const userAnswer = input.value.trim().toLowerCase();
+      const correctAnswer = gameState.data[gameState.currentIndex].answer.toLowerCase();
+      
+      if (!userAnswer) {
+        showFeedback('請輸入答案', 'wrong');
+        return;
+      }
+      
+      gameState.answered = true;
+      stopTimer();
+      
+      if (userAnswer === correctAnswer) {
+        // 答對
+        const timeUsed = (Date.now() - gameState.questionStartTs) / 1000;
+        const usedHint = currentHintLevel > 0;
+        
+        // 檢查 Perfect
+        const isPerfect = checkPerfectAnswer(timeUsed, usedHint);
+        if (isPerfect) {
+          practiceState.perfectCount++;
+        }
+        
+        // 增加 Combo
+        increaseCombo();
+        
+        // 計算星星 (包含 Combo 倍率)
+        let stars = calculateStars();
+        const comboMultiplier = getComboMultiplier();
+        stars = Math.floor(stars * comboMultiplier);
+        
+        // Perfect 獎勵
+        if (isPerfect) {
+          stars += PRACTICE_CONFIG.perfectBonus;
+        }
+        
+        // 快速挑戰獎勵
+        if (practiceState.quickChallengeActive) {
+          stars += PRACTICE_CONFIG.quickBonus;
+        }
+        
+        // 雙倍星星
+        if (practiceState.doubleStarActive) {
+          stars *= 2;
+        }
+        
+        // 寶箱獎勵
+        if (practiceState.currentEvent === 'treasure') {
+          const treasureReward = PRACTICE_CONFIG.treasureRewards[Math.floor(Math.random() * PRACTICE_CONFIG.treasureRewards.length)];
+          stars += treasureReward;
+          practiceState.treasureCount++;
+        }
+        
+        // Boss 戰處理
+        if (practiceState.bossActive) {
+          practiceState.bossHp--;
+          updateBossUI();
+          
+          if (practiceState.bossHp <= 0) {
+            handleBossDefeat();
+          }
+        }
+        
+        gameState.sessionStars += stars;
+        gameState.answerLog[gameState.currentIndex] = {
+          word: gameState.data[gameState.currentIndex].answer,
+          zh: gameState.data[gameState.currentIndex].zh_sentence || gameState.data[gameState.currentIndex].zh,
+          en: gameState.data[gameState.currentIndex].original,
+          user: userAnswer,
+          correct: true,
+          stars: stars,
+          category: gameState.data[gameState.currentIndex].category,
+          hintCount: currentHintLevel,
+          combo: practiceState.combo,
+          perfect: isPerfect
+        };
+        
+        let feedbackText = `✅ 正確！+${stars}⭐`;
+        if (practiceState.combo >= 2) {
+          feedbackText += ` Combo ×${practiceState.combo}`;
+        }
+        if (isPerfect) {
+          feedbackText += ` ✨ PERFECT`;
+        }
+        showFeedback(feedbackText, 'correct');
+        updateSessionStars();
+        
+        // 播放音效（使用 quiz.html 的音效系統）
+        if (typeof window.GreekSoundManager !== 'undefined' && window.GreekSoundManager.settings.sfxEnabled) {
+          if (typeof window.SoundSystem !== 'undefined') {
+            try {
+              window.SoundSystem.play('correct');
+              setTimeout(() => {
+                if (typeof window.GreekSoundManager !== 'undefined') {
+                  window.GreekSoundManager.play('star');
+                }
+              }, 150);
+            } catch (error) {
+              console.warn('[Greek Sound] 答對音效播放失敗:', error);
+            }
+          }
+        }
+        
+        setTimeout(() => {
+          gameState.currentIndex++;
+          showQuestion();
+        }, 1500);
+        
+      } else {
+        // 答錯 - 重置 Combo
+        resetCombo();
+        
+        gameState.attemptCount++;
+        
+        if (gameState.attemptCount >= GAME_CONFIG.MAX_ATTEMPTS) {
+          // 超過嘗試次數
+          deductGreekLife();
+          updateLives();
+          
+          // Boss 戰答錯處理
+          if (practiceState.bossActive) {
+            // Boss 戰答錯不扣愛心，但重置 Boss HP
+            practiceState.bossHp = PRACTICE_CONFIG.bossHp;
+            updateBossUI();
+            showFeedback('❌ Boss 回復了！再試一次', 'wrong');
+          } else {
+            // 檢查復活
+            if (PRACTICE_CONFIG.features.revive && !practiceState.reviveUsed && lives <= 0) {
+              showReviveChallenge();
+              return;
+            }
+          }
+          
+          // 播放音效（使用 quiz.html 的音效系統）
+          if (typeof window.GreekSoundManager !== 'undefined' && window.GreekSoundManager.settings.sfxEnabled) {
+            if (typeof window.SoundSystem !== 'undefined') {
+              try {
+                window.SoundSystem.play('wrong');
+                if (lives > 0) {
+                  setTimeout(() => {
+                    if (typeof window.GreekSoundManager !== 'undefined') {
+                      window.GreekSoundManager.play('lifeLost');
+                    }
+                  }, 120);
+                } else {
+                  setTimeout(() => {
+                    if (typeof window.GreekSoundManager !== 'undefined') {
+                      window.GreekSoundManager.play('gameOver');
+                    }
+                  }, 120);
+                }
+              } catch (error) {
+                console.warn('[Greek Sound] 答錯音效播放失敗:', error);
+              }
+            }
+          }
+          
+          // 添加題目卡 shake 動畫
+          const questionCard = document.querySelector('.question-card');
+          if (questionCard) {
+            questionCard.classList.add('shake');
+            setTimeout(() => questionCard.classList.remove('shake'), 400);
+          }
+          
+          gameState.answerLog[gameState.currentIndex] = {
+            word: gameState.data[gameState.currentIndex].answer,
+            zh: gameState.data[gameState.currentIndex].zh_sentence || gameState.data[gameState.currentIndex].zh,
+            en: gameState.data[gameState.currentIndex].original,
+            user: userAnswer,
+            correct: false,
+            stars: 0,
+            category: gameState.data[gameState.currentIndex].category,
+            hintCount: currentHintLevel
+          };
+          
+          showFeedback(`❌ 正確答案是：${gameState.data[gameState.currentIndex].answer}`, 'wrong');
+          const userInput = document.getElementById('answerInput');
+          const submitBtn = document.getElementById('submit-btn');
+          
+          if (userInput) userInput.disabled = true;
+          if (submitBtn) submitBtn.disabled = true;
+          
+          if (lives <= 0) {
+            setTimeout(() => endGame(), 1500);
+          } else {
+            setTimeout(() => {
+              gameState.currentIndex++;
+              showQuestion();
+            }, 2000);
+          }
+          
+        } else {
+          showFeedback(`❌ 再試一次！（剩餘 ${GAME_CONFIG.MAX_ATTEMPTS - gameState.attemptCount} 次機會）`, 'wrong');
+          gameState.answered = false;
+          input.value = '';
+          input.focus();
+        }
+      }
+    }
+
+    // ===== 跳過題目 =====
+    function skipQuestion() {
+      if (gameState.answered) return;
+      
+      stopTimer();
+      deductGreekLife();
+      updateLives();
+      
+      gameState.answerLog[gameState.currentIndex] = {
+        word: gameState.data[gameState.currentIndex].answer,
+        zh: gameState.data[gameState.currentIndex].zh_sentence || gameState.data[gameState.currentIndex].zh,
+        en: gameState.data[gameState.currentIndex].original,
+        user: '',
+        correct: false,
+        stars: 0,
+        category: gameState.data[gameState.currentIndex].category
+      };
+      
+      showFeedback('已跳過本題', 'wrong');
+      
+      if (lives <= 0) {
+        setTimeout(() => endGame(), 1000);
+      } else {
+        setTimeout(() => {
+          gameState.currentIndex++;
+          showQuestion();
+        }, 1000);
+      }
+    }
+
+    // ===== 計算星星數 =====
+    function calculateStars() {
+      if (gameState.attemptCount === 0) return 3;
+      if (gameState.attemptCount === 1) return 2;
+      return 1;
+    }
+
+    // ===== 顯示回饋 =====
+    function showFeedback(message, type) {
+      const feedback = document.getElementById('feedback');
+      if (feedback) {
+        feedback.innerHTML = `<div class="feedback-box feedback-${type}">${message}</div>`;
+      } else {
+        console.warn('[Greek Game] 找不到 #feedback 元素');
+      }
+    }
+
+    // ===== 更新本次星星顯示 =====
+    function updateSessionStars() {
+      setTextSafe('sessionStarsDisplay', `⭐ ${gameState.sessionStars}`);
+      updateStatusGrid();
+    }
+
+    // ===== 更新愛心顯示 =====
+    function updateLives() {
+      const livesEl = document.getElementById('lives');
+      const livesDisplayEl = document.getElementById('lives-display');
+      const safeLives = Math.max(0, Math.min(5, lives));
+      
+      if (livesEl) {
+        livesEl.textContent = safeLives;
+      }
+      if (livesDisplayEl) {
+        livesDisplayEl.textContent = safeLives;
+      }
+      
+      // 添加 shake 動畫當愛心被扣時
+      if (livesEl && livesEl.classList.contains('life-hit')) {
+        livesEl.classList.remove('life-hit');
+        void livesEl.offsetWidth; // 觸發重繪
+        livesEl.classList.add('life-hit');
+      }
+    }
+
+    // ===== 商城道具：愛心護盾、提示藥水、時間暫停藥水 =====
+    function hasInventoryItem(itemId) {
+      return typeof getItemCount === 'function' && getItemCount(itemId) > 0;
+    }
+    function consumeInventoryItem(itemId) {
+      return typeof removeItem === 'function' && removeItem(itemId);
+    }
+    function consumeHeartShield() {
+      return hasInventoryItem('heart_shield') && consumeInventoryItem('heart_shield');
+    }
+    function deductGreekLife() {
+      if (consumeHeartShield()) {
+        return;
+      }
+      lives--;
+    }
+    function useHintPotion() {
+      const question = gameState.data[gameState.currentIndex];
+      if (!question) return;
+      const answer = question.answer || question.en || question.word || '';
+      const hintBox = document.getElementById('hintBox');
+      if (hasInventoryItem('hint_potion') && consumeInventoryItem('hint_potion')) {
+        if (hintBox) {
+          hintBox.textContent = '💡 提示：' + revealLetters(answer, 3);
+          hintBox.style.display = 'block';
+        }
+        showFeedback('已使用三字母提示藥水', 'correct');
+      } else {
+        showFeedback('沒有三字母提示藥水', 'wrong');
+      }
+    }
+    function useTimeFreezePotion() {
+      if (gameState.timerInterval) {
+        if (hasInventoryItem('time_freeze_potion') && consumeInventoryItem('time_freeze_potion')) {
+          stopTimer();
+          showFeedback('⏸️ 時間暫停 5 秒', 'correct');
+          setTimeout(() => {
+            if (!gameState.timerInterval && !gameState.answered) startTimer();
+          }, 5000);
+        } else {
+          showFeedback('沒有時間暫停藥水', 'wrong');
+        }
+      } else {
+        showFeedback('計時尚未開始', 'wrong');
+      }
+    }
+
+    // ===== 計時器 =====
+    function startTimer() {
+      stopTimer();
+      let timeLeft = getQuestionTimeLimit(); // 使用動態時間限制
+      
+      const timeLeftEl = document.getElementById('time-left');
+      const timerEl = document.querySelector('.question-timer');
+      
+      if (timeLeftEl) timeLeftEl.textContent = timeLeft;
+      if (timerEl) {
+        timerEl.classList.remove('warning', 'danger');
+      }
+      
+      gameState.questionStartTs = Date.now();
+      
+      gameState.timerInterval = setInterval(() => {
+        timeLeft--;
+        if (timeLeftEl) timeLeftEl.textContent = timeLeft;
+        
+        // 更新計時器顏色
+        if (timerEl) {
+          if (timeLeft <= 5) {
+            timerEl.classList.add('danger');
+          } else if (timeLeft <= 10) {
+            timerEl.classList.add('warning');
+          }
+        }
+        
+        if (timeLeft <= 0) {
+          stopTimer();
+          handleTimeout();
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (gameState.timerInterval) {
+        clearInterval(gameState.timerInterval);
+        gameState.timerInterval = null;
+      }
+      
+      if (gameState.questionStartTs) {
+        const deltaSec = Math.max(0, Math.round((Date.now() - gameState.questionStartTs) / 1000));
+        gameState.totalTimeUsed = (Number(gameState.totalTimeUsed) || 0) + deltaSec;
+        gameState.questionStartTs = null;
+      }
+      
+      // 安全移除計時器警告樣式
+      const timerEl = document.querySelector('.question-timer');
+      if (timerEl) {
+        timerEl.classList.remove('warning', 'danger');
+      }
+    }
+
+    function handleTimeout() {
+      deductGreekLife();
+      updateLives();
+      
+      gameState.answerLog[gameState.currentIndex] = {
+        word: gameState.data[gameState.currentIndex].answer,
+        zh: gameState.data[gameState.currentIndex].zh_sentence || gameState.data[gameState.currentIndex].zh,
+        en: gameState.data[gameState.currentIndex].original,
+        user: '',
+        correct: false,
+        stars: 0,
+        category: gameState.data[gameState.currentIndex].category,
+        hintCount: currentHintLevel
+      };
+      
+      showFeedback(`⏰ 時間到！正確答案是：${gameState.data[gameState.currentIndex].answer}`, 'wrong');
+      
+      const userInput = document.getElementById('answerInput');
+      const submitBtn = document.getElementById('submit-btn');
+      
+      if (userInput) userInput.disabled = true;
+      if (submitBtn) submitBtn.disabled = true;
+      
+      if (lives <= 0) {
+        setTimeout(() => endGame(), 1500);
+      } else {
+        setTimeout(() => {
+          gameState.currentIndex++;
+          showQuestion();
+        }, 2000);
+      }
+    }
+
+    // ===== 結束遊戲 =====
+    function endGame() {
+      stopTimer();
+      
+      const correctCount = gameState.answerLog.filter(log => log.correct).length;
+      const wrongCount = gameState.answerLog.length - correctCount;
+      const accuracy = gameState.answerLog.length > 0 
+        ? Math.round((correctCount / gameState.answerLog.length) * 100) 
+        : 0;
+      
+      // 計算提示使用次數
+      const totalHints = gameState.answerLog.reduce((sum, item) => sum + Number(item?.hintCount || 0), 0);
+      
+      // 計算評價
+      let grade = 'C';
+      if (accuracy >= 90 && practiceState.bossActive === false) {
+        grade = 'S';
+      } else if (accuracy >= 80) {
+        grade = 'A';
+      } else if (accuracy >= 60) {
+        grade = 'B';
+      }
+      
+      // 判斷是否通關（愛心歸零不算通關）
+      const isHeartZero = lives <= 0;
+      const passed = !isHeartZero && accuracy >= 60;
+      
+      // 計算本次關卡評價星星
+      let currentStageStars = 0;
+      if (passed) {
+        if (accuracy >= 90) currentStageStars = 3;
+        else if (accuracy >= 80) currentStageStars = 2;
+        else if (accuracy >= 60) currentStageStars = 1;
+      }
+      
+      // 處理通關獎勵（只有通關才發放）
+      let clearReward = 0;
+      let oldBestStars = 0;
+      let newBestStars = 0;
+      
+      if (passed && typeof getStageProgress === 'function' && typeof calculateClearReward === 'function') {
+        const stageId = godConfig.id;
+        const category = 'greek';
+        
+        // 讀取舊的關卡進度
+        const oldProgress = getStageProgress(category, stageId);
+        oldBestStars = Number(oldProgress.stars) || 0;
+        
+        // 計算新的最高星等
+        newBestStars = Math.max(oldBestStars, currentStageStars);
+        
+        // 計算差額獎勵
+        clearReward = calculateClearReward(oldBestStars, newBestStars);
+        
+        // 發放獎勵到玩家總星星
+        if (clearReward > 0 && typeof StarRewardSystem !== 'undefined' && typeof StarRewardSystem.addStars === 'function') {
+          StarRewardSystem.addStars(clearReward);
+          console.log(`[Greek Reward] 通關獎勵: +${clearReward} 星星 (星等 ${oldBestStars} → ${newBestStars})`);
+        }
+        
+        // 更新關卡進度
+        if (typeof updateStageProgress === 'function') {
+          updateStageProgress(category, stageId, {
+            stars: newBestStars,
+            bestScore: Math.max(Number(oldProgress.bestScore) || 0, gameState.sessionStars),
+            stageCleared: true,
+            collectionUnlocked: true
+          });
+        }
+      }
+      
+      // 更新總星星（本次遊戲獲得的星星）
+      const totalStars = getTotalStars() + gameState.sessionStars;
+      saveTotalStars(totalStars);
+      updateGlobalStarsDisplay();
+      
+      // 顯示結算畫面
+      setTextSafe('endIcon', isHeartZero ? '💔' : '🎉');
+      setTextSafe('endTitle', isHeartZero ? '挑戰結束' : '挑戰完成');
+      setTextSafe('endSubtitle', `${godConfig.name} - ${godConfig.title}`);
+      setTextSafe('endSessionStars', gameState.sessionStars);
+      setTextSafe('endCorrectCount', correctCount);
+      setTextSafe('endWrongCount', wrongCount);
+      setTextSafe('endAccuracy', `${accuracy}%`);
+      setTextSafe('endTotalTime', `${Math.floor(gameState.totalTimeUsed)}s`);
+      setTextSafe('endTotalStars', totalStars);
+      
+      // 新增遊戲化統計
+      setTextSafe('endMaxCombo', practiceState.maxCombo);
+      setTextSafe('endPerfectCount', practiceState.perfectCount);
+      setTextSafe('endTreasureCount', practiceState.treasureCount);
+      setTextSafe('endGrade', grade);
+      
+      // 顯示關卡評價和獎勵
+      const starDisplay = currentStageStars > 0 ? '⭐'.repeat(currentStageStars) + '☆'.repeat(3 - currentStageStars) : '☆☆☆';
+      const bestStarDisplay = newBestStars > 0 ? '⭐'.repeat(newBestStars) + '☆'.repeat(3 - newBestStars) : '☆☆☆';
+      
+      setTextSafe('endStageStars', starDisplay);
+      setTextSafe('endBestStars', bestStarDisplay);
+      
+      if (clearReward > 0) {
+        setTextSafe('endClearReward', `⭐ +${clearReward}`);
+      } else if (passed && newBestStars > 0) {
+        setTextSafe('endClearReward', '獎勵已領取');
+      } else {
+        setTextSafe('endClearReward', '未通關');
+      }
+      
+      // 設定評價樣式
+      const gradeEl = document.getElementById('endGrade');
+      if (gradeEl) {
+        gradeEl.className = `settlement-value grade-${grade}`;
+      }
+      
+      const gameEndModal = document.getElementById('gameEndModal');
+      if (gameEndModal) {
+        gameEndModal.style.display = 'flex';
+        gameEndModal.classList.add('show');
+      }
+      
+      // 播放關卡完成音效（正常完成）
+      if (!isHeartZero && typeof window.GreekSoundManager !== 'undefined') {
+        window.GreekSoundManager.play('complete');
+      }
+      
+      // 準備上傳資料
+      const category = getCurrentGreekCategory();
+      const totalTime = Math.max(0, Math.round(gameState.totalTimeUsed || 0));
+      const answered = correctCount + wrongCount;
+      const averageTime = answered > 0 ? Math.round(totalTime / answered) : 0;
+      
+      const payload = {
+        score: Number(gameState.sessionStars || 0),
+        correctCount,
+        wrongCount,
+        category,
+        totalTime,
+        averageTime,
+        details: gameState.answerLog
+      };
+      
+      console.log('[Greek Upload] payload:', payload);
+      
+      // category 空白就不要亂傳
+      if (!category) {
+        console.error('[Greek Upload] category 是空白，取消上傳');
+        return;
+      }
+      
+      // 正式呼叫 submitGreekScore（不阻塞結算畫面）
+      if (typeof window.submitGreekScore === 'function') {
+        // 防止重複上傳
+        if (greekScoreSubmitted) {
+          console.warn('[Greek Upload] 已上傳，忽略重複');
+          return;
+        }
+        greekScoreSubmitted = true;
+        
+        window.submitGreekScore(payload)
+          .then(result => {
+            console.log('[Greek Upload] submit result:', result);
+          })
+          .catch(error => {
+            console.error('[Greek Upload] submit failed:', error);
+          });
+      } else {
+        console.error('[Greek Upload] submitGreekScore 不存在');
+      }
+      
+      // 顯示提示統計
+      console.log(`💡 本次遊戲使用提示：${totalHints} 次`);
+    }
+
+    // ===== 重新開始 =====
+    function restartGame() {
+      const gameEndModal = document.getElementById('gameEndModal');
+      if (gameEndModal) {
+        gameEndModal.style.display = 'none';
+        gameEndModal.classList.remove('show');
+      }
+      
+      // 重置上傳狀態
+      greekScoreSubmitted = false;
+      
+      // 重置提示狀態
+      currentHintLevel = 0;
+      
+      // 重置遊戲化狀態
+      practiceState.combo = 0;
+      practiceState.maxCombo = 0;
+      practiceState.perfectCount = 0;
+      practiceState.bossHp = 0;
+      practiceState.bossActive = false;
+      practiceState.reviveUsed = false;
+      practiceState.bonusMultiplier = 1;
+      practiceState.currentEvent = null;
+      practiceState.treasureCount = 0;
+      practiceState.quickChallengeActive = false;
+      practiceState.trapActive = false;
+      practiceState.doubleStarActive = false;
+      
+      lives = 5;
+      updateLives();
+      
+      initData();
+      updateSessionStars();
+      showQuestion();
+    }
+
+    // ===== 重置進度 =====
+    function resetProgress() {
+      if (confirm('確定要重新開始嗎？')) {
+        restartGame();
+      }
+    }
+
+    // ===== 複習功能 =====
+    function showReviewModal() {
+      stopTimer();
+      
+      // 播放 Modal 開啟音效
+      if (typeof window.GreekSoundManager !== 'undefined') {
+        window.GreekSoundManager.play('modalOpen');
+      }
+      
+      // 填充分類選項
+      const categories = [...new Set(vocabData.map(v => v.category || '未分類'))];
+      const select = document.getElementById('categoryFilter');
+      if (select) {
+        select.innerHTML = '<option value="all">全部單字</option>';
+        categories.forEach(cat => {
+          const option = document.createElement('option');
+          option.value = cat;
+          option.textContent = cat;
+          select.appendChild(option);
+        });
+        
+        select.onchange = () => showReviewWords(select.value);
+      }
+      
+      setTextSafe('totalVocabCount', vocabData.length);
+      showReviewWords('all');
+      
+      const reviewModal = document.getElementById('reviewModal');
+      if (reviewModal) {
+        reviewModal.style.display = 'flex';
+        reviewModal.classList.add('show');
+      }
+    }
+
+    function closeReviewModal() {
+      // 播放 Modal 關閉音效
+      if (typeof window.GreekSoundManager !== 'undefined') {
+        window.GreekSoundManager.play('modalClose');
+      }
+      
+      const reviewModal = document.getElementById('reviewModal');
+      if (reviewModal) {
+        reviewModal.style.display = 'none';
+        reviewModal.classList.remove('show');
+      }
+      
+      if (gameState.currentIndex < gameState.data.length && !gameState.answered) {
+        startTimer();
+      }
+    }
+
+    function showReviewWords(category) {
+      const container = document.getElementById('reviewWordsContainer');
+      container.innerHTML = '';
+      
+      const words = category === 'all' 
+        ? vocabData 
+        : vocabData.filter(v => (v.category || '未分類') === category);
+      
+      document.getElementById('totalVocabCount').textContent = words.length;
+      
+      if (words.length === 0) {
+        container.innerHTML = '<div style="text-align:center;color:#888;padding:20px;">此分類暫無單字</div>';
+        return;
+      }
+      
+      words.forEach(word => {
+        const item = document.createElement('div');
+        item.className = 'vocab-item';
+        item.innerHTML = `
+          <div class="word">${word.word}</div>
+          <div class="meaning">${word.zh}</div>
+          <div class="sentence">${word.en_sentence}</div>
+          <div class="category">${word.category || '未分類'}</div>
+          <button onclick="speak('${word.word}')" style="background:rgba(0,255,255,0.2);color:#00ffff;border:1px solid #00ffff;border-radius:5px;padding:5px 10px;margin-top:5px;cursor:pointer;">🔊 發音</button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // ===== 語音朗讀 =====
+    function speak(text) {
+      // 檢查單字語音是否啟用
+      if (typeof window.GreekSoundManager !== 'undefined' && !window.GreekSoundManager.isSpeechEnabled()) {
+        return;
+      }
+      
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9;
+        speechSynthesis.speak(utterance);
+      }
+    }
+
+    function speakQuestion() {
+      const question = gameState.data[gameState.currentIndex];
+      if (question) {
+        speak(question.original);
+      }
+    }
+
+    // ===== 星星系統 =====
+    // 使用全站統一的 StarSystem
+    function getTotalStars() {
+      if (typeof window.StarSystem !== 'undefined' && window.StarSystem.getTotalStars) {
+        return window.StarSystem.getTotalStars();
+      }
+      // 備用方案
+      const totalStars = parseInt(localStorage.getItem('totalStars') || '0');
+      const playerStars = parseInt(localStorage.getItem('playerStars') || '0');
+      return playerStars > 0 ? playerStars : totalStars;
+    }
+
+    function saveTotalStars(stars) {
+      if (typeof window.StarSystem !== 'undefined' && window.StarSystem.setTotalStars) {
+        return window.StarSystem.setTotalStars(stars);
+      }
+      // 備用方案
+      const starsValue = String(stars);
+      window.StarSystem.setTotalStars(starsValue);
+      localStorage.setItem('playerStars', starsValue);
+    }
+
+    // ===== 更新左上角總星星顯示 =====
+    function updateGlobalStarsDisplay() {
+      const totalStars = getTotalStars();
+      const globalStarsElement = document.querySelector('[data-global-stars-value]');
+      if (globalStarsElement) {
+        globalStarsElement.textContent = totalStars;
+      }
+    }
+
+    // ===== 安全文字設定函數 =====
+    function setTextSafe(id, value) {
+      const el = document.getElementById(id);
+      if (!el) {
+        console.warn('[Greek Common UI] 找不到元素:', id);
+        return false;
+      }
+      el.textContent = String(value ?? '');
+      return true;
+    }
+
+    // ===== DOM 驗證器 =====
+    function validateGreekGameDOM() {
+      const requiredIds = [
+        'question-container',
+        'time-left',
+        'current-index',
+        'total-questions',
+        'lives',
+        'sessionStarsDisplay',
+        'gameEndModal'
+      ];
+
+      const missing = requiredIds.filter(id => !document.getElementById(id));
+
+      if (missing.length > 0) {
+        console.error('[Greek DOM] 缺少必要元素:', missing);
+        return false;
+      }
+
+      console.log('[Greek DOM] 必要元素完整');
+      return true;
+    }
+
+    // ===== 錯誤顯示 =====
+    function showError(message) {
+      console.error('[Greek Game]', message);
+      
+      const loading = document.getElementById('loading');
+      const error = document.getElementById('error');
+      
+      if (loading) {
+        loading.style.display = 'none';
+      }
+      
+      if (error) {
+        error.style.display = 'block';
+        error.textContent = String(message || '發生未知錯誤');
+      } else {
+        console.warn('[Greek Game] 找不到 #error 元素');
+      }
+    }
+
+    // ===== 頁面載入時初始化 =====
+    window.addEventListener('DOMContentLoaded', () => {
+      // 驗證 DOM 結構
+      const domOk = validateGreekGameDOM();
+      if (!domOk) {
+        console.error('[Greek Init] DOM 結構不完整，遊戲可能無法正常運作');
+      }
+
+      // 更新左上角總星星顯示
+      updateGlobalStarsDisplay();
+
+      // 跨頁面同步：監聽 localStorage 變化
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'totalStars' || e.key === 'playerStars') {
+          console.log('[Greek Stars] 檢測到跨頁面星星變化:', e.key);
+          updateGlobalStarsDisplay();
+        }
+      });
+
+      // 頁面可見性變化時更新星星（當用戶切換回此頁面時）
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          updateGlobalStarsDisplay();
+        }
+      });
+
+      // 初始化遊戲
+      initGame();
+    });
+  </script>
+</body>
+</html>

@@ -2,11 +2,13 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
   <meta charset="UTF-8">
   <title>星際英打冒險 − 單字本管理</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="responsive_enhanced.css">
+  <link rel="stylesheet" href="css/shared.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
@@ -17,15 +19,15 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      font-family: 'Noto Sans TC', 'Orbitron', sans-serif;
+      font-family: 'Noto Sans TC', 'Microsoft JhengHei', 'Orbitron', sans-serif;
       background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
       color: #fff;
       overflow-x: hidden;
     }
-    * {
+    
+    .book-page,
+    .book-page * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     /*-------------------------
@@ -57,106 +59,494 @@
     }
 
     /*-------------------------
-      左上角 TopBar（顯示總星星數）
+      新版 book-page 佈局樣式
     -------------------------*/
-    #topBar {
+    .book-page {
+      position: relative;
+      z-index: 1;
+      width: min(1440px, calc(100% - 32px));
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .book-topbar {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      background: linear-gradient(90deg, rgba(0, 0, 0, 0.8), rgba(26, 26, 46, 0.8));
-      backdrop-filter: blur(10px);
-      padding: 15px 25px;
+      right: 0;
+      height: 68px;
+      background: linear-gradient(90deg, rgba(0, 0, 0, 0.85), rgba(26, 26, 46, 0.85));
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(69, 162, 158, 0.25);
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
       z-index: 1000;
-      border-bottom: 1px solid rgba(69, 162, 158, 0.3);
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
     }
-    
-    /*-------------------------
-      音樂控制按鈕
-    -------------------------*/
-    #audioControls {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 1001;
+
+    .book-topbar-left {
       display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .book-topbar-center {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .book-topbar-right {
+      display: flex;
+      align-items: center;
       gap: 10px;
     }
-    
-    #toggleMusic {
-      background: rgba(10, 20, 40, 0.85);
-      border: 2px solid #45a29e;
+
+    .global-stars-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: 20px;
+      backdrop-filter: blur(8px);
+    }
+
+    .global-star-icon {
+      font-size: 1.1rem;
+      animation: twinkle 2s infinite;
+    }
+
+    .global-stars-value {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffd700;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+    }
+
+    .book-title {
       color: #66fcf1;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      cursor: pointer;
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-shadow: 0 0 15px rgba(102, 252, 241, 0.4);
+      margin: 0;
+    }
+
+    .topbar-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(10, 20, 40, 0.8);
+      border: 1px solid rgba(69, 162, 158, 0.4);
+      color: #66fcf1;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-decoration: none;
+      backdrop-filter: blur(8px);
     }
-    
-    #toggleMusic:hover {
-      background: rgba(69, 162, 158, 0.2);
-      transform: scale(1.1);
+
+    .topbar-btn:hover {
+      background: rgba(69, 162, 158, 0.25);
+      border-color: #66fcf1;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(69, 162, 158, 0.3);
+    }
+
+    .topbar-btn:active {
+      transform: translateY(0);
+    }
+
+    .topbar-btn .material-icons {
+      font-size: 1.3rem;
+    }
+
+    .book-main {
+      margin-top: 88px;
+      padding: 0 16px 40px;
+      flex: 1;
+    }
+
+    .book-create-panel {
+      max-width: 1180px;
+      margin: 0 auto 32px;
+      padding: 28px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(69, 162, 158, 0.25);
+      border-radius: 22px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .book-create-title {
+      color: #66fcf1;
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin: 0 0 20px 0;
+      text-shadow: 0 0 12px rgba(102, 252, 241, 0.35);
+    }
+
+    .book-create-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .book-input {
+      height: 58px;
+      padding: 0 18px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(69, 162, 158, 0.35);
+      border-radius: 14px;
+      color: #fff;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: all 0.25s ease;
+    }
+
+    .book-input:focus {
+      outline: none;
+      border-color: #66fcf1;
+      box-shadow: 0 0 0 3px rgba(102, 252, 241, 0.15);
+    }
+
+    .book-input::placeholder {
+      color: rgba(102, 252, 241, 0.45);
+    }
+
+    .book-create-btn {
+      height: 58px;
+      padding: 0 28px;
+      background: linear-gradient(135deg, #45a29e, #66fcf1);
+      border: none;
+      border-radius: 14px;
+      color: #0b0c10;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+      box-shadow: 0 4px 15px rgba(69, 162, 158, 0.3);
+    }
+
+    .book-create-btn:hover {
+      background: linear-gradient(135deg, #66fcf1, #45a29e);
+      transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(69, 162, 158, 0.4);
     }
-    
-    #toggleMusic.playing {
-      background: rgba(0, 255, 255, 0.2);
-      border-color: #66fcf1;
-      animation: pulse 2s infinite;
+
+    .book-create-btn:active {
+      transform: translateY(0);
     }
-    
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+
+    .book-create-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
     }
-    
-    #testMusic {
-      background: rgba(10, 20, 40, 0.85);
-      border: 2px solid #45a29e;
+
+    .book-cost-info {
+      padding: 12px 16px;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 12px;
+      color: rgba(102, 252, 241, 0.7);
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .cost-highlight {
+      color: #ffd700;
+      font-weight: 700;
+    }
+
+    .book-list-section {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .book-list-title {
       color: #66fcf1;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin: 0 0 20px 0;
+      text-shadow: 0 0 12px rgba(102, 252, 241, 0.35);
+    }
+
+    .book-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 340px);
+      gap: 24px;
+      justify-content: center;
+    }
+
+    .card {
+      width: 340px;
+      height: 470px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(69, 162, 158, 0.25);
+      border-radius: 22px;
+      padding: 16px;
+      text-align: center;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+      display: grid;
+      grid-template-rows: 150px 54px 70px 1fr;
+      grid-template-columns: 1fr;
+      box-sizing: border-box;
+      overflow: hidden;
+      gap: 8px;
+    }
+
+    .card:hover {
+      border-color: rgba(102, 252, 241, 0.5);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(69, 162, 158, 0.35);
+    }
+
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 16px;
       cursor: pointer;
+      transition: transform 0.25s ease;
+    }
+
+    .card img:hover {
+      transform: scale(1.03);
+    }
+
+    .card-name {
+      color: #66fcf1;
+      font-size: 1.3rem;
+      font-weight: 800;
+      text-shadow: 0 0 8px rgba(102, 252, 241, 0.4);
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      font-size: 0.8rem;
     }
-    
-    #testMusic:hover {
-      background: rgba(69, 162, 158, 0.2);
-      transform: scale(1.1);
-    }
-    #topBar #starsDisplay {
-      font-size: 1.3rem;
-      color: #66fcf1;
-      font-weight: 700;
-      text-shadow: 0 0 10px #66fcf1;
+
+    .card-meta {
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 0.9rem;
       display: flex;
+      flex-direction: column;
       align-items: center;
       gap: 8px;
     }
-    #topBar #starsDisplay::before {
-      content: "⭐";
-      font-size: 1.5rem;
-      animation: twinkle 2s infinite;
+
+    .card-meta-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(69, 162, 158, 0.15);
+      border: 1px solid rgba(69, 162, 158, 0.25);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
     }
-    @keyframes twinkle {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.7; transform: scale(1.1); }
+
+    .card-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-top: 8px;
+    }
+
+    .card button {
+      width: 100%;
+      padding: 10px 16px;
+      background: linear-gradient(135deg, #45a29e, #66fcf1);
+      border: none;
+      border-radius: 12px;
+      color: #0b0c10;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      height: 46px;
+    }
+
+    .card button:hover {
+      background: linear-gradient(135deg, #66fcf1, #45a29e);
+      transform: translateY(-2px);
+    }
+
+    .card .delete-btn {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      color: #fff;
+      margin-top: 8px;
+    }
+
+    .card .delete-btn:hover {
+      background: linear-gradient(135deg, #c0392b, #e74c3c);
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 50px 20px;
+      color: rgba(255, 255, 255, 0.5);
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 18px;
+      border: 1px dashed rgba(69, 162, 158, 0.3);
+    }
+
+    .empty-state h3 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+      color: #66fcf1;
+    }
+
+    .empty-state p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /*-------------------------
+      新版響應式設計
+    -------------------------*/
+    @media (max-width: 900px) {
+      .card {
+        width: 300px;
+        height: 440px;
+        grid-template-rows: 140px 50px 66px 1fr;
+      }
+
+      .card-name {
+        font-size: 1.2rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .book-topbar {
+        height: 60px;
+        padding: 0 12px;
+      }
+
+      .book-title {
+        font-size: 1.4rem;
+      }
+
+      .topbar-btn {
+        width: 40px;
+        height: 40px;
+      }
+
+      .book-main {
+        margin-top: 76px;
+        padding: 0 12px 30px;
+      }
+
+      .book-create-panel {
+        padding: 20px;
+        border-radius: 18px;
+      }
+
+      .book-create-title {
+        font-size: 1.3rem;
+      }
+
+      .book-create-form {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .book-input,
+      .book-create-btn {
+        width: 100%;
+      }
+
+      .book-grid {
+        grid-template-columns: repeat(auto-fill, 300px);
+      }
+
+      .card {
+        width: 300px;
+        height: 440px;
+        grid-template-rows: 140px 50px 66px 1fr;
+      }
+
+      .card-name {
+        font-size: 1.2rem;
+      }
+
+      .notification {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .book-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 340px;
+        height: 460px;
+        grid-template-rows: 150px 52px 68px 1fr;
+        justify-self: center;
+      }
+
+      .card-name {
+        font-size: 1.15rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .book-title {
+        font-size: 1.2rem;
+      }
+
+      .book-create-panel {
+        padding: 16px;
+      }
+
+      .card {
+        padding: 14px;
+        height: 440px;
+        grid-template-rows: 130px 48px 64px 1fr;
+      }
+
+      .card-name {
+        font-size: 1.1rem;
+      }
+
+      .card-meta {
+        font-size: 0.85rem;
+      }
+
+      .card-meta-chip {
+        padding: 5px 10px;
+      }
+
+      .card button {
+        height: 42px;
+        font-size: 0.9rem;
+        padding: 8px 12px;
+      }
     }
 
     /*-------------------------
@@ -177,7 +567,7 @@
     .container {
       position: relative;
       z-index: 1;
-      max-width: 1200px;
+      max-width: min(1200px, calc(100% - 32px));
       margin: 100px auto 50px;
       background: rgba(0, 0, 0, 0.4);
       padding: 30px;
@@ -189,6 +579,8 @@
       border: 1px solid rgba(69, 162, 158, 0.2);
       overflow-y: auto;
       max-height: calc(100vh - 150px);
+      width: 100%;
+      box-sizing: border-box;
     }
     
     .container h1 {
@@ -559,6 +951,19 @@
       background: linear-gradient(135deg, #c0392b, #e74c3c);
       box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
     }
+
+    .rename-pen {
+      cursor: pointer;
+      margin-left: 6px;
+      opacity: 0.75;
+      font-size: 0.85em;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .rename-pen:hover {
+      opacity: 1;
+      transform: scale(1.15);
+    }
     
     /*-------------------------
       空狀態提示
@@ -709,21 +1114,6 @@
   </style>
 </head>
 <body>
-  <!-- 左上角 TopBar：顯示總星星數 -->
-  <div id="topBar">
-    <div id="starsDisplay">總星星數：<span id="totalStarsCount">0</span></div>
-  </div>
-
-  <!-- 音樂控制 -->
-  <div id="audioControls">
-    <button id="toggleMusic" title="背景音樂">
-      <span class="material-icons">music_note</span>
-    </button>
-    <button id="testMusic" title="測試音樂系統" onclick="diagnoseMusicSystem()" style="font-size: 0.8rem; padding: 2px 6px;">
-      🔍
-    </button>
-  </div>
-
   <!-- 背景音樂音頻元素 -->
   <audio id="backgroundMusic" loop>
     <source src="sound/午後放鬆時光（純音樂）.mp3" type="audio/mpeg">
@@ -732,29 +1122,60 @@
   <!-- 星空 Canvas -->
   <canvas id="stars"></canvas>
 
-  <!-- 主容器：單字本管理 -->
-  <div class="container">
-    <h1>單字本管理</h1>
-    
-    <!-- 返回首頁按鈕 -->
-    <a href="index.html" class="back-btn">🏠 返回首頁</a>
-
-    <!-- 新增單字本區域 -->
-    <div class="input-section">
-      <h3>📖 創建新單字本</h3>
-      <div class="input-group">
-        <input id="newBook" placeholder="輸入新單字本名稱" maxlength="20">
-        <input id="newCategory" placeholder="輸入類別（例如：GEPT、生活英語）" maxlength="15">
-        <button onclick="createBook()">➕ 新增單字本</button>
+  <!-- 主頁面容器 -->
+  <div class="book-page">
+    <!-- 頂部工具列 -->
+    <header class="book-topbar">
+      <div class="book-topbar-left">
+        <div class="global-stars-pill" data-global-stars>
+          <span class="global-star-icon">⭐</span>
+          <span class="global-stars-value" data-global-stars-value>0</span>
+        </div>
       </div>
-      <div class="cost-info">💡 第一冊免費，第二冊開始每冊需支付 10 星星</div>
-    </div>
+      <div class="book-topbar-center">
+        <h1 class="book-title">📚 單字本管理</h1>
+      </div>
+      <div class="book-topbar-right">
+        <a href="vocabulary_download.html" class="topbar-btn" title="下載單字">
+          <span class="material-icons">download</span>
+        </a>
+        <button id="toggleMusic" class="topbar-btn" title="背景音樂">
+          <span class="material-icons">music_note</span>
+        </button>
+        <button id="testMusic" class="topbar-btn" title="測試音樂系統" onclick="diagnoseMusicSystem()">
+          🔍
+        </button>
+        <button class="topbar-btn" title="使用說明" onclick="showBookHelp()">
+          <span class="material-icons">help</span>
+        </button>
+        <a href="index.html" class="topbar-btn" title="返回首頁">
+          <span class="material-icons">home</span>
+        </a>
+      </div>
+    </header>
 
-    <!-- 隱藏的檔案上傳，用於上傳封面 -->
-    <input type="file" id="imgUploader" accept="image/*" onchange="handleImageUpload(event)">
+    <!-- 主內容區 -->
+    <main class="book-main">
+      <!-- 建立新單字本區塊 -->
+      <section class="book-create-panel">
+        <h2 class="book-create-title">📖 建立新單字本</h2>
+        <div class="book-create-form">
+          <input id="newBook" class="book-input" placeholder="輸入新單字本名稱" maxlength="20">
+          <input id="newCategory" class="book-input" placeholder="輸入類別（例如：GEPT、生活英語）" maxlength="15">
+          <button id="createBookBtn" class="book-create-btn" onclick="createBook()">📕 新增單字本・⭐300</button>
+        </div>
+        <div class="book-cost-info">💡 每新增一本單字本需要消耗 <span class="cost-highlight">300 星星</span></div>
+      </section>
 
-    <!-- 單字本卡片格子 -->
-    <div class="grid" id="bookList"></div>
+      <!-- 隱藏的檔案上傳，用於上傳封面 -->
+      <input type="file" id="imgUploader" accept="image/*" onchange="handleImageUpload(event)">
+
+      <!-- 單字本列表區塊 -->
+      <section class="book-list-section">
+        <h2 class="book-list-title">📚 我的單字本</h2>
+        <div class="book-grid" id="bookList"></div>
+      </section>
+    </main>
   </div>
 
   <!-- 載入必要的 JavaScript 檔案 -->
@@ -923,23 +1344,71 @@
       showNotification('音樂系統診斷完成，請查看控制台', 'info');
     }
     
-    /***** 星星計數 (TopBar) *****/
+    /***** 星星計數 (TopBar) - 使用統一 StarSystem *****/
     function loadTotalStars() {
+      console.log('[book.html] loadTotalStars - StarSystem:', typeof window.StarSystem, 'LinkageSystem:', typeof LinkageSystem);
+      
+      // 優先使用統一 StarSystem，回退到 LinkageSystem，最後回退到 localStorage
+      if (typeof window.StarSystem !== 'undefined' && window.StarSystem.getTotalStars) {
+        const stars = window.StarSystem.getTotalStars();
+        console.log('[book.html] 從 StarSystem 讀取星星:', stars);
+        return stars;
+      }
+      if (typeof LinkageSystem !== 'undefined' && LinkageSystem.stars && typeof LinkageSystem.stars.get === 'function') {
+        const stars = Number(LinkageSystem.stars.get()) || 0;
+        console.log('[book.html] 從 LinkageSystem 讀取星星:', stars);
+        return stars;
+      }
       const v = localStorage.getItem('totalStars');
-      return v !== null ? parseInt(v, 10) : 0;
+      const stars = v !== null ? parseInt(v, 10) : 0;
+      console.log('[book.html] 從 localStorage 讀取星星:', stars);
+      return stars;
     }
     function updateStarsDisplay() {
-      document.getElementById('totalStarsCount').textContent = loadTotalStars();
+      const stars = loadTotalStars();
+      console.log('[book.html] 更新星星顯示:', stars);
+      
+      // 嘗試多種可能的選擇器
+      const starsValueElement = 
+        document.querySelector('[data-global-stars-value]') ||
+        document.querySelector('.global-stars-value') ||
+        document.getElementById('totalStarsCount');
+      
+      if (starsValueElement) {
+        starsValueElement.textContent = stars;
+        console.log('[book.html] 星星顯示已更新:', starsValueElement.textContent);
+      } else {
+        console.error('[book.html] 找不到星星顯示元素');
+      }
     }
     function addStars(n) {
-      let cur = loadTotalStars();
-      localStorage.setItem('totalStars', cur + n);
+      // 優先使用統一 StarSystem
+      if (typeof window.StarSystem !== 'undefined' && window.StarSystem.addTotalStars) {
+        window.StarSystem.addTotalStars(n, '單字本操作');
+      } else if (typeof LinkageSystem !== 'undefined' && LinkageSystem.stars && typeof LinkageSystem.stars.add === 'function') {
+        LinkageSystem.stars.add(n);
+      } else {
+        let cur = loadTotalStars();
+        window.StarSystem.setTotalStars(cur + n);
+      }
       updateStarsDisplay();
     }
     function subtractStars(n) {
-      let cur = loadTotalStars();
-      localStorage.setItem('totalStars', Math.max(0, cur - n));
+      // 優先使用統一 StarSystem
+      if (typeof window.StarSystem !== 'undefined' && window.StarSystem.spendTotalStars) {
+        const result = window.StarSystem.spendTotalStars(n, '單字本操作');
+        if (!result.ok) {
+          return false; // 扣除失敗
+        }
+      } else if (typeof LinkageSystem !== 'undefined' && LinkageSystem.stars && typeof LinkageSystem.stars.set === 'function') {
+        const current = Number(LinkageSystem.stars.get()) || 0;
+        LinkageSystem.stars.set(Math.max(0, current - n));
+      } else {
+        let cur = loadTotalStars();
+        window.StarSystem.setTotalStars(Math.max(0, cur - n));
+      }
       updateStarsDisplay();
+      return true;
     }
 
     /***** 星空背景動畫 *****/
@@ -995,6 +1464,12 @@
 
     /***** 單字本管理邏輯 *****/
 
+    // 新增單字本價格常數
+    const CREATE_BOOK_COST = 300;
+
+    // 防止重複提交標記
+    let isCreatingBook = false;
+
     // 預設書籍圖片
     const DEFAULT_BOOK_IMAGE = 'https://i.pinimg.com/1200x/78/fd/39/78fd39fac28a8d26d6e11cb52001ebbf.jpg';
 
@@ -1017,7 +1492,7 @@
           <div class="empty-state" style="grid-column: 1 / -1;">
             <h3>📚 還沒有單字本</h3>
             <p>點擊上方「新增單字本」開始創建您的第一個單字本吧！</p>
-            <p>✨ 第一冊完全免費，立即開始您的學習之旅</p>
+            <p>✨ 每新增一本單字本需要消耗 300 星星</p>
           </div>
         `;
         return;
@@ -1041,24 +1516,36 @@
             loading="lazy"
             onerror="this.onerror=null; this.src='${DEFAULT_BOOK_IMAGE}';"
           >
-          <div class="card-name">${name}</div>
-          <div class="card-meta">📂 類別：${category}</div>
-          <div class="card-meta">📊 ${count} 個單字</div>
-          <button onclick="location.href='book_edit.html?book=${encodeURIComponent(name)}'">
-            ✏️ 編輯 / 🎮 玩遊戲
-          </button>
-          <button onclick="deleteBook('${name}')" class="delete-btn">
-            🗑️ 刪除
-          </button>
+          <div class="card-name" title="${name}">${name}<span class="rename-pen" onclick="renameBook('${name}')" title="重新命名">✏️</span></div>
+          <div class="card-meta">
+            <div class="card-meta-chip" title="類別：${category}">📂 類別：${category}</div>
+            <div class="card-meta-chip">📊 ${count} 個單字</div>
+          </div>
+          <div class="card-actions">
+            <button onclick="location.href='book_edit.html?book=${encodeURIComponent(name)}'">
+              ✏️ 編輯 / 🎮 玩遊戲
+            </button>
+            <button onclick="deleteBook('${name}')" class="delete-btn">
+              🗑️ 刪除
+            </button>
+          </div>
         `;
         bookList.appendChild(div);
       });
     }
 
     function createBook() {
+      // 防止重複提交
+      if (isCreatingBook) {
+        showNotification('正在建立單字本中，請稍候...', 'warning');
+        return;
+      }
+
       const name = document.getElementById('newBook').value.trim();
       const category = document.getElementById('newCategory').value.trim();
+      const createBtn = document.getElementById('createBookBtn');
       
+      // 1. 驗證輸入
       if (!name) {
         showNotification('請輸入書名', 'warning');
         return;
@@ -1068,33 +1555,91 @@
         return;
       }
       
-      // 計算已存在的書本數量
-      const existingBooks = Object.keys(localStorage).filter(k => k.startsWith('book_')).length;
-      // 如果已有至少 1 本，需支付 10 星星
-      if (existingBooks >= 1) {
-        const price = 10;
-        const stars = loadTotalStars();
-        if (stars < price) {
-          showNotification(`購買第二本及後續書本需要 ${price} 顆星，目前只有 ${stars} 顆，無法購買。`, 'error');
-          return;
-        }
-        subtractStars(price);
-        showNotification(`成功扣除 ${price} 顆星，創建單字本「${name}」`, 'success');
-      } else {
-        showNotification(`成功創建免費單字本「${name}」`, 'success');
-      }
-      
+      // 2. 檢查是否已有同名單字本
       if (localStorage.getItem('book_' + name)) {
         showNotification('此書名已存在，請使用其他名稱', 'error');
         return;
       }
       
-      // 新增空陣列
-      localStorage.setItem('book_' + name, JSON.stringify([]));
-      localStorage.setItem('cat_' + name, category);
-      loadBooks();
-      document.getElementById('newBook').value = '';
-      document.getElementById('newCategory').value = '';
+      // 3. 檢查星星是否足夠
+      const currentStars = loadTotalStars();
+      if (currentStars < CREATE_BOOK_COST) {
+        const missingStars = CREATE_BOOK_COST - currentStars;
+        showNotification(
+          `⭐ 星星不足\n新增一本單字本需要 ${CREATE_BOOK_COST} 星星。\n你目前有：${currentStars} 星星\n還差：${missingStars} 星星`,
+          'error'
+        );
+        return;
+      }
+      
+      // 4. 顯示確認視窗
+      const confirmed = confirm(
+        `確定要花費 ⭐${CREATE_BOOK_COST} 新增單字本「${name}」嗎？\n\n類別：${category}`
+      );
+      
+      if (!confirmed) {
+        // 玩家取消，不扣星也不建立
+        return;
+      }
+      
+      // 5. 鎖定按鈕，開始建立流程
+      isCreatingBook = true;
+      createBtn.disabled = true;
+      createBtn.textContent = '建立中……';
+      
+      try {
+        // 6. 先扣除星星（使用統一 StarSystem）
+        const deductSuccess = subtractStars(CREATE_BOOK_COST);
+        if (!deductSuccess) {
+          showNotification('星星扣除失敗，請稍後再試', 'error');
+          return;
+        }
+        
+        // 7. 建立並儲存單字本
+        localStorage.setItem('book_' + name, JSON.stringify([]));
+        localStorage.setItem('cat_' + name, category);
+        
+        // 8. 更新顯示
+        loadBooks();
+        document.getElementById('newBook').value = '';
+        document.getElementById('newCategory').value = '';
+        
+        // 9. 顯示成功通知
+        const remainingStars = loadTotalStars();
+        showNotification(
+          `📕 單字本建立成功！\n已建立：「${name}」\n已扣除：⭐${CREATE_BOOK_COST}\n剩餘星星：⭐${remainingStars}`,
+          'success'
+        );
+        
+        // 10. 觸發星星更新事件（如果專案有此機制）
+        if (typeof window.StarSystem !== 'undefined' && window.StarSystem.updateAllStarDisplays) {
+          window.StarSystem.updateAllStarDisplays();
+        } else if (typeof LinkageSystem !== 'undefined' && LinkageSystem.stars && typeof LinkageSystem.stars.updateDisplay === 'function') {
+          LinkageSystem.stars.updateDisplay();
+        }
+        
+      } catch (error) {
+        console.error('建立單字本失敗:', error);
+        
+        // 如果已經扣除星星，嘗試退回
+        try {
+          addStars(CREATE_BOOK_COST);
+          showNotification('建立失敗，已退回 ⭐300。', 'error');
+        } catch (rollbackError) {
+          console.error('退回星星失敗:', rollbackError);
+          showNotification('建立單字本失敗，請稍後再試。', 'error');
+        }
+        
+        // 清理失敗的資料
+        localStorage.removeItem('book_' + name);
+        localStorage.removeItem('cat_' + name);
+        
+      } finally {
+        // 11. 恢復按鈕狀態
+        isCreatingBook = false;
+        createBtn.disabled = false;
+        createBtn.textContent = '📕 新增單字本・⭐300';
+      }
     }
 
     function deleteBook(name) {
@@ -1106,6 +1651,35 @@
       localStorage.removeItem('cat_' + name);
       
       showNotification(`已刪除單字本「${name}」`, 'success');
+      loadBooks();
+    }
+
+    function renameBook(name) {
+      const newName = prompt(`請輸入「${name}」的新名稱：`, name);
+      if (!newName) return;
+      const trimmed = newName.trim();
+      if (!trimmed) {
+        showNotification('名稱不能為空', 'error');
+        return;
+      }
+      if (trimmed === name) return;
+      if (localStorage.getItem('book_' + trimmed)) {
+        showNotification('此書名已存在，請使用其他名稱', 'error');
+        return;
+      }
+
+      const prefixes = ['book_', 'cat_', 'img_', 'wrong_'];
+      prefixes.forEach(prefix => {
+        const oldKey = prefix + name;
+        const newKey = prefix + trimmed;
+        const value = localStorage.getItem(oldKey);
+        if (value !== null) {
+          localStorage.setItem(newKey, value);
+          localStorage.removeItem(oldKey);
+        }
+      });
+
+      showNotification(`已將單字本「${name}」重新命名為「${trimmed}」`, 'success');
       loadBooks();
     }
 
@@ -1202,7 +1776,32 @@
 
     // 頁面載入時初始化
     window.addEventListener('load', () => {
-      updateStarsDisplay();
+      // 等待 StarSystem 載入後再更新星星顯示
+      const waitForStarSystem = setInterval(() => {
+        if (typeof window.StarSystem !== 'undefined' && window.StarSystem.getTotalStars) {
+          clearInterval(waitForStarSystem);
+          updateStarsDisplay();
+          
+          // 監聽星星變更事件
+          window.addEventListener('starsChanged', (e) => {
+            if (e.detail && typeof e.detail.stars === 'number') {
+              const starsValueElement = document.querySelector('[data-global-stars-value]');
+              if (starsValueElement) {
+                starsValueElement.textContent = e.detail.stars;
+              }
+            } else {
+              updateStarsDisplay();
+            }
+          });
+        }
+      }, 50);
+      
+      // 超時保護
+      setTimeout(() => {
+        clearInterval(waitForStarSystem);
+        updateStarsDisplay(); // 即使 StarSystem 未載入也嘗試更新
+      }, 2000);
+      
       initCanvas();
       animate();
       loadBooks();
@@ -1267,6 +1866,10 @@
         }
       });
     });
+
+    function showBookHelp(){
+      alert('📖 單字本管理使用說明\n\n1. 點擊「新增單字本」建立新書本（消耗星星）\n2. 點擊書本封面可更換封面圖片\n3. 點擊名稱旁的 ✏️ 可重新命名\n4. 點擊「編輯 / 玩遊戲」可加入單字或玩遊戲\n5. 點擊 🗑️ 可刪除單字本');
+    }
   </script>
 </body>
 </html>

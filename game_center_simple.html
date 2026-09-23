@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>遊戲中心 - 三大遊戲</title>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="js/playerProgress.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="css/shared.css">
   <style>
     :root {
       --glow-cyan: #00ffff;
@@ -464,6 +467,114 @@
       display: flex;
       justify-content: flex-end;
       gap: 10px;
+    }
+
+    .payment-details {
+      margin: 16px 0;
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .payment-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.95rem;
+    }
+
+    .payment-row:last-child {
+      border-bottom: none;
+    }
+
+    .payment-row span:first-child {
+      color: #cbd5e1;
+    }
+
+    .payment-row span:last-child {
+      font-weight: 900;
+      color: var(--glow-gold);
+    }
+
+    .payment-row span.is-insufficient {
+      color: var(--glow-red);
+    }
+
+    .insufficient-stars-warning {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid rgba(255, 107, 107, 0.3);
+      text-align: center;
+    }
+
+    .insufficient-stars-warning p {
+      margin: 6px 0;
+      color: #e5e7eb;
+      line-height: 1.5;
+    }
+
+    .insufficient-stars-warning p:first-child {
+      font-weight: 900;
+      color: var(--glow-red);
+      font-size: 1.1rem;
+    }
+
+    .goto-atlas-btn {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--glow-cyan), var(--glow-magenta));
+      color: #06101f;
+      font-weight: 900;
+      text-decoration: none;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .goto-atlas-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    }
+
+    .modal-cancel-btn,
+    .modal-confirm-btn {
+      min-height: 42px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.18s ease, filter 0.18s ease;
+    }
+
+    .modal-cancel-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+
+    .modal-cancel-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .modal-confirm-btn {
+      background: linear-gradient(135deg, var(--glow-cyan), var(--glow-magenta));
+      border: none;
+      color: #06101f;
+    }
+
+    .modal-confirm-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    }
+
+    .modal-confirm-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      filter: grayscale(0.6);
     }
 
     .modal-footer-left {
@@ -1072,43 +1183,665 @@
     }
 
     .wallet-section {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
       margin-top: 18px;
+    }
+
+    .player-stats-grid {
+      display: grid;
+      grid-template-columns:
+        minmax(220px, 1fr)
+        minmax(250px, 1fr)
+        minmax(380px, 1.6fr);
+      gap: 22px;
+      align-items: stretch;
     }
 
     .wallet-card {
       display: flex;
-      gap: 12px;
+      gap: 18px;
       align-items: center;
-      padding: 16px;
-      border-radius: 20px;
-      background: rgba(10,20,40,0.82);
-      border: 1px solid rgba(0,255,255,0.18);
-      box-shadow: 0 0 22px rgba(0,255,255,0.08);
+      padding: 22px 28px;
+      border-radius: 28px;
+      background: rgba(8, 20, 44, 0.82);
+      border: 1px solid rgba(0, 255, 255, 0.15);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+      min-height: 170px;
+      min-width: 240px;
+      box-sizing: border-box;
     }
 
     .wallet-icon {
-      width: 48px;
-      height: 48px;
-      display: grid;
-      place-items: center;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.08);
-      font-size: 1.6rem;
+      width: 70px;
+      height: 70px;
+      flex: 0 0 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 1.8rem;
+    }
+
+    .wallet-content {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .wallet-label {
+      color: rgba(255, 255, 255, 0.78);
+      font-size: clamp(17px, 1.3vw, 21px);
+      font-weight: 700;
+      margin-bottom: 6px;
+      white-space: nowrap;
+      line-height: 1.25;
+    }
+
+    .wallet-value {
+      display: block;
+      width: 100%;
+      color: #ffd900;
+      font-size: clamp(28px, 2.4vw, 46px);
+      font-weight: 900;
+      line-height: 1.05;
+      white-space: nowrap;
+      overflow: visible;
+    }
+
+    .wallet-subtext {
+      margin-top: 6px;
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .stat-card {
+      grid-column: span 1;
+    }
+
+    .exp-card {
+      grid-column: span 1;
+      min-width: 380px;
+      min-height: 170px;
+      padding: 22px 28px;
+    }
+
+    .exp-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .exp-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .exp-icon {
+      font-size: 18px;
+    }
+
+    .exp-label {
+      color: rgba(255, 255, 255, 0.78);
+      font-size: clamp(17px, 1.3vw, 21px);
+      font-weight: 700;
+    }
+
+    .level-help-btn {
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+      padding: 0;
+    }
+
+    .level-help-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .exp-value {
+      color: #ffd900;
+      font-size: clamp(18px, 1.5vw, 22px);
+      font-weight: 700;
+      margin-bottom: 12px;
+      white-space: nowrap;
+    }
+
+    .exp-bar {
+      width: 100%;
+      max-width: 360px;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+    }
+
+    .exp-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--glow-cyan), var(--glow-magenta));
+      transition: width 0.35s ease;
+    }
+
+    .secondary-card {
+      grid-column: span 1;
+      min-width: 240px;
+    }
+
+    .admin-card {
+      min-height: auto;
+      min-width: 240px;
+      border-color: rgba(162, 89, 255, 0.3);
+      box-shadow: 0 0 22px rgba(162, 89, 255, 0.08);
+    }
+
+    .admin-input {
+      width: 120px;
+      min-width: 120px;
+      height: 42px;
+      padding: 0 14px;
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.3);
+      color: #fff;
+      font-size: 14px;
+      margin-top: 4px;
+      box-sizing: border-box;
+    }
+
+    .admin-input::placeholder {
+      color: #666;
+    }
+
+    .admin-status {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--glow-magenta);
+      font-weight: 700;
+    }
+
+    .admin-unlock-status {
+      margin-top: 2px;
+      font-size: 12px;
+      color: var(--glow-green);
+      font-weight: 700;
+    }
+
+    .reset-progress-card {
+      border-color: rgba(255, 107, 107, 0.3);
+      box-shadow: 0 0 22px rgba(255, 107, 107, 0.08);
+    }
+
+    .reset-progress-btn {
+      padding: 8px 16px;
+      border: 1px solid rgba(255, 107, 107, 0.5);
+      border-radius: 10px;
+      background: rgba(255, 107, 107, 0.15);
+      color: #ff6b6b;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: 4px;
+    }
+
+    .reset-progress-btn:hover {
+      background: rgba(255, 107, 107, 0.25);
+      border-color: rgba(255, 107, 107, 0.7);
+      transform: scale(1.05);
+    }
+
+    .admin-input:focus {
+      border-color: rgba(162, 89, 255, 0.8);
+      box-shadow: 0 0 10px rgba(162, 89, 255, 0.3);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      backdrop-filter: blur(5px);
+    }
+
+    .level-up-modal {
+      max-width: 400px;
+      width: 90%;
+      background: linear-gradient(135deg, rgba(10, 20, 40, 0.95), rgba(20, 40, 80, 0.95));
+      border: 2px solid var(--glow-gold);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+      animation: levelUpPop 0.3s ease-out;
+    }
+
+    @keyframes levelUpPop {
+      0% {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .level-up-header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .level-up-icon {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      animation: bounce 0.5s ease infinite alternate;
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-10px); }
+    }
+
+    .level-up-header h2 {
+      color: var(--glow-gold);
+      font-size: 1.8rem;
+      margin: 0;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+
+    .level-up-body {
+      margin-bottom: 25px;
+    }
+
+    .level-change {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .level-label {
+      display: block;
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .level-arrows {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      font-size: 1.5rem;
+      font-weight: 900;
+    }
+
+    .level-old {
+      color: #94a3b8;
+    }
+
+    .level-arrow {
+      color: var(--glow-cyan);
+    }
+
+    .level-new {
+      color: var(--glow-gold);
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    }
+
+    .level-up-stats {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .stat-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-item:last-child {
+      border-bottom: none;
+    }
+
+    .stat-label {
       color: #cbd5e1;
       font-size: 0.9rem;
     }
 
-    .wallet-value {
+    .stat-value {
       color: var(--glow-gold);
-      font-size: 1.5rem;
       font-weight: 900;
-      margin-top: 4px;
+      font-size: 1rem;
+    }
+
+    .level-up-info {
+      text-align: center;
+      color: #00ff88;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-top: 20px;
+    }
+
+    .unlocked-games-list {
+      margin-top: 15px;
+      background: rgba(0, 255, 136, 0.1);
+      border-radius: 12px;
+      padding: 15px;
+      border: 1px solid rgba(0, 255, 136, 0.3);
+    }
+
+    .unlocked-game-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+
+    .unlocked-game-item .game-icon {
+      font-size: 1.2rem;
+    }
+
+    .unlocked-game-item .game-name {
+      font-weight: 600;
+    }
+
+    .level-up-footer {
+      text-align: center;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 25px;
+    }
+
+    .level-up-btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(45deg, var(--glow-cyan), var(--glow-magenta));
+      color: #000;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    }
+
+    .level-up-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+    }
+
+    .level-up-btn.secondary {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+    }
+
+    .level-up-btn.secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+
+    .level-help-modal {
+      width: min(680px, calc(100vw - 40px));
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 28px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgba(10, 20, 40, 0.95), rgba(20, 40, 80, 0.95));
+      border: 2px solid var(--glow-cyan);
+      box-shadow: 0 0 40px rgba(0, 255, 255, 0.25);
+    }
+
+    .level-help-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 8px;
+    }
+
+    .level-help-icon {
+      font-size: 2.2rem;
+    }
+
+    .level-help-header h2 {
+      flex: 1;
+      color: #ffd900;
+      font-size: 1.6rem;
+      margin: 0;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+
+    .level-help-close {
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-size: 1.5rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.2s ease;
+    }
+
+    .level-help-close:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: rotate(90deg);
+    }
+
+    .level-help-subtitle {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+
+    .level-help-section {
+      padding: 18px 20px;
+      margin-top: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .level-help-section .section-title {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 0 0 12px 0;
+    }
+
+    .level-help-section p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin: 6px 0;
+    }
+
+    .level-highlight {
+      color: #ffd900;
+      font-size: 1.8rem;
+      font-weight: 900;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+    }
+
+    .level-help-sub {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+      margin-top: 8px;
+    }
+
+    .level-help-exp-bar {
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .level-help-exp-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--glow-cyan), var(--glow-magenta));
+    }
+
+    .level-flow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 0;
+    }
+
+    .flow-step {
+      color: #ffd900;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 12px;
+      background: rgba(255, 215, 0, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.25);
+      text-align: center;
+    }
+
+    .flow-arrow {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 1.1rem;
+    }
+
+    .level-benefit-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .level-benefit-list li {
+      color: rgba(255, 255, 255, 0.85);
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.95rem;
+    }
+
+    .level-benefit-list li:last-child {
+      border-bottom: none;
+    }
+
+    .level-highlight-box {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.12), rgba(255, 215, 0, 0.05));
+      border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .unlock-preview-list,
+    .exp-card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .unlock-preview-item,
+    .exp-card-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.2);
+      font-size: 0.95rem;
+    }
+
+    .unlock-preview-item .preview-icon {
+      font-size: 1.1rem;
+    }
+
+    .unlock-preview-item .preview-name {
+      flex: 1;
+      color: #fff;
+    }
+
+    .unlock-preview-item .preview-level,
+    .exp-card-item .exp-card-value {
+      color: #ffd900;
+      font-weight: 700;
+    }
+
+    .exp-card-item .exp-card-name {
+      flex: 1;
+      color: #fff;
+    }
+
+    .exp-card-item .exp-card-icon {
+      font-size: 1.2rem;
+    }
+
+    .level-help-footer {
+      margin-top: 24px;
+      text-align: center;
+    }
+
+    .level-help-confirm {
+      padding: 12px 40px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(45deg, var(--glow-cyan), var(--glow-magenta));
+      color: #000;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    }
+
+    .level-help-confirm:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+    }
+
+    @media (max-width: 600px) {
+      .level-help-modal {
+        width: calc(100vw - 24px);
+        padding: 20px;
+        border-radius: 22px;
+      }
+
+      .level-help-header h2 {
+        font-size: 1.3rem;
+      }
+
+      .level-help-icon {
+        font-size: 1.6rem;
+      }
     }
 
     .exchange-section,
@@ -1252,15 +1985,17 @@
 
     .games-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(3, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 1400px;
+      margin: 0 auto;
     }
 
     .game-card {
       display: flex;
       flex-direction: column;
-      min-height: 240px;
-      padding: 20px;
+      min-height: 330px;
+      padding: 18px;
       border-radius: 22px;
       background: rgba(255,255,255,0.07);
       border: 1px solid rgba(0,255,255,0.16);
@@ -1280,7 +2015,7 @@
     }
 
     .game-card.locked {
-      opacity: 0.68;
+      opacity: 0.78;
       border-color: rgba(255,107,107,0.35);
     }
 
@@ -1292,16 +2027,182 @@
       transform: none;
     }
 
+    .game-card--alphabet-words {
+      background:
+        radial-gradient(
+          circle at 85% 15%,
+          rgba(255, 224, 87, 0.3),
+          transparent 30%
+        ),
+        linear-gradient(
+          145deg,
+          #176dc1,
+          #18a779
+        );
+    }
+
+    .game-card--alphabet-words .game-start-btn {
+      color: #10233d;
+      background: #ffe35b;
+      font-weight: 900;
+    }
+
+    .game-card--vegamix-da-vinci {
+      background:
+        radial-gradient(
+          circle at 85% 15%,
+          rgba(255, 215, 0, 0.18),
+          transparent 28%
+        ),
+        linear-gradient(
+          145deg,
+          #4a3b2a,
+          #6b5a3f 52%,
+          #3d2e1f
+        );
+
+      border-color:
+        rgba(255, 215, 0, 0.52);
+    }
+
+    .game-card--plants-vs-zombies-new-wave {
+      background:
+        radial-gradient(
+          circle at 82% 15%,
+          rgba(255, 221, 75, 0.22),
+          transparent 28%
+        ),
+        linear-gradient(
+          145deg,
+          #224f2d,
+          #2f7a3f 52%,
+          #182d25
+        );
+
+      border-color:
+        rgba(121, 232, 110, 0.72);
+    }
+
+    .game-card--plants-vs-zombies-new-wave
+    .game-start-btn {
+      color: #1e2508;
+
+      background:
+        linear-gradient(
+          180deg,
+          #ffe463,
+          #d8bc2b
+        );
+
+      font-weight: 900;
+    }
+
+    .game-card--kids-kitchen {
+      background:
+        radial-gradient(
+          circle at 85% 15%,
+          rgba(255, 182, 193, 0.25),
+          transparent 28%
+        ),
+        linear-gradient(
+          145deg,
+          #ff6b8a,
+          #ff8fa3 52%,
+          #ff4d6a
+        );
+
+      border-color:
+        rgba(255, 107, 138, 0.65);
+    }
+
+    .game-card--kids-kitchen
+    .game-card__paid-play-button {
+      color: #1e0a12;
+
+      background:
+        linear-gradient(
+          180deg,
+          #ffb3c1,
+          #ff8fa3
+        );
+
+      font-weight: 900;
+    }
+
+    .game-card--mojicon {
+      background:
+        radial-gradient(
+          circle at 85% 15%,
+          rgba(144, 238, 144, 0.25),
+          transparent 28%
+        ),
+        linear-gradient(
+          145deg,
+          #90ee90,
+          #98fb98 52%,
+          #7cfc00
+        );
+
+      border-color:
+        rgba(144, 238, 144, 0.65);
+    }
+
+    .game-card--mojicon
+    .game-card__paid-play-button {
+      color: #1e3a1e;
+
+      background:
+        linear-gradient(
+          180deg,
+          #98fb98,
+          #90ee90
+        );
+
+      font-weight: 900;
+    }
+
+    .game-card--cozy-coloring {
+      background:
+        radial-gradient(
+          circle at 85% 15%,
+          rgba(255, 182, 193, 0.25),
+          transparent 28%
+        ),
+        linear-gradient(
+          145deg,
+          #dda0dd,
+          #ee82ee 52%,
+          #ba55d3
+        );
+
+      border-color:
+        rgba(221, 160, 221, 0.65);
+    }
+
+    .game-card--cozy-coloring
+    .game-card__paid-play-button {
+      color: #1e0a1e;
+
+      background:
+        linear-gradient(
+          180deg,
+          #ee82ee,
+          #dda0dd
+        );
+
+      font-weight: 900;
+    }
+
     .game-icon {
-      width: 80px;
-      height: 80px;
+      width: 72px;
+      height: 72px;
       display: flex;
       justify-content: center;
       align-items: center;
       border-radius: 20px;
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       background: rgba(255,255,255,0.08);
-      margin: 0 auto 18px;
+      margin: 0 auto 14px;
       transition: transform 0.18s ease;
     }
 
@@ -1324,6 +2225,13 @@
       border: 1px solid rgba(255,107,107,0.35);
       font-size: 0.82rem;
       font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .game-status .lock-icon {
+      font-size: 0.9rem;
     }
 
     .game-status.available {
@@ -1345,9 +2253,9 @@
     }
 
     .game-card h3 {
-      margin: 0 0 8px;
+      margin: 0 0 6px;
       color: var(--glow-cyan);
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       font-weight: 700;
       line-height: 1.3;
       text-align: center;
@@ -1357,8 +2265,8 @@
       color: var(--glow-gold);
       font-weight: 700;
       text-align: center;
-      margin-bottom: 8px;
-      font-size: 0.95rem;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
       opacity: 0.9;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -1367,26 +2275,27 @@
 
     .game-description {
       color: #cbd5e1;
-      line-height: 1.5;
-      margin: 0 0 12px;
-      font-size: 0.9rem;
+      line-height: 1.4;
+      margin: 0 0 10px;
+      font-size: 0.85rem;
       text-align: center;
       flex: 1;
       display: -webkit-box;
       -webkit-line-clamp: 2;
+      line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
 
     .game-features {
       display: grid;
-      gap: 6px;
-      margin: 0 0 16px;
+      gap: 4px;
+      margin: 0 0 12px;
     }
 
     .game-features div {
       color: #e5e7eb;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       text-align: center;
     }
 
@@ -1403,15 +2312,71 @@
       gap: 10px;
     }
 
-    .game-cost {
-      padding: 8px 12px;
-      border-radius: 12px;
-      text-align: center;
-      color: #ffd700;
-      background: rgba(255,215,0,0.10);
-      border: 1px solid rgba(255,215,0,0.24);
+    .game-card__play-cost {
+      min-height: 42px;
+      padding: 9px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      border: 1px solid rgba(255, 220, 82, 0.62);
+      border-radius: 13px;
+      color: #3b2b00;
+      background: linear-gradient(180deg, #ffe974, #e9bd33);
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 0.94rem;
       font-weight: 900;
-      font-size: 0.9rem;
+    }
+
+    .game-card__paid-play-button {
+      width: 100%;
+      min-height: 50px;
+      padding: 11px 16px;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 14px;
+      color: #ffffff;
+      background: linear-gradient(135deg, #5b46df, #2679c7);
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+      transition: transform 0.18s ease, filter 0.18s ease;
+    }
+
+    .game-card__paid-play-button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.12);
+    }
+
+    .game-card__paid-play-button:active {
+      transform: translateY(0) scale(0.985);
+    }
+
+    .game-card__paid-play-button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      filter: grayscale(0.6);
+    }
+
+    .game-center-page .game-card.game-card--level-locked {
+      filter: saturate(0.55) brightness(0.78);
+      border-color: rgba(154, 166, 188, 0.36);
+    }
+
+    .game-card__level-requirement {
+      min-height: 42px;
+      padding: 9px 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      border: 1px solid rgba(255, 202, 77, 0.46);
+      border-radius: 13px;
+      color: #ffe6a0;
+      background: rgba(82, 57, 12, 0.7);
+      font-weight: 900;
+      text-align: center;
     }
 
     .guide-grid {
@@ -1448,13 +2413,49 @@
       line-height: 1.6;
     }
 
+    @media (max-width: 1450px) {
+      .player-stats-grid {
+        grid-template-columns: repeat(4, minmax(230px, 1fr));
+      }
+
+      .exp-card {
+        grid-column: span 2;
+      }
+
+      .secondary-card {
+        grid-column: span 1;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .player-stats-grid {
+        grid-template-columns: repeat(3, minmax(220px, 1fr));
+      }
+
+      .exp-card {
+        grid-column: span 2;
+      }
+
+      .secondary-card {
+        grid-column: span 1;
+      }
+    }
+
     @media (max-width: 900px) {
       .hero-section {
         grid-template-columns: 1fr;
       }
 
-      .wallet-section {
-        grid-template-columns: repeat(2, 1fr);
+      .player-stats-grid {
+        grid-template-columns: repeat(2, minmax(220px, 1fr));
+      }
+
+      .exp-card {
+        grid-column: span 2;
+      }
+
+      .secondary-card {
+        grid-column: span 1;
       }
 
       .exchange-grid {
@@ -1476,10 +2477,41 @@
       }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 520px) {
+      .player-stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .exp-card {
+        grid-column: auto;
+      }
+
+      .secondary-card {
+        grid-column: auto;
+      }
+
+      .wallet-card {
+        min-width: 0;
+        width: 100%;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1199px) {
+      .games-grid {
+        grid-template-columns: repeat(2, minmax(260px, 1fr));
+        gap: 18px;
+      }
+    }
+
+    @media (max-width: 767px) {
       .games-grid {
         grid-template-columns: 1fr;
-        gap: 20px;
+        gap: 16px;
+      }
+
+      .game-card {
+        min-height: auto;
+        padding: 16px;
       }
 
       .game-icon {
@@ -1495,6 +2527,18 @@
 
       .game-subtitle {
         font-size: 0.9rem;
+      }
+
+      .player-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .exp-card {
+        grid-column: 1 / -1;
+      }
+
+      .secondary-card {
+        grid-column: span 1;
       }
 
       .game-description {
@@ -1515,8 +2559,16 @@
         border-radius: 20px;
       }
 
-      .wallet-section {
+      .player-stats-grid {
         grid-template-columns: 1fr;
+      }
+
+      .exp-card {
+        grid-column: 1 / -1;
+      }
+
+      .secondary-card {
+        grid-column: 1 / -1;
       }
 
       .games-grid {
@@ -1537,10 +2589,213 @@
     body {
       overflow-x: hidden;
     }
+
+    /* 分頁樣式 */
+    .game-pagination {
+      width: min(100%, 900px);
+      margin: 28px auto 10px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+
+      gap: 10px;
+    }
+
+    .game-pagination__button {
+      min-width: 112px;
+      min-height: 44px;
+      padding: 9px 16px;
+
+      border: 1px solid rgba(54, 220, 240, 0.55);
+      border-radius: 12px;
+
+      color: #ffffff;
+
+      background:
+        linear-gradient(
+          180deg,
+          #1a526f,
+          #10334a
+        );
+
+      font-family:
+        'Noto Sans TC',
+        sans-serif;
+
+      font-size: 0.94rem;
+      font-weight: 900;
+
+      cursor: pointer;
+
+      box-shadow:
+        inset 0 1px 0
+          rgba(255, 255, 255, 0.1),
+        0 7px 16px
+          rgba(0, 0, 0, 0.24);
+
+      transition:
+        transform 0.18s ease,
+        filter 0.18s ease,
+        border-color 0.18s ease;
+    }
+
+    .game-pagination__button:not(:disabled):hover {
+      transform: translateY(-2px);
+      filter: brightness(1.12);
+      border-color: #43e4f5;
+    }
+
+    .game-pagination__button:disabled {
+      opacity: 0.42;
+      cursor: not-allowed;
+      transform: none;
+      filter: grayscale(0.5);
+    }
+
+    .game-pagination__numbers {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+
+      gap: 7px;
+    }
+
+    .game-pagination__page {
+      width: 42px;
+      height: 42px;
+      padding: 0;
+
+      display: grid;
+      place-items: center;
+
+      border: 1px solid
+        rgba(255, 255, 255, 0.16);
+      border-radius: 11px;
+
+      color: #dce5f2;
+      background: rgba(17, 35, 54, 0.88);
+
+      font-family:
+        'Rajdhani',
+        'Noto Sans TC',
+        sans-serif;
+
+      font-size: 1rem;
+      font-weight: 900;
+
+      cursor: pointer;
+
+      transition:
+        transform 0.18s ease,
+        background 0.18s ease,
+        border-color 0.18s ease;
+    }
+
+    .game-pagination__page:hover {
+      transform: translateY(-2px);
+      border-color:
+        rgba(59, 225, 244, 0.72);
+      background:
+        rgba(33, 91, 118, 0.95);
+    }
+
+    .game-pagination__page.is-active {
+      border-color:
+        rgba(255, 224, 79, 0.92);
+
+      color: #17210a;
+
+      background:
+        linear-gradient(
+          180deg,
+          #ffe66b,
+          #e4bd35
+        );
+
+      box-shadow:
+        0 0 16px
+          rgba(255, 224, 79, 0.22);
+
+      cursor: default;
+    }
+
+    .game-pagination__ellipsis {
+      min-width: 24px;
+
+      color: rgba(
+        255,
+        255,
+        255,
+        0.55
+      );
+
+      font-size: 1.1rem;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .game-pagination__info {
+      margin: 0 auto 28px;
+
+      color: rgba(
+        255,
+        255,
+        255,
+        0.68
+      );
+
+      font-family:
+        'Noto Sans TC',
+        sans-serif;
+
+      font-size: 0.86rem;
+      font-weight: 650;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .game-pagination {
+        width: 100%;
+        margin-top: 22px;
+        gap: 8px;
+      }
+
+      .game-pagination__button {
+        min-width: 96px;
+        min-height: 40px;
+        padding: 7px 11px;
+        font-size: 0.84rem;
+      }
+
+      .game-pagination__numbers {
+        order: 3;
+        width: 100%;
+      }
+
+      .game-pagination__page {
+        width: 38px;
+        height: 38px;
+        font-size: 0.9rem;
+      }
+
+      .game-pagination__info {
+        padding: 0 12px;
+        font-size: 0.78rem;
+      }
+    }
   </style>
 </head>
 <body>
   <div id="app">
+    <!-- Unified Star Display -->
+    <div class="global-stars-pill" data-global-stars style="position: fixed; top: 15px; right: 15px; z-index: 1000;">
+      <span class="global-star-icon">⭐</span>
+      <span class="global-stars-value" data-global-stars-value>{{ totalStars }}</span>
+    </div>
+
     <button class="back-button" @click="goHome">
       🏠 返回首頁
     </button>
@@ -1557,7 +2812,7 @@
         <div class="hero-content">
           <div class="hero-kicker">GAME ARCADE</div>
           <h1>🎮 星幣遊戲中心</h1>
-          <p>直接使用星星遊玩遊戲，每次消耗 500～1,000 星星。</p>
+          <p>每次遊玩都要支付星星，每次消耗 500～1000 星星。</p>
         </div>
 
         <div class="hero-badges">
@@ -1576,35 +2831,76 @@
       </section>
 
       <section class="wallet-section">
-        <div class="wallet-card">
-          <div class="wallet-icon">⭐</div>
-          <div>
-            <div class="wallet-label">目前星星</div>
-            <div class="wallet-value">{{ totalStars }}</div>
+        <div class="player-stats-grid">
+          <!-- 第一排：主要資訊 -->
+          <div class="wallet-card stat-card">
+            <div class="wallet-icon">🏆</div>
+            <div class="wallet-content">
+              <div class="wallet-label">玩家等級</div>
+              <div class="wallet-value">Lv.{{ playerLevel }}</div>
+            </div>
           </div>
-        </div>
 
-        <div class="wallet-card">
-          <div class="wallet-icon">🪙</div>
-          <div>
-            <div class="wallet-label">目前金幣</div>
-            <div class="wallet-value">{{ goldCoins }}</div>
+          <div class="wallet-card stat-card">
+            <div class="wallet-icon">🔓</div>
+            <div class="wallet-content">
+              <div class="wallet-label">下一個解鎖</div>
+              <div class="wallet-value">Lv.{{ getNextUnlockLevel() }}</div>
+              <div class="wallet-subtext" v-if="getNextUnlockLevel() > playerLevel">還差 {{ getNextUnlockLevel() - playerLevel }} 級</div>
+            </div>
           </div>
-        </div>
 
-        <div class="wallet-card">
-          <div class="wallet-icon">🏆</div>
-          <div>
-            <div class="wallet-label">玩家等級</div>
-            <div class="wallet-value">{{ playerLevel }}</div>
+          <div class="wallet-card stat-card exp-card">
+            <div class="wallet-icon">✨</div>
+            <div class="wallet-content">
+              <div class="exp-header">
+                <div class="exp-title">
+                  <span class="exp-icon">✨</span>
+                  <span class="exp-label">EXP</span>
+                </div>
+                <button class="level-help-btn" @click="openLevelHelp" title="玩家等級系統說明">ⓘ</button>
+              </div>
+              <div class="exp-value">{{ Math.round(getPlayerLevelProgress().currentLevelExp) }} / {{ getPlayerLevelProgress().nextLevel ? getPlayerLevelProgress().requiredLevelExp : 'MAX' }}</div>
+              <div class="exp-bar">
+                <div class="exp-fill" :style="{ width: levelProgressPercentage + '%' }"></div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div class="wallet-card">
-          <div class="wallet-icon">📊</div>
-          <div>
-            <div class="wallet-label">完成率</div>
-            <div class="wallet-value">{{ completionRate }}%</div>
+          <!-- 第二排：次要資訊 -->
+          <div class="wallet-card secondary-card">
+            <div class="wallet-icon">💫</div>
+            <div class="wallet-content">
+              <div class="wallet-label">累積花費</div>
+              <div class="wallet-value">{{ totalSpentStars.toLocaleString() }} ⭐</div>
+            </div>
+          </div>
+
+          <div class="wallet-card secondary-card">
+            <div class="wallet-icon">📊</div>
+            <div class="wallet-content">
+              <div class="wallet-label">完成率</div>
+              <div class="wallet-value">{{ completionRate }}%</div>
+              <div class="wallet-subtext">已體驗 {{ completedGames }} / {{ totalGames }}</div>
+            </div>
+          </div>
+
+          <div class="wallet-card secondary-card admin-card">
+            <div class="wallet-icon">🔐</div>
+            <div class="wallet-content">
+              <div class="wallet-label">管理員</div>
+              <input type="password" class="admin-input" v-model.trim="adminCommand" @keyup.enter="submitAdminCommand" placeholder="輸入密碼或指令" autocomplete="off" />
+              <div v-if="adminModeEnabled" class="admin-status">管理員模式已啟用</div>
+              <div v-if="adminModeEnabled && allGamesUnlocked" class="admin-unlock-status">🔓 遊戲已解鎖</div>
+            </div>
+          </div>
+
+          <div class="wallet-card secondary-card reset-progress-card" v-if="showResetButton">
+            <div class="wallet-icon">🔄</div>
+            <div class="wallet-content">
+              <div class="wallet-label">重置進度</div>
+              <button class="reset-progress-btn" @click="resetPlayerProgress">清空等級</button>
+            </div>
           </div>
         </div>
       </section>
@@ -1692,7 +2988,7 @@
           <div>
             <div class="section-kicker">GAME LIST</div>
             <h2>🕹️ 遊戲入口</h2>
-            <p>每次遊玩會隨機消耗 300 / 500 / 1000 金幣。</p>
+            <p>每次遊玩都要支付星星，每次消耗 500～1000 星星。</p>
           </div>
 
           <div class="section-pill" id="game-count">
@@ -1700,375 +2996,104 @@
           </div>
         </div>
 
-        <div class="games-grid">
-          <!-- 刮刮樂 -->
-          <div class="game-card" :class="{ locked: !canPlayScratchCard }">
+        <div class="games-grid" id="gameGrid">
+          <div
+            v-for="game in currentPageGames"
+            :key="game.id"
+            class="game-card"
+            :class="getGameCardClass(game)"
+          >
             <div class="game-card-top">
-              <div class="game-icon">🪙</div>
-              <div class="game-status" v-if="!canPlayScratchCard">星星不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
+              <div v-if="game.external" class="external-game-badge">外部遊戲</div>
+              <div class="game-icon">{{ game.icon }}</div>
+              <div class="game-status" :class="getGameStatus(game)">
+                <span v-if="!isGameAvailableForPlayer(game, playerLevel)" class="lock-icon">🔒</span>
+                {{ getGameStatusText(game) }}
+              </div>
             </div>
 
-            <h3>刮刮樂</h3>
-            <div class="game-subtitle">刮開銀漆抽獎</div>
-            <p class="game-description">刮開銀漆揭曉獎項，支援滑鼠與觸控。</p>
+            <h3>{{ game.title }}</h3>
+            <div class="game-subtitle">{{ game.subtitle }}</div>
+            <p class="game-description">{{ game.description }}</p>
 
             <div class="game-features">
-              <div>Canvas 刮開效果</div>
-              <div>刮到一定比例自動揭曉</div>
+              <div v-for="feature in game.features" :key="feature">{{ feature }}</div>
             </div>
 
             <div class="game-footer">
-              <div class="game-cost">⭐{{ formatNumber(GAME_COST.scratchCard) }} 星星／次</div>
+              <div v-if="isGameAvailableForPlayer(game, playerLevel)" class="game-card__play-cost">
+                <span aria-hidden="true">⭐</span>
+                <span>每次費用：{{ MIN_GAME_PLAY_COST }}～{{ MAX_GAME_PLAY_COST }}</span>
+              </div>
+              <div v-else class="game-card__level-requirement">
+                <span>需要等級 {{ getGameRequiredLevel(game) }}</span>
+              </div>
               <button
-                class="game-start-btn"
-                @click="startGameDirectly('scratchCard', '刮刮樂', 'scratch_card.html')"
-                :disabled="!canPlayScratchCard"
+                class="game-card__paid-play-button"
+                @click="handleGameLaunch(game)"
+                :disabled="!isGameAvailableForPlayer(game, playerLevel)"
               >
-                {{ canPlayScratchCard ? '開始遊戲' : `需要至少 ${formatNumber(GAME_COST.scratchCard)} 星星` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- 拉霸機遊戲 -->
-          <div class="game-card" :class="{ locked: !canPlaySlotMachine }">
-            <div class="game-card-top">
-              <div class="game-icon">🎰</div>
-              <div class="game-status" v-if="!canPlaySlotMachine">星星不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>拉霸機遊戲</h3>
-            <div class="game-subtitle">經典三連線遊戲</div>
-            <p class="game-description">經典的拉霸機遊戲，轉動拉霸機獲得三個相同圖案即可獲勝。</p>
-
-            <div class="game-features">
-              <div>經典拉霸機玩法</div>
-              <div>三連線獲勝機制</div>
-              <div>華麗視覺效果</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">⭐{{ formatNumber(GAME_COST.slotMachine) }} 星星／次</div>
-              <button
-                class="game-start-btn"
-                @click="startGameDirectly('slotMachine', '拉霸機遊戲', 'word_spin_game.html')"
-                :disabled="!canPlaySlotMachine"
-              >
-                {{ canPlaySlotMachine ? '開始遊戲' : `需要至少 ${formatNumber(GAME_COST.slotMachine)} 星星` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- 瘋狂巴士停車 -->
-          <div class="game-card" :class="{ locked: !canPlayBattleSystem }">
-            <div class="game-card-top">
-              <div class="game-icon">🚌</div>
-              <div class="game-status" v-if="!canPlayBattleSystem">星星不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>Crazy Bus Car Jam Parking</h3>
-            <div class="game-subtitle">瘋狂巴士停車</div>
-            <p class="game-description">在擁擠的停車場中，將巴士和汽車移動到正確的位置，解開停車謎題。</p>
-
-            <div class="game-features">
-              <div>停車謎題挑戰</div>
-              <div>多種關卡設計</div>
-              <div>策略性解謎</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">⭐{{ formatNumber(GAME_COST.battleSystem) }} 星星／次</div>
-              <button
-                class="game-start-btn"
-                @click="startGameDirectly('battleSystem', 'Crazy Bus Car Jam Parking', 'https://plix.gg/zh-tw/games/crazy-bus-car-jam-parking')"
-                :disabled="!canPlayBattleSystem"
-              >
-                {{ canPlayBattleSystem ? '開始遊戲' : `需要至少 ${formatNumber(GAME_COST.battleSystem)} 星星` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- 單字爭霸戰 Ultimate -->
-          <div class="game-card" :class="{ locked: !canPlayVocabularyBattle }">
-            <div class="game-card-top">
-              <div class="external-game-badge">外部遊戲</div>
-              <div class="game-icon">⚔️</div>
-              <div class="game-status" v-if="!canPlayVocabularyBattle">星星不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>單字爭霸戰 Ultimate</h3>
-            <div class="game-subtitle">45課版</div>
-            <p class="game-description">挑戰45課英文單字，看看誰能成為最後的單字王者！</p>
-
-            <div class="game-features">
-              <div>外部網站遊戲</div>
-              <div>45課單字綜合挑戰</div>
-              <div>新分頁開啟</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">⭐{{ formatNumber(GAME_COST.vocabularyBattle) }} 星星／次</div>
-              <button
-                class="game-start-btn"
-                @click="startGameDirectly('vocabularyBattle', '單字爭霸戰 Ultimate', 'https://boyo400.netlify.app/')"
-                :disabled="!canPlayVocabularyBattle"
-              >
-                {{ canPlayVocabularyBattle ? '開始挑戰' : `需要至少 ${formatNumber(GAME_COST.vocabularyBattle)} 星星` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- 熊貓商店模擬器 -->
-          <div class="game-card" :class="{ locked: !canPlayPandaShopSimulator }">
-            <div class="game-card-top">
-              <div class="external-game-badge">外部遊戲</div>
-              <div class="game-icon">🐼</div>
-              <div class="game-status" v-if="!canPlayPandaShopSimulator">星星不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>熊貓商店模擬器</h3>
-            <div class="game-subtitle">Panda Shop Simulator</div>
-            <p class="game-description">經營熊貓商店、服務顧客、補充商品並完成商店經營任務。</p>
-
-            <div class="game-features">
-              <div>外部網站遊戲</div>
-              <div>模擬經營</div>
-              <div>熊貓、商店、顧客</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">⭐{{ formatNumber(GAME_COST.pandaShopSimulator) }} 星星／次</div>
-              <button
-                class="game-start-btn"
-                @click="startGameDirectly('pandaShopSimulator', '熊貓商店模擬器', 'https://plix.gg/zh-tw/games/panda-shop-simulator')"
-                :disabled="!canPlayPandaShopSimulator"
-              >
-                {{ canPlayPandaShopSimulator ? '開始遊戲' : `需要至少 ${formatNumber(GAME_COST.pandaShopSimulator)} 星星` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- Bonko -->
-          <div class="game-card" :class="{ locked: !canPlayBonko }">
-            <div class="game-card-top">
-              <div class="external-game-badge">外部遊戲</div>
-              <div class="game-icon">🎮</div>
-              <div class="game-status" v-if="!canPlayBonko">星星不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>Bonko</h3>
-            <div class="game-subtitle">街機遊戲</div>
-            <p class="game-description">挑戰反應速度與技巧的趣味街機遊戲，透過精準操作獲得高分。</p>
-
-            <div class="game-features">
-              <div>外部網站遊戲</div>
-              <div>街機、反應、技巧</div>
-              <div>休閒娛樂</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">⭐{{ formatNumber(GAME_COST.bonko) }} 星星／次</div>
-              <button
-                class="game-start-btn"
-                @click="startGameDirectly('bonko', 'Bonko', 'https://plix.gg/zh-tw/games/bonko')"
-                :disabled="!canPlayBonko"
-              >
-                {{ canPlayBonko ? '開始遊戲' : `需要至少 ${formatNumber(GAME_COST.bonko)} 星星` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- 方塊拼圖爆破大師 -->
-          <div class="game-card" :class="{ locked: !canPlayBlockPuzzleBlastMaster }">
-            <div class="game-card-top">
-              <div class="external-game-badge">外部遊戲</div>
-              <div class="game-icon">🧩</div>
-              <div class="game-status" v-if="!canPlayBlockPuzzleBlastMaster">星星不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>方塊拼圖爆破大師</h3>
-            <div class="game-subtitle">Block Puzzle Blast Master</div>
-            <p class="game-description">拖曳並排列方塊，完成橫向或直向連線來消除方塊，挑戰更高分數。</p>
-
-            <div class="game-features">
-              <div>外部網站遊戲</div>
-              <div>益智遊戲</div>
-              <div>方塊、拼圖、消除</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">⭐{{ formatNumber(GAME_COST.blockPuzzleBlastMaster) }} 星星／次</div>
-              <button
-                class="game-start-btn"
-                @click="startGameDirectly('blockPuzzleBlastMaster', '方塊拼圖爆破大師', 'https://plix.gg/zh-tw/games/block-puzzle-blast-master')"
-                :disabled="!canPlayBlockPuzzleBlastMaster"
-              >
-                {{ canPlayBlockPuzzleBlastMaster ? '開始遊戲' : `需要至少 ${formatNumber(GAME_COST.blockPuzzleBlastMaster)} 星星` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- 填字遊戲 Crossword -->
-          <div class="game-card" :class="{ locked: !canPlayCrossword }">
-            <div class="game-card-top">
-              <div class="external-game-badge">外部遊戲</div>
-              <div class="game-icon">📝</div>
-              <div class="game-status" v-if="!canPlayCrossword">星星不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>填字遊戲 Crossword</h3>
-            <div class="game-subtitle">文字益智遊戲</div>
-            <p class="game-description">挑戰經典填字遊戲，運用詞彙知識填滿格子，完成各種有趣的謎題。</p>
-
-            <div class="game-features">
-              <div>外部網站遊戲</div>
-              <div>文字遊戲</div>
-              <div>益智、詞彙</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">⭐{{ formatNumber(GAME_COST.crossword) }} 星星／次</div>
-              <button
-                class="game-start-btn"
-                @click="startGameDirectly('crossword', '填字遊戲 Crossword', 'https://plix.gg/zh-tw/games/crossword')"
-                :disabled="!canPlayCrossword"
-              >
-                {{ canPlayCrossword ? '開始遊戲' : `需要至少 ${formatNumber(GAME_COST.crossword)} 星星` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- 2048 合併方塊 -->
-          <div class="game-card" :class="{ locked: !canPlay2048MergeBlocks }">
-            <div class="game-card-top">
-              <div class="external-game-badge">外部遊戲</div>
-              <div class="game-icon">🔢</div>
-              <div class="game-status" v-if="!canPlay2048MergeBlocks">星星不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>2048 合併方塊</h3>
-            <div class="game-subtitle">休閒益智</div>
-            <p class="game-description">經典 2048 遊戲，滑動方塊合併相同數字，挑戰達到 2048！</p>
-
-            <div class="game-features">
-              <div>外部網站遊戲</div>
-              <div>益智遊戲</div>
-              <div>數字、合併、策略</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">⭐{{ formatNumber(GAME_COST.merge2048) }} 星星／次</div>
-              <button
-                class="game-start-btn"
-                @click="startGameDirectly('merge2048', '2048 合併方塊', 'https://plix.gg/zh-tw/games/2048-merge-blocks')"
-                :disabled="!canPlay2048MergeBlocks"
-              >
-                {{ canPlay2048MergeBlocks ? '開始遊戲' : `需要至少 ${formatNumber(GAME_COST.merge2048)} 星星` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- UNO 經典卡牌遊戲 -->
-          <div class="game-card" :class="{ locked: !canPlayClassicUno }">
-            <div class="game-card-top">
-              <div class="external-game-badge">外部遊戲</div>
-              <div class="game-icon">🃏</div>
-              <div class="game-status" v-if="!canPlayClassicUno">星星不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>UNO 經典卡牌遊戲</h3>
-            <div class="game-subtitle">卡牌遊戲</div>
-            <p class="game-description">經典 UNO 卡牌遊戲，與其他玩家對戰，運用策略成為最後的勝利者！</p>
-
-            <div class="game-features">
-              <div>外部網站遊戲</div>
-              <div>卡牌遊戲</div>
-              <div>策略、對戰</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">⭐{{ formatNumber(GAME_COST.classicUno) }} 星星／次</div>
-              <button
-                class="game-start-btn"
-                @click="startGameDirectly('classicUno', 'UNO 經典卡牌遊戲', 'https://plix.gg/zh-tw/games/the-classic-uno-cards-game-online-version')"
-                :disabled="!canPlayClassicUno"
-              >
-                {{ canPlayClassicUno ? '開始遊戲' : `需要至少 ${formatNumber(GAME_COST.classicUno)} 星星` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- Super Mario HTML5 -->
-          <div class="game-card" :class="{ locked: !canPlaySuperMarioHtml5 }">
-            <div class="game-card-top">
-              <div class="external-game-badge">外部遊戲</div>
-              <div class="game-icon">🍄</div>
-              <div class="game-status" v-if="!canPlaySuperMarioHtml5">星星不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>Super Mario HTML5</h3>
-            <div class="game-subtitle">平台遊戲</div>
-            <p class="game-description">經典 Super Mario 遊戲，跳躍、奔跑、收集金幣，挑戰各種關卡！</p>
-
-            <div class="game-features">
-              <div>外部網站遊戲</div>
-              <div>動作遊戲</div>
-              <div>平台、冒險</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">⭐{{ formatNumber(GAME_COST.superMarioHtml5) }} 星星／次</div>
-              <button
-                class="game-start-btn"
-                @click="startGameDirectly('superMarioHtml5', 'Super Mario HTML5', 'https://plix.gg/zh-tw/games/super-mario-html5')"
-                :disabled="!canPlaySuperMarioHtml5"
-              >
-                {{ canPlaySuperMarioHtml5 ? '開始遊戲' : `需要至少 ${formatNumber(GAME_COST.superMarioHtml5)} 星星` }}
-              </button>
-            </div>
-          </div>
-
-          <!-- 飯店經營大亨 -->
-          <div class="game-card" :class="{ locked: !canPlayHotelFeverTycoon }">
-            <div class="game-card-top">
-              <div class="external-game-badge">外部遊戲</div>
-              <div class="game-icon">🏨</div>
-              <div class="game-status" v-if="!canPlayHotelFeverTycoon">星星不足</div>
-              <div class="game-status available" v-else>可遊玩</div>
-            </div>
-
-            <h3>飯店經營大亨</h3>
-            <div class="game-subtitle">模擬經營</div>
-            <p class="game-description">經營你的飯店，服務顧客，擴建設施，成為最成功的飯店大亨！</p>
-
-            <div class="game-features">
-              <div>外部網站遊戲</div>
-              <div>經營遊戲</div>
-              <div>模擬、策略</div>
-            </div>
-
-            <div class="game-footer">
-              <div class="game-cost">⭐{{ formatNumber(GAME_COST.hotelFeverTycoon) }} 星星／次</div>
-              <button
-                class="game-start-btn"
-                @click="startGameDirectly('hotelFeverTycoon', '飯店經營大亨', 'https://plix.gg/games/hotel-fever-tycoon')"
-                :disabled="!canPlayHotelFeverTycoon"
-              >
-                {{ canPlayHotelFeverTycoon ? '開始遊戲' : `需要至少 ${formatNumber(GAME_COST.hotelFeverTycoon)} 星星` }}
+                {{ isGameAvailableForPlayer(game, playerLevel) ? '查看本次費用' : '等級不足' }}
               </button>
             </div>
           </div>
         </div>
+
+        <!-- 分頁導航 -->
+        <nav
+          v-if="filteredGames.length > 0"
+          id="gamePagination"
+          class="game-pagination"
+          aria-label="遊戲列表分頁"
+        >
+          <button
+            id="gamePrevPageButton"
+            class="game-pagination__button"
+            type="button"
+            aria-label="上一頁"
+            :disabled="currentGamePage <= 1"
+            @click="goToGamePage(currentGamePage - 1)"
+          >
+            ← 上一頁
+          </button>
+
+          <div
+            id="gamePageNumbers"
+            class="game-pagination__numbers"
+            aria-label="頁碼"
+          >
+            <span
+              v-for="item in visiblePageItems"
+              :key="item"
+              :class="item === 'ellipsis' ? 'game-pagination__ellipsis' : 'game-pagination__page'"
+              :class="{ 'is-active': item === currentGamePage && item !== 'ellipsis' }"
+              :aria-current="item === currentGamePage && item !== 'ellipsis' ? 'page' : undefined"
+              @click="item !== 'ellipsis' && goToGamePage(item)"
+            >
+              {{ item === 'ellipsis' ? '…' : item }}
+            </span>
+          </div>
+
+          <button
+            id="gameNextPageButton"
+            class="game-pagination__button"
+            type="button"
+            aria-label="下一頁"
+            :disabled="currentGamePage >= gamePageCount"
+            @click="goToGamePage(currentGamePage + 1)"
+          >
+            下一頁 →
+          </button>
+        </nav>
+
+        <p
+          v-if="filteredGames.length > 0"
+          id="gamePaginationInfo"
+          class="game-pagination__info"
+          aria-live="polite"
+        >
+          {{ paginationInfo }}
+        </p>
       </section>
 
       <section class="guide-section">
@@ -2089,7 +3114,7 @@
           <div class="guide-card">
             <div class="guide-number">2</div>
             <h3>選擇遊戲</h3>
-            <p>每個遊戲消耗 500～1,000 星星，選擇喜歡的遊戲開始挑戰。</p>
+            <p>每個遊戲消耗 500～1000 星星，選擇喜歡的遊戲開始挑戰。</p>
           </div>
 
           <div class="guide-card">
@@ -2100,6 +3125,160 @@
         </div>
       </section>
     </main>
+
+    <!-- 升等 Modal -->
+    <div class="modal-overlay" v-if="showLevelUpModal" @click.self="closeLevelUpModal">
+      <div class="modal-content level-up-modal">
+        <div class="level-up-header">
+          <div class="level-up-icon">🎉</div>
+          <h2>升等成功！</h2>
+        </div>
+        
+        <div class="level-up-body">
+          <div class="level-change">
+            <span class="level-label">玩家等級</span>
+            <div class="level-arrows">
+              <span class="level-old">Lv.{{ levelUpData.previousLevel }}</span>
+              <span class="level-arrow">→</span>
+              <span class="level-new">Lv.{{ levelUpData.currentLevel }}</span>
+            </div>
+          </div>
+          
+          <div class="level-up-stats">
+            <div class="stat-item">
+              <span class="stat-label">累積消費</span>
+              <span class="stat-value">{{ levelUpData.totalSpentStars.toLocaleString() }} 星</span>
+            </div>
+            <div class="stat-item" v-if="levelUpData.reward">
+              <span class="stat-label">升等獎勵</span>
+              <span class="stat-value" v-if="levelUpData.reward.goldCoins > 0">{{ levelUpData.reward.goldCoins.toLocaleString() }} 金幣</span>
+              <span class="stat-value" v-else-if="levelUpData.reward.badge">特殊徽章</span>
+              <span class="stat-value" v-else>無</span>
+            </div>
+          </div>
+          
+          <div class="level-up-info">
+            <p v-if="levelUpData.newUnlockedGames && levelUpData.newUnlockedGames.length > 0">
+              🎮 新遊戲已解鎖！
+            </p>
+            <div v-if="levelUpData.newUnlockedGames && levelUpData.newUnlockedGames.length > 0" class="unlocked-games-list">
+              <div v-for="game in levelUpData.newUnlockedGames" :key="game.id" class="unlocked-game-item">
+                <span class="game-icon">{{ game.icon }}</span>
+                <span class="game-name">{{ game.title }}</span>
+              </div>
+            </div>
+            <p v-else>
+              繼續升級可解鎖更多遊戲！
+            </p>
+          </div>
+        </div>
+        
+        <div class="level-up-footer">
+          <button class="level-up-btn" @click="closeLevelUpModal">繼續遊玩</button>
+          <button v-if="levelUpData.newUnlockedGames && levelUpData.newUnlockedGames.length > 0" class="level-up-btn secondary" @click="goToGameCenter">前往遊戲大廳</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 等級系統說明 Modal -->
+    <div class="modal-overlay" v-if="showLevelHelpModal" @click.self="closeLevelHelp">
+      <div class="modal-content level-help-modal">
+        <div class="level-help-header">
+          <div class="level-help-icon">🏆</div>
+          <h2>玩家等級系統</h2>
+          <button class="level-help-close" @click="closeLevelHelp" title="關閉">×</button>
+        </div>
+
+        <p class="level-help-subtitle">累積 EXP，提升你的玩家等級！</p>
+
+        <div class="level-help-section">
+          <h3 class="section-title">✨ 什麼是 EXP？</h3>
+          <p>EXP 是玩家的經驗值。</p>
+          <p>完成網站中的學習、挑戰或指定活動後，就可以獲得 EXP。</p>
+          <p>EXP 累積到指定數量後，玩家就會提升等級。</p>
+        </div>
+
+        <div class="level-help-section">
+          <h3 class="section-title">🏆 目前等級</h3>
+          <div class="level-highlight">LV.{{ playerLevel }}</div>
+        </div>
+
+        <div class="level-help-section">
+          <h3 class="section-title">✨ 目前經驗</h3>
+          <div class="level-exp-display">
+            <div class="level-highlight">
+              {{ Math.round(getPlayerLevelProgress().currentLevelExp) }} / {{ getPlayerLevelProgress().nextLevel ? getPlayerLevelProgress().requiredLevelExp : 'MAX' }} EXP
+            </div>
+            <div class="level-help-exp-bar">
+              <div class="level-help-exp-fill" :style="{ width: levelProgressPercentage + '%' }"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="level-help-section">
+          <h3 class="section-title">📈 如何升級？</h3>
+          <div class="level-flow">
+            <div class="flow-step">完成活動</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">獲得 EXP</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">累積 EXP</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">玩家升級</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">解鎖更多遊戲</div>
+          </div>
+        </div>
+
+        <div class="level-help-section">
+          <h3 class="section-title">🎁 升級可以做什麼？</h3>
+          <ul class="level-benefit-list">
+            <li>🎮 解鎖更多遊戲</li>
+            <li>🔓 解鎖新的內容</li>
+            <li>⚡ 使用經驗卡提升 EXP</li>
+            <li>🏆 展示玩家成長</li>
+          </ul>
+        </div>
+
+        <div class="level-help-section level-highlight-box">
+          <h3 class="section-title">🎮 等級越高，解鎖越多遊戲！</h3>
+          <p>提升玩家等級，就可以進入更多遊戲大廳內容。</p>
+        </div>
+
+        <div class="level-help-section" v-if="getNextUnlockLevel() > playerLevel">
+          <h3 class="section-title">🔓 下一個解鎖</h3>
+          <div class="level-highlight">LV.{{ getNextUnlockLevel() }}</div>
+          <p class="level-help-sub">距離下一個解鎖：還差 {{ getNextUnlockLevel() - playerLevel }} 級</p>
+        </div>
+
+        <div class="level-help-section" v-if="nextUnlockGames.length > 0">
+          <h3 class="section-title">🎮 即將解鎖的遊戲</h3>
+          <div class="unlock-preview-list">
+            <div v-for="game in nextUnlockGames" :key="game.id" class="unlock-preview-item">
+              <span class="preview-icon">🔒</span>
+              <span class="preview-name">{{ game.title }}</span>
+              <span class="preview-level">LV.{{ game.requiredLevel }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="level-help-section" v-if="expCards.length > 0">
+          <h3 class="section-title">⚡ 經驗卡</h3>
+          <p>經驗卡可以增加玩家 EXP，幫助玩家更快提升等級。</p>
+          <div class="exp-card-list">
+            <div v-for="card in expCards" :key="card.id" class="exp-card-item">
+              <span class="exp-card-icon">{{ card.icon }}</span>
+              <span class="exp-card-name">{{ card.name }}</span>
+              <span class="exp-card-value">+{{ card.expValue }} EXP</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="level-help-footer">
+          <button class="level-help-confirm" @click="closeLevelHelp">我知道了</button>
+        </div>
+      </div>
+    </div>
 
     <!-- 開始冒險 Modal -->
     <div class="adventure-modal-overlay" v-if="showAdventureModal" @click.self="showAdventureModal=false">
@@ -2115,6 +3294,54 @@
 
           <button class="adventure-secondary-btn" @click="showAdventureModal=false">
             留在遊戲中心
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 付款確認視窗 -->
+    <div class="modal-overlay" v-if="showPaymentDialog" @click.self="closeGamePlayPaymentDialog">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 class="modal-title">支付星星開始遊戲</h3>
+          <button class="modal-close" @click="closeGamePlayPaymentDialog">✕</button>
+        </div>
+        <div class="modal-body">
+          <p v-if="pendingPaidGame">確定要支付 {{ pendingGamePlayCost }} 顆星星開始「{{ pendingPaidGame.title }}」嗎？</p>
+          
+          <div class="payment-details" v-if="pendingPaidGame">
+            <div class="payment-row">
+              <span>目前星星：</span>
+              <span>{{ getCurrentGameCenterStars() }}</span>
+            </div>
+            <div class="payment-row">
+              <span>本次費用：</span>
+              <span>{{ pendingGamePlayCost }}</span>
+            </div>
+            <div class="payment-row">
+              <span>支付後剩餘：</span>
+              <span :class="{ 'is-insufficient': getCurrentGameCenterStars() < pendingGamePlayCost }">
+                {{ getCurrentGameCenterStars() >= pendingGamePlayCost ? getCurrentGameCenterStars() - pendingGamePlayCost : '星星不足' }}
+              </span>
+            </div>
+          </div>
+
+          <div v-if="getCurrentGameCenterStars() < pendingGamePlayCost" class="insufficient-stars-warning">
+            <p>星星不足</p>
+            <p>目前有 {{ getCurrentGameCenterStars() }} 顆星星，本次遊玩需要 {{ pendingGamePlayCost }} 顆。</p>
+            <p>請先完成 Atlas 關卡取得更多星星。</p>
+            <a href="atlas.html" class="goto-atlas-btn">前往 Atlas 賺星星</a>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-cancel-btn" @click="closeGamePlayPaymentDialog">取消</button>
+          <button 
+            id="gamePlayPaymentConfirmButton"
+            class="modal-confirm-btn" 
+            @click="confirmPaidGameLaunch"
+            :disabled="isProcessingGamePayment"
+          >
+            {{ isProcessingGamePayment ? '處理中...' : '支付並開始' }}
           </button>
         </div>
       </div>
@@ -2169,71 +3396,451 @@
           activeReminderCount: 0,
           gameSessionStartedAt: null,
           showAdventureModal: false,
+          showLevelHelpModal: false,
           adventureMessage: '',
           gameSessionMinutes: 10,
           gameReminderGapSeconds: 10,
           activeGameClosedChecker: null,
 
-          // 遊戲星星價格設定
-          GAME_COST: {
-            default: 500,
-            scratchCard: 500,
-            slotMachine: 500,
-            battleSystem: 700,
-            vocabularyBattle: 800,
-            pandaShopSimulator: 600,
-            bonko: 500,
-            blockPuzzleBlastMaster: 500,
-            crossword: 700,
-            merge2048: 700,
-            classicUno: 800,
-            superMarioHtml5: 800,
-            hotelFeverTycoon: 800
-          },
+          // 隨機遊戲費用範圍
+          MIN_GAME_PLAY_COST: 500,
+          MAX_GAME_PLAY_COST: 1000,
+
+          // 玩家進度資料
+          PLAYER_PROGRESS_KEY: 'playerProgress',
+          playerExperience: 0,
+          totalSpentStars: 0,
+          showLevelUpModal: false,
+          levelUpData: null,
+          showResetButton: false,
+
+          // 管理員指令系統
+          adminCommand: '',
+          adminModeEnabled: false,
+          allGamesUnlocked: false,
+
+          // 完成率資料
+          COMPLETED_GAME_IDS_KEY: 'gameCenterCompletedGameIds',
+          completedGameIds: [],
+
+          // 遊戲資料陣列
+          games: [
+            {
+              id: 'scratchCard',
+              title: '刮刮樂',
+              subtitle: '刮開銀漆抽獎',
+              description: '刮開銀漆揭曉獎項，支援滑鼠與觸控。',
+              icon: '🪙',
+              features: ['Canvas 刮開效果', '刮到一定比例自動揭曉'],
+              external: false,
+              url: 'scratch_card.html',
+              category: 'other',
+              requiredLevel: 1
+            },
+            {
+              id: 'slotMachine',
+              title: '拉霸機遊戲',
+              subtitle: '經典三連線遊戲',
+              description: '經典的拉霸機遊戲，轉動拉霸機獲得三個相同圖案即可獲勝。',
+              icon: '🎰',
+              features: ['經典拉霸機玩法', '三連線獲勝機制', '華麗視覺效果'],
+              external: false,
+              url: 'word_spin_game.html',
+              category: 'other',
+              requiredLevel: 1
+            },
+            {
+              id: 'battleSystem',
+              title: 'Crazy Bus Car Jam Parking',
+              subtitle: '瘋狂巴士停車',
+              description: '在擁擠的停車場中，將巴士和汽車移動到正確的位置，解開停車謎題。',
+              icon: '🚌',
+              features: ['停車謎題挑戰', '多種關卡設計', '策略性解謎'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/crazy-bus-car-jam-parking',
+              category: 'puzzle',
+              requiredLevel: 1
+            },
+            {
+              id: 'vocabularyBattle',
+              title: '單字爭霸戰 Ultimate',
+              subtitle: '45課版',
+              description: '挑戰45課英文單字，看看誰能成為最後的單字王者！',
+              icon: '⚔️',
+              features: ['外部網站遊戲', '45課單字綜合挑戰', '新分頁開啟'],
+              external: true,
+              url: 'https://boyo400.netlify.app/',
+              category: 'english',
+              requiredLevel: 1
+            },
+            {
+              id: 'pandaShopSimulator',
+              title: '熊貓商店模擬器',
+              subtitle: 'Panda Shop Simulator',
+              description: '經營熊貓商店、服務顧客、補充商品並完成商店經營任務。',
+              icon: '🐼',
+              features: ['外部網站遊戲', '模擬經營', '熊貓、商店、顧客'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/panda-shop-simulator',
+              category: 'simulation',
+              requiredLevel: 1
+            },
+            {
+              id: 'bonko',
+              title: '蹦蹦球大冒險',
+              subtitle: 'Bonko',
+              description: '運用跳躍、慣性與時機穿越機械障礙，啟動按鈕和槓桿，找出通往出口的正確路線。',
+              icon: '🔵',
+              features: ['外部網站遊戲', '益智遊戲', '物理、平台、敏捷'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/bonko',
+              category: 'puzzle',
+              requiredLevel: 2
+            },
+            {
+              id: 'blockPuzzleBlastMaster',
+              title: '方塊拼圖爆破大師',
+              subtitle: 'Block Puzzle Blast Master',
+              description: '拖曳並排列方塊，完成橫向或直向連線來消除方塊，挑戰更高分數。',
+              icon: '🧩',
+              features: ['外部網站遊戲', '益智遊戲', '方塊、拼圖、消除'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/block-puzzle-blast-master',
+              category: 'puzzle',
+              requiredLevel: 2
+            },
+            {
+              id: 'crossword',
+              title: '填字遊戲 Crossword',
+              subtitle: '文字益智遊戲',
+              description: '挑戰經典填字遊戲，運用詞彙知識填滿格子，完成各種有趣的謎題。',
+              icon: '📝',
+              features: ['外部網站遊戲', '文字遊戲', '益智、詞彙'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/crossword',
+              category: 'english',
+              requiredLevel: 2
+            },
+            {
+              id: 'merge2048',
+              title: '2048 合併方塊',
+              subtitle: '休閒益智',
+              description: '經典 2048 遊戲，滑動方塊合併相同數字，挑戰達到 2048！',
+              icon: '🔢',
+              features: ['外部網站遊戲', '益智遊戲', '數字、合併、策略'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/2048-merge-blocks',
+              category: 'puzzle',
+              requiredLevel: 2
+            },
+            {
+              id: 'classicUno',
+              title: 'UNO 經典卡牌遊戲',
+              subtitle: '卡牌遊戲',
+              description: '經典 UNO 卡牌遊戲，與其他玩家對戰，運用策略成為最後的勝利者！',
+              icon: '🃏',
+              features: ['外部網站遊戲', '卡牌遊戲', '策略、對戰'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/the-classic-uno-cards-game-online-version',
+              category: 'card',
+              requiredLevel: 5
+            },
+            {
+              id: 'alphabetWords',
+              title: '字母單字配對',
+              subtitle: 'Alphabet Words',
+              description: '觀察畫面中的英文單字或字母，選出正確對應的圖片，練習字母辨識、基礎單字與圖像配對。',
+              icon: '🔤',
+              features: ['英文學習', '字母辨識', '圖片配對'],
+              external: true,
+              url: 'https://plix.gg/games/alphabet-words',
+              category: 'english',
+              requiredLevel: 5
+            },
+            {
+              id: 'vegamixDaVinci',
+              title: 'VegaMix 達文西謎題',
+              subtitle: 'VegaMix Da Vinci Puzzles',
+              description: '交換相鄰圖塊，連成三個以上相同圖案，協助達文西找回設計圖並完成發明。',
+              icon: '⚙️',
+              features: ['三消配對玩法', '文藝復興主題', '達文西發明關卡'],
+              external: true,
+              url: 'https://plix.gg/games/vegamix-da-vinci-puzzles',
+              category: 'puzzle',
+              requiredLevel: 6
+            },
+            {
+              id: 'plantsVsZombiesNewWave',
+              title: '植物大戰殭屍：新浪潮',
+              subtitle: 'Plants vs Zombies: New Wave',
+              description: '種植向日葵累積陽光，配置攻擊與防禦植物，阻止殭屍穿越草坪。',
+              icon: '🌻',
+              features: ['外部網站遊戲', '策略遊戲', '塔防、植物、殭屍'],
+              external: true,
+              url: 'https://plix.gg/games/plants-vs-zombies-new-wave',
+              category: 'strategy',
+              requiredLevel: 4
+            },
+            {
+              id: 'superMarioHtml5',
+              title: 'Super Mario HTML5',
+              subtitle: '平台遊戲',
+              description: '經典 Super Mario 遊戲，跳躍、奔跑、收集金幣，挑戰各種關卡！',
+              icon: '🍄',
+              features: ['外部網站遊戲', '動作遊戲', '平台、冒險'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/super-mario-html5',
+              category: 'action',
+              requiredLevel: 4
+            },
+            {
+              id: 'hotelFeverTycoon',
+              title: '飯店經營大亨',
+              subtitle: '模擬經營',
+              description: '經營你的飯店，服務顧客，擴建設施，成為最成功的飯店大亨！',
+              icon: '🏨',
+              features: ['外部網站遊戲', '經營遊戲', '模擬、策略'],
+              external: true,
+              url: 'https://plix.gg/games/hotel-fever-tycoon',
+              category: 'simulation',
+              requiredLevel: 6
+            },
+            {
+              id: 'fireboy-watergirl-7-and-friends',
+              title: '火娃冰娃7與好友',
+              subtitle: 'Fireboy & Watergirl 7: and Friends',
+              description: '操控火娃、冰娃與三位好友，在36個全新平台關卡中合作解謎、收集鑽石並抵達出口。',
+              icon: '🔥',
+              features: ['外部網站遊戲', '冒險遊戲', '平台、解謎、多人合作'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/fireboy-watergirl-7-and-friends',
+              category: 'adventure',
+              requiredLevel: 3
+            },
+            {
+              id: 'fairylandMergeMagic',
+              title: '童話仙境合併魔法',
+              subtitle: 'Fairyland Merge & Magic',
+              description: '合併相同物品，解鎖新的魔法道具，打造夢幻童話仙境。',
+              icon: '🧚‍♀️',
+              features: ['外部網站遊戲', '合併益智遊戲', '魔法、童話'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/fairyland-merge-magic',
+              category: 'puzzle',
+              requiredLevel: 2
+            },
+            {
+              id: 'fishEatFish2',
+              title: '大魚吃小魚 2',
+              subtitle: 'Fish Eat Fish 2',
+              description: '控制小魚在海底世界中覓食成長，避開比自己更大的魚，逐步成為海洋霸主。',
+              icon: '🐟',
+              features: ['外部網站遊戲', '休閒動作遊戲', '海洋、成長'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/fish-eat-fish-2',
+              category: 'casual',
+              requiredLevel: 2
+            },
+            {
+              id: 'drawAndGuessOnline',
+              title: '線上你畫我猜',
+              subtitle: 'Draw and Guess Online',
+              description: '根據題目畫出提示圖案，讓其他玩家猜出正確答案，考驗創意、觀察力與反應速度。',
+              icon: '🎨',
+              features: ['外部網站遊戲', '多人益智遊戲', '繪畫、猜謎'],
+              external: true,
+              url: 'https://plix.gg/games/draw-and-guess-online',
+              category: 'puzzle',
+              requiredLevel: 4
+            },
+            {
+              id: 'zumaDeluxeOriginal',
+              title: '祖瑪豪華版',
+              subtitle: 'Zuma Deluxe Original',
+              description: '發射彩色球並排列相同顏色，完成連鎖消除，阻止球鏈進入終點並挑戰更高分數。',
+              icon: '🐸',
+              features: ['外部網站遊戲', '益智消除遊戲', '發射、消除、連鎖'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/zuma-deluxe-original',
+              category: 'puzzle',
+              requiredLevel: 4
+            },
+            {
+              id: 'football3D',
+              title: '3D 足球',
+              subtitle: 'Football 3D',
+              description: '瞄準球門、調整射門方向與角度，挑戰精彩的3D足球射門與競技玩法。',
+              icon: '⚽',
+              features: ['外部網站遊戲', '運動競技遊戲', '足球、3D'],
+              external: true,
+              url: 'https://plix.gg/games/football-3d',
+              category: 'sports',
+              requiredLevel: 4
+            },
+            {
+              id: 'poolBallOffline',
+              title: '離線撞球',
+              subtitle: 'Pool Ball Offline',
+              description: '瞄準球的方向與角度，控制擊球力道，將目標球準確打入球袋，挑戰撞球技巧。',
+              icon: '🎱',
+              features: ['外部網站遊戲', '運動技巧遊戲', '撞球、運動'],
+              external: true,
+              url: 'https://plix.gg/games/pool-ball-offline',
+              category: 'sports',
+              requiredLevel: 3
+            },
+            {
+              id: 'snake2048',
+              title: '貪食蛇 2048',
+              subtitle: 'Snake 2048',
+              description: '控制貪食蛇移動並合併相同數字，持續成長並挑戰更高的2048分數。',
+              icon: '🐍',
+              features: ['外部網站遊戲', '益智休閒遊戲', '貪食蛇、2048'],
+              external: true,
+              url: 'https://plix.gg/games/snake-2048',
+              category: 'puzzle',
+              requiredLevel: 3
+            },
+            {
+              id: 'hundredDoorsEscapeRoom',
+              title: '100道門：密室逃脫',
+              subtitle: '100 Doors: Escape Room',
+              description: '解開100道門的謎題，運用觀察力與邏輯思考，逃離神秘密室。',
+              icon: '🚪',
+              features: ['外部網站遊戲', '解謎遊戲', '密室、逃脫'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/100-doors-escape-room',
+              category: 'puzzle',
+              requiredLevel: 5
+            },
+            {
+              id: 'evoWorldIo',
+              title: '進化世界',
+              subtitle: 'EvoWorld.io',
+              description: '在生存世界中持續覓食與進化，避開天敵並提升自己的生物階級，挑戰更高層次的進化。',
+              icon: '🦅',
+              features: ['外部網站遊戲', '生存進化遊戲', '覓食、進化、生存'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/evoworld-io',
+              category: 'casual',
+              requiredLevel: 5
+            },
+            {
+              id: 'subwaySurfersSeoul',
+              title: '地鐵跑酷：首爾',
+              subtitle: 'Subway Surfers Seoul',
+              description: '在首爾城市場景中高速奔跑、閃避障礙、收集道具與金幣，挑戰更高分數與更遠距離。',
+              icon: '🏃',
+              features: ['外部網站遊戲', '跑酷動作遊戲', '奔跑、障礙、收集'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/subway-surfer-seoul',
+              category: 'action',
+              requiredLevel: 5
+            },
+            {
+              id: 'atlantisLostParadise',
+              title: '失落的亞特蘭提斯',
+              subtitle: 'Atlantis: The Lost Paradise',
+              description: '探索神秘的亞特蘭提斯世界，解開關卡中的謎題與挑戰，尋找失落文明的秘密。',
+              icon: '🌊',
+              features: ['外部網站遊戲', '冒險益智遊戲', '探索、謎題、冒險'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/atlantis-the-lost-paradise',
+              category: 'adventure',
+              requiredLevel: 5
+            },
+            {
+              id: 'saveDogsFromBee',
+              title: '救救狗狗',
+              subtitle: 'Save Dogs From Bee',
+              description: '畫出安全防護線，保護狗狗避開蜜蜂攻擊，完成各種益智關卡。',
+              icon: '🐶',
+              features: ['外部網站遊戲', '益智解謎遊戲', '狗狗、蜜蜂、防護線'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/save-dogs-from-bee',
+              category: 'puzzle',
+              requiredLevel: 2
+            },
+            {
+              id: 'flappyBirdClassic',
+              title: '經典小鳥飛行',
+              subtitle: 'Flappy Bird Classic',
+              description: '點擊控制小鳥飛行高度，避開障礙物並挑戰更高分數。',
+              icon: '🐦',
+              features: ['外部網站遊戲', '休閒反應遊戲', '小鳥、飛行、障礙物'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/flappy-bird-classic',
+              category: 'casual',
+              requiredLevel: 2
+            },
+            {
+              id: 'fourInARow',
+              title: '四子棋',
+              subtitle: 'Four in a Row',
+              description: '輪流放入棋子，率先讓四枚同色棋子連成橫線、直線或斜線即可獲勝。',
+              icon: '🔴',
+              features: ['外部網站遊戲', '益智策略遊戲', '棋子、連線、策略'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/four-in-a-row',
+              category: 'strategy',
+              requiredLevel: 3
+            },
+            {
+              id: 'kidsKitchenCozyCooking',
+              title: '小小廚師：溫馨料理',
+              subtitle: 'Kids Kitchen - Cozy Cooking',
+              description: '在溫馨的廚房中烹飪美味料理，學習烹飪技巧並享受料理的樂趣。',
+              icon: '🍳',
+              features: ['外部網站遊戲', '烹飪遊戲', '廚房、料理、溫馨'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/kids-kitchen-cozy-cooking',
+              category: 'cooking',
+              requiredLevel: 8
+            },
+            {
+              id: 'mojiconSpringConnect',
+              title: 'Mojicon 春日連連看',
+              subtitle: 'Mojicon Spring Connect',
+              description: '在春日主題的連連看遊戲中，連接相同的圖案，挑戰你的觀察力和反應速度。',
+              icon: '🧩',
+              features: ['外部網站遊戲', '益智連連看', '春日主題、配對、益智'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/mojicon-spring-connect',
+              category: 'puzzle',
+              requiredLevel: 10
+            },
+            {
+              id: 'cozyColoring',
+              title: '溫馨著色',
+              subtitle: 'Cozy Coloring',
+              description: '在溫馨的填色遊戲中，為各種圖案上色，放鬆心情並發揮創意。',
+              icon: '🎨',
+              features: ['外部網站遊戲', '休閒填色', '著色、創意、放鬆'],
+              external: true,
+              url: 'https://plix.gg/zh-tw/games/cozy-coloring',
+              category: 'casual',
+              requiredLevel: 6
+            }
+          ],
+
+          // 分頁設定
+          GAMES_PER_PAGE: 9,
+          currentGamePage: 1,
+          currentFilteredGames: [],
+          searchQuery: '',
+          selectedCategory: 'all',
 
           // 防止連點重複扣款
-          isStartingGame: false
+          isStartingGame: false,
+          isProcessingGamePayment: false,
+          pendingPaidGame: null,
+          pendingGamePlayCost: null,
+          showPaymentDialog: false
         }
       },
       computed: {
         completionRate() {
           return Math.round((this.completedGames / this.totalGames) * 100);
-        },
-        canPlaySlotMachine() {
-           return this.totalStars >= this.GAME_COST.slotMachine;
-         },
-        canPlayBattleSystem() {
-          return this.totalStars >= this.GAME_COST.battleSystem;
-        },
-        canPlayScratchCard() {
-          return this.totalStars >= this.GAME_COST.scratchCard;
-        },
-        canPlayVocabularyBattle() {
-          return this.totalStars >= this.GAME_COST.vocabularyBattle;
-        },
-        canPlayPandaShopSimulator() {
-          return this.totalStars >= this.GAME_COST.pandaShopSimulator;
-        },
-        canPlayBonko() {
-          return this.totalStars >= this.GAME_COST.bonko;
-        },
-        canPlayBlockPuzzleBlastMaster() {
-          return this.totalStars >= this.GAME_COST.blockPuzzleBlastMaster;
-        },
-        canPlayCrossword() {
-          return this.totalStars >= this.GAME_COST.crossword;
-        },
-        canPlay2048MergeBlocks() {
-          return this.totalStars >= this.GAME_COST.merge2048;
-        },
-        canPlayClassicUno() {
-          return this.totalStars >= this.GAME_COST.classicUno;
-        },
-        canPlaySuperMarioHtml5() {
-          return this.totalStars >= this.GAME_COST.superMarioHtml5;
-        },
-        canPlayHotelFeverTycoon() {
-          return this.totalStars >= this.GAME_COST.hotelFeverTycoon;
         },
         previewCoins() {
           const stars = Math.max(0, Math.floor(Number(this.exchangeStarsAmount) || 0));
@@ -2244,114 +3851,610 @@
           return Math.floor(coins / this.exchangeCoinsPerRate);
         },
         levelProgressPercentage() {
-          return Math.round((this.totalStars % this.nextLevelStars) / this.nextLevelStars * 100);
+          const progress = this.getPlayerLevelProgress();
+          return progress.percent || 0;
         },
         canLevelUp() {
-          return this.totalStars >= this.nextLevelStars;
+          return false; // Level up is automatic based on spending
+        },
+        nextUnlockGames() {
+          const nextLevel = this.getNextUnlockLevel();
+          if (!nextLevel || nextLevel <= this.playerLevel) {
+            return [];
+          }
+          return this.games.filter(game => game.requiredLevel === nextLevel);
+        },
+        expCards() {
+          if (typeof window === 'undefined' || !window.ITEM_DATABASE) {
+            return [];
+          }
+          return Object.values(window.ITEM_DATABASE).filter(item => item.type === 'exp');
         },
         starsEfficiency() {
           return this.totalStarsEarned > 0 ? Math.round((this.totalStars / this.totalStarsEarned) * 100) : 0;
+        },
+        // 分頁相關 computed
+        filteredGames() {
+          let filtered = this.games;
+
+          // 分類篩選
+          if (this.selectedCategory !== 'all') {
+            filtered = filtered.filter(game => game.category === this.selectedCategory);
+          }
+
+          // 搜尋篩選
+          if (this.searchQuery.trim()) {
+            const query = this.searchQuery.toLowerCase();
+            filtered = filtered.filter(game =>
+              game.title.toLowerCase().includes(query) ||
+              game.subtitle.toLowerCase().includes(query) ||
+              game.description.toLowerCase().includes(query) ||
+              (Array.isArray(game.features) && game.features.some(f => f.toLowerCase().includes(query)))
+            );
+          }
+
+          this.currentFilteredGames = filtered;
+          return filtered;
+        },
+        gamePageCount() {
+          return Math.max(1, Math.ceil(this.filteredGames.length / this.GAMES_PER_PAGE));
+        },
+        currentPageGames() {
+          const pageCount = this.gamePageCount;
+          this.currentGamePage = Math.min(Math.max(this.currentGamePage, 1), pageCount);
+
+          const startIndex = (this.currentGamePage - 1) * this.GAMES_PER_PAGE;
+          const endIndex = startIndex + this.GAMES_PER_PAGE;
+
+          return this.filteredGames.slice(startIndex, endIndex);
+        },
+        visiblePageItems() {
+          const pageCount = this.gamePageCount;
+
+          if (pageCount <= 7) {
+            return Array.from({ length: pageCount }, (_, index) => index + 1);
+          }
+
+          const pages = new Set([1, pageCount, this.currentGamePage - 1, this.currentGamePage, this.currentGamePage + 1]);
+          const validPages = Array.from(pages).filter(page => page >= 1 && page <= pageCount).sort((a, b) => a - b);
+
+          const result = [];
+          validPages.forEach((page, index) => {
+            const previousPage = validPages[index - 1];
+            if (previousPage && page - previousPage > 1) {
+              result.push('ellipsis');
+            }
+            result.push(page);
+          });
+
+          return result;
+        },
+        paginationInfo() {
+          const itemCount = this.filteredGames.length;
+          if (itemCount === 0) return '';
+
+          const startItem = (this.currentGamePage - 1) * this.GAMES_PER_PAGE + 1;
+          const endItem = Math.min(this.currentGamePage * this.GAMES_PER_PAGE, itemCount);
+
+          return `第 ${this.currentGamePage}／${this.gamePageCount} 頁，顯示第 ${startItem}－${endItem} 款，共 ${itemCount} 款遊戲`;
         }
       },
       methods: {
+        // 分頁相關方法
+        goToGamePage(pageNumber) {
+          const pageCount = this.gamePageCount;
+          const nextPage = Math.min(Math.max(Number(pageNumber) || 1, 1), pageCount);
+
+          if (nextPage === this.currentGamePage) {
+            return;
+          }
+
+          this.currentGamePage = nextPage;
+          this.updateGamePageUrl();
+          this.scrollToGameListTop();
+        },
+        updateGamePageUrl() {
+          const url = new URL(window.location.href);
+          if (this.currentGamePage <= 1) {
+            url.searchParams.delete('page');
+          } else {
+            url.searchParams.set('page', String(this.currentGamePage));
+          }
+          window.history.pushState(null, '', url);
+        },
+        getInitialGamePage() {
+          const params = new URLSearchParams(window.location.search);
+          const page = Number(params.get('page'));
+          return (Number.isInteger(page) && page > 0) ? page : 1;
+        },
+        scrollToGameListTop() {
+          const gameList = document.querySelector('.games-section');
+          if (!gameList) return;
+
+          const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          gameList.scrollIntoView({
+            behavior: reducedMotion ? 'auto' : 'smooth',
+            block: 'start'
+          });
+        },
+        handleSearchChange() {
+          this.currentGamePage = 1;
+        },
+        handleCategoryChange() {
+          this.currentGamePage = 1;
+        },
+        canPlayGame(gameId) {
+          // 由於費用是隨機的，這裡只檢查是否有足夠星星玩最低費用
+          return this.totalStars >= this.MIN_GAME_PLAY_COST;
+        },
+        // 產生隨機遊戲費用 (500～1000)
+        generateRandomGamePlayCost() {
+          return Math.floor(
+            Math.random() * (this.MAX_GAME_PLAY_COST - this.MIN_GAME_PLAY_COST + 1)
+          ) + this.MIN_GAME_PLAY_COST;
+        },
+
+        getGamePlayCost(game) {
+          // 卡片顯示用，返回範圍字串
+          return `${this.MIN_GAME_PLAY_COST}～${this.MAX_GAME_PLAY_COST}`;
+        },
+        getGameButtonText(game) {
+          return '查看本次費用';
+        },
+        getGameCostDisplay(game) {
+          return `每次費用：⭐ ${this.MIN_GAME_PLAY_COST}～${this.MAX_GAME_PLAY_COST}`;
+        },
+        getGameCardClass(game) {
+          const classes = [];
+          if (game.id === 'alphabetWords') {
+            classes.push('game-card--alphabet-words');
+          } else if (game.id === 'vegamixDaVinci') {
+            classes.push('game-card--vegamix-da-vinci');
+          } else if (game.id === 'plantsVsZombiesNewWave') {
+            classes.push('game-card--plants-vs-zombies-new-wave');
+          } else if (game.id === 'kidsKitchenCozyCooking') {
+            classes.push('game-card--kids-kitchen');
+          } else if (game.id === 'mojiconSpringConnect') {
+            classes.push('game-card--mojicon');
+          } else if (game.id === 'cozyColoring') {
+            classes.push('game-card--cozy-coloring');
+          }
+          if (!this.isGameAvailableForPlayer(game, this.playerLevel)) {
+            classes.push('game-card--level-locked');
+          }
+          return classes.join(' ');
+        },
+        getGameStatus(game) {
+          return this.isGameAvailableForPlayer(game, this.playerLevel) ? 'available' : 'level-locked';
+        },
+        getGameStatusText(game) {
+          if (this.isGameAvailableForPlayer(game, this.playerLevel)) {
+            return '可遊玩';
+          }
+          return `需要等級 ${this.getGameRequiredLevel(game)}`;
+        },
+
+        // 取得遊戲中心星星
+        getCurrentGameCenterStars() {
+          if (typeof Storage !== 'undefined' && typeof Storage.getTotalStars === 'function') {
+            const value = Number(Storage.getTotalStars());
+            return Number.isFinite(value) ? Math.max(0, value) : 0;
+          }
+          const value = Number(localStorage.getItem('totalStars'));
+          return Number.isFinite(value) ? Math.max(0, value) : 0;
+        },
+
+        // 設定遊戲中心星星
+        setCurrentGameCenterStars(value) {
+          const safeValue = Math.max(0, Math.floor(Number(value) || 0));
+          if (typeof Storage !== 'undefined' && typeof Storage.setTotalStars === 'function') {
+            Storage.setTotalStars(safeValue);
+            return;
+          }
+          window.StarSystem.setTotalStars(String(safeValue));
+          window.dispatchEvent(new CustomEvent('starsUpdated', {
+            detail: { totalStars: safeValue }
+          }));
+        },
+
         // 數字格式化函式
         formatNumber(value) {
           return Number(value || 0).toLocaleString('zh-TW');
         },
-        // 取得遊戲價格
-        getGameCost(gameKey) {
-          return this.GAME_COST[gameKey] || this.GAME_COST.default;
+        // 取得遊戲需求等級
+        getGameRequiredLevel(game) {
+          const value = Number(game?.requiredLevel ?? game?.minLevel ?? game?.unlockLevel ?? 1);
+          if (!Number.isFinite(value) || value < 1) {
+            return 1;
+          }
+          return Math.floor(value);
         },
+
+        // 判斷遊戲是否符合玩家等級
+        isGameAvailableForPlayer(game, playerLevel) {
+          if (this.adminModeEnabled && this.allGamesUnlocked) {
+            return true;
+          }
+          return Number(playerLevel) >= this.getGameRequiredLevel(game);
+        },
+
+        // 取得預設玩家進度
+        getDefaultPlayerProgress() {
+          return typeof getDefaultPlayerProgress === 'function' ? getDefaultPlayerProgress() : {
+            totalSpentStars: 0,
+            level: 1,
+            rewardedClears: [],
+            rewardedBestRecords: [],
+            claimedLevelRewards: [],
+            spendingTransactions: [],
+            updatedAt: null
+          };
+        },
+
+        // 讀取玩家進度
+        getPlayerProgress() {
+          return typeof getPlayerProgress === 'function' ? getPlayerProgress() : this.getDefaultPlayerProgress();
+        },
+
+        // 計算玩家等級
+        calculatePlayerLevel(totalSpentStars) {
+          return typeof calculatePlayerLevel === 'function' ? calculatePlayerLevel(totalSpentStars) : 1;
+        },
+
+        // 計算經驗值
+        calculateExperience(totalSpentStars) {
+          return typeof calculateExperience === 'function' ? calculateExperience(totalSpentStars) : 0;
+        },
+
+        // 取得目前玩家等級
+        getCurrentPlayerLevel() {
+          return typeof getCurrentPlayerLevel === 'function' ? getCurrentPlayerLevel() : 1;
+        },
+
+        // 取得等級進度
+        getPlayerLevelProgress() {
+          return typeof getPlayerLevelProgress === 'function' ? getPlayerLevelProgress() : {
+            currentLevel: 1,
+            currentExp: 0,
+            totalSpentStars: 0,
+            nextLevel: 2,
+            currentLevelExp: 0,
+            requiredLevelExp: 20,
+            percent: 0,
+            isMaxLevel: false
+          };
+        },
+
+        // 完成率相關函式
+        getCompletedGameIds() {
+          try {
+            const rawValue = localStorage.getItem(this.COMPLETED_GAME_IDS_KEY);
+            if (!rawValue) {
+              return [];
+            }
+            const parsedValue = JSON.parse(rawValue);
+            if (!Array.isArray(parsedValue)) {
+              return [];
+            }
+            return Array.from(
+              new Set(
+                parsedValue
+                  .map(value => String(value || '').trim())
+                  .filter(Boolean)
+              )
+            );
+          } catch (error) {
+            console.warn('[Game Center Completion] 完成紀錄讀取失敗：', error);
+            return [];
+          }
+        },
+
+        saveCompletedGameIds(gameIds) {
+          const safeGameIds = Array.from(
+            new Set(
+              Array.isArray(gameIds)
+                ? gameIds
+                    .map(value => String(value || '').trim())
+                    .filter(Boolean)
+                : []
+            )
+          );
+          try {
+            localStorage.setItem(this.COMPLETED_GAME_IDS_KEY, JSON.stringify(safeGameIds));
+            return true;
+          } catch (error) {
+            console.error('[Game Center Completion] 完成紀錄保存失敗：', error);
+            return false;
+          }
+        },
+
+        markGameAsCompleted(game) {
+          const gameId = String(game?.id || '').trim();
+          if (!gameId) {
+            console.warn('[Game Center Completion] 遊戲缺少 ID。', game);
+            return false;
+          }
+          const completedGameIds = this.getCompletedGameIds();
+          if (completedGameIds.includes(gameId)) {
+            return false;
+          }
+          completedGameIds.push(gameId);
+          const saved = this.saveCompletedGameIds(completedGameIds);
+          if (saved) {
+            this.completedGameIds = completedGameIds;
+            window.dispatchEvent(new CustomEvent('gameCenterCompletionUpdated', {
+              detail: { gameId }
+            }));
+          }
+          return saved;
+        },
+
+        // 管理員指令系統
+        submitAdminCommand() {
+          const command = String(this.adminCommand || '').trim();
+          const normalizedCommand = command.toLowerCase();
+          this.adminCommand = '';
+
+          if (!command) {
+            alert('請輸入管理員密碼或指令。');
+            return;
+          }
+
+          if (normalizedCommand === 'open') {
+            if (!this.adminModeEnabled) {
+              alert('請先輸入正確的管理員密碼。');
+              return;
+            }
+            this.allGamesUnlocked = true;
+            alert('所有遊戲已暫時解鎖。');
+            return;
+          }
+
+          if (normalizedCommand === 'close') {
+            if (!this.adminModeEnabled) {
+              alert('請先輸入正確的管理員密碼。');
+              return;
+            }
+            this.allGamesUnlocked = false;
+            alert('遊戲已恢復原本的等級限制。');
+            return;
+          }
+
+          if (normalizedCommand === 'logout') {
+            this.adminModeEnabled = false;
+            this.allGamesUnlocked = false;
+            alert('已離開管理員模式。');
+            return;
+          }
+
+          if (command === 'admin888') {
+            this.adminModeEnabled = true;
+            alert('管理員模式已啟用。');
+            return;
+          }
+
+          alert('管理員密碼或指令錯誤。');
+        },
+
+        getUniqueGameList(games) {
+          const gameMap = new Map();
+          (Array.isArray(games) ? games : []).forEach(game => {
+            const gameId = String(game?.id || '').trim();
+            if (!gameId || gameMap.has(gameId)) {
+              return;
+            }
+            gameMap.set(gameId, game);
+          });
+          return Array.from(gameMap.values());
+        },
+
+        getValidCompletedGameIds() {
+          const uniqueGames = this.getUniqueGameList(this.games);
+          const validGameIds = new Set(uniqueGames.map(game => String(game.id)));
+          return this.getCompletedGameIds().filter(gameId => validGameIds.has(gameId));
+        },
+
+        getGameCenterCompletionStats() {
+          const uniqueGames = this.getUniqueGameList(this.games);
+          const totalGames = uniqueGames.length;
+          const completedGameIds = this.getValidCompletedGameIds();
+          const completedGames = completedGameIds.length;
+          const completionRate = totalGames > 0 ? Math.round(completedGames / totalGames * 100) : 0;
+          const safeCompletionRate = Math.min(100, Math.max(0, completionRate));
+          return {
+            totalGames,
+            completedGames,
+            completionRate: safeCompletionRate
+          };
+        },
+
+        updateGameCenterCompletionDisplay() {
+          const stats = this.getGameCenterCompletionStats();
+          this.completedGames = stats.completedGames;
+          this.totalGames = stats.totalGames;
+        },
+
         // 動態計算可用遊戲和總遊戲數量
         updateGameCount() {
-          this.$nextTick(() => {
-            const gameCards = document.querySelectorAll('.games-grid .game-card');
-            this.totalGames = gameCards.length;
+          const progress = this.getPlayerProgress();
+          const playerLevel = this.calculatePlayerLevel(progress.totalSpentStars);
+          const currentExp = this.calculateExperience(progress.totalSpentStars);
+          this.playerLevel = playerLevel;
+          this.playerExperience = currentExp;
+          this.totalSpentStars = progress.totalSpentStars;
 
-            let availableCount = 0;
-            gameCards.forEach(card => {
-              // 檢查遊戲卡片是否被鎖定、禁用或即將推出
-              const isLocked = card.classList.contains('locked');
-              const isDisabled = card.classList.contains('disabled');
-              const isComingSoon = card.classList.contains('coming-soon');
-              // 只有沒有被鎖定、禁用或即將推出的遊戲才算可用
-              if (!isLocked && !isDisabled && !isComingSoon) {
-                availableCount++;
-              }
-            });
-            this.availableGames = availableCount;
+          const totalGames = this.games.length;
+          const availableGames = this.games.filter(game =>
+            this.isGameAvailableForPlayer(game, playerLevel)
+          ).length;
+          
+          this.totalGames = totalGames;
+          this.availableGames = availableGames;
+          
+          // 更新完成率
+          this.updateGameCenterCompletionDisplay();
+          
+          console.log('[Game Center Statistics]', {
+            playerLevel,
+            playerExperience: currentExp,
+            totalSpentStars: progress.totalSpentStars,
+            totalGames,
+            availableGames,
+            completedGames: this.completedGames
           });
         },
-        // 直接開始遊戲並扣款
-        startGameDirectly(gameKey, gameTitle, gameUrl) {
-          console.log('開始遊戲:', gameKey, gameTitle, gameUrl);
-          console.log('目前星星:', this.totalStars);
+        // 統一遊戲啟動函式
+        handleGameLaunch(game) {
+          if (!game || !game.id || !game.url) {
+            console.error('[Game Center] 遊戲資料不完整：', game);
+            return;
+          }
+          
+          const requiredLevel = this.getGameRequiredLevel(game);
+          if (!this.isGameAvailableForPlayer(game, this.playerLevel)) {
+            alert(`玩家等級不足。這款遊戲需要等級 ${requiredLevel}，你目前是等級 ${this.playerLevel}。`);
+            return;
+          }
+          
+          this.openGamePlayPaymentDialog(game);
+        },
 
-          if (this.isStartingGame) {
-            console.log('遊戲正在處理中，忽略點擊');
+        // 開啟付款確認視窗
+        openGamePlayPaymentDialog(game) {
+          if (!game) {
             return;
           }
 
-          // 使用統一的 cost 來源：GAME_COST
-          const cost = this.getGameCost(gameKey);
-          console.log('遊戲費用:', cost);
+          this.pendingPaidGame = game;
+          this.pendingGamePlayCost = this.generateRandomGamePlayCost();
+          this.showPaymentDialog = true;
+        },
 
-          // 取得目前星星
-          const currentStars = Number(this.totalStars || 0);
+        // 關閉付款視窗
+        closeGamePlayPaymentDialog(options = {}) {
+          const { resetPendingState = true } = options;
+          this.showPaymentDialog = false;
+          if (resetPendingState) {
+            this.pendingPaidGame = null;
+            this.pendingGamePlayCost = null;
+          }
+        },
 
-          // 星星不足，禁止開始遊戲
-          if (currentStars < cost) {
-            alert(`星星不足，無法開始遊戲！\n\n開始遊戲需要 ${cost} 顆星星。`);
+        // 開啟外部遊戲空白分頁
+        openPendingExternalGameWindow() {
+          try {
+            return window.open('about:blank', '_blank');
+          } catch (error) {
+            console.error('[Game Center] 建立遊戲分頁失敗：', error);
+            return null;
+          }
+        },
+
+        // 確認付款並開始遊戲
+        confirmPaidGameLaunch() {
+          if (this.isProcessingGamePayment || !this.pendingPaidGame || !Number.isFinite(this.pendingGamePlayCost)) {
             return;
           }
 
-          this.isStartingGame = true;
-          const remainingStars = currentStars - cost;
+          this.isProcessingGamePayment = true;
 
-          console.log('扣除前星星:', currentStars);
-          console.log('扣除後星星:', remainingStars);
+          const game = this.pendingPaidGame;
+          const cost = this.pendingGamePlayCost;
+          const currentStars = this.getCurrentGameCenterStars();
 
-          // 先扣除星星
-          this.totalStars = remainingStars;
-          this.starsSpent = Number(this.starsSpent || 0) + cost;
+          let externalWindow = null;
+          let starsDeducted = false;
 
-          console.log('Vue totalStars 已更新:', this.totalStars);
+          console.log('[Game Center] 準備啟動遊戲', {
+            gameId: game.id,
+            gameTitle: game.title,
+            external: game.external,
+            url: game.url,
+            cost,
+            currentStars
+          });
 
-          // 儲存玩家資料
-          this.savePlayerData();
+          try {
+            if (currentStars < cost) {
+              alert(`星星不足！目前有 ${currentStars} 顆，本次需要 ${cost} 顆。`);
+              this.closeGamePlayPaymentDialog();
+              return;
+            }
 
-          console.log('資料已儲存');
-
-          // 儲存共用星星資料
-          localStorage.setItem('totalStars', String(remainingStars));
-
-          // 同步 StarSystem
-          if (window.StarSystem && typeof window.StarSystem.setStars === 'function') {
-            window.StarSystem.setStars(remainingStars);
-            console.log('StarSystem 已同步');
-          }
-
-          // 通知其他頁面星星已更新
-          window.dispatchEvent(
-            new CustomEvent('starsUpdated', {
-              detail: {
-                stars: remainingStars,
-                spent: cost
+            if (game.external === true) {
+              externalWindow = this.openPendingExternalGameWindow();
+              if (!externalWindow) {
+                console.warn('[Game Center] 彈出視窗被瀏覽器阻擋', { gameId: game.id });
+                alert('瀏覽器阻擋了遊戲視窗，請允許此網站開啟彈出式視窗後再試一次。');
+                return;
               }
-            })
-          );
+            }
 
-          // 更新顯示
-          this.triggerStarsAnimation();
+            const remainingStars = currentStars - cost;
+            this.setCurrentGameCenterStars(remainingStars);
+            this.totalStars = remainingStars;
+            this.starsSpent = Number(this.starsSpent || 0) + cost;
+            this.savePlayerData();
+            starsDeducted = true;
 
-          // 顯示扣除訊息
-          alert(`已扣除 ${cost} 顆星星！`);
+            // 發放經驗值獎勵：每花 100 顆星星獲得 1 EXP
+            if (typeof addSpentStars === 'function') {
+              const expResult = addSpentStars(cost, 'game-center-play', game.id);
+              console.log('[Experience] 遊戲消費經驗值獎勵：', expResult);
+            }
 
-          // 最後才開啟遊戲
-          window.open(gameUrl, '_blank', 'noopener,noreferrer');
+            // 記錄完成遊戲
+            this.markGameAsCompleted(game);
 
-          this.isStartingGame = false;
-          this.updateGameCount(); // 遊戲啟動後更新遊戲數量
+            if (game.external === true) {
+              try {
+                externalWindow.opener = null;
+              } catch (error) {
+                console.warn('[Game Center] 無法清除 opener：', error);
+              }
+              externalWindow.location.replace(game.url);
+            } else {
+              window.location.href = game.url;
+            }
+
+            this.closeGamePlayPaymentDialog({ resetPendingState: false });
+            this.pendingPaidGame = null;
+            this.pendingGamePlayCost = null;
+
+            console.log('[Game Center] 遊戲啟動流程完成', {
+              gameId: game.id,
+              cost,
+              remainingStars
+            });
+
+            this.updateGameCount();
+          } catch (error) {
+            console.error('[Game Center] 支付或啟動遊戲失敗：', error);
+            if (externalWindow && !externalWindow.closed) {
+              externalWindow.close();
+            }
+            if (starsDeducted) {
+              this.setCurrentGameCenterStars(currentStars);
+              this.totalStars = currentStars;
+              this.starsSpent = Number(this.starsSpent || 0) - cost;
+              this.savePlayerData();
+              alert('遊戲開啟失敗，本次扣除的星星已退回。');
+            } else {
+              alert('遊戲開啟失敗，未扣除星星。');
+            }
+          } finally {
+            this.isProcessingGamePayment = false;
+          }
+        },
+
+        // 正常開啟遊戲（此函式已不再使用，保留以備用）
+        openGameNormally(game) {
+          if (game.external === true) {
+            const gameWindow = window.open(game.url, '_blank', 'noopener,noreferrer');
+            return Boolean(gameWindow);
+          }
+          window.location.href = game.url;
+          return true;
         },
         exchangeStarsForCoins() {
           if (this.exchangeBusy) return;
@@ -2435,12 +4538,10 @@
           const playerData = localStorage.getItem('playerData');
           if (playerData) {
             const data = JSON.parse(playerData);
-            this.playerLevel = data.level || 1;
             this.totalStarsEarned = data.totalStarsEarned || 0;
             this.starsSpent = data.starsSpent || 0;
             this.nextLevelStars = data.nextLevelStars || 100;
           } else {
-            this.playerLevel = 1;
             this.totalStarsEarned = totalStars;
             this.starsSpent = 0;
             this.nextLevelStars = 100;
@@ -2451,6 +4552,9 @@
             const progress = JSON.parse(gameProgress);
             this.completedGames = progress.completedGames || 0;
           }
+
+          // 載入玩家經驗值與等級
+          this.updateGameCount();
 
           // 同步 StarSystem
           if (typeof StarSystem !== 'undefined' && typeof StarSystem.setTotalStars === 'function') {
@@ -2468,7 +4572,7 @@
           localStorage.setItem('playerData', JSON.stringify(data));
 
           // 直接儲存 totalStars 到 localStorage
-          localStorage.setItem('totalStars', String(this.totalStars));
+          window.StarSystem.setTotalStars(String(this.totalStars));
 
           // 同步 StarSystem
           if (typeof StarSystem !== 'undefined' && typeof StarSystem.setTotalStars === 'function') {
@@ -2664,6 +4768,79 @@
               block: 'start'
             });
           }
+        },
+        resetPlayerProgress() {
+          if (!confirm('確定要清空玩家等級和經驗值？此操作無法復原。')) {
+            return;
+          }
+          localStorage.removeItem('playerProgress');
+          location.reload();
+        },
+        handleLevelUp(result) {
+          const reward = typeof getLevelReward === 'function' ? getLevelReward(result.currentLevel) : null;
+          
+          // 找出新解鎖的遊戲
+          const newUnlockedGames = this.games.filter(game => {
+            const requiredLevel = this.getGameRequiredLevel(game);
+            return requiredLevel === result.currentLevel;
+          });
+          
+          this.levelUpData = {
+            previousLevel: result.previousLevel,
+            currentLevel: result.currentLevel,
+            totalSpentStars: this.totalSpentStars,
+            reward: reward,
+            newUnlockedGames: newUnlockedGames
+          };
+          
+          // 發放金幣獎勵
+          if (reward && reward.goldCoins > 0) {
+            this.goldCoins += reward.goldCoins;
+            this.saveEconomyData();
+          }
+          
+          // 標記已領取獎勵
+          if (typeof claimLevelReward === 'function') {
+            claimLevelReward(result.currentLevel);
+          }
+          
+          this.showLevelUpModal = true;
+        },
+        closeLevelUpModal() {
+          this.showLevelUpModal = false;
+          this.levelUpData = null;
+        },
+        openLevelHelp() {
+          this.showLevelHelpModal = true;
+        },
+        closeLevelHelp() {
+          this.showLevelHelpModal = false;
+        },
+        goToGameCenter() {
+          this.closeLevelUpModal();
+          // Scroll to top of game grid
+          document.getElementById('gameGrid')?.scrollIntoView({ behavior: 'smooth' });
+        },
+        getNewGamesCount(level) {
+          const previousLevelGames = this.games.filter(game =>
+            this.isGameAvailableForPlayer(game, level - 1)
+          ).length;
+          const currentLevelGames = this.games.filter(game =>
+            this.isGameAvailableForPlayer(game, level)
+          ).length;
+          return currentLevelGames - previousLevelGames;
+        },
+        getNextUnlockLevel() {
+          const playerLevel = this.playerLevel;
+          const nextLevelGames = this.games
+            .map(game => this.getGameRequiredLevel(game))
+            .filter(level => level > playerLevel);
+          
+          if (nextLevelGames.length === 0) {
+            return 'MAX';
+          }
+          
+          return Math.min(...nextLevelGames);
         }
       },
       watch: {
@@ -2675,7 +4852,43 @@
       mounted() {
         this.loadPlayerData();
         this.loadEconomyData();
+        this.completedGameIds = this.getCompletedGameIds(); // 載入完成紀錄
         this.updateGameCount(); // 頁面載入時初始化遊戲數量
+
+        // 監聽玩家等級更新事件
+        window.addEventListener('playerLevelUpdated', (event) => {
+          const result = event.detail;
+          if (result.leveledUp) {
+            this.handleLevelUp(result);
+          }
+          this.updateGameCount();
+        });
+
+        // 監聽玩家進度更新事件
+        window.addEventListener('playerProgressUpdated', () => {
+          this.updateGameCount();
+        });
+
+        // 監聽完成率更新事件
+        window.addEventListener('gameCenterCompletionUpdated', () => {
+          this.updateGameCenterCompletionDisplay();
+        });
+
+        // 分頁：從 URL 讀取初始頁碼
+        this.currentGamePage = this.getInitialGamePage();
+
+        // ESC 關閉彈窗
+        window.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') {
+            this.closeLevelHelp();
+          }
+        });
+
+        // 分頁：監聽瀏覽器返回鍵
+        window.addEventListener('popstate', () => {
+          this.currentGamePage = this.getInitialGamePage();
+        });
+
 
         // 背景音樂控制
         const toggleMusicBtn = document.getElementById('toggleMusic');

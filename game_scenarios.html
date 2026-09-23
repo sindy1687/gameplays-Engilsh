@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
   <meta charset="UTF-8">
   <title>遊戲場景 - Typing Hero</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -236,7 +237,7 @@
       <button class="btn" onclick="location.href='cards.html'">📁 卡片收藏</button>
       <button class="btn" onclick="location.href='gacha.html'">🎴 抽卡</button>
       <button class="btn" onclick="location.href='social_share.html'">👥 社交</button>
-      <button class="btn" onclick="location.href='visual_enhancement.html'">✨ 視覺</button>
+      <button class="btn" onclick="location.href='card_effect_demo.html'">✨ 卡片特效</button>
     </div>
   </header>
 
@@ -309,9 +310,10 @@
   <script src="js/sound.js"></script>
   <script src="js/userData.js"></script>
   <script src="js/cards.js"></script>
+  <script src="js/cardVideoManager.js"></script>
   <script>
     // 載入卡片數據
-    let allCards = window.allCards || [];
+    let pageCards = window.allCards || [];
     let ownedCards = JSON.parse(localStorage.getItem('ownedCards') || '{}');
     let shards = JSON.parse(localStorage.getItem('cardShards') || '{}');
     let achievementData = JSON.parse(localStorage.getItem('achievement_rewards') || '{}');
@@ -337,7 +339,7 @@
 
     // 更新收集挑戰統計
     function updateCollectionStats() {
-      const totalCards = allCards.length;
+      const totalCards = pageCards.length;
       const collectedCount = Object.keys(ownedCards).length;
       const percent = totalCards > 0 ? Math.round((collectedCount / totalCards) * 100) : 0;
 
@@ -349,7 +351,7 @@
 
     // 更新稀有度追求統計
     function updateRarityStats() {
-      const ssrCards = allCards.filter(card => card.rarity === '超稀有');
+      const ssrCards = pageCards.filter(card => card.rarity === '超稀有');
       const collectedSSR = ssrCards.filter(card => ownedCards[card.word]).length;
       const percent = ssrCards.length > 0 ? Math.round((collectedSSR / ssrCards.length) * 100) : 0;
 
@@ -414,7 +416,7 @@
     // 進入收集挑戰場景
     function enterCollectionChallenge() {
       const collectedCount = Object.keys(ownedCards).length;
-      const totalCards = allCards.length;
+      const totalCards = pageCards.length;
       
       if (collectedCount === totalCards) {
         showNotification('🎉 恭喜！你已經收集完所有卡片！', 'success');
@@ -428,7 +430,7 @@
 
     // 進入稀有度追求場景
     function enterRarityHunt() {
-      const ssrCards = allCards.filter(card => card.rarity === '超稀有');
+      const ssrCards = pageCards.filter(card => card.rarity === '超稀有');
       const collectedSSR = ssrCards.filter(card => ownedCards[card.word]).length;
       
       if (collectedSSR === ssrCards.length) {

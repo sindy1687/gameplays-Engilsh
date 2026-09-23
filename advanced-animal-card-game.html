@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
+  <script src="js/stars.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>進階動物卡牌相克遊戲</title>
@@ -1255,7 +1256,7 @@
 
                 addStars(amount) {
                     this.totalStars += amount;
-                    localStorage.setItem('totalStars', this.totalStars.toString());
+                    window.StarSystem.setTotalStars(this.totalStars.toString());
                     this.updateStarsDisplay();
                     
                     // 如果是獲得星星（正數），顯示彈窗和音效

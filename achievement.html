@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
   <meta charset="UTF-8">
   <title>成就徽章 - Typing Hero</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -1241,7 +1242,9 @@
       </div>
     </div>
   </div>
+  <script src="js/achievementProgress.js"></script>
   <script src="js/cards.js"></script>
+  <script src="js/cardVideoManager.js"></script>
   <script src="js/userData.js"></script>
   <script>
     // 頁面載入時自動初始化成就頁面
@@ -1376,6 +1379,10 @@
     let ownedCards = JSON.parse(localStorage.getItem('ownedCards') || '{}');
     // 各類型分組
     const groupTitles = {
+      checkin: '累積簽到',
+      checkin_streak: '連續簽到',
+      learn_unique: '學習里程碑',
+      negotiation: 'AI議價',
       collection: '📚 收集進度',
       rarity: '🎯 稀有度專精',
       special: '🏆 特殊成就',
@@ -1733,7 +1740,10 @@
     }
     
     // 新增：計算成就進度
+    AchievementProgress.extend(achievements);
     function getAchievementProgress(ach) {
+      const shared = AchievementProgress.progress(ach);
+      if (shared !== null) return shared;
       let current = 0;
       switch (ach.type) {
         case 'collection':
@@ -1841,6 +1851,8 @@
     }
     
     function checkAchievementUnlocked(ach) {
+      const shared = AchievementProgress.progress(ach);
+      if (shared !== null) return shared >= ach.requirement;
       switch (ach.type) {
         case 'collection':
         case 'special':
@@ -1964,7 +1976,7 @@
         }
       }
       stars += reward;
-      localStorage.setItem('totalStars', stars);
+      window.StarSystem.setTotalStars(stars);
       claimed.push(ach.id);
       setClaimedAchievements(claimed);
       

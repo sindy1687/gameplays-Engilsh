@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
   <meta charset="UTF-8">
   <title>星際英打冒險 − 編輯單字本</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -998,6 +999,119 @@
     const storageKey = 'book_' + bookName;
     let vocab = [];
 
+    // 合法的單一字母英文單字清單
+    const VALID_SINGLE_LETTER_WORDS = new Set(['a', 'i']);
+
+    // 共用英文單字驗證函式
+    function validateEnglishWord(rawWord) {
+      const word = String(rawWord || '').trim();
+
+      if (!word) {
+        return {
+          valid: false,
+          message: '請輸入英文單字'
+        };
+      }
+
+      // 檢查是否為單一字母
+      if (/^[A-Za-z]$/.test(word)) {
+        const isValidSingleLetter = VALID_SINGLE_LETTER_WORDS.has(word.toLowerCase());
+        if (!isValidSingleLetter) {
+          return {
+            valid: false,
+            message: `「${word}」只有一個字母，不是可收錄的完整英文單字。單一字母單字目前只接受 a 和 I。`
+          };
+        }
+      }
+
+      return {
+        valid: true,
+        value: word
+      };
+    }
+
+    function parseCSVRows(text) {
+      const rows = [];
+      let row = [];
+      let field = '';
+      let inQuotes = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const nextChar = text[i + 1];
+
+        if (char === '"') {
+          if (inQuotes && nextChar === '"') {
+            field += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (char === ',' && !inQuotes) {
+          row.push(field.trim());
+          field = '';
+        } else if ((char === '\n' || char === '\r') && !inQuotes) {
+          if (char === '\r' && nextChar === '\n') i++;
+          row.push(field.trim());
+          if (row.some(cell => cell.trim())) rows.push(row);
+          row = [];
+          field = '';
+        } else {
+          field += char;
+        }
+      }
+
+      row.push(field.trim());
+      if (row.some(cell => cell.trim())) rows.push(row);
+      return rows;
+    }
+
+    function isVocabularyHeader(row) {
+      if (!Array.isArray(row) || row.length < 2) return false;
+      const normalized = row.map(cell => String(cell || '').trim().toLowerCase());
+      return normalized[0] === 'word'
+        && ['meaning', 'zh', 'chinese', '中文', '解釋'].includes(normalized[1]);
+    }
+
+    function rowToVocabularyItem(row, headers = null) {
+      if (!Array.isArray(row)) return null;
+
+      if (headers) {
+        const data = {};
+        headers.forEach((header, index) => {
+          data[String(header || '').trim().toLowerCase()] = row[index] || '';
+        });
+
+        return {
+          word: data.word || data.english || data['英文單字'] || '',
+          meaning: data.meaning || data.zh || data.chinese || data['中文'] || data['中文解釋'] || '',
+          example: data.example || data.en_sentence || data.sentence || data['英文例句'] || '',
+          exampleMeaning: data.examplemeaning || data.zh_sentence || data.translation || data['例句中文解釋'] || data['中文例句'] || ''
+        };
+      }
+
+      return {
+        word: row[0] || '',
+        meaning: row[1] || '',
+        example: row[2] || '',
+        exampleMeaning: row.slice(3).join(',') || ''
+      };
+    }
+
+    function getVocabUniqueKey(item) {
+      return [
+        item.word,
+        item.meaning,
+        item.example,
+        item.exampleMeaning || ''
+      ].map(value => String(value || '').trim().toLowerCase()).join('\u0001');
+    }
+
+    function escapeCSVField(value) {
+      const text = String(value ?? '');
+      return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+    }
+
     async function loadDefaultVocabIfNeeded() {
       const localData = localStorage.getItem(storageKey);
       if (localData) {
@@ -1010,15 +1124,13 @@
         if (!response.ok) throw new Error('無法載入 1000英檢單字.csv');
         const text = await response.text();
         // 解析 CSV
-        vocab = text.split('\n').filter(l => l.trim()).map(line => {
-          const parts = line.split(',');
-          return {
-            word: parts[0]?.trim() || '',
-            meaning: parts[1]?.trim() || '',
-            example: parts[2]?.trim() || '',
-            exampleMeaning: parts[3]?.trim() || ''
-          };
-        }).filter(v => v.word && v.meaning && v.example);
+        const rows = parseCSVRows(text.replace(/^\uFEFF/, ''));
+        const hasHeader = rows.length > 0 && isVocabularyHeader(rows[0]);
+        const headers = hasHeader ? rows[0] : null;
+        const dataRows = hasHeader ? rows.slice(1) : rows;
+        vocab = dataRows
+          .map(row => rowToVocabularyItem(row, headers))
+          .filter(v => v && v.word && v.meaning && v.example);
         localStorage.setItem(storageKey, JSON.stringify(vocab));
       } catch (e) {
         alert('預設單字載入失敗：' + e.message);
@@ -1105,8 +1217,18 @@
       const m = document.getElementById('meaning').value.trim();
       const e = document.getElementById('example').value.trim();
       const em = document.getElementById('exampleMeaning').value.trim();
-      if (!w || !m || !e) return alert('請至少輸入英文、中文和英文例句。');
-      vocab.push({ word: w, meaning: m, example: e, exampleMeaning: em });
+      
+      // 驗證英文單字
+      const wordValidation = validateEnglishWord(w);
+      if (!wordValidation.valid) {
+        alert(wordValidation.message);
+        document.getElementById('word').focus();
+        return;
+      }
+      
+      if (!m || !e) return alert('請至少輸入中文和英文例句。');
+      
+      vocab.push({ word: wordValidation.value, meaning: m, example: e, exampleMeaning: em });
       saveVocab();
       displayWords();
       document.getElementById('word').value = '';
@@ -1171,14 +1293,17 @@
           // 移除 BOM 標記
           text = text.replace(/^\uFEFF/, '');
           
-          const lines = text.split('\n').filter(l => l.trim());
-          const totalLines = lines.length;
+          const rows = parseCSVRows(text);
+          const hasHeader = rows.length > 0 && isVocabularyHeader(rows[0]);
+          const headers = hasHeader ? rows[0] : null;
+          const dataRows = hasHeader ? rows.slice(1) : rows;
+          const totalLines = dataRows.length;
           let importedCount = 0;
           let skippedCount = 0;
           let duplicateCount = 0;
           
-          // 建立現有單字的 Set 以加速查詢（不分大小寫）
-          const existingWords = new Set(vocab.map(v => v.word.toLowerCase()));
+          // 只跳過完全相同的一筆；同英文單字但不同意思/例句仍會匯入
+          const existingEntries = new Set(vocab.map(getVocabUniqueKey));
 
           // 更新總行數
           document.getElementById('totalLines').textContent = totalLines;
@@ -1190,74 +1315,32 @@
             const endIndex = Math.min(startIndex + batchSize, totalLines);
             
             for (let i = startIndex; i < endIndex; i++) {
-              const line = lines[i];
-              let word, meaning, example, exampleMeaning;
-              
-              // 嘗試不同的分隔符號格式
-              if (line.includes(',')) {
-                // CSV 格式：word,meaning,example,exampleMeaning
-                const parts = line.split(',').map(s => s.trim());
-                if (parts.length >= 4) {
-                  [word, meaning, example, exampleMeaning] = parts;
-                } else if (parts.length === 3) {
-                  [word, meaning, example] = parts;
-                  exampleMeaning = '';
-                }
-              } else if (line.includes('：')) {
-                // 中文冒號格式：word：meaning：example：exampleMeaning
-                const parts = line.split('：').map(s => s.trim());
-                if (parts.length >= 4) {
-                  [word, meaning, example, exampleMeaning] = parts;
-                } else if (parts.length === 3) {
-                  [word, meaning, example] = parts;
-                  exampleMeaning = '';
-                }
-              } else if (line.includes(':')) {
-                // 英文冒號格式：word:meaning:example:exampleMeaning
-                const parts = line.split(':').map(s => s.trim());
-                if (parts.length >= 4) {
-                  [word, meaning, example, exampleMeaning] = parts;
-                } else if (parts.length === 3) {
-                  [word, meaning, example] = parts;
-                  exampleMeaning = '';
-                }
-              } else if (line.includes('\t')) {
-                // Tab 分隔格式：word\tmeaning\texample\texampleMeaning
-                const parts = line.split('\t').map(s => s.trim());
-                if (parts.length >= 4) {
-                  [word, meaning, example, exampleMeaning] = parts;
-                } else if (parts.length === 3) {
-                  [word, meaning, example] = parts;
-                  exampleMeaning = '';
-                }
-              } else if (line.includes(' ')) {
-                // 空格分隔格式：word meaning example exampleMeaning
-                const parts = line.split(' ');
-                if (parts.length >= 4) {
-                  word = parts[0];
-                  meaning = parts[1];
-                  example = parts[2];
-                  exampleMeaning = parts.slice(3).join(' ');
-                } else if (parts.length === 3) {
-                  word = parts[0];
-                  meaning = parts[1];
-                  example = parts[2];
-                  exampleMeaning = '';
-                }
-              }
+              const item = rowToVocabularyItem(dataRows[i], headers);
+              const word = item?.word;
+              const meaning = item?.meaning;
+              const example = item?.example;
+              const exampleMeaning = item?.exampleMeaning || '';
               
               // 如果成功解析且必要欄位都有值，則新增單字
               if (word && meaning && example) {
-                // 檢查是否重複（不分大小寫）
-                if (!existingWords.has(word.toLowerCase())) {
-                  vocab.push({ 
-                    word: word, 
-                    meaning: meaning, 
-                    example: example, 
-                    exampleMeaning: exampleMeaning || '' 
-                  });
-                  // 將新單字加入 Set，以處理檔案內的重複
-                  existingWords.add(word.toLowerCase());
+                // 驗證英文單字
+                const wordValidation = validateEnglishWord(word);
+                if (!wordValidation.valid) {
+                  skippedCount++;
+                  continue;
+                }
+                
+                const newItem = { 
+                  word: wordValidation.value, 
+                  meaning: meaning, 
+                  example: example, 
+                  exampleMeaning: exampleMeaning 
+                };
+                const entryKey = getVocabUniqueKey(newItem);
+
+                if (!existingEntries.has(entryKey)) {
+                  vocab.push(newItem);
+                  existingEntries.add(entryKey);
                   importedCount++;
                 } else {
                   duplicateCount++;
@@ -1289,9 +1372,9 @@
                 document.body.removeChild(progressModal);
                 
                 // 顯示結果
-                let resultMessage = `✅ 成功匯入 ${importedCount} 個單字`;
+                let resultMessage = `✅ 檔案共有 ${totalLines} 個單字，成功匯入 ${importedCount} 個`;
                 if (duplicateCount > 0) {
-                  resultMessage += `\n🔄 已忽略 ${duplicateCount} 個重複單字`;
+                  resultMessage += `\n🔄 已忽略 ${duplicateCount} 筆完全重複資料`;
                 }
                 if (skippedCount > 0) {
                   resultMessage += `\n⚠️ 已跳過 ${skippedCount} 個無效行`;
@@ -1316,7 +1399,15 @@
 
     function exportCSV() {
       if (vocab.length === 0) return alert('目前沒有可匯出的單字。');
-      const csvContent = vocab.map(v => `${v.word},${v.meaning},${v.example},${v.exampleMeaning || ''}`).join('\n');
+      const csvContent = [
+        'word,zh,en_sentence,zh_sentence',
+        ...vocab.map(v => [
+          escapeCSVField(v.word),
+          escapeCSVField(v.meaning),
+          escapeCSVField(v.example),
+          escapeCSVField(v.exampleMeaning || '')
+        ].join(','))
+      ].join('\n');
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);

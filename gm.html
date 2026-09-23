@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GM 管理後台</title>
@@ -84,9 +85,12 @@
         <button type="button" data-gm-tab="levels">關卡</button>
         <button type="button" data-gm-tab="zodiac">十二星座</button>
         <button type="button" data-gm-tab="gods">希臘神祇</button>
+        <button type="button" data-gm-tab="stage-manager">🗺️ 特殊圖鑑關卡</button>
+        <button type="button" data-gm-tab="milestones">🏆 星星里程碑</button>
         <button type="button" data-gm-tab="cards">卡片</button>
         <button type="button" data-gm-tab="market">商城交易</button>
         <button type="button" data-gm-tab="gacha">抽卡</button>
+        <button type="button" data-gm-tab="tasks">每日任務</button>
         <button type="button" data-gm-tab="settings">設定</button>
         <button type="button" data-gm-tab="backup">備份</button>
         <button type="button" data-gm-tab="inspector">資料檢查器</button>
@@ -184,6 +188,88 @@
         <div id="gmGodList" class="gm-list"></div>
       </section>
 
+      <section class="gm-tab-panel" id="gmTabStageManager" hidden>
+        <h2>🗺️ 特殊圖鑑關卡通關管理</h2>
+        <p>設定玩家的十二星座與希臘神祇關卡通關狀態</p>
+
+        <!-- 玩家資訊顯示 -->
+        <div id="gmStagePlayerInfo" class="gm-stage-player-info">
+          <div class="gm-stage-player-label">目前管理玩家：</div>
+          <div class="gm-stage-player-name" id="gmStagePlayerName">未選擇</div>
+          <div class="gm-stage-player-id" id="gmStagePlayerId">--</div>
+          <div class="gm-stage-player-source" id="gmStagePlayerSource">--</div>
+        </div>
+
+        <!-- 系列分頁 -->
+        <div class="gm-stage-series-tabs">
+          <button type="button" class="gm-stage-tab active" data-series="zodiac">
+            ♈ 十二星座圖鑑
+          </button>
+          <button type="button" class="gm-stage-tab" data-series="greek">
+            ⚡ 希臘神祇圖鑑
+          </button>
+        </div>
+
+        <!-- 系列統計 -->
+        <div class="gm-stage-summary" id="gmStageSummary">
+          <div class="gm-stage-stat">
+            <span class="gm-stage-stat-label">關卡總數</span>
+            <span class="gm-stage-stat-value" id="gmStageTotal">0</span>
+          </div>
+          <div class="gm-stage-stat">
+            <span class="gm-stage-stat-label">已通關</span>
+            <span class="gm-stage-stat-value completed" id="gmStageCompleted">0</span>
+          </div>
+          <div class="gm-stage-stat">
+            <span class="gm-stage-stat-label">未通關</span>
+            <span class="gm-stage-stat-value locked" id="gmStageLocked">0</span>
+          </div>
+          <div class="gm-stage-stat">
+            <span class="gm-stage-stat-label">完成度</span>
+            <span class="gm-stage-stat-value" id="gmStagePercentage">0%</span>
+          </div>
+        </div>
+
+        <!-- 批次操作 -->
+        <div class="gm-stage-bulk-actions">
+          <button type="button" id="gmStageCompleteAllBtn" class="gm-stage-bulk-btn success">
+            ✅ 全部設為已通關
+          </button>
+          <button type="button" id="gmStageClearAllBtn" class="gm-stage-bulk-btn danger">
+            🔒 全部設為未通關
+          </button>
+        </div>
+
+        <!-- 關卡列表 -->
+        <div id="gmStageList" class="gm-stage-list"></div>
+      </section>
+
+      <section class="gm-tab-panel" id="gmTabMilestones" hidden>
+        <h2>🏆 星星里程碑管理</h2>
+        <p>管理星座關卡星星里程碑與獎勵狀態。</p>
+
+        <!-- 星座關卡總星數顯示 -->
+        <div class="gm-milestone-summary">
+          <div class="gm-milestone-stat">
+            <span class="gm-milestone-stat-label">星座關卡總星數</span>
+            <span class="gm-milestone-stat-value" id="gmConstellationTotalStars">0 ⭐</span>
+          </div>
+          <div class="gm-milestone-stat">
+            <span class="gm-milestone-stat-label">玩家獎勵星星</span>
+            <span class="gm-milestone-stat-value" id="gmPlayerRewardStars">0 ⭐</span>
+          </div>
+        </div>
+
+        <!-- 里程碑列表 -->
+        <div id="gmMilestoneList" class="gm-list"></div>
+
+        <!-- 批次操作 -->
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmRefreshMilestonesBtn">重新計算里程碑</button>
+          <button type="button" id="gmResetMilestonesBtn" class="danger">重置所有里程碑</button>
+        </div>
+      </section>
+
       <section class="gm-tab-panel" id="gmTabCards" hidden>
         <h2>卡片管理</h2>
 
@@ -256,6 +342,25 @@
         </div>
 
         <div id="gmGachaList" class="gm-list"></div>
+
+        <h3 style="margin-top: 30px;">系列抽卡池管理</h3>
+        <p>管理系列抽卡券與系列抽卡紀錄。</p>
+
+        <div class="gm-filter-row">
+          <select id="gmSeriesSelect">
+            <option value="">請選擇系列</option>
+          </select>
+          <input type="number" id="gmSeriesTicketInput" placeholder="抽卡券數量" min="0">
+          <button type="button" id="gmSetSeriesTicketBtn">設定抽卡券</button>
+          <button type="button" id="gmAddSeriesTicketBtn">+1 抽卡券</button>
+        </div>
+
+        <div class="gm-card-bulk-actions">
+          <button type="button" id="gmClearSeriesGachaBtn" class="danger">清除系列抽卡紀錄</button>
+          <button type="button" id="gmRefreshSeriesBtn">重新載入系列</button>
+        </div>
+
+        <div id="gmSeriesList" class="gm-list"></div>
       </section>
 
       <section class="gm-tab-panel" id="gmTabSettings" hidden>
@@ -320,6 +425,12 @@
   </main>
 
   <script src="js/cards.js"></script>
+  <script src="js/cardVideoManager.js"></script>
+  <script src="js/seriesGacha.js"></script>
+  <script src="js/constellationGrammar.js"></script>
+  <script src="js/userData.js"></script>
+  <script src="js/stageProgress.js"></script>
+  <script src="js/atlasStageRegistry.js"></script>
   <script src="js/gm.js"></script>
 </body>
 </html>

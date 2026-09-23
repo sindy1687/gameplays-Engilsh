@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
+  <script src="js/stars.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>月曆簽到 - 宇宙遠航</title>
@@ -457,6 +458,7 @@
         </div>
     </div>
 
+  <script src="js/achievementProgress.js"></script>
     <script src="js/achievementSystem.js"></script>
     <script>
         // 加入簽到音效
@@ -582,7 +584,7 @@
             // 扣除星星（如果是補簽）
             if (isMakeup) {
                 userData.stars -= 10;
-                localStorage.setItem('totalStars', userData.stars.toString());
+                window.StarSystem.setTotalStars(userData.stars.toString());
             }
             
             // 記錄簽到

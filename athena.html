@@ -1,11 +1,69 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
   <meta charset="UTF-8" />
   <title>填空挑戰 - 英打小英雄</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <script type="application/json" id="atlasStageMeta">
+  {
+    "type": "greek",
+    "id": "athena",
+    "name": "雅典娜",
+    "englishName": "Athena",
+    "order": 5,
+    "description": "智慧女神",
+    "questionCount": 40
+  }
+  </script>
+  <script type="application/json" id="greek-question-data">
+  [
+    {"word":"hotel","zh":"旅館","en_sentence":"We stayed at a hotel.","zh_sentence":"我們住在一家旅館。","category":"名詞"},
+    {"word":"season","zh":"季節","en_sentence":"Spring is my favorite season.","zh_sentence":"春天是我最喜歡的季節。","category":"名詞"},
+    {"word":"high","zh":"高的","en_sentence":"The mountain is high.","zh_sentence":"這座山很高。","category":"形容詞"},
+    {"word":"autumn","zh":"秋天","en_sentence":"Autumn is cool and nice.","zh_sentence":"秋天涼爽又舒服。","category":"名詞"},
+    {"word":"snow","zh":"雪","en_sentence":"Snow falls in winter.","zh_sentence":"冬天會下雪。","category":"名詞"},
+    {"word":"snowman","zh":"雪人","en_sentence":"The kids made a snowman.","zh_sentence":"孩子們堆了一個雪人。","category":"名詞"},
+    {"word":"plan","zh":"計畫","en_sentence":"We have a travel plan.","zh_sentence":"我們有一個旅行計畫。","category":"名詞"},
+    {"word":"date","zh":"日期；約會","en_sentence":"What is today's date?","zh_sentence":"今天是幾號？","category":"名詞"},
+    {"word":"Father's Day","zh":"父親節","en_sentence":"We celebrate Father's Day in June.","zh_sentence":"我們在六月慶祝父親節。","category":"節日"},
+    {"word":"USA","zh":"美國","en_sentence":"She lives in the USA.","zh_sentence":"她住在美國。","category":"國名"},
+    {"word":"photo","zh":"照片","en_sentence":"I took a photo.","zh_sentence":"我拍了一張照片。","category":"名詞"},
+    {"word":"mind","zh":"心；介意","en_sentence":"Do you mind if I sit here?","zh_sentence":"你介意我坐這裡嗎？","category":"名詞"},
+    {"word":"work","zh":"工作","en_sentence":"My father goes to work early.","zh_sentence":"我爸爸很早去上班。","category":"名詞"},
+    {"word":"exercise","zh":"運動","en_sentence":"She does exercise every day.","zh_sentence":"她每天運動。","category":"名詞"},
+    {"word":"turtle","zh":"烏龜","en_sentence":"The turtle is slow.","zh_sentence":"烏龜很慢。","category":"名詞"},
+    {"word":"practice","zh":"練習","en_sentence":"He practices the piano.","zh_sentence":"他練習彈鋼琴。","category":"動詞"},
+    {"word":"race","zh":"比賽","en_sentence":"They run in a race.","zh_sentence":"他們參加跑步比賽。","category":"名詞"},
+    {"word":"team","zh":"隊伍","en_sentence":"Our team won the game.","zh_sentence":"我們的隊伍贏了比賽。","category":"名詞"},
+    {"word":"problem","zh":"問題","en_sentence":"I have a problem.","zh_sentence":"我有一個問題。","category":"名詞"},
+    {"word":"toe","zh":"腳趾","en_sentence":"He hurt his toe.","zh_sentence":"他傷到腳趾。","category":"名詞"},
+    {"word":"kind","zh":"善良的；種類","en_sentence":"She is kind to everyone.","zh_sentence":"她對每個人都很善良。","category":"形容詞"},
+    {"word":"violin","zh":"小提琴","en_sentence":"She plays the violin.","zh_sentence":"她拉小提琴。","category":"名詞"},
+    {"word":"flute","zh":"長笛","en_sentence":"He plays the flute.","zh_sentence":"他吹長笛。","category":"名詞"},
+    {"word":"special","zh":"特別的","en_sentence":"Today is a special day.","zh_sentence":"今天是特別的一天。","category":"形容詞"},
+    {"word":"afraid","zh":"害怕的","en_sentence":"I am afraid of dogs.","zh_sentence":"我怕狗。","category":"形容詞"},
+    {"word":"same","zh":"相同的","en_sentence":"We wear the same shirt.","zh_sentence":"我們穿一樣的衣服。","category":"形容詞"},
+    {"word":"different","zh":"不同的","en_sentence":"They have different ideas.","zh_sentence":"他們有不同的想法。","category":"形容詞"},
+    {"word":"snowy","zh":"下雪的","en_sentence":"It is a snowy day.","zh_sentence":"今天是下雪的日子。","category":"形容詞"},
+    {"word":"dry","zh":"乾的","en_sentence":"The clothes are dry.","zh_sentence":"衣服乾了。","category":"形容詞"},
+    {"word":"wet","zh":"濕的","en_sentence":"My shoes are wet.","zh_sentence":"我的鞋子濕了。","category":"形容詞"},
+    {"word":"popular","zh":"受歡迎的","en_sentence":"This song is popular.","zh_sentence":"這首歌很受歡迎。","category":"形容詞"},
+    {"word":"dark","zh":"黑暗的","en_sentence":"The room is dark.","zh_sentence":"房間很暗。","category":"形容詞"},
+    {"word":"know","zh":"知道","en_sentence":"I know the answer.","zh_sentence":"我知道答案。","category":"動詞"},
+    {"word":"keep","zh":"保持；保留","en_sentence":"Keep the door closed.","zh_sentence":"把門關著。","category":"動詞"},
+    {"word":"join","zh":"加入","en_sentence":"She joins the team.","zh_sentence":"她加入隊伍。","category":"動詞"},
+    {"word":"throw","zh":"丟；投","en_sentence":"Throw the ball.","zh_sentence":"把球丟出去。","category":"動詞"},
+    {"word":"hit","zh":"打；擊中","en_sentence":"He hit the ball.","zh_sentence":"他打到球。","category":"動詞"},
+    {"word":"enjoy","zh":"享受；喜歡","en_sentence":"I enjoy the game.","zh_sentence":"我喜歡這個遊戲。","category":"動詞"},
+    {"word":"bow","zh":"弓；鞠躬","en_sentence":"The boy bows to the teacher.","zh_sentence":"男孩向老師鞠躬。","category":"名詞"},
+    {"word":"win","zh":"贏","en_sentence":"They win the match.","zh_sentence":"他們贏了比賽。","category":"動詞"}
+  ]
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="responsive_enhanced.css">
+  <link rel="stylesheet" href="css/greek-stage.css">
+  <link rel="stylesheet" href="css/greek-game-theme.css">
   <style>
     /* 防止水平滾動 */
     html {
@@ -599,146 +657,183 @@
     }
   </style>
 </head>
-<body>
+<body data-god="athena">
   <!-- 背景音樂控制按鈕 -->
   <button id="bgMusicControl" onclick="toggleBackgroundMusic()" title="背景音樂控制">🎵</button>
 
-  <!-- 星星數顯示區塊 -->
-  <div id="starsDisplay">
-    ⭐<span id="totalStarsCount">0</span>
-  </div>
-
-  <!-- 生命值顯示區塊 -->
-  <div id="lives">❤️❤️❤️❤️❤️</div>
-
-  <!-- 頂部按鈕 -->
-  <div class="top-btns">
-    <button onclick="location.href='atlas.html?tab=greek'" aria-label="回首頁">🏠 回首頁</button>
-    <button onclick="resetProgress()" aria-label="重新開始">🔄 重新開始</button>
-    <button onclick="showReviewModal()" aria-label="複習單字">📚 複習單字</button>
-  </div>
-
-  <h1>雅典娜 Athena - 填空挑戰</h1>
-
-  <!-- 本次星星顯示 -->
-  <div id="sessionStarsDisplay" style="margin-bottom:10px;color:#ffd700;font-weight:bold;font-size:1.08rem;">
-    本次已獲得 0 顆星星
-  </div>
-
-  <!-- 進度顯示 -->
-  <div id="star-counter">
-    第 <span id="current-index">0</span> / <span id="total-questions">0</span> 題
-  </div>
-
-  <!-- 計時器 -->
-  <div id="timer" class="hidden">
-    ⏳ 倒數：<span id="time-left">0</span> 秒
-  </div>
-
-  <!-- 問題容器 -->
-  <div id="question-container"></div>
-
-  <!-- 遊戲結束畫面 -->
-  <div id="gameEndModal" class="modal" style="display: none;">
-    <div class="modal-content">
-      <div class="end-icon">🎉</div>
-      <h2>遊戲完成！</h2>
-      <div class="end-stats">
-        <p>⭐ 本次獲得星星：<span id="endSessionStars">0</span></p>
-        <p>✅ 答對題數：<span id="endCorrectCount">0</span></p>
-        <p>❌ 答錯題數：<span id="endWrongCount">0</span></p>
-        <p>⭐ 累積總星星：<span id="endTotalStars">0</span></p>
+  <!-- 主內容容器 -->
+  <div class="greek-game-shell">
+    <!-- HUD -->
+    <div class="greek-hud">
+      <div class="hud-left">
+        <div class="hud-stars" id="starsDisplay">
+          <span class="hud-stars-icon">⭐</span>
+          <span id="totalStarsCount">0</span>
+        </div>
       </div>
-      <div class="end-buttons">
-        <button onclick="restartGame()">🔄 重新開始</button>
-        <button onclick="location.href='atlas.html?tab=greek'">🏠 返回首頁</button>
+      <div class="hud-center">
+        雅典娜 ATHENA
+      </div>
+      <div class="hud-right">
+        <div class="hud-hearts" id="lives">
+          <span class="hud-heart-icon">❤️</span>
+          <span id="lives-count">5</span>
+        </div>
+        <div class="hud-nav">
+          <button class="hud-btn" onclick="showReviewModal()">📚 複習</button>
+          <button class="hud-btn" onclick="restartGame()">🔄 重來</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- 複習單字彈窗 -->
-  <div id="reviewModal" class="modal" style="display: none;">
-    <div class="modal-content">
-      <div class="end-icon">📚</div>
-      <h2>單字複習</h2>
-      
-      <!-- 分類選擇器 -->
-      <div style="margin-bottom: 20px;">
-        <label for="categoryFilter" style="color: #ffd700; font-weight: bold; margin-right: 10px;">選擇分類：</label>
-        <select id="categoryFilter" style="
-          background: #222;
-          color: #fff;
-          border: 2px solid #ffd700;
+    <!-- 神祇 Hero 區塊 -->
+    <div class="god-hero">
+      <div class="god-icon">🦉</div>
+      <h1 class="god-name">雅典娜</h1>
+      <div class="god-name-en">ATHENA</div>
+      <div class="god-title">智慧與戰略女神</div>
+    </div>
+
+    <!-- 本次星星顯示 -->
+    <div id="sessionStarsDisplay" style="margin-bottom:10px;color:#ffd700;font-weight:bold;font-size:1.08rem;">
+      本次已獲得 0 顆星星
+    </div>
+
+    <!-- 問題容器 -->
+    <div id="question-container"></div>
+
+    <!-- 遊戲結束畫面 -->
+    <div id="gameEndModal" class="modal" style="display: none;">
+      <div class="game-end-content">
+        <div class="end-icon" id="end-icon">🏆</div>
+        <h2 class="end-title" id="end-title">挑戰完成</h2>
+        <div class="end-subtitle" id="end-subtitle">雅典娜 ATHENA</div>
+
+        <div class="settlement-grid">
+          <div class="settlement-item">
+            <span class="settlement-icon">⭐</span>
+            <span class="settlement-label">本次星星</span>
+            <span class="settlement-value" id="endSessionStars">0</span>
+          </div>
+          <div class="settlement-item">
+            <span class="settlement-icon">✅</span>
+            <span class="settlement-label">答對</span>
+            <span class="settlement-value" id="endCorrectCount">0</span>
+          </div>
+          <div class="settlement-item">
+            <span class="settlement-icon">❌</span>
+            <span class="settlement-label">答錯</span>
+            <span class="settlement-value" id="endWrongCount">0</span>
+          </div>
+          <div class="settlement-item">
+            <span class="settlement-icon">🎯</span>
+            <span class="settlement-label">正確率</span>
+            <span class="settlement-value" id="endAccuracy">0%</span>
+          </div>
+          <div class="settlement-item">
+            <span class="settlement-icon">⏱</span>
+            <span class="settlement-label">總時間</span>
+            <span class="settlement-value" id="endTime">0秒</span>
+          </div>
+          <div class="settlement-item">
+            <span class="settlement-icon">⭐</span>
+            <span class="settlement-label">總星星</span>
+            <span class="settlement-value" id="endTotalStars">0</span>
+          </div>
+        </div>
+
+        <div class="leaderboard-section">
+          <div class="leaderboard-title">� 希臘神祇排行榜</div>
+          <div class="leaderboard-status" id="leaderboard-status">☁️ 成績同步中...</div>
+        </div>
+
+        <div class="end-buttons">
+          <button class="btn-primary" onclick="restartGame()">🔄 再玩一次</button>
+          <button class="btn-secondary" onclick="showReviewModal()">📚 複習單字</button>
+          <button class="btn-ghost" onclick="location.href='atlas.html?tab=greek'">🏛️ 返回神祇圖鑑</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 複習單字彈窗 -->
+    <div id="reviewModal" class="modal" style="display: none;">
+      <div class="review-modal-content">
+        <h2>📚 複習單字</h2>
+
+        <!-- 分類選擇器 -->
+        <div class="review-filters" style="margin-bottom: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+          <select id="categoryFilter" style="
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 1rem;
+            cursor: pointer;
+          ">
+            <option value="all">全部單字</option>
+            <option value="動作動詞">動作動詞</option>
+            <option value="學術教育">學術教育</option>
+            <option value="時間日期">時間日期</option>
+            <option value="節日慶祝">節日慶祝</option>
+            <option value="數量分數">數量分數</option>
+            <option value="聲音表演">聲音表演</option>
+            <option value="稱謂人際">稱謂人際</option>
+            <option value="交通工具">交通工具</option>
+            <option value="運動娛樂">運動娛樂</option>
+            <option value="身體健康">身體健康</option>
+            <option value="形容詞">形容詞</option>
+            <option value="抽象概念">抽象概念</option>
+            <option value="場所位置">場所位置</option>
+          </select>
+          <div>總計：<span id="totalVocabCount">0</span> 個單字</div>
+        </div>
+
+        <!-- 統計資訊 -->
+        <div id="vocabStats" style="
+          background: rgba(255, 215, 0, 0.1);
+          border: 1px solid var(--border-god);
           border-radius: 8px;
-          padding: 8px 12px;
-          font-size: 1rem;
-          cursor: pointer;
+          padding: 10px;
+          margin-bottom: 15px;
+          color: var(--god-primary);
+          font-size: 0.9rem;
+          display: flex;
+          gap: 8px;
+          align-items: center;
+          flex-wrap: wrap;
         ">
-          <option value="all">全部單字</option>
-          <option value="動作動詞">動作動詞</option>
-          <option value="學術教育">學術教育</option>
-          <option value="時間日期">時間日期</option>
-          <option value="節日慶祝">節日慶祝</option>
-          <option value="數量分數">數量分數</option>
-          <option value="聲音表演">聲音表演</option>
-          <option value="稱謂人際">稱謂人際</option>
-          <option value="交通工具">交通工具</option>
-          <option value="運動娛樂">運動娛樂</option>
-          <option value="身體健康">身體健康</option>
-          <option value="形容詞">形容詞</option>
-          <option value="抽象概念">抽象概念</option>
-          <option value="場所位置">場所位置</option>
-        </select>
-      </div>
-      
-      <!-- 統計資訊 -->
-      <div id="vocabStats" style="
-        background: rgba(255, 215, 0, 0.1);
-        border: 1px solid #ffd700;
-        border-radius: 8px;
-        padding: 10px;
-        margin-bottom: 15px;
-        color: #ffd700;
-        font-size: 0.9rem;
-      ">
-        總共 <span id="totalVocabCount">0</span> 個單字
-        <button onclick="showVocabStats()" style="
-          background: #0ff;
-          color: #000;
-          border: none;
-          border-radius: 6px;
-          padding: 4px 8px;
-          font-size: 0.8rem;
-          margin-left: 10px;
-          cursor: pointer;
-        ">📊 詳細統計</button>
-        <button onclick="exportVocabData()" style="
-          background: #4caf50;
-          color: #fff;
-          border: none;
-          border-radius: 6px;
-          padding: 4px 8px;
-          font-size: 0.8rem;
-          margin-left: 5px;
-          cursor: pointer;
-        ">📥 匯出字庫</button>
-      </div>
-      
-      <div id="reviewWordsContainer" style="max-height: 400px; overflow-y: auto; margin: 20px 0;">
-        <!-- 單字列表將在這裡動態生成 -->
-      </div>
-      <div class="end-buttons">
-        <button onclick="closeReviewModal()">關閉</button>
+          <span>總共 <span id="totalVocabCount">0</span> 個單字</span>
+          <button onclick="showVocabStats()" class="btn-secondary" style="
+            padding: 4px 8px;
+            font-size: 0.8rem;
+          ">📊 詳細統計</button>
+          <button onclick="exportVocabData()" class="btn-secondary" style="
+            padding: 4px 8px;
+            font-size: 0.8rem;
+          ">📥 匯出字庫</button>
+        </div>
+
+        <div id="reviewWordsContainer" style="max-height: 400px; overflow-y: auto; margin: 20px 0;">
+          <!-- 單字列表將在這裡動態生成 -->
+        </div>
+        <div class="end-buttons">
+          <button class="btn-primary" onclick="closeReviewModal()">關閉</button>
+        </div>
       </div>
     </div>
-  </div>
+
+    <!-- 關閉主內容容器 -->
+    </div>
 
   <script src="js/utils.js"></script>
   <script src="js/bgmController.js"></script>
   <script src="js/userData.js"></script>
   <script src="js/characterDialogue.js"></script>
   <script src="js/gameDialogue.js"></script>
+  <script src="js/apiConfig.js"></script>
   <script src="js/greekScoreUpload.js"></script>
+  <script src="js/greekStageSystem.js"></script>
   <script>
     // ===== 遊戲配置 =====
     const GAME_CONFIG = {
@@ -807,12 +902,13 @@
 
     window.gameState = gameState;
 
-    let lives = 5;
+    // 使用共用愛心系統
+    let lives = 5; // 初始值，稍後會由 GreekStageSystem 初始化
 
     function updateLives() {
-      const el = document.getElementById('lives');
-      if (!el) return;
-      el.innerHTML = '❤️'.repeat(Math.max(0, lives)) + '🤍'.repeat(Math.max(0, 5 - lives));
+      if (typeof GreekStageSystem !== 'undefined' && GreekStageSystem.updateLivesUI) {
+        GreekStageSystem.updateLivesUI();
+      }
     }
 
     // ===== 音效資源 =====
@@ -1057,48 +1153,140 @@
     }
 
     // ===== 遊戲結束畫面 =====
+    let greekGameEnded = false;
+
+    function setTextSafe(id, value) {
+      const element = document.getElementById(id);
+      if (!element) {
+        console.warn('[Greek Settlement] 找不到元素:', id);
+        return false;
+      }
+      element.textContent = value;
+      return true;
+    }
+
     function showGameEndScreen() {
-      // 計算統計數據
-      const correctCount = gameState.answerLog.filter(log => log && log.correct === true).length;
-      const wrongCount = gameState.answerLog.filter(log => log && log.correct === false).length;
-      const totalStars = loadTotalStars();
+      console.log('[Greek Settlement] showGameEndScreen called');
 
-      // 更新結束畫面數據
-      document.getElementById('endSessionStars').textContent = gameState.sessionStars;
-      document.getElementById('endCorrectCount').textContent = correctCount;
-      document.getElementById('endWrongCount').textContent = wrongCount;
-      document.getElementById('endTotalStars').textContent = totalStars;
+      if (greekGameEnded) {
+        console.warn('[Greek Settlement] 已結算，忽略重複呼叫');
+        return;
+      }
+      greekGameEnded = true;
 
-      // 顯示結束畫面
-      document.getElementById('gameEndModal').style.display = 'flex';
-      
-      // 停止計時器
-      stopTimer();
-      
-      // 解鎖複習按鈕
-      unlockReviewButton();
-      
-      // 播放完成音效
       try {
-        SOUNDS.correct.currentTime = 0;
-        SOUNDS.correct.play();
-      } catch (e) {}
+        // 停止計時器
+        if (gameState.timerInterval) {
+          clearInterval(gameState.timerInterval);
+          gameState.timerInterval = null;
+        }
 
-      if (window.GameDialogue) {
-        setTimeout(() => {
-          if (correctCount > wrongCount) {
-            window.GameDialogue.showGameVictoryDialogue();
-          } else {
-            window.GameDialogue.showGameDefeatDialogue();
-          }
-        }, 2000);
+        // 計算統計數據
+        const logs = Array.isArray(gameState.answerLog) ? gameState.answerLog : [];
+        const correctCount = logs.filter(log => log && log.correct === true).length;
+        const wrongCount = logs.filter(log => log && log.correct === false).length;
+        const sessionStars = Number(gameState.sessionStars || 0);
+
+        let totalStars = 0;
+        try {
+          totalStars = typeof loadTotalStars === 'function' ? Number(loadTotalStars() || 0) : Number(localStorage.getItem('totalStars') || 0);
+        } catch (error) {
+          console.warn('[Greek Settlement] 取得總星星失敗', error);
+        }
+
+        // 安全更新結束畫面數據
+        setTextSafe('endSessionStars', sessionStars);
+        setTextSafe('endCorrectCount', correctCount);
+        setTextSafe('endWrongCount', wrongCount);
+        setTextSafe('endTotalStars', totalStars);
+
+        // 顯示結束畫面（優先執行）
+        const modal = document.getElementById('gameEndModal');
+        if (!modal) {
+          console.error('[Greek Settlement] gameEndModal 不存在');
+          return;
+        }
+        modal.style.display = 'flex';
+        modal.classList.add('show');
+        console.log('✅ [Greek Settlement] 結算畫面已顯示');
+
+        // 停止計時器
+        stopTimer();
+
+        // 解鎖複習按鈕
+        unlockReviewButton();
+
+        // 播放完成音效
+        try {
+          SOUNDS.correct.currentTime = 0;
+          SOUNDS.correct.play();
+        } catch (e) {}
+
+        // 結算畫面顯示後，執行非必要功能（排行榜上傳等）
+        runGreekSettlementExtras({
+          correctCount,
+          wrongCount,
+          sessionStars,
+          totalStars
+        });
+
+        // 顯示勝利/失敗對話
+        if (window.GameDialogue) {
+          setTimeout(() => {
+            if (correctCount > wrongCount) {
+              window.GameDialogue.showGameVictoryDialogue();
+            } else {
+              window.GameDialogue.showGameDefeatDialogue();
+            }
+          }, 2000);
+        }
+
+      } catch (error) {
+        console.error('❌ [Greek Settlement] 結算發生錯誤', error);
+
+        // 就算前面有錯，最後還是嘗試打開 modal
+        const modal = document.getElementById('gameEndModal');
+        if (modal) {
+          modal.style.display = 'flex';
+        }
       }
     }
 
+    function runGreekSettlementExtras(settlement) {
+      if (gameState.data.length > 0 && gameState.currentIndex >= gameState.data.length && settlement.correctCount >= Math.ceil(gameState.data.length * 0.8)) {
+        const passed = JSON.parse(localStorage.getItem("passed_greek") || "[]");
+        if (!passed.includes("athena")) {
+          passed.push("athena");
+          localStorage.setItem("passed_greek", JSON.stringify(passed));
+        }
+      }
+      // 不阻塞 UI
+      Promise.resolve().then(async () => {
+        if (typeof window.submitGreekScore !== 'function') {
+          console.warn('[Greek Settlement] submitGreekScore 不存在');
+          return;
+        }
+
+        try {
+          await window.submitGreekScore({
+            score: settlement.sessionStars,
+            correctCount: settlement.correctCount,
+            wrongCount: settlement.wrongCount,
+            totalTime: typeof gameState.totalTimeUsed === 'number' ? gameState.totalTimeUsed : 0,
+            averageTime: settlement.correctCount > 0 ? Math.round((typeof gameState.totalTimeUsed === 'number' ? gameState.totalTimeUsed : 0) / settlement.correctCount) : 0
+          });
+        } catch (error) {
+          console.error('[Greek Settlement] 排行榜上傳失敗', error);
+        }
+      });
+    }
+
     function restartGame() {
+      greekGameEnded = false;
+
       // 隱藏結束畫面
       document.getElementById('gameEndModal').style.display = 'none';
-      
+
       // 重置遊戲狀態
       gameState.currentIndex = 0;
       gameState.sessionStars = 0;
@@ -1108,14 +1296,15 @@
 
       window.gameState = gameState;
 
-      lives = 5;
+      // 重置愛心系統
+      GreekStageSystem.initLives();
+      lives = GreekStageSystem.getLives();
       updateLives();
-      
+
       // 重新初始化數據
       initData();
       updateCounter();
       showQuestion();
-      
       // 更新本次星星顯示
       document.getElementById('sessionStarsDisplay').textContent = '本次已獲得 0 顆星星';
     }
@@ -1129,13 +1318,12 @@
       const feedback = document.getElementById('feedback');
       if (feedback) feedback.innerHTML = '<span style="color:#bbb;">已跳過本題</span>';
       setTimeout(() => {
-        lives--;
-        updateLives();
-        if (lives <= 0) {
-          showGameEndScreen();
+        const lostLife = GreekStageSystem.loseLife('skip');
+        if (GreekStageSystem.isGameOver()) {
           return;
         }
         gameState.currentIndex++;
+        GreekStageSystem.resetQuestionState();
         showQuestion();
       }, 400);
     }
@@ -1148,13 +1336,12 @@
         if (feedback) feedback.innerHTML = '<span style="color:#bbb;">未作答</span>';
       }
       setTimeout(() => {
-        lives--;
-        updateLives();
-        if (lives <= 0) {
-          showGameEndScreen();
+        const lostLife = GreekStageSystem.loseLife('timeout');
+        if (GreekStageSystem.isGameOver()) {
           return;
         }
         gameState.currentIndex++;
+        GreekStageSystem.resetQuestionState();
         showQuestion();
       }, 400);
     }
@@ -1211,39 +1398,34 @@
           showQuestion();
         }, 1300);
       } else {
-        if (gameState.attemptCount < GAME_CONFIG.MAX_ATTEMPTS) {
-          feedback.innerHTML = '<div class="feedback-box feedback-wrong">❌ 再試一次！你可以的！</div>';
-          try {
-            SOUNDS.wrong.currentTime = 0;
-            SOUNDS.wrong.play();
-          } catch (e) {}
-        } else {
-          feedback.innerHTML = '<div class="feedback-box feedback-wrong">❌ 正確答案：<b>' + gameState.data[gameState.currentIndex].answer + '</b><br>別氣餒，再接再厲！</div>';
-          inputEl.disabled = true;
-          document.getElementById('submit-btn').disabled = true;
-          
-          logAnswer(false, inputEl.value.trim());
-          
-          try {
-            SOUNDS.wrong.currentTime = 0;
-            SOUNDS.wrong.play();
-          } catch (e) {}
+        // 答錯立即扣 1 顆愛心
+        const lostLife = GreekStageSystem.loseLife('wrong_answer');
 
-          if (window.GameDialogue) {
-            window.GameDialogue.showWrongAnswerDialogue();
-          }
-          
-          setTimeout(() => {
-            lives--;
-            updateLives();
-            if (lives <= 0) {
-              showGameEndScreen();
-              return;
-            }
-            gameState.currentIndex++;
-            showQuestion();
-          }, 1300);
+        feedback.innerHTML = '<div class="feedback-box feedback-wrong">❌ 正確答案：<b>' + gameState.data[gameState.currentIndex].answer + '</b><br>' + (lostLife ? '失去 ❤️ ×1' : '') + '</div>';
+        inputEl.disabled = true;
+        document.getElementById('submit-btn').disabled = true;
+
+        logAnswer(false, inputEl.value.trim());
+
+        try {
+          SOUNDS.wrong.currentTime = 0;
+          SOUNDS.wrong.play();
+        } catch (e) {}
+
+        if (window.GameDialogue) {
+          window.GameDialogue.showWrongAnswerDialogue();
         }
+
+        // 如果遊戲結束，不繼續
+        if (GreekStageSystem.isGameOver()) {
+          return;
+        }
+
+        setTimeout(() => {
+          gameState.currentIndex++;
+          GreekStageSystem.resetQuestionState();
+          showQuestion();
+        }, 1300);
       }
     }
 
@@ -1260,6 +1442,12 @@
     }
 
     function addStarsToTotal(stars) {
+      // 優先使用 StarSystem
+      if (typeof StarSystem !== 'undefined' && typeof StarSystem.addTotalStars === 'function') {
+        StarSystem.addTotalStars(stars, '雅典娜遊戲獎勵');
+        updateStarsDisplay();
+        return;
+      }
       if (typeof StarRewardSystem !== 'undefined' && typeof StarRewardSystem.addStars === 'function') {
         StarRewardSystem.addStars(stars);
         updateStarsDisplay();
@@ -1272,12 +1460,15 @@
       }
       const currentStars = loadTotalStars();
       const newTotal = currentStars + stars;
-      localStorage.setItem('totalStars', newTotal);
+      window.StarSystem.setTotalStars(newTotal);
       updateStarsDisplay();
     }
 
     function updateStarsDisplay() {
-      document.getElementById('totalStarsCount').textContent = loadTotalStars();
+      const element = document.getElementById('totalStarsCount');
+      if (element) {
+        element.textContent = loadTotalStars();
+      }
     }
 
     // ===== 複習單字功能 =====
@@ -1609,6 +1800,10 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      // 初始化共用愛心系統
+      GreekStageSystem.initLives();
+      lives = GreekStageSystem.getLives();
+
       updateStarsDisplay();
       document.getElementById('sessionStarsDisplay').textContent = '本次已獲得 0 顆星星';
       updateLives();

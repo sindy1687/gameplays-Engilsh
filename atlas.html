@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
   <meta charset="UTF-8" />
   <title>星座圖鑑 - 英打小英雄</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E%E2%AD%90%3C/text%3E%3C/svg%3E">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&family=Rajdhani:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
   <!-- TODO: css/shared.css file does not exist - commented out -->
   <!-- <link rel="stylesheet" href="css/shared.css"> -->
   <link rel="stylesheet" href="responsive_enhanced.css">
@@ -21,10 +23,10 @@
     }
     
     /* 全局 */
-    body { 
-      margin: 0; 
+    body {
+      margin: 0;
       padding: 0;
-      font-family: 'Orbitron', sans-serif; 
+      font-family: 'Noto Sans TC', sans-serif;
       background: linear-gradient(to bottom, #020111 0%, #000010 100%);
       color: #fff;
       min-height: 100vh;
@@ -107,26 +109,1666 @@
     }
 
     /* 卡片網格 */
-    .grid { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 24px; 
-      max-width: 1200px;
-      width: 95%;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      column-gap: 36px;
+      row-gap: 40px;
+      max-width: 1100px;
+      width: calc(100% - 32px);
       margin: 0 auto 40px;
-      padding: 20px;
+      padding: 16px 0;
     }
 
     /* 卡片樣式 */
-    .card { width:140px; height:220px; background:linear-gradient(145deg,#181818,#0a0a0a); border-radius:16px; padding:12px; position:relative; box-shadow:4px 4px 10px #0008,-4px -4px 10px #fff1; transition:.3s; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-    .card:hover { transform:translateY(-6px) scale(1.03); box-shadow:6px 6px 12px #000b,-6px -6px 12px #fff2; }
-    #tab1 .card { border:2px solid #00ffff; box-shadow: 0 0 16px #00ffff44; }
-    #tab2 .card { border:2px solid #ff99cc; box-shadow: 0 0 16px #ff99cc44; }
-    #tab3 .card { border:2px solid #ffd700; box-shadow: 0 0 16px #ffd70044; }
-    .card.locked::after { content:attr(data-locktext); position:absolute; top:10px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.8); padding:4px 8px; border-radius:8px; font-weight:700; color:#ff4; animation:glowText 1.5s infinite; }
+    .card {
+      width: 100%;
+      max-width: 210px;
+      min-height: 350px;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      padding: 18px 18px 20px;
+      background: linear-gradient(160deg, rgba(10,15,32,.98), rgba(5,8,20,.98));
+      border: 1px solid rgba(0,255,255,.65);
+      border-radius: 18px;
+      box-sizing: border-box;
+      position: relative;
+      box-shadow: 0 0 16px rgba(0,255,255,.12), inset 0 0 18px rgba(93,68,255,.05);
+      transition: .3s;
+      justify-self: center;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: #00ffff;
+      box-shadow: 0 10px 28px rgba(0,0,0,.35), 0 0 20px rgba(0,255,255,.28);
+    }
+    #tab1 .card { border: 1.5px solid rgba(0,255,255,.65); box-shadow: 0 0 16px rgba(0,255,255,.12), inset 0 0 18px rgba(93,68,255,.05); }
+    #tab2 .card { border: 1.5px solid rgba(255,153,204,.65); box-shadow: 0 0 16px rgba(255,153,204,.12), inset 0 0 18px rgba(255,153,204,.05); }
+    #tab3 .card { border: 1.5px solid rgba(255,215,0,.65); box-shadow: 0 0 16px rgba(255,215,0,.12), inset 0 0 18px rgba(255,215,0,.05); }
+
+    /* 未解鎖卡片灰色狀態 */
+    .card.locked-card {
+      background: linear-gradient(160deg, rgba(31, 34, 42, .96), rgba(15, 17, 22, .98));
+      border-color: rgba(150, 160, 175, .35);
+      box-shadow: 0 0 10px rgba(100, 110, 125, .12);
+      filter: grayscale(.85);
+      opacity: .72;
+    }
+
+    .card.locked-card:hover {
+      filter: grayscale(.65);
+      border-color: rgba(255,215,0,.5);
+      box-shadow: 0 8px 22px rgba(0,0,0,.3), 0 0 14px rgba(255,215,0,.12);
+      transform: translateY(-3px);
+    }
+
+    .card.locked-card::before {
+      content: '🔒';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 4rem;
+      opacity: .055;
+      filter: grayscale(1);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .card.locked-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .locked-card .card-name-en,
+    .locked-card .card-title {
+      color: #9299a5;
+      text-shadow: 0 0 5px rgba(150,160,175,.25);
+    }
+
+    .locked-card .card-name-zh {
+      color: #858b98;
+    }
+
+    .locked-card .card-description,
+    .locked-card .card-desc {
+      color: #737985;
+    }
+
+    .locked-card .range-label {
+      color: #666d79;
+    }
+
+    /* 免費遊戲解鎖模式：已通關關卡不可用 */
+    body.atlas-free-unlock-requires-new-stage
+    .card.already-cleared-unavailable {
+      filter: grayscale(0.8);
+      opacity: 0.62;
+      cursor: not-allowed;
+    }
+
+    body.atlas-free-unlock-requires-new-stage
+    .card.already-cleared-unavailable:hover {
+      transform: none;
+      border-color: rgba(150, 160, 175, .35);
+      box-shadow: 0 0 10px rgba(100, 110, 125, .12);
+    }
+
+    .locked-card .card-range strong,
+    .locked-card .stage-info {
+      color: #8b929e;
+      text-shadow: none;
+    }
+
+    .locked-card .stage-badge,
+    .locked-card .stage-chip {
+      background: rgba(130,140,155,.08);
+      border-color: rgba(150,160,175,.3);
+      color: #9299a5;
+      box-shadow: none;
+    }
+
+    .locked-card .stage-stars {
+      color: #666b75;
+      text-shadow: none;
+    }
+
+    .locked-card .unlock-btn {
+      filter: none;
+      opacity: 1;
+      background: rgba(255, 196, 0, .12);
+      border: 1px solid rgba(255, 205, 0, .65);
+      color: #ffd84d;
+      box-shadow: 0 0 8px rgba(255, 205, 0, .12);
+    }
+
+    /* 希臘神祇卡片網格 */
+    .greek-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 26px;
+      max-width: 1150px;
+      width: calc(100% - 40px);
+      margin: 0 auto 40px;
+      padding: 20px 0;
+    }
+
+    /* 希臘神祇卡片樣式 */
+    .greek-card {
+      width: 100%;
+      max-width: 245px;
+      min-height: 340px;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      background: linear-gradient(160deg, rgba(15,18,35,.98), rgba(7,10,22,.98));
+      border: 1.5px solid rgba(255,215,0,.55);
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.28), 0 0 16px rgba(255,215,0,.08);
+      box-sizing: border-box;
+      position: relative;
+      transition: .3s;
+      justify-self: center;
+    }
+
+    .greek-card:not(.locked-card):hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,215,0,.9);
+      box-shadow: 0 12px 26px rgba(0,0,0,.32), 0 0 18px rgba(255,215,0,.16);
+    }
+
+    /* 希臘神祇卡片頂部 */
+    .greek-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 12px;
+    }
+
+    .greek-stage-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(255,215,0,.1);
+      border: 1px solid rgba(255,215,0,.45);
+      color: #ffd700;
+      font-size: .72rem;
+      font-weight: 700;
+      font-family: 'Noto Sans TC', sans-serif;
+      white-space: nowrap;
+    }
+
+    .greek-stars {
+      color: #ffd700;
+      font-size: .95rem;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* 希臘神祇頭像 */
+    .greek-avatar {
+      width: 120px;
+      height: 120px;
+      margin: 4px auto 12px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid rgba(255,215,0,.8);
+      box-shadow: 0 0 16px rgba(255,215,0,.18);
+      flex-shrink: 0;
+    }
+
+    .greek-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+
+    .greek-avatar-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      background: linear-gradient(145deg, #272b38, #151821);
+    }
+
+    /* 希臘神祇名稱 */
+    .greek-name {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: #f3e5a1;
+      text-align: center;
+      line-height: 1.35;
+      margin-bottom: 5px;
+      word-break: keep-all;
+    }
+
+    /* 希臘神祇描述 */
+    .greek-desc {
+      min-height: 38px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      text-align: center;
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: .82rem;
+      line-height: 1.55;
+      color: #b7b0eb;
+      margin-bottom: 10px;
+    }
+
+    /* 希臘神祇單字範圍 */
+    .greek-range {
+      text-align: center;
+      margin: 4px 0 14px;
+    }
+
+    .greek-range span {
+      display: block;
+      color: #727b91;
+      font-size: .68rem;
+      margin-bottom: 3px;
+      font-family: 'Noto Sans TC', sans-serif;
+    }
+
+    .greek-range strong {
+      color: #5fe8ff;
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    /* 希臘神祇底部 */
+    .greek-footer {
+      width: 100%;
+      margin-top: auto;
+    }
+
+    /* 希臘神祇解鎖按鈕 */
+    .greek-unlock-btn {
+      width: 100%;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 12px;
+      border: 1px solid rgba(255,215,0,.55);
+      border-radius: 11px;
+      background: rgba(255,215,0,.10);
+      color: #ffd84c;
+      font-family: 'Noto Sans TC', sans-serif;
+      font-weight: 800;
+      cursor: pointer;
+      box-sizing: border-box;
+      transition: .3s;
+    }
+
+    .greek-unlock-btn:hover {
+      background: linear-gradient(90deg, #ffd700, #ffae00);
+      color: #111;
+    }
+
+    /* 希臘神祇狀態按鈕 */
+    .greek-status {
+      width: 100%;
+      padding: 9px;
+      text-align: center;
+      border-radius: 10px;
+      font-family: 'Noto Sans TC', sans-serif;
+      font-weight: 800;
+      box-sizing: border-box;
+    }
+
+    .greek-status.unlocked {
+      background: rgba(0,255,190,.08);
+      border: 1px solid rgba(0,255,190,.35);
+      color: #70ffd9;
+    }
+
+    .greek-status.passed {
+      background: rgba(0,255,190,.08);
+      border: 1px solid rgba(0,255,190,.35);
+      color: #70ffd9;
+    }
+
+    /* 希臘神祇未解鎖灰色狀態 */
+    .greek-card.locked-card {
+      background: linear-gradient(160deg, rgba(30,32,40,.96), rgba(15,16,22,.98));
+      border-color: rgba(160,160,160,.32);
+      box-shadow: none;
+    }
+
+    .greek-card.locked-card .greek-avatar img {
+      filter: grayscale(.85) brightness(.65);
+    }
+
+    .greek-card.locked-card .greek-name {
+      color: #9299a5;
+    }
+
+    .greek-card.locked-card .greek-desc {
+      color: #737985;
+    }
+
+    .greek-card.locked-card .greek-range strong {
+      color: #8b929e;
+    }
+
+    .greek-card.locked-card .greek-stage-badge {
+      background: rgba(130,140,155,.08);
+      border-color: rgba(150,160,175,.3);
+      color: #9299a5;
+    }
+
+    .greek-card.locked-card .greek-stars {
+      color: #666b75;
+    }
+
+    .greek-card.locked-card .greek-unlock-btn {
+      filter: none;
+      opacity: 1;
+      background: rgba(255, 196, 0, .12);
+      border: 1px solid rgba(255, 205, 0, .65);
+      color: #ffd84d;
+      box-shadow: 0 0 8px rgba(255, 205, 0, .12);
+    }
+
+    .greek-card.locked-card:hover {
+      filter: grayscale(.65);
+      border-color: rgba(255,215,0,.5);
+      box-shadow: 0 8px 22px rgba(0,0,0,.3), 0 0 14px rgba(255,215,0,.12);
+      transform: translateY(-3px);
+    }
+
+    /* 希臘神祇響應式設計 */
+    @media (min-width: 1400px) {
+      .greek-grid {
+        grid-template-columns: repeat(5, minmax(0,1fr));
+      }
+    }
+
+    @media (max-width: 1000px) {
+      .greek-grid {
+        grid-template-columns: repeat(3, minmax(0,1fr));
+      }
+    }
+
+    @media (max-width: 700px) {
+      .greek-grid {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+        gap: 20px;
+      }
+
+      .greek-card {
+        max-width: none;
+        min-height: 310px;
+        padding: 14px;
+      }
+
+      .greek-avatar {
+        width: 100px;
+        height: 100px;
+      }
+
+      .greek-name {
+        font-size: 1rem;
+      }
+
+      .greek-desc {
+        font-size: .8rem;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .greek-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* 希臘神祇進度面板 */
+    .greek-progress-panel {
+      width: min(92%, 620px);
+      margin: 18px auto 30px;
+      padding: 18px 20px;
+      background: linear-gradient(145deg, rgba(10,14,30,.92), rgba(20,17,38,.88));
+      border: 1px solid rgba(255,215,0,.25);
+      border-radius: 20px;
+      box-shadow: 0 8px 28px rgba(0,0,0,.28), 0 0 18px rgba(255,215,0,.08);
+    }
+
+    .greek-progress-title {
+      text-align: center;
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #f4d76d;
+      margin-bottom: 14px;
+    }
+
+    .greek-progress-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .greek-progress-track {
+      flex: 1;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      overflow: hidden;
+    }
+
+    .greek-progress-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #ffd84d, #00eaff, #8b5cff);
+      box-shadow: 0 0 10px rgba(0,234,255,.35);
+      transition: width 0.5s;
+    }
+
+    .greek-progress-percent {
+      min-width: 46px;
+      text-align: right;
+      color: #f4d76d;
+      font-weight: 900;
+      font-family: 'Rajdhani', sans-serif;
+    }
+
+    .greek-progress-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .greek-progress-stat {
+      min-height: 62px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .greek-progress-stat.passed {
+      background: rgba(255,215,0,.07);
+      border: 1px solid rgba(255,215,0,.25);
+    }
+
+    .greek-progress-stat.passed .stat-label {
+      color: #e7c95c;
+    }
+
+    .greek-progress-stat.unlocked {
+      background: rgba(0,234,255,.06);
+      border: 1px solid rgba(0,234,255,.22);
+    }
+
+    .greek-progress-stat.unlocked .stat-label {
+      color: #58eaff;
+    }
+
+    .greek-progress-stat strong {
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: #fff;
+      font-family: 'Rajdhani', sans-serif;
+    }
+
+    .greek-progress-stat .stat-label {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    /* 排行榜面板 */
+    .leaderboard-panel {
+      width: min(96%, 1240px);
+      margin: 28px auto 56px;
+      padding: clamp(16px, 2vw, 26px);
+
+      border: 1px solid rgba(77, 220, 245, 0.22);
+      border-radius: 24px;
+
+      color: #f4f7ff;
+
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(36, 190, 224, 0.09),
+          transparent 34%
+        ),
+        linear-gradient(
+          145deg,
+          rgba(10, 17, 30, 0.98),
+          rgba(5, 9, 18, 0.99)
+        );
+
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 18px 45px rgba(0, 0, 0, 0.42),
+        0 0 28px rgba(33, 207, 235, 0.06);
+
+      backdrop-filter: blur(12px);
+    }
+
+    .leaderboard-title {
+      margin: 0 0 10px;
+
+      color: #f7f9ff;
+
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: clamp(1.3rem, 2vw, 1.7rem);
+      font-weight: 900;
+      line-height: 1.3;
+      letter-spacing: 1px;
+      text-align: center;
+
+      text-shadow:
+        0 0 16px rgba(38, 220, 245, 0.22);
+    }
+
+    .leaderboard-notice {
+      margin: 0 0 18px;
+
+      color: #fbbf24;
+      font-size: 0.92rem;
+      font-weight: 600;
+      text-align: center;
+
+      background: rgba(251, 191, 36, 0.10);
+      border: 1px solid rgba(251, 191, 36, 0.30);
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
+
+    .leaderboard-title::after {
+      content: '';
+
+      width: 86px;
+      height: 3px;
+      margin: 10px auto 0;
+
+      display: block;
+
+      border-radius: 999px;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          #40dff5,
+          #a978ff,
+          transparent
+        );
+    }
+
+    .leaderboard-toolbar {
+      width: min(100%, 520px);
+      margin: 0 auto 20px;
+      padding: 10px 12px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 14px;
+
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .leaderboard-toolbar label {
+      color: #aeb7c8;
+
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 800;
+    }
+
+    .leaderboard-toolbar select {
+      min-width: 190px;
+      min-height: 42px;
+      padding: 9px 38px 9px 14px;
+
+      border: 1px solid rgba(57, 218, 242, 0.42);
+      border-radius: 11px;
+
+      color: #f5f7ff;
+      background: #111827;
+
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+
+      outline: none;
+      cursor: pointer;
+
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+      transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease;
+    }
+
+    .leaderboard-toolbar select option {
+      background: #171b27 !important;
+      color: #f5f7ff !important;
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 0.92rem;
+    }
+
+    .leaderboard-toolbar select option:checked {
+      background: #263247;
+      color: #ffffff;
+    }
+
+    .leaderboard-toolbar select:focus {
+      border-color: #43dff5;
+
+      box-shadow:
+        0 0 0 3px rgba(67, 223, 245, 0.1),
+        0 0 14px rgba(67, 223, 245, 0.12);
+    }
+
+    /* 排行榜表格容器 */
+    .leaderboard-table-wrap {
+      width: 100%;
+      max-height: 680px;
+
+      overflow-x: auto;
+      overflow-y: auto;
+
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 18px;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.018),
+          rgba(255, 255, 255, 0.008)
+        );
+
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.025);
+
+      scrollbar-width: thin;
+      scrollbar-color:
+        rgba(72, 216, 239, 0.55)
+        rgba(255, 255, 255, 0.04);
+    }
+
+    .leaderboard-table-wrap::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    .leaderboard-table-wrap::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .leaderboard-table-wrap::-webkit-scrollbar-thumb {
+      border-radius: 999px;
+      background: rgba(72, 216, 239, 0.48);
+    }
+
+    .leaderboard-table-wrap::-webkit-scrollbar-thumb:hover {
+      background: rgba(72, 216, 239, 0.68);
+    }
+
+    .leaderboard-table {
+      width: 100%;
+      min-width: 980px;
+
+      border-collapse: separate;
+      border-spacing: 0;
+
+      table-layout: auto;
+    }
+
+    .leaderboard-table thead {
+      background:
+        linear-gradient(
+          90deg,
+          rgba(31, 115, 149, 0.16),
+          rgba(99, 71, 160, 0.12)
+        );
+    }
+
+    .leaderboard-table th {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+
+      padding: 15px 14px;
+
+      border-bottom: 1px solid rgba(80, 216, 239, 0.16);
+
+      color: #bfc8d9;
+      background: rgba(12, 18, 31, 0.98);
+
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 900;
+      line-height: 1.4;
+      letter-spacing: 0.4px;
+      text-align: center;
+      white-space: nowrap;
+
+      text-shadow: none;
+    }
+
+    .leaderboard-table th:first-child {
+      border-top-left-radius: 15px;
+    }
+
+    .leaderboard-table th:last-child {
+      border-top-right-radius: 15px;
+    }
+
+    .leaderboard-table tbody tr {
+      min-height: 58px;
+
+      background: rgba(255, 255, 255, 0.008);
+
+      transition:
+        background 0.18s ease,
+        box-shadow 0.18s ease;
+    }
+
+    .leaderboard-table tbody tr:nth-child(odd) {
+      background: rgba(255, 255, 255, 0.015);
+    }
+
+    .leaderboard-table tbody tr:hover {
+      background: rgba(57, 213, 237, 0.055);
+
+      box-shadow:
+        inset 3px 0 0 rgba(57, 213, 237, 0.5);
+    }
+
+    .leaderboard-table td {
+      padding: 14px 14px;
+
+      border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+
+      color: #e7ebf4;
+
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 0.96rem;
+      font-weight: 600;
+      line-height: 1.45;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .leaderboard-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* 前三名特殊樣式 */
+    .leaderboard-table tbody tr.rank-1 {
+      background:
+        linear-gradient(
+          90deg,
+          rgba(255, 210, 73, 0.12),
+          rgba(255, 210, 73, 0.025),
+          transparent 68%
+        );
+
+      box-shadow:
+        inset 4px 0 0 rgba(255, 210, 73, 0.76);
+    }
+
+    .leaderboard-table tbody tr.rank-2 {
+      background:
+        linear-gradient(
+          90deg,
+          rgba(187, 202, 220, 0.1),
+          transparent 65%
+        );
+
+      box-shadow:
+        inset 4px 0 0 rgba(194, 210, 228, 0.62);
+    }
+
+    .leaderboard-table tbody tr.rank-3 {
+      background:
+        linear-gradient(
+          90deg,
+          rgba(205, 132, 78, 0.1),
+          transparent 65%
+        );
+
+      box-shadow:
+        inset 4px 0 0 rgba(208, 133, 78, 0.62);
+    }
+
+    /* 排名欄 */
+    .rank-cell {
+      width: 76px;
+      min-width: 76px;
+
+      color: #f4f6fb;
+
+      font-family: 'Rajdhani', 'Noto Sans TC', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .leaderboard-table tbody tr:not(.rank-1):not(.rank-2):not(.rank-3)
+    .rank-cell {
+      color: #b6c0d2;
+    }
+
+    /* 玩家欄 */
+    .player-cell {
+      min-width: 230px;
+      text-align: left !important;
+    }
+
+    .player-name {
+      display: block;
+      max-width: 250px;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      color: #f4f6fb;
+
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      line-height: 1.4;
+
+      text-shadow: none;
+    }
+
+    /* 關卡標籤 */
+    .stage-tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-width: 74px;
+      padding: 5px 10px;
+
+      border: 1px solid rgba(159, 117, 255, 0.28);
+      border-radius: 999px;
+
+      color: #c5abff;
+      background: rgba(130, 83, 231, 0.1);
+
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 0.86rem;
+      font-weight: 800;
+
+      text-shadow: none;
+    }
+
+    /* 分數欄 */
+    .score-cell {
+      color: #f4ce58;
+
+      font-family: 'Rajdhani', 'Noto Sans TC', sans-serif;
+      font-size: 1.12rem;
+      font-weight: 900;
+
+      text-shadow:
+        0 0 10px rgba(244, 206, 88, 0.12);
+    }
+
+    /* 答對欄 */
+    .correct-cell {
+      color: #72dfb3;
+
+      font-family: 'Rajdhani', 'Noto Sans TC', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+
+      text-shadow: none;
+    }
+
+    /* 平均時間 */
+    .average-cell {
+      color: #aeb9cc;
+
+      font-family: 'Rajdhani', 'Noto Sans TC', sans-serif;
+      font-size: 0.98rem;
+      font-weight: 800;
+
+      text-shadow: none;
+    }
+
+    /* 總時間 */
+    .total-time-cell {
+      color: #9fb4ef;
+
+      font-family: 'Rajdhani', 'Noto Sans TC', sans-serif;
+      font-size: 0.98rem;
+      font-weight: 800;
+
+      text-shadow: none;
+    }
+
+    /* 原始名次欄 */
+    .leaderboard-table td:last-child {
+      color: #c4ccd8;
+      font-weight: 700;
+    }
+
+    /* 目前玩家標示 */
+    .leaderboard-table tbody tr.is-me {
+      background:
+        linear-gradient(
+          90deg,
+          rgba(37, 211, 238, 0.1),
+          rgba(37, 211, 238, 0.02),
+          transparent
+        );
+
+      box-shadow:
+        inset 4px 0 0 rgba(37, 211, 238, 0.76);
+    }
+
+    /* 目前玩家名次突出 */
+    .leaderboard-table tbody tr.is-me .rank-cell.my-rank {
+      color: #03151a;
+      background: linear-gradient(135deg, #2cf3ff, #d7ff47);
+      box-shadow: 0 0 14px rgba(44, 243, 255, 0.55);
+      font-weight: 900;
+      font-size: 1.15rem;
+      text-shadow: none;
+    }
+
+    /* 排名變化欄位 */
+    .rank-change-cell {
+      min-width: 120px;
+      text-align: center;
+      vertical-align: middle;
+      padding: 8px 12px;
+    }
+
+    .rank-change {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      font-family: 'Rajdhani', 'Noto Sans TC', sans-serif;
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .rank-change-up {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      animation: slideUp 0.4s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .rank-change-down {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      animation: slideDown 0.4s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .rank-change-same {
+      background: rgba(148, 163, 184, 0.15);
+      color: #94a3b8;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    .rank-change-new {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      animation: pulse 0.6s ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    .previous-rank-text {
+      display: block;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    /* 手機版響應式 */
+    @media (max-width: 768px) {
+      .rank-change-cell {
+        min-width: auto;
+        padding: 6px 8px;
+      }
+
+      .rank-change {
+        font-size: 0.8rem;
+        padding: 3px 8px;
+      }
+
+      .previous-rank-text {
+        font-size: 0.7rem;
+        margin-top: 2px;
+      }
+
+      .leaderboard-table {
+        font-size: 0.85rem;
+      }
+
+      .leaderboard-table th,
+      .leaderboard-table td {
+        padding: 8px 6px;
+      }
+    }
+
+    .me-badge {
+      margin-left: 7px;
+      padding: 3px 8px;
+
+      display: inline-flex;
+      align-items: center;
+
+      border: 1px solid rgba(62, 222, 243, 0.34);
+      border-radius: 999px;
+
+      color: #9af0fb;
+      background: rgba(28, 173, 196, 0.12);
+
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 0.64rem;
+      font-weight: 900;
+    }
+
+    /* 排行榜響應式設計 */
+    @media (max-width: 700px) {
+      .leaderboard-panel {
+        width: calc(100% - 14px);
+        margin: 16px auto 32px;
+        padding: 11px;
+        border-radius: 17px;
+      }
+
+      .leaderboard-title {
+        font-size: 1.16rem;
+        margin-bottom: 14px;
+      }
+
+      .leaderboard-toolbar {
+        width: 100%;
+        padding: 9px;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .leaderboard-toolbar label {
+        font-size: 0.84rem;
+      }
+
+      .leaderboard-toolbar select {
+        width: 100%;
+        min-width: 0;
+        font-size: 0.86rem;
+      }
+
+      .leaderboard-table-wrap {
+        max-height: 520px;
+        border-radius: 13px;
+      }
+
+      .leaderboard-table {
+        min-width: 820px;
+      }
+
+      .leaderboard-table th {
+        padding: 11px 9px;
+        font-size: 0.8rem;
+      }
+
+      .leaderboard-table td {
+        padding: 11px 9px;
+        font-size: 0.84rem;
+      }
+
+      .rank-cell {
+        width: 58px;
+        min-width: 58px;
+        font-size: 0.94rem;
+      }
+
+      .player-cell {
+        min-width: 150px;
+      }
+
+      .player-name {
+        max-width: 150px;
+        font-size: 0.9rem;
+      }
+
+      .stage-tag {
+        min-width: 66px;
+        padding: 4px 8px;
+        font-size: 0.76rem;
+      }
+
+      .score-cell {
+        font-size: 1rem;
+      }
+
+      .correct-cell,
+      .average-cell,
+      .total-time-cell {
+        font-size: 0.88rem;
+      }
+    }
+
+    /* 卡片內部元素樣式 */
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      min-height: 32px;
+      margin-bottom: 12px;
+    }
+
+    .stage-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(0,255,255,.1);
+      border: 1px solid rgba(0,255,255,.45);
+      color: #00ffff;
+      font-size: .72rem;
+      font-weight: 700;
+      font-family: 'Noto Sans TC', sans-serif;
+      white-space: nowrap;
+    }
+
+    .stage-stars {
+      color: #ffd700;
+      font-size: .95rem;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .card-name {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .card-name-en {
+      font-family: 'Rajdhani', sans-serif;
+      color: #00ffff;
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      line-height: 1.1;
+      text-shadow: 0 0 8px rgba(0,255,255,.55);
+    }
+
+    .card-name-zh {
+      font-family: 'Noto Sans TC', sans-serif;
+      margin-top: 6px;
+      color: #c7bfff;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .card-description {
+      font-family: 'Noto Sans TC', sans-serif;
+      min-height: 48px;
+      max-height: none;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      text-align: center;
+      color: #bbb7ff;
+      font-size: .85rem;
+      font-weight: 500;
+      line-height: 1.7;
+      letter-spacing: .4px;
+      padding: 0 4px;
+      margin-bottom: 12px;
+    }
+
+    .card-range {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+      margin-bottom: 16px;
+    }
+
+    .range-label {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: .7rem;
+      color: #72809d;
+    }
+
+    .card-range strong {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.2rem;
+      color: #00ffff;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .card-footer {
+      margin-top: auto;
+      width: 100%;
+      position: static;
+    }
+
+    .unlock-btn {
+      font-family: 'Noto Sans TC', sans-serif;
+      width: 100%;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,215,0,.65);
+      background: rgba(255,215,0,.1);
+      color: #ffd700;
+      font-size: .82rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-sizing: border-box;
+      margin: 0;
+      transition: .3s;
+    }
+
+    .unlock-btn:hover {
+      background: linear-gradient(90deg, #ffd700, #ffae00);
+      color: #111;
+    }
+
+    .status-btn {
+      font-family: 'Noto Sans TC', sans-serif;
+      width: 100%;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: .82rem;
+      font-weight: 700;
+      text-align: center;
+      box-sizing: border-box;
+      margin: 0;
+    }
+
+    .status-btn.unlocked {
+      background: rgba(0,255,180,.1);
+      border: 1px solid rgba(0,255,180,.45);
+      color: #6dffd2;
+    }
+
+    .status-btn.passed {
+      background: rgba(0,255,180,.1);
+      border: 1px solid rgba(0,255,180,.45);
+      color: #6dffd2;
+    }
+
+    /* 進度面板樣式 */
+    .progress-panel {
+      width: min(92%, 560px);
+      margin: 16px auto 26px;
+      padding: 18px;
+      background: linear-gradient(145deg, rgba(8,15,35,.92), rgba(20,20,50,.82));
+      border: 1px solid rgba(0,255,255,.28);
+      border-radius: 20px;
+      box-shadow: 0 0 22px rgba(0,255,255,.12), inset 0 0 30px rgba(128,80,255,.08);
+    }
+
+    .progress-title {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #ffd700;
+      text-align: center;
+      text-shadow: 0 0 8px rgba(255,215,0,.7);
+      margin-bottom: 16px;
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 16px;
+      background: rgba(255,255,255,.10);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #00eaff, #7b5cff, #ff5fcf);
+      box-shadow: 0 0 12px rgba(0,234,255,.65);
+      transition: width 0.5s ease;
+    }
+
+    .progress-fill.completed {
+      background: linear-gradient(90deg, #ffd700, #00ffff);
+    }
+
+    .progress-percent {
+      color: #00ffff;
+      font-weight: 800;
+      font-size: 1.1rem;
+      min-width: 50px;
+      text-align: right;
+    }
+
+    .progress-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .progress-stat {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 72px;
+      border-radius: 14px;
+      padding: 12px 16px;
+      backdrop-filter: blur(8px);
+    }
+
+    .progress-stat.passed {
+      background: rgba(255,215,0,.08);
+      border: 1px solid rgba(255,215,0,.45);
+    }
+
+    .progress-stat.unlocked {
+      background: rgba(0,255,255,.07);
+      border: 1px solid rgba(0,255,255,.4);
+    }
+
+    .stat-icon {
+      font-size: 1.5rem;
+    }
+
+    .stat-label {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .progress-stat.passed .stat-label {
+      color: #ffd700;
+    }
+
+    .progress-stat.unlocked .stat-label {
+      color: #00ffff;
+    }
+
+    .stat-value {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 900;
+    }
+
+    .progress-stat.passed .stat-value {
+      color: #ffd700;
+      text-shadow: 0 0 8px rgba(255,215,0,.5);
+    }
+
+    .progress-stat.unlocked .stat-value {
+      color: #00ffff;
+      text-shadow: 0 0 8px rgba(0,255,255,.5);
+    }
+
+    /* 手機版響應式 */
+    @media (max-width: 600px) {
+      .progress-panel {
+        width: calc(100% - 24px);
+        padding: 14px;
+      }
+
+      .progress-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .progress-row {
+        gap: 8px;
+      }
+
+      .progress-percent {
+        font-size: 1rem;
+        min-width: 45px;
+      }
+
+      .progress-stat {
+        min-height: 60px;
+        padding: 10px 14px;
+      }
+
+      .stat-value {
+        font-size: 1.2rem;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 12px;
+        row-gap: 20px;
+        width: calc(100% - 20px);
+      }
+
+      .card {
+        max-width: none;
+        min-height: 330px;
+        padding: 14px;
+      }
+
+      .card-name-en {
+        font-size: 1.1rem;
+      }
+
+      .card-name-zh {
+        font-size: .85rem;
+      }
+
+      .card-description {
+        font-size: .75rem;
+        min-height: 40px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
     @keyframes glowText {
       0%, 100% { text-shadow: 0 0 6px #ffd700; }
       50% { text-shadow: 0 0 12px #ffd700, 0 0 24px #00ffff; }
+    }
+
+    /* 星星里程碑系統 */
+    .star-milestone-section {
+      width: min(92%, 620px);
+      margin: 20px auto 30px;
+      padding: 20px;
+      background: linear-gradient(145deg, rgba(10,14,30,.92), rgba(20,17,38,.88));
+      border: 2px solid rgba(255,215,0,.3);
+      border-radius: 20px;
+      box-shadow: 0 8px 28px rgba(0,0,0,.28), 0 0 18px rgba(255,215,0,.12);
+    }
+
+    .star-milestone-title {
+      text-align: center;
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: #ffd700;
+      margin-bottom: 16px;
+      text-shadow: 0 0 10px rgba(255,215,0,.5);
+    }
+
+    .star-milestone-total {
+      text-align: center;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem;
+      color: #ffd700;
+      margin-bottom: 20px;
+      text-shadow: 0 0 15px rgba(255,215,0,.6);
+    }
+
+    .star-milestone-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .star-milestone-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: rgba(0,0,0,.25);
+      border-radius: 12px;
+      border: 1px solid rgba(255,215,0,.2);
+      transition: all 0.3s ease;
+    }
+
+    .star-milestone-item.unlocked {
+      background: linear-gradient(135deg, rgba(255,215,0,.15), rgba(0,255,255,.1));
+      border-color: rgba(255,215,0,.5);
+      box-shadow: 0 0 15px rgba(255,215,0,.2);
+    }
+
+    .star-milestone-item.locked {
+      opacity: 0.7;
+    }
+
+    .star-milestone-icon {
+      font-size: 1.8rem;
+      min-width: 40px;
+      text-align: center;
+    }
+
+    .star-milestone-info {
+      flex: 1;
+    }
+
+    .star-milestone-name {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .star-milestone-progress {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.85rem;
+      color: #a0a0ff;
+    }
+
+    .star-milestone-status {
+      min-width: 80px;
+      text-align: right;
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 8px;
+    }
+
+    .star-milestone-status.unlocked {
+      background: linear-gradient(90deg, #00ff88, #00ccff);
+      color: #000;
+    }
+
+    .star-milestone-status.locked {
+      background: rgba(255,255,255,.1);
+      color: #888;
+    }
+
+    .star-milestone-status.available {
+      background: linear-gradient(90deg, #ffd700, #ff8800);
+      color: #000;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .star-milestone-status.available:hover {
+      transform: scale(1.05);
     }
 
     .card img { 
@@ -216,6 +1858,397 @@
       border: 2px solid #00ffff;
       font-size: 1.2rem;
       z-index: 1000;
+    }
+
+    /* 星星里程碑觸發按鈕 */
+    .milestone-trigger {
+      position: absolute;
+      top: 16px;
+      right: 180px;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(162, 89, 255, 0.15));
+      color: #ffd700;
+      border: 1px solid rgba(255, 215, 0, 0.5);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.3), inset 0 0 12px rgba(255, 215, 0, 0.1);
+      transition: all 0.3s ease;
+      z-index: 1000;
+      font-family: 'Noto Sans TC', sans-serif;
+    }
+
+    .milestone-trigger:hover {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(162, 89, 255, 0.25));
+      border-color: rgba(255, 215, 0, 0.8);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5), inset 0 0 16px rgba(255, 215, 0, 0.15);
+      transform: translateY(-2px);
+    }
+
+    /* 星星里程碑 Modal 遮罩 */
+    .milestone-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(4px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .milestone-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    /* 星星里程碑 Modal 主體 */
+    .milestone-modal {
+      width: min(720px, 92vw);
+      max-height: 78vh;
+      background: linear-gradient(145deg, rgba(10, 14, 30, 0.98), rgba(20, 17, 38, 0.96));
+      border: 1px solid rgba(255, 215, 0, 0.25);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+      overflow: hidden;
+      transform: scale(0.96);
+      transition: transform 0.2s ease;
+    }
+
+    .milestone-overlay.active .milestone-modal {
+      transform: scale(1);
+    }
+
+    /* Modal 標題區 */
+    .milestone-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+      background: linear-gradient(90deg, rgba(255, 215, 0, 0.1), rgba(162, 89, 255, 0.1));
+      position: relative;
+    }
+
+    .milestone-modal-title {
+      margin: 0;
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffd700;
+      text-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+    }
+
+    .milestone-close {
+      position: absolute;
+      right: 16px;
+      top: 12px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      font-size: 22px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .milestone-close:hover {
+      background: rgba(255, 100, 100, 0.3);
+      border-color: rgba(255, 100, 100, 0.5);
+      transform: rotate(90deg);
+    }
+
+    /* 摘要資訊區 */
+    .milestone-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 12px 20px;
+      background: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid rgba(255, 215, 0, 0.15);
+    }
+
+    .milestone-stat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 215, 0, 0.15);
+    }
+
+    .milestone-stat-icon {
+      font-size: 20px;
+      min-width: 24px;
+      text-align: center;
+    }
+
+    .milestone-stat-info {
+      flex: 1;
+    }
+
+    .milestone-stat-label {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 11px;
+      color: #a0a0ff;
+      margin-bottom: 2px;
+    }
+
+    .milestone-stat-value {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffd700;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+    }
+
+    /* 進度條包裝區 */
+    .milestone-progress-wrapper {
+      padding: 10px 20px;
+      background: rgba(0, 0, 0, 0.15);
+      border-bottom: 1px solid rgba(255, 215, 0, 0.15);
+    }
+
+    .milestone-progress-label {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 12px;
+      color: #a0a0ff;
+      margin-bottom: 6px;
+      text-align: right;
+    }
+
+    .milestone-progress-track {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .milestone-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #f7c948, #ffd700);
+      border-radius: inherit;
+      transition: width 0.5s ease;
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+    }
+
+    /* 滾動區域 */
+    .milestone-scroll-area {
+      overflow-y: auto;
+      max-height: 52vh;
+    }
+
+    .milestone-scroll-area::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .milestone-scroll-area::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 3px;
+    }
+
+    .milestone-scroll-area::-webkit-scrollbar-thumb {
+      background: rgba(255, 215, 0, 0.35);
+      border-radius: 3px;
+    }
+
+    .milestone-scroll-area::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 215, 0, 0.5);
+    }
+
+    /* 里程碑列表 */
+    .milestone-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 12px 20px;
+    }
+
+    .milestone-item {
+      display: grid;
+      grid-template-columns: 50px 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      min-height: 72px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .milestone-item.unlocked {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.12), rgba(0, 255, 255, 0.08));
+      border-color: rgba(255, 215, 0, 0.45);
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.15);
+      opacity: 1;
+    }
+
+    .milestone-item.locked {
+      opacity: 0.7;
+    }
+
+    .milestone-icon {
+      font-size: 30px;
+      min-width: 38px;
+      text-align: center;
+    }
+
+    .milestone-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .milestone-name {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .milestone-reward {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 14px;
+      color: #a0a0ff;
+      opacity: 0.75;
+    }
+
+    .milestone-status {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: #00ff88;
+    }
+
+    .milestone-stars-badge {
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: rgba(255, 215, 0, 0.15);
+      border: 1px solid rgba(255, 215, 0, 0.35);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffd700;
+      text-align: center;
+    }
+
+    .milestone-diff {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 12px;
+      color: #ff6bb5;
+      text-align: right;
+      margin-top: 2px;
+    }
+
+    /* 手機版響應式 */
+    @media (max-width: 600px) {
+      .milestone-trigger {
+        top: 60px;
+        right: 10px;
+        font-size: 12px;
+        padding: 6px 10px;
+      }
+
+      .milestone-modal {
+        width: 94vw;
+        max-height: 88vh;
+      }
+
+      .milestone-modal-header {
+        padding: 12px 16px;
+      }
+
+      .milestone-modal-title {
+        font-size: 18px;
+      }
+
+      .milestone-close {
+        width: 32px;
+        height: 32px;
+        font-size: 18px;
+        right: 12px;
+        top: 10px;
+      }
+
+      .milestone-summary {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        padding: 10px 16px;
+      }
+
+      .milestone-stat:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .milestone-stat-label {
+        font-size: 10px;
+      }
+
+      .milestone-stat-value {
+        font-size: 18px;
+      }
+
+      .milestone-progress-wrapper {
+        padding: 8px 16px;
+      }
+
+      .milestone-progress-label {
+        font-size: 11px;
+      }
+
+      .milestone-scroll-area {
+        max-height: 58vh;
+      }
+
+      .milestone-list {
+        padding: 10px 16px;
+        gap: 6px;
+      }
+
+      .milestone-item {
+        grid-template-columns: 40px 1fr;
+        gap: 10px;
+        padding: 10px 12px;
+        min-height: auto;
+      }
+
+      .milestone-icon {
+        font-size: 24px;
+        min-width: 32px;
+      }
+
+      .milestone-name {
+        font-size: 15px;
+      }
+
+      .milestone-reward {
+        font-size: 12px;
+      }
+
+      .milestone-stars-badge {
+        grid-column: 2;
+        justify-self: end;
+        font-size: 13px;
+        padding: 4px 8px;
+      }
+
+      .milestone-diff {
+        grid-column: 2;
+        justify-self: end;
+        font-size: 11px;
+      }
     }
 
     /* 播放/靜音 按鈕 */
@@ -676,6 +2709,7 @@
 
   <button class="back-btn" onclick="location.href='index.html'">← 返回首頁</button>
   <div id="totalStarsDisplay">⭐ 總星數：<span id="displayStars">0</span></div>
+  <button class="milestone-trigger" id="milestoneTrigger">🏆 星星里程碑</button>
   <h1>🌠 星座圖鑑</h1>
 
  <div class="tabs">
@@ -685,112 +2719,414 @@
     <button class="practice-btn" id="practiceBtn" style="display:inline-block;">練習關卡</button>
 </div>
   <div id="tab1" class="tab-content active">
-    <div style="margin: 0 auto 12px; max-width: 400px;">
-      <div id="progressBar1Container" style="background:#222;border-radius:12px;overflow:hidden;height:28px;box-shadow:0 0 8px #00ffff55;margin-bottom:8px;">
-        <div id="progressBar1" style="height:100%;width:0;background:linear-gradient(90deg,#00ffff,#a259ff);transition:width 0.5s;"></div>
+    <div class="progress-panel">
+      <div class="progress-title">🏆 星座挑戰進度</div>
+      
+      <div class="progress-row">
+        <div class="progress-track">
+          <div id="progressBar1" class="progress-fill"></div>
+        </div>
+        <div id="progressPercent1" class="progress-percent">0%</div>
       </div>
-      <div id="progressText1" style="text-align:center;color:#00ffff;font-weight:bold;"></div>
+      
+      <div class="progress-stats">
+        <div class="progress-stat passed">
+          <div class="stat-icon">✔</div>
+          <div>
+            <div class="stat-label">已通關</div>
+            <div id="passedCount1" class="stat-value">0 / 20</div>
+          </div>
+        </div>
+        <div class="progress-stat unlocked">
+          <div class="stat-icon">🔓</div>
+          <div>
+            <div class="stat-label">已解鎖</div>
+            <div id="unlockedCount1" class="stat-value">0 / 20</div>
+          </div>
+        </div>
+      </div>
     </div>
+
     <div class="grid" id="atlasGrid"></div>
   </div>
   <div id="tab3" class="tab-content">
-    <div style="margin: 0 auto 12px; max-width: 400px;">
-      <div id="progressBar3Container" style="background:#222;border-radius:12px;overflow:hidden;height:28px;box-shadow:0 0 8px #ffd70055;margin-bottom:8px;">
-        <div id="progressBar3" style="height:100%;width:0;background:linear-gradient(90deg,#ffd700,#00ffff);transition:width 0.5s;"></div>
+    <div class="greek-progress-panel">
+      <div class="greek-progress-title">🏛️ 希臘神祇挑戰進度</div>
+      <div class="greek-progress-row">
+        <div class="greek-progress-track">
+          <div class="greek-progress-fill" id="greekProgressBar"></div>
+        </div>
+        <div class="greek-progress-percent" id="greekProgressPercent">0%</div>
       </div>
-      <div id="progressText3" style="text-align:center;color:#ffd700;font-weight:bold;"></div>
+      <div class="greek-progress-stats">
+        <div class="greek-progress-stat passed">
+          <span class="stat-label">✔ 已通關</span>
+          <strong id="greekPassedCount">0 / 22</strong>
+        </div>
+        <div class="greek-progress-stat unlocked">
+          <span class="stat-label">🔓 已解鎖</span>
+          <strong id="greekUnlockedCount">0 / 22</strong>
+        </div>
+      </div>
     </div>
-    <div class="grid" id="greekGrid"></div>
+    <div class="greek-grid" id="greekGrid"></div>
   </div>
 <div id="tab4" class="tab-content">
-  <h2 style="text-align:center;color:#00ffff;margin-top:10px;">⭐ 星座分數排行榜 ⭐</h2>
-  <div style="text-align:center;margin:10px auto 0;max-width:960px;">
-    <label for="rankingCategorySelect" style="color:#00ffff;font-weight:bold;margin-right:8px;">選擇關卡：</label>
-    <select id="rankingCategorySelect" style="padding:8px 12px;border-radius:10px;border:2px solid #00ffff;background:#111;color:#fff;font-family:'Orbitron',sans-serif;">
-      <option value="all">全部</option>
-      <option value="aries">牡羊座</option>
-      <option value="taurus">金牛座</option>
-      <option value="gemini">雙子座</option>
-      <option value="cancer">巨蟹座</option>
-      <option value="leo">獅子座</option>
-      <option value="virgo">處女座</option>
-      <option value="libra">天秤座</option>
-      <option value="scorpio">天蠍座</option>
-      <option value="sagittarius">射手座</option>
-      <option value="capricorn">摩羯座</option>
-      <option value="aquarius">水瓶座</option>
-      <option value="pisces">雙魚座</option>
-      <option value="andromeda">仙女座</option>
-      <option value="cygnus">天鵝座</option>
-      <option value="orion">獵戶座</option>
-      <option value="pegasus">飛馬座</option>
-      <option value="cassiopeia">仙后座</option>
-      <option value="phoenix">鳳凰座</option>
-      <option value="vela">船帆座</option>
-    </select>
-  </div>
-  <div id="rankingContainer"
-       style="max-width:960px;margin:16px auto 28px;padding:26px;background:#111;
-              border-radius:16px;box-shadow:0 0 16px #00ffff55;">
+  <div class="leaderboard-panel">
+    <h2 class="leaderboard-title">⭐ 星座分數排行榜 ⭐</h2>
+    <p class="leaderboard-notice">⚠️ 排行榜資料會定期清除，請把握時間挑戰！</p>
+    <div class="leaderboard-toolbar">
+      <label>關卡</label>
+      <select id="rankingCategorySelect">
+        <option value="all">全部</option>
+        <option value="aries">牡羊座</option>
+        <option value="taurus">金牛座</option>
+        <option value="gemini">雙子座</option>
+        <option value="cancer">巨蟹座</option>
+        <option value="leo">獅子座</option>
+        <option value="virgo">處女座</option>
+        <option value="libra">天秤座</option>
+        <option value="scorpio">天蠍座</option>
+        <option value="sagittarius">射手座</option>
+        <option value="capricorn">摩羯座</option>
+        <option value="aquarius">水瓶座</option>
+        <option value="pisces">雙魚座</option>
+        <option value="andromeda">仙女座</option>
+        <option value="cygnus">天鵝座</option>
+        <option value="orion">獵戶座</option>
+        <option value="pegasus">飛馬座</option>
+        <option value="cassiopeia">仙后座</option>
+        <option value="phoenix">鳳凰座</option>
+        <option value="vela">船帆座</option>
+      </select>
+    </div>
+    <div class="leaderboard-table-wrap" id="rankingContainer">
       <p style="text-align:center;color:#aaa;">正在載入排行榜…</p>
+    </div>
   </div>
 
-  <h2 style="text-align:center;color:#ffd700;margin-top:10px;">🏛️ 希臘神祉分數排行榜 🏛️</h2>
-  <div style="text-align:center;margin:10px auto 0;max-width:960px;">
-    <label for="greekRankingCategorySelect" style="color:#ffd700;font-weight:bold;margin-right:8px;">選擇神祉：</label>
-    <select id="greekRankingCategorySelect" style="padding:8px 12px;border-radius:10px;border:2px solid #ffd700;background:#111;color:#fff;font-family:'Orbitron',sans-serif;">
-      <option value="all">全部</option>
-      <option value="宙斯">宙斯</option>
-      <option value="赫拉">赫拉</option>
-      <option value="波塞頓">波塞頓</option>
-      <option value="得墨忒耳">得墨忒耳</option>
-      <option value="雅典娜">雅典娜</option>
-      <option value="阿波羅">阿波羅</option>
-      <option value="阿爾忒彌斯">阿爾忒彌斯</option>
-      <option value="阿瑞斯">阿瑞斯</option>
-      <option value="阿芙蘿黛蒂">阿芙蘿黛蒂</option>
-      <option value="赫菲斯托斯">赫菲斯托斯</option>
-      <option value="赫耳墨斯">赫耳墨斯</option>
-      <option value="赫斯提亞">赫斯提亞</option>
-      <option value="狄俄尼索斯">狄俄尼索斯</option>
-      <option value="哈迪斯">哈迪斯</option>
-      <option value="珀爾塞福涅">珀爾塞福涅</option>
-      <option value="厄洛斯">厄洛斯</option>
-      <option value="尼刻">尼刻</option>
-      <option value="蓋婭">蓋婭</option>
-      <option value="阿特拉斯">阿特拉斯</option>
-      <option value="克洛諾斯">克洛諾斯</option>
-      <option value="瑞亞">瑞亞</option>
-      <option value="普羅米修斯">普羅米修斯</option>
-    </select>
-  </div>
-  <div id="greekRankingContainer"
-       style="max-width:960px;margin:16px auto 28px;padding:26px;background:#111;
-              border-radius:16px;box-shadow:0 0 16px #ffd70055;">
+  <div class="leaderboard-panel">
+    <h2 class="leaderboard-title">🏛️ 希臘神祉分數排行榜 🏛️</h2>
+    <p class="leaderboard-notice">⚠️ 排行榜資料會定期清除，請把握時間挑戰！</p>
+    <div class="leaderboard-toolbar">
+      <label>神祉</label>
+      <select id="greekRankingCategorySelect">
+        <option value="all">全部</option>
+        <option value="宙斯">宙斯</option>
+        <option value="赫拉">赫拉</option>
+        <option value="波塞頓">波塞頓</option>
+        <option value="得墨忒耳">得墨忒耳</option>
+        <option value="雅典娜">雅典娜</option>
+        <option value="阿波羅">阿波羅</option>
+        <option value="阿爾忒彌斯">阿爾忒彌斯</option>
+        <option value="阿瑞斯">阿瑞斯</option>
+        <option value="阿芙蘿黛蒂">阿芙蘿黛蒂</option>
+        <option value="赫菲斯托斯">赫菲斯托斯</option>
+        <option value="赫耳墨斯">赫耳墨斯</option>
+        <option value="赫斯提亞">赫斯提亞</option>
+        <option value="狄俄尼索斯">狄俄尼索斯</option>
+        <option value="哈迪斯">哈迪斯</option>
+        <option value="珀爾塞福涅">珀爾塞福涅</option>
+        <option value="厄洛斯">厄洛斯</option>
+        <option value="尼刻">尼刻</option>
+        <option value="蓋婭">蓋婭</option>
+        <option value="阿特拉斯">阿特拉斯</option>
+        <option value="克洛諾斯">克洛諾斯</option>
+        <option value="瑞亞">瑞亞</option>
+        <option value="普羅米修斯">普羅米修斯</option>
+      </select>
+    </div>
+    <div class="leaderboard-table-wrap" id="greekRankingContainer">
       <p style="text-align:center;color:#aaa;">正在載入排行榜…</p>
+    </div>
   </div>
 </div>
 
+  <!-- 星星里程碑 Modal -->
+  <div class="milestone-overlay" id="milestoneOverlay">
+    <div class="milestone-modal" id="milestoneModal">
+      <div class="milestone-modal-header">
+        <h2 class="milestone-modal-title">🏆 星星里程碑</h2>
+        <button class="milestone-close" id="milestoneClose">✕</button>
+      </div>
+      <div class="milestone-summary">
+        <div class="milestone-stat">
+          <div class="milestone-stat-icon">⭐</div>
+          <div class="milestone-stat-info">
+            <div class="milestone-stat-label">星座關卡星數</div>
+            <div class="milestone-stat-value" id="modalTotalStars">0</div>
+          </div>
+        </div>
+        <div class="milestone-stat">
+          <div class="milestone-stat-icon">🎯</div>
+          <div class="milestone-stat-info">
+            <div class="milestone-stat-label">下一個里程碑</div>
+            <div class="milestone-stat-value" id="nextMilestoneStars">10 ⭐</div>
+          </div>
+        </div>
+        <div class="milestone-stat">
+          <div class="milestone-stat-icon">✨</div>
+          <div class="milestone-stat-info">
+            <div class="milestone-stat-label">還差</div>
+            <div class="milestone-stat-value" id="nextMilestoneDiff">10 ⭐</div>
+          </div>
+        </div>
+      </div>
+      <div class="milestone-progress-wrapper">
+        <div class="milestone-progress-label">目前進度 <span id="milestoneProgressText">0</span> / <span id="milestoneProgressMax">10</span> ⭐</div>
+        <div class="milestone-progress-track">
+          <div class="milestone-progress-fill" id="milestoneProgressFill"></div>
+        </div>
+      </div>
+      <div class="milestone-scroll-area">
+        <div class="milestone-list" id="modalMilestoneList">
+          <!-- 里程碑項目將由 JavaScript 動態生成 -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/achievementProgress.js"></script>
   <script src="js/achievementSystem.js"></script>
   <script src="js/utils.js"></script>
+  <script src="js/stageProgress.js"></script>
+  <script src="js/atlasStageRegistry.js"></script>
+  <script src="js/apiConfig.js"></script>
+  <script src="js/soundSystem.js"></script>
   <script>
+  // 希臘神祇圖片錯誤處理
+  function handleGreekImageError(img) {
+    img.onerror = null;
+    const wrapper = img.closest('.greek-avatar');
+    if (wrapper) {
+      wrapper.innerHTML = '<div class="greek-avatar-fallback">🏛️</div>';
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
+    // ----- 免費遊戲解鎖模式 -----
+    function initFreeGameUnlockMode() {
+      try {
+        const currentParams = new URLSearchParams(window.location.search);
+        if (currentParams.get('mode') !== 'free-game-unlock') {
+          return;
+        }
+
+        const pendingGameRaw = sessionStorage.getItem('atlasPendingFreeGame');
+        const pendingGame = pendingGameRaw ? JSON.parse(pendingGameRaw) : null;
+
+        if (!pendingGame) {
+          console.warn('[Atlas Free Game] 找不到待解鎖遊戲資料');
+          return;
+        }
+
+        // 檢查是否需要未通關關卡
+        const requiresUnclearedStage = pendingGame.requiresUnclearedAtlasStage === true;
+
+        // 如果需要未通關關卡，檢查是否有可用的未通關關卡
+        if (requiresUnclearedStage) {
+          const zodiacStages = typeof getOfficialStages === 'function' ? getOfficialStages('zodiac') : [];
+          const unclearedStages = zodiacStages.filter(stage => !hasAtlasStageAlreadyCleared(stage.id));
+
+          if (unclearedStages.length === 0) {
+            // 所有關卡都已通關，顯示提示並提供返回按鈕
+            showAllStagesClearedMessage(pendingGame);
+            return;
+          }
+        }
+
+        let message = '完成任意一個關卡，即可返回遊戲中心免費遊玩。';
+        if (pendingGame.gameTitle) {
+          if (requiresUnclearedStage) {
+            message = `完成一個「尚未通關過」的關卡，即可返回遊戲中心免費遊玩「${pendingGame.gameTitle}」。已通關過的關卡不可用於本次解鎖。`;
+          } else {
+            message = `完成任意一個關卡，即可返回遊戲中心免費遊玩「${pendingGame.gameTitle}」。`;
+          }
+        }
+
+        // 建立提示元素
+        const unlockBanner = document.createElement('div');
+        unlockBanner.id = 'atlasFreeGameUnlockBanner';
+        unlockBanner.style.cssText = `
+          background: linear-gradient(90deg, #ffd700, #ffae00);
+          color: #111;
+          text-align: center;
+          padding: 12px 20px;
+          font-weight: bold;
+          font-size: 1rem;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 9999;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        `;
+        unlockBanner.textContent = message;
+
+        // 插入到頁面最前面
+        document.body.insertBefore(unlockBanner, document.body.firstChild);
+
+        // 調整 body padding 避免內容被遮擋
+        document.body.style.paddingTop = '50px';
+
+        // 如果需要未通關關卡，加上 body class
+        if (requiresUnclearedStage) {
+          document.body.classList.add('atlas-free-unlock-requires-new-stage');
+        }
+
+        console.log('[Atlas Free Game] 解鎖模式已啟用', pendingGame);
+      } catch (error) {
+        console.warn('[Atlas Free Game] 讀取待解鎖資料失敗', error);
+      }
+    }
+
+    // ----- 顯示所有關卡已通關訊息 -----
+    function showAllStagesClearedMessage(pendingGame) {
+      // 隱藏原本的內容
+      const mainContent = document.querySelector('.container') || document.body;
+      mainContent.style.display = 'none';
+
+      // 建立提示訊息
+      const messageDiv = document.createElement('div');
+      messageDiv.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #1a1a2e, #16213e);
+        color: #fff;
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        z-index: 10000;
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        max-width: 500px;
+        width: 90%;
+      `;
+
+      messageDiv.innerHTML = `
+        <div style="font-size: 3rem; margin-bottom: 20px;">🎮</div>
+        <h2 style="color: #ffd700; margin-bottom: 15px;">目前沒有尚未通關的 Atlas 關卡</h2>
+        <p style="color: #a0a0ff; margin-bottom: 25px; line-height: 1.6;">
+          這款免費遊戲必須完成一個尚未通關的關卡才能取得資格，<br>
+          但你目前已完成全部 Atlas 關卡。
+        </p>
+        <button id="returnToGameCenter" style="
+          background: linear-gradient(90deg, #ffd700, #ffae00);
+          color: #111;
+          border: none;
+          padding: 12px 30px;
+          border-radius: 10px;
+          font-size: 1rem;
+          font-weight: bold;
+          cursor: pointer;
+          transition: transform 0.2s;
+        ">返回遊戲中心</button>
+      `;
+
+      document.body.appendChild(messageDiv);
+
+      // 綁定返回按鈕事件
+      document.getElementById('returnToGameCenter').addEventListener('click', () => {
+        sessionStorage.removeItem('atlasPendingFreeGame');
+        window.location.href = 'game_center_simple.html';
+      });
+
+      console.log('[Atlas Free Game] 所有關卡已通關，顯示提示訊息');
+    }
+
+    // ----- 判斷關卡是否已通關 -----
+    function hasAtlasStageAlreadyCleared(stageId) {
+      // 優先使用新的 stage progress 系統
+      if (typeof isStageCleared === 'function') {
+        return isStageCleared('zodiac', stageId);
+      }
+
+      // 備用方案：使用舊資料
+      try {
+        const passedStages = JSON.parse(localStorage.getItem('passed_atlas') || '[]');
+        if (Array.isArray(passedStages) && passedStages.includes(stageId)) {
+          return true;
+        }
+      } catch (error) {
+        console.warn('[Atlas Free Game] passed_atlas 讀取失敗', error);
+      }
+
+      // 備用方案：使用星級系統
+      if (typeof StarSystem !== 'undefined' && typeof StarSystem.getLevelBestStars === 'function') {
+        return StarSystem.getLevelBestStars(stageId) >= 1;
+      }
+
+      return false;
+    }
+
+    // ----- 取得待解鎖遊戲 -----
+    function getPendingAtlasGame() {
+      try {
+        const rawValue = sessionStorage.getItem('atlasPendingFreeGame');
+        if (!rawValue) {
+          return null;
+        }
+        const parsedValue = JSON.parse(rawValue);
+        if (!parsedValue.gameId || !parsedValue.gameUrl) {
+          return null;
+        }
+        return parsedValue;
+      } catch (error) {
+        console.warn('[Atlas Free Game] 待解鎖資料讀取失敗。', error);
+        return null;
+      }
+    }
+
+    // ----- 更新選擇的關卡 ID -----
+    function updatePendingAtlasSelectedStage(stageId) {
+      const pendingGame = getPendingAtlasGame();
+      if (!pendingGame) {
+        return false;
+      }
+
+      if (pendingGame.requiresUnclearedAtlasStage === true && hasAtlasStageAlreadyCleared(stageId)) {
+        return false;
+      }
+
+      const updatedPendingGame = {
+        ...pendingGame,
+        selectedStageId: stageId,
+        stageWasClearedBeforeChallenge: false
+      };
+
+      sessionStorage.setItem('atlasPendingFreeGame', JSON.stringify(updatedPendingGame));
+      return true;
+    }
+
     // ----- 開發者模式：輸入 "open" + Enter 解鎖所有關卡 -----
     let keySequence = '';
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         if (keySequence.toLowerCase() === 'open') {
-          // 解鎖所有星座關卡
-          const atlasCategories = ["aries","taurus","gemini","cancer","leo","virgo","libra","scorpio",
-            "sagittarius","capricorn","aquarius","pisces","andromeda","cygnus","orion","pegasus",
-            "cassiopeia","scorpius","phoenix","vela"];
-          localStorage.setItem('unlocked', JSON.stringify(atlasCategories));
-          
-          // 解鎖所有希臘神祇關卡
-          const deities = ['宙斯', '赫拉', '波塞頓', '得墨忒耳', '雅典娜', '阿波羅', '阿爾忒彌斯', 
-            '阿瑞斯', '阿芙蘿黛蒂', '赫菲斯托斯', '赫耳墨斯', '赫斯提亞', '狄俄尼索斯', '哈迪斯', 
-            '珀爾塞福涅', '厄洛斯', '尼刻', '蓋婭', '阿特拉斯', '克洛諾斯', '瑞亞', '普羅米修斯'];
-          localStorage.setItem('unlockedGreek', JSON.stringify(deities));
+          // 解鎖所有星座關卡 (使用新的 stage progress 系統)
+          if (typeof getOfficialStages === 'function' && typeof setStageUnlocked === 'function') {
+            const zodiacStages = getOfficialStages('zodiac');
+            zodiacStages.forEach(stage => {
+              setStageUnlocked('zodiac', stage.id, true);
+            });
+            
+            // 解鎖所有希臘神祇關卡
+            const greekStages = getOfficialStages('greek');
+            greekStages.forEach(stage => {
+              setStageUnlocked('greek', stage.id, true);
+            });
+          } else {
+            // 備用方案：使用舊系統
+            const atlasCategories = ["aries","taurus","gemini","cancer","leo","virgo","libra","scorpio",
+              "sagittarius","capricorn","aquarius","pisces","andromeda","cygnus","orion","pegasus",
+              "cassiopeia","scorpius","phoenix","vela"];
+            localStorage.setItem('unlocked', JSON.stringify(atlasCategories));
+            
+            const greekStages = window.AtlasStageRegistry ? window.AtlasStageRegistry.greek : [];
+            const greekIds = greekStages.map(s => s.id);
+            localStorage.setItem('unlockedGreek', JSON.stringify(greekIds));
+          }
           
           // 顯示解鎖成功訊息
           alert('🎉 所有關卡已解鎖！');
@@ -798,11 +3134,23 @@
           // 重新載入頁面以更新顯示
           location.reload();
         } else if (keySequence.toLowerCase() === 'close') {
-          // 鎖定所有星座關卡
-          localStorage.setItem('unlocked', JSON.stringify([]));
-          
-          // 鎖定所有希臘神祇關卡
-          localStorage.setItem('unlockedGreek', JSON.stringify([]));
+          // 鎖定所有星座關卡 (使用新的 stage progress 系統)
+          if (typeof getOfficialStages === 'function' && typeof setStageUnlocked === 'function') {
+            const zodiacStages = getOfficialStages('zodiac');
+            zodiacStages.forEach(stage => {
+              setStageUnlocked('zodiac', stage.id, false);
+            });
+            
+            // 鎖定所有希臘神祇關卡
+            const greekStages = getOfficialStages('greek');
+            greekStages.forEach(stage => {
+              setStageUnlocked('greek', stage.id, false);
+            });
+          } else {
+            // 備用方案：使用舊系統
+            localStorage.setItem('unlocked', JSON.stringify([]));
+            localStorage.setItem('unlockedGreek', JSON.stringify([]));
+          }
           
           // 顯示鎖定成功訊息
           alert('🔒 所有關卡已鎖定！');
@@ -835,6 +3183,336 @@
       updateDisplayStars();
     });
 
+    // ----- 星星里程碑系統 -----
+    // 里程碑定義 - 每 10 星獲得 50 獎勵星星
+    const STAR_MILESTONES = [
+      { id: 'milestone_10', stars: 10, name: '初露鋒芒', icon: '🌟', reward: '50 ⭐' },
+      { id: 'milestone_20', stars: 20, name: '小有成就', icon: '⭐', reward: '50 ⭐' },
+      { id: 'milestone_30', stars: 30, name: '星途漫漫', icon: '🌠', reward: '50 ⭐' },
+      { id: 'milestone_40', stars: 40, name: '星光璀璨', icon: '✨', reward: '50 ⭐' },
+      { id: 'milestone_50', stars: 50, name: '星河浩瀚', icon: '🌌', reward: '50 ⭐' },
+      { id: 'milestone_60', stars: 60, name: '神之領域', icon: '🏛️', reward: '50 ⭐' },
+      { id: 'milestone_70', stars: 70, name: '神話傳說', icon: '📜', reward: '50 ⭐' },
+      { id: 'milestone_80', stars: 80, name: '星辰大海', icon: '🌊', reward: '50 ⭐' },
+      { id: 'milestone_90', stars: 90, name: '宇宙無垠', icon: '🌌', reward: '50 ⭐' },
+      { id: 'milestone_100', stars: 100, name: '星際穿越', icon: '🚀', reward: '50 ⭐' }
+    ];
+
+    // 里程碑 localStorage key
+    const MILESTONES_KEY = 'starMilestones';
+
+    // 取得已解鎖的里程碑
+    function getUnlockedMilestones() {
+      try {
+        return JSON.parse(localStorage.getItem(MILESTONES_KEY) || '[]');
+      } catch (error) {
+        console.warn('[Milestone System] 讀取里程碑失敗', error);
+        return [];
+      }
+    }
+
+    // 設定里程碑為已解鎖
+    function setMilestoneUnlocked(milestoneId) {
+      const unlocked = getUnlockedMilestones();
+      if (!unlocked.includes(milestoneId)) {
+        unlocked.push(milestoneId);
+        localStorage.setItem(MILESTONES_KEY, JSON.stringify(unlocked));
+        console.log('[Milestone System] 里程碑已解鎖:', milestoneId);
+      }
+    }
+
+    // 計算星座關卡總星數（只用於里程碑系統）
+    function getConstellationStars() {
+      let totalStars = 0;
+      
+      try {
+        // 使用與星座卡片相同的資料來源：StarSystem.getLevelBestStars()
+        // 這會讀取 localStorage 中的 'levelBestStars' 資料
+        if (typeof StarSystem !== 'undefined' && typeof StarSystem.getLevelBestStars === 'function') {
+          // 星座關卡 ID 清單（與卡片渲染使用相同的陣列）
+          const constellationLevels = ["aries","taurus","gemini","cancer","leo","virgo","libra","scorpio",
+            "sagittarius","capricorn","aquarius","pisces","andromeda","cygnus","orion","pegasus",
+            "cassiopeia","scorpius","phoenix","vela"];
+          
+          // 加總所有星座關卡的星數
+          constellationLevels.forEach(levelId => {
+            const stars = StarSystem.getLevelBestStars(levelId);
+            totalStars += Math.max(0, Number(stars) || 0);
+          });
+          
+          console.log('[Milestone System] 星座關卡總星數計算:', {
+            total: totalStars,
+            source: 'StarSystem.getLevelBestStars (levelBestStars localStorage)'
+          });
+        } else {
+          console.warn('[Milestone System] StarSystem 未定義，無法計算星座關卡星數');
+        }
+      } catch (error) {
+        console.warn('[Milestone System] 計算星座關卡星數失敗', error);
+      }
+      
+      return totalStars;
+    }
+
+    // 計算總星數（從 stageProgress）- 保留舊函式以備其他用途
+    function calculateTotalStageStars() {
+      return getConstellationStars();
+    }
+
+    // 檢查並解鎖里程碑
+    function checkAndUnlockMilestones() {
+      const totalStars = calculateTotalStageStars();
+      const unlocked = getUnlockedMilestones();
+      
+      console.log('[Milestone System] 檢查里程碑:', {
+        totalStars: totalStars,
+        unlocked: unlocked,
+        milestones: STAR_MILESTONES.map(m => ({
+          id: m.id,
+          stars: m.stars,
+          achieved: totalStars >= m.stars,
+          claimed: unlocked.includes(m.id)
+        }))
+      });
+      
+      STAR_MILESTONES.forEach(milestone => {
+        if (!unlocked.includes(milestone.id) && totalStars >= milestone.stars) {
+          setMilestoneUnlocked(milestone.id);
+          
+          // 執行獎勵（發放 50 顆獎勵星星）
+          applyMilestoneReward(milestone);
+          
+          // 顯示解鎖通知
+          alert(`🎉 達成里程碑：${milestone.name}！\n獲得獎勵：${milestone.reward}`);
+        }
+      });
+      
+      renderStarMilestones();
+    }
+
+    // 應用里程碑獎勵 - 發放 50 顆獎勵星星
+    function applyMilestoneReward(milestone) {
+      try {
+        // 使用 StarSystem 發放 50 顆獎勵星星
+        if (typeof StarSystem !== 'undefined' && typeof StarSystem.addTotalStars === 'function') {
+          const rewardAmount = 50;
+          const currentTotal = StarSystem.getTotalStars();
+          const result = StarSystem.addTotalStars(rewardAmount, `里程碑獎勵：${milestone.name}`);
+          
+          console.log('[Milestone System] 發放里程碑獎勵:', {
+            milestone: milestone.name,
+            milestoneId: milestone.id,
+            reward: rewardAmount,
+            before: currentTotal,
+            after: result
+          });
+          
+          // 更新頁面顯示
+          if (typeof updateDisplayStars === 'function') {
+            updateDisplayStars();
+          }
+        } else {
+          console.warn('[Milestone System] StarSystem 未定義，無法發放獎勵');
+        }
+      } catch (error) {
+        console.warn('[Milestone System] 應用獎勵失敗', error);
+      }
+    }
+
+    // 渲染里程碑列表（Modal 版本）
+    function renderStarMilestones() {
+      const totalStars = calculateTotalStageStars();
+      const unlocked = getUnlockedMilestones();
+      const listEl = document.getElementById('modalMilestoneList');
+      const totalEl = document.getElementById('modalTotalStars');
+      const nextStarsEl = document.getElementById('nextMilestoneStars');
+      const nextDiffEl = document.getElementById('nextMilestoneDiff');
+      const progressFillEl = document.getElementById('milestoneProgressFill');
+      const progressTextEl = document.getElementById('milestoneProgressText');
+      const progressMaxEl = document.getElementById('milestoneProgressMax');
+      
+      if (!listEl || !totalEl) return;
+      
+      // 更新總星數顯示
+      totalEl.textContent = totalStars;
+      
+      // 找出下一個未達成的里程碑（基於星數，不是基於是否領取）
+      const nextMilestone = STAR_MILESTONES.find(m => totalStars < m.stars);
+      
+      if (nextMilestone) {
+        // 顯示下一個里程碑資訊
+        if (nextStarsEl) nextStarsEl.textContent = `${nextMilestone.stars} ⭐`;
+        if (nextDiffEl) nextDiffEl.textContent = `${Math.max(nextMilestone.stars - totalStars, 0)} ⭐`;
+        
+        // 更新進度條
+        const prevMilestone = STAR_MILESTONES.filter(m => m.stars <= totalStars).pop();
+        const prevStars = prevMilestone ? prevMilestone.stars : 0;
+        const progress = Math.min(((totalStars - prevStars) / (nextMilestone.stars - prevStars)) * 100, 100);
+        
+        if (progressFillEl) progressFillEl.style.width = `${progress}%`;
+        if (progressTextEl) progressTextEl.textContent = totalStars;
+        if (progressMaxEl) progressMaxEl.textContent = nextMilestone.stars;
+      } else {
+        // 所有里程碑已完成
+        if (nextStarsEl) nextStarsEl.textContent = '完成';
+        if (nextDiffEl) nextDiffEl.textContent = '0 ⭐';
+        if (progressFillEl) progressFillEl.style.width = '100%';
+        if (progressTextEl) progressTextEl.textContent = totalStars;
+        if (progressMaxEl) progressMaxEl.textContent = totalStars;
+      }
+      
+      // 清空列表
+      listEl.innerHTML = '';
+      
+      // 渲染每個里程碑
+      STAR_MILESTONES.forEach(milestone => {
+        const isClaimed = unlocked.includes(milestone.id);
+        const isAchieved = totalStars >= milestone.stars;
+        const isAvailable = !isClaimed && isAchieved;
+        const diff = Math.max(milestone.stars - totalStars, 0);
+        
+        const item = document.createElement('div');
+        item.className = `milestone-item ${isAchieved ? 'unlocked' : 'locked'}`;
+        
+        // 更新狀態文字：只有真正達到門檻且已領取才顯示"已獲得"
+        let statusText;
+        if (isAchieved && isClaimed) {
+          // 已達成且已領取
+          statusText = `✓ 已獲得 ${milestone.reward}`;
+        } else if (isAchieved && !isClaimed) {
+          // 已達成但尚未領取（自動發放系統會處理）
+          statusText = `✓ 已達成`;
+        } else {
+          // 尚未達成
+          statusText = `還差 ${diff} ⭐`;
+        }
+        
+        item.innerHTML = `
+          <div class="milestone-icon">${milestone.icon}</div>
+          <div class="milestone-info">
+            <div class="milestone-name">${milestone.name}</div>
+            <div class="milestone-reward">獎勵：${milestone.reward}</div>
+            <div class="milestone-status">${statusText}</div>
+          </div>
+          <div>
+            <div class="milestone-stars-badge">需要：${milestone.stars} ⭐</div>
+            ${!isAchieved && diff > 0 ? `<div class="milestone-diff">還差 ${diff} ⭐</div>` : ''}
+          </div>
+        `;
+        
+        // 自動發放系統：獎勵由 checkAndUnlockMilestones 自動發放
+        // 不需要手動點擊領取
+        
+        listEl.appendChild(item);
+      });
+    }
+
+    // 初始化里程碑系統
+    function initStarMilestoneSystem() {
+      // 檢查並清除舊的里程碑數據（如果格式不符）
+      try {
+        const currentMilestones = getUnlockedMilestones();
+        console.log('[Milestone System] 當前已領取里程碑:', currentMilestones);
+        
+        // 如果里程碑數據格式不正確（例如包含舊的關卡解鎖紀錄），清除它
+        const validMilestoneIds = STAR_MILESTONES.map(m => m.id);
+        const filteredMilestones = currentMilestones.filter(id => validMilestoneIds.includes(id));
+        
+        if (filteredMilestones.length !== currentMilestones.length) {
+          console.log('[Milestone System] 清除舊的里程碑紀錄，從', currentMilestones, '變為', filteredMilestones);
+          localStorage.setItem(MILESTONES_KEY, JSON.stringify(filteredMilestones));
+        }
+        
+        // 臨時：如果當前星座關卡星數小於 10，清除所有里程碑紀錄（確保測試正確性）
+        const currentConstellationStars = getConstellationStars();
+        if (currentConstellationStars < 10 && filteredMilestones.length > 0) {
+          console.log('[Milestone System] 當前星數', currentConstellationStars, '小於 10，清除所有里程碑紀錄以確保正確顯示');
+          localStorage.setItem(MILESTONES_KEY, JSON.stringify([]));
+        }
+      } catch (error) {
+        console.warn('[Milestone System] 檢查里程碑數據失敗', error);
+      }
+      
+      renderStarMilestones();
+      checkAndUnlockMilestones();
+      
+      // 監聽 localStorage 變化（跨頁同步）
+      window.addEventListener('storage', (e) => {
+        // 監聽 levelBestStars 變化（星座卡片使用的資料來源）
+        if (e.key === 'levelBestStars' || e.key === MILESTONES_KEY) {
+          console.log('[Milestone System] 偵測到 localStorage 變化:', e.key);
+          renderStarMilestones();
+          checkAndUnlockMilestones();
+        }
+      });
+    }
+
+    // ----- Modal 開關控制 -----
+    const milestoneOverlay = document.getElementById('milestoneOverlay');
+    const milestoneModal = document.getElementById('milestoneModal');
+    const milestoneTrigger = document.getElementById('milestoneTrigger');
+    const milestoneClose = document.getElementById('milestoneClose');
+
+    // 開啟 Modal
+    function openMilestoneModal() {
+      if (milestoneOverlay && milestoneModal) {
+        // 重新計算星座關卡總星數（確保使用最新資料）
+        const currentStars = getConstellationStars();
+        console.log('[Milestone Modal] 開啟 Modal，重新計算星數:', currentStars);
+        renderStarMilestones(); // 更新內容
+        milestoneOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // 防止背景滾動
+      }
+    }
+
+    // 關閉 Modal
+    function closeMilestoneModal() {
+      if (milestoneOverlay) {
+        milestoneOverlay.classList.remove('active');
+        document.body.style.overflow = ''; // 恢復背景滾動
+      }
+    }
+
+    // 綁定觸發按鈕事件
+    if (milestoneTrigger) {
+      milestoneTrigger.addEventListener('click', openMilestoneModal);
+    }
+
+    // 綁定關閉按鈕事件
+    if (milestoneClose) {
+      milestoneClose.addEventListener('click', closeMilestoneModal);
+    }
+
+    // 點擊遮罩關閉 Modal
+    if (milestoneOverlay) {
+      milestoneOverlay.addEventListener('click', (e) => {
+        if (e.target === milestoneOverlay) {
+          closeMilestoneModal();
+        }
+      });
+    }
+
+    // 頁面顯示時重新計算星數（返回 atlas 時更新）
+    window.addEventListener('pageshow', (e) => {
+      if (e.persisted) {
+        console.log('[Atlas] 頁面從快取返回，重新計算星數');
+        // 重新計算並更新里程碑
+        const currentStars = getConstellationStars();
+        console.log('[Atlas] 返回時的星座關卡總星數:', currentStars);
+        renderStarMilestones();
+      }
+    });
+
+    // ESC 鍵關閉 Modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && milestoneOverlay && milestoneOverlay.classList.contains('active')) {
+        closeMilestoneModal();
+      }
+    });
+
+    // 頁面載入時初始化
+    initStarMilestoneSystem();
+
     // ----- 分頁切換 -----
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -851,6 +3529,7 @@
         // 進入排行榜分頁時才載入資料
         if (btn.dataset.target === 'tab4') {
           loadRanking();
+          loadGreekRanking();
         }
       });
     });
@@ -894,29 +3573,53 @@
     }
     let unlockedList = JSON.parse(localStorage.getItem('unlocked')||'[]');
     if (!unlockedList.length) {
-      unlockedList = atlasCategories.sort(() => 0.5 - Math.random()).slice(0,2);
+      unlockedList = [...atlasCategories].sort(() => 0.5 - Math.random()).slice(0,2);
       localStorage.setItem('unlocked', JSON.stringify(unlockedList));
     }
+    const nameMap = {
+      aries:        '牡羊座',
+      taurus:       '金牛座',
+      gemini:       '雙子座',
+      cancer:       '巨蟹座',
+      leo:          '獅子座',
+      virgo:        '處女座',
+      libra:        '天秤座',
+      scorpio:      '天蠍座',
+      sagittarius: '射手座',
+      capricorn:    '摩羯座',
+      aquarius:     '水瓶座',
+      pisces:       '雙魚座',
+      andromeda:    '仙女座',
+      cygnus:       '天鵝座',
+      orion:        '獵戶座',
+      pegasus:      '飛馬座',
+      cassiopeia:   '仙后座',
+      scorpius:     '天蠍座',
+      phoenix:      '鳳凰座',
+      vela:         '船帆座'
+    };
+
     const descMap = {
-      aries:        '牡羊座，象徵勇氣與冒險。',
-      taurus:       '金牛座，代表穩定與毅力。',
-      gemini:       '雙子座，靈活聰明，喜歡交流。',
-      cancer:       '巨蟹座，溫柔體貼，家庭導向。',
-      leo:          '獅子座，領導力強，充滿自信。',
-      virgo:        '處女座，細心認真，注重細節。',
-      libra:        '天秤座，追求平衡與和諧。',
-      scorpio:      '天蠍座被稱為「火星的競爭者」。',
-      sagittarius: '射手座，熱愛自由與探索。',
-      capricorn:    '摩羯座，務實努力，堅持到底。',
-      aquarius:     '水瓶座，創新獨立，喜歡新奇。',
-      pisces:       '雙魚座，富有想像力與同理心。',
-      andromeda:    '仙女座，以其獨特的形狀和神話背景聞名。',
-      cygnus:       '天鵝座，這個星座的形狀像展翅飛翔的天鵝，因此得名。',
-      orion:        '獵戶座，獵戶腰帶由三顆亮星排列成直線，非常醒目。',
-      pegasus:      '飛馬座，英雄的勇氣與智慧。',
-      cassiopeia:   '仙后座，象徵傲慢的王后。',
-      phoenix:      '鳳凰座，象徵重生與不滅的生命，代表著希望與永恆。',
-      vela:         '船帆座，以其散開的帆布狀星群聞名，原屬大船座的一部分。'
+      aries:        '象徵勇氣與冒險。',
+      taurus:       '代表穩定與毅力。',
+      gemini:       '靈活聰明，喜歡交流。',
+      cancer:       '溫柔體貼，家庭導向。',
+      leo:          '領導力強，充滿自信。',
+      virgo:        '細心認真，注重細節。',
+      libra:        '追求平衡與和諧。',
+      scorpio:      '被稱為「火星的競爭者」。',
+      sagittarius: '熱愛自由與探索。',
+      capricorn:    '務實努力，堅持到底。',
+      aquarius:     '創新獨立，喜歡新奇。',
+      pisces:       '富有想像力與同理心。',
+      andromeda:    '以其獨特的形狀和神話背景聞名。',
+      cygnus:       '形狀像展翅飛翔的天鵝，因此得名。',
+      orion:        '獵戶腰帶由三顆亮星排列成直線，非常醒目。',
+      pegasus:      '英雄的勇氣與智慧。',
+      cassiopeia:   '象徵傲慢的王后。',
+      scorpius:     '以其心臟形狀的紅色巨星心宿二聞名，象徵變革與重生。',
+      phoenix:      '象徵重生與不滅的生命，代表著希望與永恆。',
+      vela:         '以其散開的帆布狀星群聞名，原屬大船座的一部分。'
     };
     let passedAtlas = JSON.parse(localStorage.getItem('passed_atlas')||'[]');
     atlasCategories.forEach((key, index) => {
@@ -929,121 +3632,327 @@
         costData[key] = Math.floor(Math.random()*21)+10;
         localStorage.setItem('unlockCosts', JSON.stringify(costData));
       }
-      const cost = costData[key], unlocked = unlockedList.includes(key);
+      const cost = costData[key];
+      
+      // 優先使用新的 stage progress 系統
+      let unlocked, cleared;
+      if (typeof isStageUnlocked === 'function' && typeof isStageCleared === 'function') {
+        unlocked = isStageUnlocked('zodiac', key);
+        cleared = isStageCleared('zodiac', key);
+      } else {
+        // 備用方案：使用舊系統
+        unlocked = unlockedList.includes(key);
+        cleared = passedAtlas.includes(key);
+      }
+      
       const isCustom = false;
       const title = key.toUpperCase();
       const card = document.createElement('div');
-      card.className = 'card' + (unlocked ? '' : ' locked');
+      card.className = 'card' + (unlocked ? '' : ' locked locked-card');
       if (!unlocked) card.dataset.locktext = `${cost}⭐解鎖`;
+      
+      // 取得最佳星級
+      let bestStars = 0;
+      if (typeof StarSystem !== 'undefined' && typeof StarSystem.getLevelBestStars === 'function') {
+        bestStars = StarSystem.getLevelBestStars(key);
+        console.log('[Atlas 星級]', key, bestStars);
+      }
+      
+      // 生成星級顯示
+      let starDisplay = '';
+      if (bestStars === 3) starDisplay = '⭐⭐⭐';
+      else if (bestStars === 2) starDisplay = '⭐⭐☆';
+      else if (bestStars === 1) starDisplay = '⭐☆☆';
+      else starDisplay = '☆☆☆';
+
+      // 檢查是否為免費遊戲解鎖模式且需要未通關關卡
+      const pendingGame = getPendingAtlasGame();
+      const isFreeGameUnlockMode = pendingGame !== null;
+      const requiresUnclearedStage = pendingGame?.requiresUnclearedAtlasStage === true;
+      const isAlreadyCleared = hasAtlasStageAlreadyCleared(key);
+      const isUnavailableForUnlock = isFreeGameUnlockMode && requiresUnclearedStage && isAlreadyCleared;
+
+      // 如果不可用於本次解鎖，加上 class
+      if (isUnavailableForUnlock) {
+        card.classList.add('already-cleared-unavailable');
+      }
+
+      // 生成卡片內容
+      let footerContent;
+      if (isUnavailableForUnlock) {
+        footerContent = '<div class="status-btn unavailable">✓ 已通關<br><small>本次不可使用</small></div>';
+      } else if (cleared) {
+        footerContent = '<div class="status-btn passed">✓ 已通關</div>';
+      } else if (unlocked) {
+        footerContent = '<div class="status-btn unlocked">✓ 已解鎖</div>';
+      } else {
+        footerContent = `<button class="unlock-btn">🔒 ${cost}⭐ 解鎖</button>`;
+      }
+
       card.innerHTML = `
-        <div class="card-title">${title}</div>
-        <div class="card-desc">${descMap[key]||''}</div>
-        <div class="card-info">${unlocked ? '已解鎖' : cost+'⭐解鎖'}</div>
-        <div class="stage-info">${stageLabel}</div>
-        ${passedAtlas.includes(key) ? '<div style="position:absolute;top:8px;right:10px;font-size:1.3em;color:#ffd700;">✔ 已通關</div>' : ''}
+        <div class="card-top">
+          <div class="stage-badge">第${stageNumber}關</div>
+          <div class="stage-stars">${starDisplay}</div>
+        </div>
+        <div class="card-name">
+          <div class="card-name-en">${title}</div>
+          <div class="card-name-zh">${nameMap[key]||''}</div>
+        </div>
+        <div class="card-description">${descMap[key]||''}</div>
+        <div class="card-range">
+          <span class="range-label">單字範圍</span>
+          <strong>${stageStart}－${stageEnd}</strong>
+        </div>
+        <div class="card-footer">
+          ${footerContent}
+        </div>
       `;
       card.addEventListener('click', () => {
         clickSfx.currentTime = 0;
         clickSfx.play().catch(() => {});
+
+        // 檢查是否為免費遊戲解鎖模式且需要未通關關卡
+        const pendingGame = getPendingAtlasGame();
+        const requiresUnclearedStage = pendingGame?.requiresUnclearedAtlasStage === true;
+        const alreadyCleared = hasAtlasStageAlreadyCleared(key);
+
+        if (pendingGame && requiresUnclearedStage && alreadyCleared) {
+          alert('這個關卡已經通關過，不能用來取得本次免費遊玩資格。請選擇一個尚未通關的關卡。');
+          return;
+        }
+
         let cs = parseInt(localStorage.getItem('totalStars'),10)||0;
-        let ul = JSON.parse(localStorage.getItem('unlocked')||'[]');
-        if (!ul.includes(key)) {
+
+        // 檢查是否已解鎖
+        let isCurrentlyUnlocked;
+        if (typeof isStageUnlocked === 'function') {
+          isCurrentlyUnlocked = isStageUnlocked('zodiac', key);
+        } else {
+          let ul = JSON.parse(localStorage.getItem('unlocked')||'[]');
+          isCurrentlyUnlocked = ul.includes(key);
+        }
+        
+        if (!isCurrentlyUnlocked) {
           if (cs>=cost) {
             cs -= cost; 
             Storage.setTotalStars(cs);
             totalStars = cs; 
             updateDisplayStars();
-            ul.push(key); 
-            Storage.set('unlocked', ul);
+            
+            // 解鎖關卡
+            if (typeof setStageUnlocked === 'function') {
+              setStageUnlocked('zodiac', key, true);
+            } else {
+              let ul = JSON.parse(localStorage.getItem('unlocked')||'[]');
+              ul.push(key); 
+              Storage.set('unlocked', ul);
+            }
+            
             card.classList.remove('locked');
             card.removeAttribute('data-locktext');
-            card.querySelector('.card-info').textContent = '已解鎖';
+            const footer = card.querySelector('.card-footer');
+            if (footer) {
+              footer.innerHTML = '<div class="status-btn unlocked">✓ 已解鎖</div>';
+            }
           } else {
             alert('星星不足，無法解鎖。');
             return;
           }
         }
-        window.location.href = `quiz.html?category=${encodeURIComponent(key)}`;
+        // 保留 mode 參數（免費遊戲解鎖模式）
+        const currentParams = new URLSearchParams(window.location.search);
+        const quizParams = new URLSearchParams();
+        quizParams.set('category', key);
+
+        if (currentParams.get('mode') === 'free-game-unlock') {
+          quizParams.set('mode', 'free-game-unlock');
+          // 記錄選擇的關卡 ID
+          updatePendingAtlasSelectedStage(key);
+        }
+
+        window.location.href = `quiz.html?${quizParams.toString()}`;
       });
       document.getElementById('atlasGrid').appendChild(card);
     });
 
       // Tab3: 希臘神祇
     (function() {
-      const deities = [
-        { name: '宙斯', url: 'zeus.html', img: 'https://i.pinimg.com/736x/f7/44/dc/f744dc2cd9f052369f1eda963bf3b547.jpg', desc: '雷電之王' },
-        { name: '赫拉', url: 'hera.html', img: 'https://images.nightcafe.studio/jobs/jrtc05QrGWfgcL9U7oQ5/jrtc05QrGWfgcL9U7oQ5--1--0kpbz.jpg?tr=w-1600,c-at_max', desc: '婚姻守護' },
-        { name: '波塞頓', url: 'poseidon.html', img: 'https://th.bing.com/th/id/OIP.ds9l0HmwcwlBZUt1_SOAUQHaLF?r=0&rs=1&pid=ImgDetMain&cb=idpwebpc2', desc: '震海之神' },
-        { name: '得墨忒耳', url: 'demeter.html', img: 'https://i.pinimg.com/736x/5e/55/f3/5e55f31c21d96c2055d39d07fa72ea2.jpg', desc: '豐饒女神' },
-        { name: '雅典娜', url: 'athena.html', img: 'https://i.pinimg.com/originals/45/09/04/45090436c02480c7d472774ba38bf682.jpg', desc: '智慧戰略' },
-        { name: '阿波羅', url: 'apollo.html', img: 'https://th.bing.com/th/id/OIP.nST24oXU5QbHwyzkNIDI0QHaHa?r=0&w=736&h=736&rs=1&pid=ImgDetMain&cb=idpwebpc2', desc: '光與預言' },
-        { name: '阿爾忒彌斯', url: 'artemis.html', img: 'https://as2.ftcdn.net/v2/jpg/07/11/84/53/1000_F_711845312_FrFR9WTehywtZl3bO20csc48OSmqKRcU.jpg', desc: '月狩獵女神' },
-        { name: '阿瑞斯', url: 'ares.html', img: 'https://i.pinimg.com/originals/e6/bc/f7/e6bcf7f460a50f2c2700122554c4386e.png', desc: '戰場狂熱' },
-        { name: '阿芙蘿黛蒂', url: 'aphrodite.html', img: 'https://img.freepik.com/premium-photo/timeless-beauty-capturing-ancient-greek-goddess-athena-ultrarealistic-splendor_960911-22038.jpg?w=2000', desc: '愛與美' },
-        { name: '赫菲斯托斯', url: 'hephaestus.html', img: 'https://th.bing.com/th/id/OIP.c9pf5fdxkTIC4f58Wwk7SQHaHa?r=0&w=1024&h=1024&rs=1&pid=ImgDetMain&cb=idpwebpc2', desc: '鍛造工匠' },
-        { name: '赫耳墨斯', url: 'hermes.html', img: 'https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https://substack-post-media.s3.amazonaws.com/public/images/49e898d3-33e8-4355-8049-5b32b6fa2695_1024x1024.png', desc: '狡黠信使' },
-        { name: '赫斯提亞', url: 'hestia.html', img: 'https://i.etsystatic.com/10441898/c/2143/2143/0/0/il/b01774/5669551924/il_600x600.5669551924_g09a.jpg', desc: '家園聖火' },
-        { name: '狄俄尼索斯', url: 'dionysus.html', img: 'https://i.pinimg.com/1200x/d3/27/97/d327972a87a915c1cbd9fefe868307d1.jpg', desc: '狂歡酒神' },
-        { name: '哈迪斯', url: 'hades.html', img: 'https://th.bing.com/th/id/OIP.jh5PoCyBjLDW-PQlC9_1dAHaHa?r=0&w=1024&h=1024&rs=1&pid=ImgDetMain&cb=idpwebpc2', desc: '冥界君主' },
-        { name: '珀爾塞福涅', url: 'persephone.html', img: 'https://cdn.openart.ai/stable_diffusion/af3394f52d952263c6c773045bcc5391f6702033_2000x2000.webp', desc: '春天冥后' },
-        { name: '厄洛斯', url: 'eros.html', img: 'https://i.pinimg.com/736x/ad/63/63/ad6363477e4266b39aaf86e058facfb6.jpg', desc: '愛之箭' },
-        { name: '尼刻', url: 'nike.html', img: 'https://i.pinimg.com/736x/d8/b4/51/d8b4515f750e0f8106ba69a91ff05679.jpg', desc: '勝利女神' },
-        { name: '蓋婭', url: 'gaia.html', img: 'https://i.pinimg.com/1200x/4e/ac/31/4eac313f814d9044877241e163a43585.jpg', desc: '萬物之母' },
-        { name: '阿特拉斯', url: 'atlas_god.html', img: 'https://i.pinimg.com/736x/02/e2/14/02e214b507e55f3dddb673c7acdc25f7.jpg', desc: '天空支柱' },
-        { name: '克洛諾斯', url: 'cronus.html', img: 'https://i.pinimg.com/1200x/89/24/bc/8924bcdf6c9734a961ef956a8e8fbf79.jpg', desc: '時間之王' },
-        { name: '瑞亞', url: 'rhea.html', img: 'https://i.pinimg.com/1200x/44/0e/e8/440ee8571b581d7ae728d2c9c765cb74.jpg', desc: '母性守護' },
-        { name: '普羅米修斯', url: 'prometheus.html', img: 'https://i.pinimg.com/736x/2d/b4/24/2db4245bd440fa993e2e1ac1904800c6.jpg', desc: '火種使者' }
-      ];
+      // 從 Registry 讀取希臘神祇資料
+      const greekStages = window.AtlasStageRegistry ? window.AtlasStageRegistry.greek : [];
 
-      let unlockedGreek = JSON.parse(localStorage.getItem('unlockedGreek') || '[]');
+      // 舊資料遷移：將中文名稱轉換為 ID
+      function migrateLegacyData(data) {
+        if (!Array.isArray(data)) return data;
+        return data.map(item => {
+          if (window.AtlasStageRegistry && window.AtlasStageRegistry.legacyNameMap[item]) {
+            return window.AtlasStageRegistry.legacyNameMap[item];
+          }
+          return item;
+        });
+      }
+
+      let unlockedGreek = migrateLegacyData(JSON.parse(localStorage.getItem('unlockedGreek') || '[]'));
       let greekCosts = JSON.parse(localStorage.getItem('unlockGreekCosts') || '{}');
-      
-      // 如果沒有設定成本，則為每個神祇設定隨機成本
-      if (!Object.keys(greekCosts).length) {
-        deities.forEach(d => greekCosts[d.name] = Math.floor(Math.random() * 31) + 30);
+
+      // 遷移舊的成本資料（中文名稱 → ID）
+      if (window.AtlasStageRegistry && window.AtlasStageRegistry.legacyNameMap) {
+        const newCosts = {};
+        for (const [key, value] of Object.entries(greekCosts)) {
+          const newKey = window.AtlasStageRegistry.legacyNameMap[key] || key;
+          newCosts[newKey] = value;
+        }
+        greekCosts = newCosts;
         localStorage.setItem('unlockGreekCosts', JSON.stringify(greekCosts));
       }
 
-      let passedFlipcard = JSON.parse(localStorage.getItem('passed_flipcard')||'[]');
-      deities.forEach((d, index) => {
+      // 如果沒有設定成本，則為每個神祇設定隨機成本
+      if (!Object.keys(greekCosts).length) {
+        greekStages.forEach(stage => {
+          greekCosts[stage.id] = Math.floor(Math.random() * 31) + 30;
+        });
+        localStorage.setItem('unlockGreekCosts', JSON.stringify(greekCosts));
+      }
+
+      let passedFlipcard = migrateLegacyData(JSON.parse(localStorage.getItem('passed_flipcard')||'[]'));
+
+      // 保存遷移後的資料
+      localStorage.setItem('unlockedGreek', JSON.stringify(unlockedGreek));
+      localStorage.setItem('passed_flipcard', JSON.stringify(passedFlipcard));
+
+      // 計算關卡範圍
+      let cursor = 1;
+      greekStages.forEach(stage => {
+        stage.rangeStart = cursor;
+        stage.rangeEnd = cursor + stage.questionCount - 1;
+        cursor = stage.rangeEnd + 1;
+      });
+
+      // 為每個神祇添加圖片（使用原有圖片或預設）
+      const greekImages = {
+        zeus: 'https://i.pinimg.com/736x/f7/44/dc/f744dc2cd9f052369f1eda963bf3b547.jpg',
+        hera: 'https://images.nightcafe.studio/jobs/jrtc05QrGWfgcL9U7oQ5/jrtc05QrGWfgcL9U7oQ5--1--0kpbz.jpg?tr=w-1600,c-at_max',
+        poseidon: 'https://th.bing.com/th/id/OIP.ds9l0HmwcwlBZUt1_SOAUQHaLF?r=0&rs=1&pid=ImgDetMain&cb=idpwebpc2',
+        demeter: 'https://i.pinimg.com/736x/5e/55/f3/5e55f31c21d96c2055d39d07fa72ea2.jpg',
+        athena: 'https://i.pinimg.com/originals/45/09/04/45090436c02480c7d472774ba38bf682.jpg',
+        apollo: 'https://th.bing.com/th/id/OIP.nST24oXU5QbHwyzkNIDI0QHaHa?r=0&w=736&h=736&rs=1&pid=ImgDetMain&cb=idpwebpc2',
+        artemis: 'https://as2.ftcdn.net/v2/jpg/07/11/84/53/1000_F_711845312_FrFR9WTehywtZl3bO20csc48OSmqKRcU.jpg',
+        ares: 'https://i.pinimg.com/originals/e6/bc/f7/e6bcf7f460a50f2c2700122554c4386e.png',
+        aphrodite: 'https://img.freepik.com/premium-photo/timeless-beauty-capturing-ancient-greek-goddess-athena-ultrarealistic-splendor_960911-22038.jpg?w=2000',
+        hephaestus: 'https://th.bing.com/th/id/OIP.c9pf5fdxkTIC4f58Wwk7SQHaHa?r=0&w=1024&h=1024&rs=1&pid=ImgDetMain&cb=idpwebpc2',
+        hermes: 'https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https://substack-post-media.s3.amazonaws.com/public/images/49e898d3-33e8-4355-8049-5b32b6fa2695_1024x1024.png',
+        hestia: 'https://i.etsystatic.com/10441898/c/2143/2143/0/0/il/b01774/5669551924/il_600x600.5669551924_g09a.jpg',
+        dionysus: 'https://i.pinimg.com/1200x/d3/27/97/d327972a87a915c1cbd9fefe868307d1.jpg',
+        hades: 'https://th.bing.com/th/id/OIP.jh5PoCyBjLDW-PQlC9_1dAHaHa?r=0&w=1024&h=1024&rs=1&pid=ImgDetMain&cb=idpwebpc2',
+        persephone: 'https://i.pinimg.com/736x/4e/8a/9f/4e8a9f5c7d8e9f0a1b2c3d4e5f6a7b8.jpg',
+        eros: 'https://i.pinimg.com/736x/ad/63/63/ad6363477e4266b39aaf86e058facfb6.jpg',
+        nike: 'https://i.pinimg.com/736x/d8/b4/51/d8b4515f750e0f8106ba69a91ff05679.jpg',
+        gaia: 'https://i.pinimg.com/1200x/4e/ac/31/4eac313f814d9044877241e163a43585.jpg',
+        atlas: 'https://i.pinimg.com/736x/02/e2/14/02e214b507e55f3dddb673c7acdc25f7.jpg',
+        cronus: 'https://i.pinimg.com/1200x/89/24/bc/8924bcdf6c9734a961ef956a8e8fbf79.jpg',
+        rhea: 'https://i.pinimg.com/1200x/44/0e/e8/440ee8571b581d7ae728d2c9c765cb74.jpg',
+        prometheus: 'https://i.pinimg.com/736x/2d/b4/24/2db4245bd440fa993e2e1ac1904800c6.jpg'
+      };
+
+      greekStages.forEach(stage => {
+        if (!stage.image && greekImages[stage.id]) {
+          stage.image = greekImages[stage.id];
+        }
+      });
+
+      greekStages.forEach((stage, index) => {
         // 確保每個神祇都有成本設定
-        if (!greekCosts[d.name]) {
-          greekCosts[d.name] = Math.floor(Math.random() * 31) + 30;
+        if (!greekCosts[stage.id]) {
+          greekCosts[stage.id] = Math.floor(Math.random() * 31) + 30;
           // 保存更新後的成本到 localStorage
           localStorage.setItem('unlockGreekCosts', JSON.stringify(greekCosts));
         }
         const stageNumber = index + 1;
-        const stageStart = index * 40 + 1;
-        const stageEnd = (index + 1) * 40;
+        const stageStart = stage.rangeStart;
+        const stageEnd = stage.rangeEnd;
         const stageLabel = `第${stageNumber}關 ${stageStart}-${stageEnd}`;
-        const cost = greekCosts[d.name];
-        const unlocked = unlockedGreek.includes(d.name);
+        const cost = greekCosts[stage.id];
+
+        // 優先使用新的 stage progress 系統
+        let unlocked, cleared;
+        if (typeof isStageUnlocked === 'function' && typeof isStageCleared === 'function') {
+          unlocked = isStageUnlocked('greek', stage.id);
+          cleared = isStageCleared('greek', stage.id);
+        } else {
+          // 備用方案：使用舊系統
+          unlocked = unlockedGreek.includes(stage.id);
+          cleared = passedFlipcard.includes(stage.id);
+        }
+        
         const card = document.createElement('div');
-        card.className = 'card' + (unlocked ? '' : ' locked');
+        card.className = 'greek-card' + (unlocked ? '' : ' locked locked-card');
         if (!unlocked) card.dataset.locktext = `${cost}⭐解鎖`;
+
+        // 取得最佳星級
+        let bestStars = 0;
+        if (typeof StarSystem !== 'undefined' && typeof StarSystem.getLevelBestStars === 'function') {
+          bestStars = StarSystem.getLevelBestStars(stage.id);
+        }
+
+        // 生成星級顯示
+        let starDisplay = '';
+        if (bestStars === 3) starDisplay = '⭐⭐⭐';
+        else if (bestStars === 2) starDisplay = '⭐⭐☆';
+        else if (bestStars === 1) starDisplay = '⭐☆☆';
+        else starDisplay = '☆☆☆';
+
         card.innerHTML = `
-          <img src="${d.img}" alt="${d.name}"/>
-          <div class="card-title">${d.name}</div>
-          <div class="card-desc">${d.desc}</div>
-          <div class="card-info">${unlocked ? '已解鎖' : cost + '⭐解鎖'}</div>
-          <div class="stage-info">${stageLabel}</div>
-          ${passedFlipcard.includes(d.name) ? '<div style=\'position:absolute;top:8px;right:10px;font-size:1.3em;color:#ffd700;\'>✔ 已通關</div>' : ''}
+          <div class="greek-card-top">
+            <span class="greek-stage-badge">第${stageNumber}關</span>
+            <span class="greek-stars">${starDisplay}</span>
+          </div>
+          <div class="greek-avatar">
+            <img src="${stage.image || 'https://via.placeholder.com/150'}" alt="${stage.name}" onerror="handleGreekImageError(this)"/>
+          </div>
+          <div class="greek-name">${stage.name}</div>
+          <div class="greek-desc">${stage.description || ''}</div>
+          <div class="greek-range">
+            <span>單字範圍</span>
+            <strong>${stageStart}－${stageEnd}</strong>
+          </div>
+          <div class="greek-footer">
+            ${cleared ? '<div class="greek-status passed">✓ 已通關</div>' : (unlocked ? '<div class="greek-status unlocked">✓ 已解鎖</div>' : `<button class="greek-unlock-btn">🔒 ${cost}⭐ 解鎖</button>`)}
+          </div>
         `;
         card.addEventListener('click', () => {
           let cs = parseInt(localStorage.getItem('totalStars'), 10) || 0;
-          let ug = JSON.parse(localStorage.getItem('unlockedGreek') || '[]');
-          if (!ug.includes(d.name)) {
+          
+          // 檢查是否已解鎖
+          let isCurrentlyUnlocked;
+          if (typeof isStageUnlocked === 'function') {
+            isCurrentlyUnlocked = isStageUnlocked('greek', stage.id);
+          } else {
+            let ug = JSON.parse(localStorage.getItem('unlockedGreek') || '[]');
+            isCurrentlyUnlocked = ug.includes(stage.id);
+          }
+
+          if (!isCurrentlyUnlocked) {
             if (cs >= cost) {
               cs -= cost;
               Storage.setTotalStars(cs);
               totalStars = cs;
               updateDisplayStars();
-              ug.push(d.name);
-              Storage.set('unlockedGreek', ug);
+
+              // 解鎖關卡
+              if (typeof setStageUnlocked === 'function') {
+                setStageUnlocked('greek', stage.id, true);
+              } else {
+                let ug = JSON.parse(localStorage.getItem('unlockedGreek') || '[]');
+                ug.push(stage.id);
+                Storage.set('unlockedGreek', ug);
+              }
+              
               // 更新卡片顯示狀態
               card.classList.remove('locked');
               card.removeAttribute('data-locktext');
-              card.querySelector('.card-info').textContent = '已解鎖';
+              const footer = card.querySelector('.greek-footer');
+              if (footer) {
+                footer.innerHTML = '<div class="greek-status unlocked">✓ 已解鎖</div>';
+              }
               // 更新希臘關卡進度條
               updateProgress3();
             } else {
@@ -1051,17 +3960,48 @@
               return;
             }
           }
-          window.location.href = d.url;
+          window.location.href = stage.url;
         });
         document.getElementById('greekGrid').appendChild(card);
       });
     })();
 
+    // 選用較佳 TTS 語音
+    function getBestTTSVoice(lang) {
+      if (!window.speechSynthesis) return null;
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices.length) return null;
+      const prefix = String(lang || 'en').split('-')[0].toLowerCase();
+      const preferred = prefix === 'zh'
+        ? ['Google 國語（臺灣）', 'Microsoft Hanhan', 'Microsoft Yaoyao', 'Ting-Ting', 'Mei-Jia']
+        : ['Google US English', 'Samantha', 'Microsoft Zira', 'Microsoft David', 'Alex', 'Karen'];
+
+      return voices.find(v => v.lang.toLowerCase().startsWith(prefix) && preferred.some(name => v.name.includes(name)))
+        || voices.find(v => v.lang.toLowerCase().startsWith(prefix))
+        || voices.find(v => v.lang.toLowerCase().startsWith('en'))
+        || voices[0];
+    }
+
+    // 朗讀文字，自動選用較佳語音與自然語速
+    function speakNicely(text, lang = 'en-US') {
+      if (!window.speechSynthesis) return;
+      const utter = new SpeechSynthesisUtterance(text);
+      const voice = getBestTTSVoice(lang);
+      if (voice) utter.voice = voice;
+      utter.lang = lang;
+      utter.rate = 0.9;
+      utter.pitch = 1.0;
+      utter.volume = 1.0;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utter);
+    }
+
     // 練習關卡按鈕發音功能
     function speakPracticeMode() {
-      if (window.speechSynthesis) {
-        // 使用新的發音系統
+      if (typeof SoundSystem !== 'undefined' && SoundSystem.speech && typeof SoundSystem.speech.speakWord === 'function') {
         SoundSystem.speech.speakWord('Practice Mode');
+      } else {
+        speakNicely('Practice Mode', 'en-US');
       }
     }
     document.getElementById('practiceBtn').addEventListener('mouseenter', speakPracticeMode);
@@ -1072,114 +4012,285 @@
     // Tab1進度條
     function updateProgress1() {
       const total = atlasCategories.length;
-      const unlocked = JSON.parse(localStorage.getItem('unlocked')||'[]').length;
-      const percent = Math.round(unlocked/total*100);
-      document.getElementById('progressBar1').style.width = percent+'%';
-      document.getElementById('progressText1').textContent = `已解鎖 ${unlocked} / ${total}（${percent}%）`;
-      let passed = JSON.parse(localStorage.getItem('passed_atlas')||'[]').length;
-      let passDiv = document.getElementById('passText1');
-      if (!passDiv) {
-        passDiv = document.createElement('div');
-        passDiv.id = 'passText1';
-        document.getElementById('progressBar1Container').after(passDiv);
+      
+      // 自動修復 passed_atlas：如果關卡星級 >= 1 但不在 passed_atlas 中，自動補回
+      const passedAtlas = JSON.parse(localStorage.getItem('passed_atlas') || '[]');
+      let repaired = false;
+      
+      if (typeof StarSystem !== 'undefined' && typeof StarSystem.getLevelBestStars === 'function') {
+        atlasCategories.forEach(key => {
+          const stars = StarSystem.getLevelBestStars(key);
+          if (stars >= 1 && !passedAtlas.includes(key)) {
+            passedAtlas.push(key);
+            repaired = true;
+          }
+        });
+        
+        if (repaired) {
+          localStorage.setItem('passed_atlas', JSON.stringify(passedAtlas));
+        }
       }
-      passDiv.style.textAlign = 'center';
-      passDiv.style.color = '#ffd700';
-      passDiv.style.fontWeight = 'bold';
-      passDiv.textContent = `✔ 已通關 ${passed} / ${total}`;
+      
+      // 計算已解鎖數量
+      let unlocked = 0;
+      if (typeof isStageUnlocked === 'function') {
+        unlocked = atlasCategories.filter(key => isStageUnlocked('zodiac', key)).length;
+      } else {
+        unlocked = JSON.parse(localStorage.getItem('unlocked')||'[]').length;
+      }
+      
+      // 計算已通關數量（基於關卡星級 >= 1）
+      let passed = 0;
+      if (typeof StarSystem !== 'undefined' && typeof StarSystem.getLevelBestStars === 'function') {
+        passed = atlasCategories.filter(key => {
+          const stars = StarSystem.getLevelBestStars(key);
+          return stars >= 1;
+        }).length;
+      } else {
+        // 備用方案：使用 passed_atlas
+        passed = passedAtlas.length;
+      }
+      
+      // 計算百分比
+      const passPercent = total > 0 ? Math.round(passed/total*100) : 0;
+      const unlockPercent = total > 0 ? Math.round(unlocked/total*100) : 0;
+      
+      // 更新進度條
+      const progressBar = document.getElementById('progressBar1');
+      if (progressBar) {
+        progressBar.style.width = passPercent + '%';
+        // 100%時使用金色+青色漸層
+        if (passPercent === 100) {
+          progressBar.classList.add('completed');
+        } else {
+          progressBar.classList.remove('completed');
+        }
+      }
+      
+      // 更新百分比顯示
+      const progressPercent = document.getElementById('progressPercent1');
+      if (progressPercent) {
+        progressPercent.textContent = passPercent + '%';
+      }
+      
+      // 更新已通關數量
+      const passedCount = document.getElementById('passedCount1');
+      if (passedCount) {
+        passedCount.textContent = `${passed} / ${total}`;
+      }
+      
+      // 更新已解鎖數量
+      const unlockedCount = document.getElementById('unlockedCount1');
+      if (unlockedCount) {
+        unlockedCount.textContent = `${unlocked} / ${total}`;
+      }
     }
     updateProgress1();
 
-    // Tab3進度條 (希臘神祇)
+    // Tab3進度條 (希臘神祇) - 使用新的 stage progress 系統
     function updateProgress3() {
-      const deities = ['宙斯', '赫拉', '波塞頓', '得墨忒耳', '雅典娜', '阿波羅', '阿爾忒彌斯', 
-        '阿瑞斯', '阿芙蘿黛蒂', '赫菲斯托斯', '赫耳墨斯', '赫斯提亞', '狄俄尼索斯', '哈迪斯', 
-        '珀爾塞福涅', '厄洛斯', '尼刻', '蓋婭', '阿特拉斯', '克洛諾斯', '瑞亞', '普羅米修斯'];
-      const total = deities.length;
-      const unlocked = JSON.parse(localStorage.getItem('unlockedGreek')||'[]').length;
-      const percent = Math.round(unlocked/total*100);
-      document.getElementById('progressBar3').style.width = percent+'%';
-      document.getElementById('progressText3').textContent = `已解鎖 ${unlocked} / ${total}（${percent}%）`;
-      let passed = JSON.parse(localStorage.getItem('passed_flipcard')||'[]').length;
-      let passDiv = document.getElementById('passText3');
-      if (!passDiv) {
-        passDiv = document.createElement('div');
-        passDiv.id = 'passText3';
-        document.getElementById('progressBar3Container').after(passDiv);
+      let total, unlocked, passed;
+
+      // 優先使用新的 stage progress 系統
+      if (typeof getStageStatistics === 'function') {
+        const stats = getStageStatistics('greek');
+        total = stats.total;
+        unlocked = stats.stageUnlocked;
+        passed = stats.stageCleared;
+      } else {
+        // 備用方案：使用舊系統
+        const greekStages = window.AtlasStageRegistry ? window.AtlasStageRegistry.greek : [];
+        total = greekStages.length;
+        const unlockedData = JSON.parse(localStorage.getItem('unlockedGreek')||'[]');
+        const passedData = JSON.parse(localStorage.getItem('passed_flipcard')||'[]');
+
+        // 遷移舊資料
+        const migratedUnlocked = window.AtlasStageRegistry ? window.AtlasStageRegistry.migrateLegacyData(unlockedData) : unlockedData;
+        const migratedPassed = window.AtlasStageRegistry ? window.AtlasStageRegistry.migrateLegacyData(passedData) : passedData;
+
+        // 只統計 Registry 中存在的 ID
+        const validIds = new Set(greekStages.map(s => s.id));
+        unlocked = migratedUnlocked.filter(id => validIds.has(id)).length;
+        passed = migratedPassed.filter(id => validIds.has(id)).length;
       }
-      passDiv.style.textAlign = 'center';
-      passDiv.style.color = '#ffd700';
-      passDiv.style.fontWeight = 'bold';
-      passDiv.textContent = `✔ 已通關 ${passed} / ${total}`;
+
+      // 主進度條代表通關完成度
+      const passedPercent = total > 0 ? Math.round(passed/total*100) : 0;
+      document.getElementById('greekProgressBar').style.width = passedPercent+'%';
+      document.getElementById('greekProgressPercent').textContent = passedPercent+'%';
+      document.getElementById('greekPassedCount').textContent = `${passed} / ${total}`;
+      document.getElementById('greekUnlockedCount').textContent = `${unlocked} / ${total}`;
     }
     updateProgress3();
 
     // ----- 星座排行榜（Tab4） -----
     let currentRankingCategory = 'all';
+    let rankingRequestId = 0;
+    const LEADERBOARD_TIMEOUT_MS = 30000;
+    const LEADERBOARD_RETRY_COUNT = 3;
 
-    async function loadRanking() {
+    function getLeaderboardCacheKey(prefix, category) {
+      return `${prefix}_${category || 'all'}`;
+    }
+
+    async function fetchLeaderboardFromSheet(apiUrl, action, category, timeoutMs = LEADERBOARD_TIMEOUT_MS) {
+      if (!apiUrl) throw new Error('尚未設定 Google Sheet 排行榜 API URL');
+
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const formData = new URLSearchParams();
+        formData.append('action', action);
+        if (category && category !== 'all') formData.append('category', category);
+        if (action === 'getGreekLeaderboard' && (!category || category === 'all')) {
+          formData.append('category', 'all');
+        }
+
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: formData.toString(),
+          signal: controller.signal
+        });
+
+        if (!response.ok) {
+          throw new Error(`Google Sheet HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (data && data.success === false) {
+          throw new Error(data.error || 'Google Sheet 回傳失敗');
+        }
+
+        return Array.isArray(data)
+          ? data
+          : (Array.isArray(data?.leaderboard)
+            ? data.leaderboard
+            : (Array.isArray(data?.data) ? data.data : []));
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    async function fetchLeaderboardStable(label, fetcher) {
+      let lastError = null;
+      for (let attempt = 1; attempt <= LEADERBOARD_RETRY_COUNT; attempt++) {
+        try {
+          return await fetcher();
+        } catch (error) {
+          lastError = error;
+          console.warn(`[${label}] 第 ${attempt} 次讀取失敗`, error);
+          if (attempt < LEADERBOARD_RETRY_COUNT) {
+            await new Promise(resolve => setTimeout(resolve, 500 * attempt));
+          }
+        }
+      }
+      throw lastError || new Error(`${label}讀取失敗`);
+    }
+
+    function saveLeaderboardCache(prefix, category, leaderboard, label) {
+      try {
+        sessionStorage.setItem(getLeaderboardCacheKey(prefix, category), JSON.stringify({
+          savedAt: Date.now(),
+          leaderboard
+        }));
+      } catch (error) {
+        console.warn(`[${label}] 暫存快取失敗`, error);
+      }
+    }
+
+    function readLeaderboardCache(prefix, category) {
+      try {
+        const cached = JSON.parse(sessionStorage.getItem(getLeaderboardCacheKey(prefix, category)) || 'null');
+        return cached && Array.isArray(cached.leaderboard) ? cached.leaderboard : null;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function getQuizLeaderboardApiUrl() {
+      return (window.GameAPIConfig && window.GameAPIConfig.quizScoreApi)
+        || (window.API && typeof API.getApiUrl === 'function' ? API.getApiUrl() : '')
+        || '';
+    }
+
+    async function fetchQuizLeaderboardStable(category) {
+      return fetchLeaderboardStable('星座排行榜', () =>
+        fetchLeaderboardFromSheet(getQuizLeaderboardApiUrl(), 'getQuizLeaderboard', category)
+      );
+    }
+
+    function saveRankingCache(category, leaderboard) {
+      saveLeaderboardCache('atlasRankingCache', category, leaderboard, '星座排行榜');
+    }
+
+    function readRankingCache(category) {
+      return readLeaderboardCache('atlasRankingCache', category);
+    }
+
+    async function loadRanking(updateSnapshot = false) {
       const box = document.getElementById('rankingContainer');
       if (!box) return;
+
+      const requestId = ++rankingRequestId;
+      const requestedCategory = currentRankingCategory;
       
       box.innerHTML = `<p style="text-align:center;color:#aaa;">正在載入排行榜…</p>`;
       
       try {
-        const data = await API.getQuizLeaderboard(currentRankingCategory === 'all' ? null : currentRankingCategory);
-        if (data.success && Array.isArray(data.leaderboard)) {
-          const raw = currentRankingCategory === 'all'
-            ? data.leaderboard
-            : data.leaderboard.filter(item => LeaderboardUtils.normalizeCategory(item.category) === currentRankingCategory);
-          const processed = LeaderboardUtils.processLeaderboardData(raw, true);
-          renderRanking(processed);
-        } else {
-          renderLocalRanking();
-        }
-      } catch (err) {
-        console.warn('線上排行榜載入失敗，使用本地數據:', err);
-        renderLocalRanking();
-      }
-    }
+        const leaderboard = await fetchQuizLeaderboardStable(requestedCategory);
+        if (requestId !== rankingRequestId || requestedCategory !== currentRankingCategory) return;
 
-    function renderLocalRanking() {
-      const box = document.getElementById('rankingContainer');
-      if (!box) return;
-      
-      try {
-        const local = Storage.get('quizLeaderboard', []);
-        if (!local.length) {
-          box.innerHTML = LeaderboardUtils.renderEmptyState('目前沒有排行榜資料');
+        saveRankingCache(requestedCategory, leaderboard);
+        const raw = requestedCategory === 'all'
+          ? leaderboard
+          : leaderboard.filter(item => LeaderboardUtils.normalizeCategory(item.category) === requestedCategory);
+        const processed = LeaderboardUtils.processLeaderboardData(raw, true);
+
+        // 加入排名變化計算
+        const withRankChanges = LeaderboardUtils.addRankChanges(processed, requestedCategory);
+
+        renderRanking(withRankChanges);
+
+        // 儲存本次快照，下次載入時才能比對排名變化
+        LeaderboardUtils.updateLeaderboardSnapshot(requestedCategory, withRankChanges);
+      } catch (err) {
+        if (requestId !== rankingRequestId || requestedCategory !== currentRankingCategory) return;
+
+        console.warn('Google Sheet 排行榜載入失敗:', err);
+        const cached = readRankingCache(requestedCategory);
+        if (cached && cached.length) {
+          const processed = LeaderboardUtils.processLeaderboardData(cached, true);
+          const withRankChanges = LeaderboardUtils.addRankChanges(processed, requestedCategory);
+          renderRanking(withRankChanges);
+          box.insertAdjacentHTML('afterbegin', '<div style="text-align:center;color:#ffaa00;margin-bottom:10px;font-weight:bold;">Google Sheet 暫時連線不穩，已顯示本次頁面剛剛讀到的資料。</div>');
           return;
         }
-        const filtered = currentRankingCategory === 'all'
-          ? local
-          : local.filter(item => LeaderboardUtils.normalizeCategory(item.category) === currentRankingCategory);
-        const processed = LeaderboardUtils.processLeaderboardData(filtered, true);
-        renderRanking(processed);
-      } catch (e) {
-        console.error('載入本地排行榜失敗:', e);
-        box.innerHTML = LeaderboardUtils.renderEmptyState('目前沒有排行榜資料');
+
+        box.innerHTML = LeaderboardUtils.renderEmptyState('Google Sheet 排行榜讀取失敗，請稍後再試');
       }
     }
 
     function renderRanking(data) {
       const box = document.getElementById('rankingContainer');
       if (!box) return;
-      
+
       if (!data || !data.length) {
         box.innerHTML = LeaderboardUtils.renderEmptyState('目前沒有排行榜資料');
         return;
       }
-      
+
       const categoryName = LeaderboardUtils.categoryNames[currentRankingCategory] || '全部關卡';
       const title = `<div style="margin-bottom:12px;text-align:center;color:#00ffff;font-weight:bold;">🌟 ${categoryName} 排行榜</div>`;
-      
+
       LeaderboardUtils.renderTable(data, 'rankingContainer', {
         showCategory: currentRankingCategory === 'all',
-        showOriginalRank: true,
+        showOriginalRank: false,
         deduplicate: true,
         emptyMessage: '目前沒有排行榜資料'
       });
-      
+
       // 在表格前添加標題
       const tableDiv = box.querySelector('div[style*="overflow-x:auto"]');
       if (tableDiv) {
@@ -1187,9 +4298,8 @@
       }
     }
 
-    // 初始化：先檢查成就並即時載入排行榜（每次進入都會重載）
+    // 初始化：先檢查成就；排行榜等打開排行榜分頁時再讀取，避免同時打太多次 Google Sheet
     achievementSystem.triggerAchievementCheck();  // ←←← 維持原樣
-    loadRanking();
 
     // 星座排行榜下拉選單
     const rankingCategorySelect = document.getElementById('rankingCategorySelect');
@@ -1203,44 +4313,73 @@
 
     // ----- 希臘神祉排行榜（Tab4）-----
     let currentGreekRankingCategory = 'all';
-    const GREEK_SCORE_API = "https://script.google.com/macros/s/AKfycbzJWy7h__cMAyijHgeUGCEiCKSyysLfNRvzYYYnMH5sjSqfrMNyNZnmSi8hOXvVSo6c/exec";
+    let greekRankingRequestId = 0;
+
+    function getGreekLeaderboardApiUrl() {
+      return (window.GameAPIConfig && window.GameAPIConfig.greekScoreApi)
+        || "https://script.google.com/macros/s/AKfycbzJWy7h__cMAyijHgeUGCEiCKSyysLfNRvzYYYnMH5sjSqfrMNyNZnmSi8hOXvVSo6c/exec";
+    }
+
+    async function fetchGreekLeaderboardStable(category) {
+      return fetchLeaderboardStable('希臘神祉排行榜', () =>
+        fetchLeaderboardFromSheet(getGreekLeaderboardApiUrl(), 'getGreekLeaderboard', category)
+      );
+    }
+
+    function saveGreekRankingCache(category, leaderboard) {
+      saveLeaderboardCache('atlasGreekRankingCache', category, leaderboard, '希臘神祉排行榜');
+    }
+
+    function readGreekRankingCache(category) {
+      return readLeaderboardCache('atlasGreekRankingCache', category);
+    }
 
     async function loadGreekRanking() {
       const box = document.getElementById('greekRankingContainer');
       if (!box) return;
 
+      const requestId = ++greekRankingRequestId;
+      const requestedCategory = currentGreekRankingCategory;
+
       box.innerHTML = `<p style="text-align:center;color:#aaa;">正在載入排行榜…</p>`;
 
       try {
-        const formData = new URLSearchParams();
-        formData.append('action', 'getGreekLeaderboard');
-        formData.append('category', currentGreekRankingCategory);
+        const list = await fetchGreekLeaderboardStable(requestedCategory);
+        if (requestId !== greekRankingRequestId || requestedCategory !== currentGreekRankingCategory) return;
 
-        const response = await fetch(GREEK_SCORE_API, {
-          method: 'POST',
-          mode: 'cors',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: formData.toString()
-        });
+        saveGreekRankingCache(requestedCategory, list);
 
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const filtered = requestedCategory === 'all'
+          ? list
+          : list.filter(item => String(item.category || '').trim() === requestedCategory);
+        const processed = LeaderboardUtils.processLeaderboardData(filtered, true);
+
+        // 加入排名變化計算（使用希臘神祇專用的快照 key，避免與星座排行榜混淆）
+        const greekSnapshotKey = `greek_${requestedCategory}`;
+        const withRankChanges = LeaderboardUtils.addRankChanges(processed, requestedCategory, greekSnapshotKey);
+
+        renderGreekRanking(withRankChanges);
+
+        // 儲存本次快照，下次載入時才能比對排名變化
+        LeaderboardUtils.updateLeaderboardSnapshot(greekSnapshotKey, withRankChanges);
+      } catch (err) {
+        if (requestId !== greekRankingRequestId || requestedCategory !== currentGreekRankingCategory) return;
+
+        console.warn('希臘神祉排行榜載入失敗:', err);
+        const cached = readGreekRankingCache(requestedCategory);
+        if (cached && cached.length) {
+          const filtered = requestedCategory === 'all'
+            ? cached
+            : cached.filter(item => String(item.category || '').trim() === requestedCategory);
+          const processed = LeaderboardUtils.processLeaderboardData(filtered, true);
+          const greekSnapshotKey = `greek_${requestedCategory}`;
+          const withRankChanges = LeaderboardUtils.addRankChanges(processed, requestedCategory, greekSnapshotKey);
+          renderGreekRanking(withRankChanges);
+          box.insertAdjacentHTML('afterbegin', '<div style="text-align:center;color:#ffaa00;margin-bottom:10px;font-weight:bold;">Google Sheet 暫時連線不穩，已顯示本次頁面剛剛讀到的資料。</div>');
+          return;
         }
 
-        const data = await response.json();
-        const list = Array.isArray(data?.leaderboard)
-          ? data.leaderboard
-          : (Array.isArray(data?.data) ? data.data : []);
-
-        const filtered = currentGreekRankingCategory === 'all'
-          ? list
-          : list.filter(item => String(item.category || '').trim() === currentGreekRankingCategory);
-        const processed = LeaderboardUtils.processLeaderboardData(filtered, true);
-        renderGreekRanking(processed);
-      } catch (err) {
-        console.warn('希臘神祉排行榜載入失敗:', err);
-        const box = document.getElementById('greekRankingContainer');
-        if (box) box.innerHTML = LeaderboardUtils.renderEmptyState('目前沒有希臘神祉排行榜資料');
+        box.innerHTML = LeaderboardUtils.renderEmptyState('Google Sheet 希臘神祉排行榜讀取失敗，請稍後再試');
       }
     }
 
@@ -1258,7 +4397,7 @@
 
       LeaderboardUtils.renderTable(data, 'greekRankingContainer', {
         showCategory: currentGreekRankingCategory === 'all',
-        showOriginalRank: true,
+        showOriginalRank: false,
         deduplicate: true,
         emptyMessage: '目前沒有希臘神祉排行榜資料'
       });
@@ -1279,7 +4418,6 @@
       });
     }
 
-    loadGreekRanking();
   });
   </script>
 </body>

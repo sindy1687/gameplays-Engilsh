@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
+  <script src="js/stars.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>卡片收藏冊</title>
@@ -283,59 +284,77 @@
     .series-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
+    }
+
+    .series-list-header {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 4px;
+      margin-bottom: 4px;
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.5);
     }
 
     .series-item {
+      width: 100%;
+      min-height: 46px;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid #00ffff;
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 10px;
-      padding: 15px;
       cursor: pointer;
       transition: all 0.3s ease;
-      position: relative;
+      box-sizing: border-box;
     }
 
     .series-item:hover {
-      background: rgba(0, 255, 255, 0.1);
-      transform: translateX(5px);
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .series-item.active {
-      background: rgba(0, 255, 255, 0.2);
-      border: 2px solid #00ffff;
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-    }
-
-    .series-item-icon {
-      font-size: 1.5rem;
-      margin-bottom: 5px;
+      background: rgba(139, 92, 246, 0.18);
+      border-left: 4px solid #8b5cf6;
     }
 
     .series-item-name {
-      font-size: 1rem;
-      font-weight: bold;
-      margin-bottom: 5px;
+      flex: 1;
+      min-width: 0;
+      font-size: 17px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .series-item-progress {
-      font-size: 0.8rem;
-      color: #aaa;
-    }
-
-    .series-missing-dot {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 20px;
-      height: 20px;
-      background: #ff6b6b;
-      border-radius: 50%;
-      display: flex;
+    .series-item-count {
+      margin-left: auto;
+      flex-shrink: 0;
+      min-width: 28px;
+      height: 26px;
+      padding: 0 8px;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.7rem;
-      font-weight: bold;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .series-item-count.has-cards {
+      background: rgba(34, 211, 238, 0.15);
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      color: #67e8f9;
+    }
+
+    .series-item-count.is-empty {
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.35);
     }
 
     /* 右欄：系列卡片收藏牆 */
@@ -1137,6 +1156,10 @@
       <!-- 左欄：系列列表 -->
       <div class="series-list-panel">
         <h3>📁 系列列表</h3>
+        <div class="series-list-header">
+          <span>系列卡池</span>
+          <span>持有</span>
+        </div>
         <div class="series-list" id="seriesList">
           <!-- 系列項目將由 JS 動態生成 -->
         </div>
@@ -1231,6 +1254,7 @@
 
   <!-- 引入必要的 JS -->
   <script src="js/cards.js"></script>
+  <script src="js/cardVideoManager.js"></script>
   <script src="js/userData.js"></script>
   <script src="js/cardStorage.js"></script>
   <script src="js/seriesGacha.js"></script>
@@ -1300,6 +1324,9 @@
       
       // 綁定領取獎勵按鈕
       document.getElementById('claimRewardBtn').addEventListener('click', claimSeriesReward);
+      
+      // 綁定系列介紹按鈕
+      document.getElementById('seriesInfoBtn').addEventListener('click', showSeriesDetail);
       
       console.log('✅ 卡片收藏冊頁面初始化完成');
     }
@@ -1406,12 +1433,12 @@
       
       // 渲染系列卡片
       seriesList.innerHTML = seriesData.map(series => {
+        const countDisplay = series.collected > 0 ? series.collected : '—';
+        const countClass = series.collected > 0 ? 'has-cards' : 'is-empty';
         return `
           <div class="series-item ${selectedSeries === series.name ? 'active' : ''}" onclick="selectSeries('${series.name}')">
-            <div class="series-item-icon">📁</div>
             <div class="series-item-name">${series.name}</div>
-            <div class="series-item-progress">${series.collected} / ${series.total}</div>
-            ${series.missing > 0 ? `<div class="series-missing-dot">${series.missing}</div>` : ''}
+            <div class="series-item-count ${countClass}">${countDisplay}</div>
           </div>
         `;
       }).join('');
@@ -2058,6 +2085,106 @@
       utterance.rate = 0.85;
       utterance.pitch = 1;
       window.speechSynthesis.speak(utterance);
+    }
+
+    // 顯示系列詳細資訊
+    function showSeriesDetail() {
+      if (!selectedSeries) {
+        alert('請先選擇一個系列');
+        return;
+      }
+
+      const seriesCards = getSeriesCards(selectedSeries);
+      const ownedCards = LinkageSystem.cards.getOwnedCards();
+      const total = seriesCards.length;
+      const collected = seriesCards.filter(card => ownedCards[card.word]).length;
+      const rate = total > 0 ? Math.round((collected / total) * 100) : 0;
+
+      // 計算稀有度分佈
+      let ssrCount = 0, srCount = 0, rCount = 0;
+      seriesCards.forEach(card => {
+        if (card.rarity === '超稀有') ssrCount++;
+        else if (card.rarity === '稀有') srCount++;
+        else rCount++;
+      });
+
+      const seriesInfo = `
+        <div style="padding: 20px; color: #fff;">
+          <h2 style="color: #00ffff; margin-bottom: 20px;">📁 ${selectedSeries}</h2>
+          
+          <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+            <h3 style="color: #a259ff; margin-bottom: 10px;">收集進度</h3>
+            <p>已收集：${collected} / ${total} (${rate}%)</p>
+            <div style="width: 100%; height: 20px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 10px; overflow: hidden;">
+              <div style="width: ${rate}%; height: 100%; background: linear-gradient(90deg, #00ffff, #a259ff);"></div>
+            </div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+            <h3 style="color: #ffd700; margin-bottom: 10px;">稀有度分佈</h3>
+            <p>SSR：${ssrCount} 張</p>
+            <p>A：${srCount} 張</p>
+            <p>R：${rCount} 張</p>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
+            <h3 style="color: #ff6b6b; margin-bottom: 10px;">系列資訊</h3>
+            <p>系列名稱：${selectedSeries}</p>
+            <p>總卡片數：${total} 張</p>
+            <p>完成狀態：${collected === total ? '✅ 已完成' : '⏳ 未完成'}</p>
+          </div>
+
+          <button onclick="closeSeriesDetail()" style="margin-top: 20px; padding: 10px 20px; background: linear-gradient(135deg, #00ffff, #a259ff); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer;">關閉</button>
+        </div>
+      `;
+
+      // 創建臨時 modal
+      const modal = document.createElement('div');
+      modal.id = 'seriesDetailModal';
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        z-index: 3000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+      `;
+
+      const content = document.createElement('div');
+      content.style.cssText = `
+        background: linear-gradient(135deg, rgba(20, 10, 40, 0.95), rgba(30, 20, 60, 0.95));
+        border: 3px solid #00ffff;
+        border-radius: 24px;
+        padding: 0;
+        max-width: 500px;
+        width: 90%;
+        max-height: 85vh;
+        overflow-y: auto;
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+      `;
+
+      content.innerHTML = seriesInfo;
+      modal.appendChild(content);
+      document.body.appendChild(modal);
+
+      // 點擊外部關閉
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          closeSeriesDetail();
+        }
+      });
+    }
+
+    function closeSeriesDetail() {
+      const modal = document.getElementById('seriesDetailModal');
+      if (modal) {
+        modal.remove();
+      }
     }
   </script>
 </body>

@@ -1,9 +1,21 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
   <meta charset="UTF-8" />
   <title>填空挑戰 - 英打小英雄</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <script type="application/json" id="atlasStageMeta">
+  {
+    "type": "greek",
+    "id": "gaia",
+    "name": "蓋婭",
+    "englishName": "Gaia",
+    "order": 18,
+    "description": "大地之母",
+    "questionCount": 40
+  }
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="responsive_enhanced.css">
   <style>
@@ -556,6 +568,7 @@
   <script src="js/userData.js"></script>
   <script src="js/characterDialogue.js"></script>
   <script src="js/gameDialogue.js"></script>
+  <script src="js/apiConfig.js"></script>
   <script src="js/greekScoreUpload.js"></script>
   <script>
     // ===== 遊戲配置 =====
@@ -1133,36 +1146,134 @@ const VOCAB_DATA = [
     }
 
     // ===== 遊戲結束畫面 =====
+    let greekGameEnded = false;
+
+    function setTextSafe(id, value) {
+      const element = document.getElementById(id);
+      if (!element) {
+        console.warn('[Greek Settlement] 找不到元素:', id);
+        return false;
+      }
+      element.textContent = value;
+      return true;
+    }
+
     function showGameEndScreen() {
-      const correctCount = gameState.answerLog.filter(log => log && log.correct === true).length;
-      const wrongCount = gameState.answerLog.filter(log => log && log.correct === false).length;
-      const totalStars = loadTotalStars();
+      console.log('[Greek Settlement] showGameEndScreen called');
 
-      document.getElementById('endSessionStars').textContent = gameState.sessionStars;
-      document.getElementById('endCorrectCount').textContent = correctCount;
-      document.getElementById('endWrongCount').textContent = wrongCount;
-      document.getElementById('endTotalStars').textContent = totalStars;
+      if (greekGameEnded) {
+        console.warn('[Greek Settlement] 已結算，忽略重複呼叫');
+        return;
+      }
+      greekGameEnded = true;
 
-      document.getElementById('gameEndModal').style.display = 'flex';
+      try {
+        // 停止計時器
+        if (gameState.timerInterval) {
+          clearInterval(gameState.timerInterval);
+          gameState.timerInterval = null;
+        }
 
-      stopTimer();
-      unlockReviewButton();
+        // 計算統計數據
+        const logs = Array.isArray(gameState.answerLog) ? gameState.answerLog : [];
+        const correctCount = logs.filter(log => log && log.correct === true).length;
+        const wrongCount = logs.filter(log => log && log.correct === false).length;
+        const sessionStars = Number(gameState.sessionStars || 0);
 
-      try { SOUNDS.correct.currentTime = 0; SOUNDS.correct.play(); } catch (e) {}
+        let totalStars = 0;
+        try {
+          totalStars = typeof loadTotalStars === 'function' ? Number(loadTotalStars() || 0) : Number(localStorage.getItem('totalStars') || 0);
+        } catch (error) {
+          console.warn('[Greek Settlement] 取得總星星失敗', error);
+        }
 
-      if (window.GameDialogue) {
-        setTimeout(() => {
-          if (correctCount > wrongCount) {
-            window.GameDialogue.showGameVictoryDialogue();
-          } else {
-            window.GameDialogue.showGameDefeatDialogue();
-          }
-        }, 2000);
+        // 安全更新結束畫面數據
+        setTextSafe('endSessionStars', sessionStars);
+        setTextSafe('endCorrectCount', correctCount);
+        setTextSafe('endWrongCount', wrongCount);
+        setTextSafe('endTotalStars', totalStars);
+
+        // 顯示結束畫面（優先執行）
+        const modal = document.getElementById('gameEndModal');
+        if (!modal) {
+          console.error('[Greek Settlement] gameEndModal 不存在');
+          return;
+        }
+        modal.style.display = 'flex';
+        modal.classList.add('show');
+        console.log('✅ [Greek Settlement] 結算畫面已顯示');
+
+        // 停止計時器
+        stopTimer();
+
+        // 解鎖複習按鈕
+        unlockReviewButton();
+
+        // 播放完成音效
+        try {
+          SOUNDS.correct.currentTime = 0;
+          SOUNDS.correct.play();
+        } catch (e) {}
+
+        // 結算畫面顯示後，執行非必要功能（排行榜上傳等）
+        runGreekSettlementExtras({
+          correctCount,
+          wrongCount,
+          sessionStars,
+          totalStars
+        });
+
+        // 顯示勝利/失敗對話
+        if (window.GameDialogue) {
+          setTimeout(() => {
+            if (correctCount > wrongCount) {
+              window.GameDialogue.showGameVictoryDialogue();
+            } else {
+              window.GameDialogue.showGameDefeatDialogue();
+            }
+          }, 2000);
+        }
+
+      } catch (error) {
+        console.error('❌ [Greek Settlement] 結算發生錯誤', error);
+
+        // 就算前面有錯，最後還是嘗試打開 modal
+        const modal = document.getElementById('gameEndModal');
+        if (modal) {
+          modal.style.display = 'flex';
+        }
       }
     }
 
+    function runGreekSettlementExtras(settlement) {
+      // 不阻塞 UI
+      Promise.resolve().then(async () => {
+        if (typeof window.submitGreekScore !== 'function') {
+          console.warn('[Greek Settlement] submitGreekScore 不存在');
+          return;
+        }
+
+        try {
+          await window.submitGreekScore({
+            score: settlement.sessionStars,
+            correctCount: settlement.correctCount,
+            wrongCount: settlement.wrongCount,
+            totalTime: typeof gameState.totalTimeUsed === 'number' ? gameState.totalTimeUsed : 0,
+            averageTime: settlement.correctCount > 0 ? Math.round((typeof gameState.totalTimeUsed === 'number' ? gameState.totalTimeUsed : 0) / settlement.correctCount) : 0
+          });
+        } catch (error) {
+          console.error('[Greek Settlement] 排行榜上傳失敗', error);
+        }
+      });
+    }
+
     function restartGame() {
+      greekGameEnded = false;
+
+      // 隱藏結束畫面
       document.getElementById('gameEndModal').style.display = 'none';
+
+      // 重置遊戲狀態
       gameState.currentIndex = 0;
       gameState.sessionStars = 0;
       gameState.answerLog = [];
@@ -1297,6 +1408,12 @@ const VOCAB_DATA = [
     }
 
     function addStarsToTotal(stars) {
+      // 優先使用 StarSystem
+      if (typeof StarSystem !== 'undefined' && typeof StarSystem.addTotalStars === 'function') {
+        StarSystem.addTotalStars(stars, '蓋亞遊戲獎勵');
+        updateStarsDisplay();
+        return;
+      }
       if (typeof StarRewardSystem !== 'undefined' && typeof StarRewardSystem.addStars === 'function') {
         StarRewardSystem.addStars(stars);
         updateStarsDisplay();
@@ -1309,12 +1426,15 @@ const VOCAB_DATA = [
       }
       const currentStars = loadTotalStars();
       const newTotal = currentStars + stars;
-      localStorage.setItem('totalStars', newTotal);
+      window.StarSystem.setTotalStars(newTotal);
       updateStarsDisplay();
     }
 
     function updateStarsDisplay() {
-      document.getElementById('totalStarsCount').textContent = loadTotalStars();
+      const element = document.getElementById('totalStarsCount');
+      if (element) {
+        element.textContent = loadTotalStars();
+      }
     }
 
     // ===== 複習單字功能 =====

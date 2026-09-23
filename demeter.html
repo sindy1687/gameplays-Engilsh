@@ -1,11 +1,24 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
   <meta charset="UTF-8" />
   <title>填空挑戰 - 英打小英雄</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <script type="application/json" id="atlasStageMeta">
+  {
+    "type": "greek",
+    "id": "demeter",
+    "name": "得墨忒耳",
+    "englishName": "Demeter",
+    "order": 4,
+    "description": "豐收女神",
+    "questionCount": 40
+  }
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="responsive_enhanced.css">
+  <link rel="stylesheet" href="css/greek-stage.css">
   <style>
     /* 防止水平滾動 */
     html {
@@ -749,7 +762,9 @@
   <script src="js/userData.js"></script>
   <script src="js/characterDialogue.js"></script>
   <script src="js/gameDialogue.js"></script>
+  <script src="js/apiConfig.js"></script>
   <script src="js/greekScoreUpload.js"></script>
+  <script src="js/greekStageSystem.js"></script>
   <script>
     // ===== 遊戲配置 =====
     const GAME_CONFIG = {
@@ -818,12 +833,13 @@
 
     window.gameState = gameState;
 
-    let lives = 5;
+    // 使用共用愛心系統
+    let lives = 5; // 初始值，稍後會由 GreekStageSystem 初始化
 
     function updateLives() {
-      const el = document.getElementById('lives');
-      if (!el) return;
-      el.innerHTML = '❤️'.repeat(Math.max(0, lives)) + '🤍'.repeat(Math.max(0, 5 - lives));
+      if (typeof GreekStageSystem !== 'undefined' && GreekStageSystem.updateLivesUI) {
+        GreekStageSystem.updateLivesUI();
+      }
     }
 
     // ===== 音效資源 =====
@@ -1108,13 +1124,12 @@
       const feedback = document.getElementById('feedback');
       if (feedback) feedback.innerHTML = '<span style="color:#bbb;">已跳過本題</span>';
       setTimeout(() => {
-        lives--;
-        updateLives();
-        if (lives <= 0) {
-          showGameEndScreen();
+        const lostLife = GreekStageSystem.loseLife('skip');
+        if (GreekStageSystem.isGameOver()) {
           return;
         }
         gameState.currentIndex++;
+        GreekStageSystem.resetQuestionState();
         showQuestion();
       }, 400);
     }
@@ -1127,13 +1142,12 @@
         if (feedback) feedback.innerHTML = '<span style="color:#bbb;">未作答</span>';
       }
       setTimeout(() => {
-        lives--;
-        updateLives();
-        if (lives <= 0) {
-          showGameEndScreen();
+        const lostLife = GreekStageSystem.loseLife('timeout');
+        if (GreekStageSystem.isGameOver()) {
           return;
         }
         gameState.currentIndex++;
+        GreekStageSystem.resetQuestionState();
         showQuestion();
       }, 400);
     }
@@ -1186,33 +1200,27 @@
           showQuestion();
         }, 1300);
       } else {
-        if (gameState.attemptCount < GAME_CONFIG.MAX_ATTEMPTS) {
-          feedback.innerHTML = `<div class='feedback-box feedback-wrong'>❌ 再試一次！你可以的！</div>`;
-          try {
-            SOUNDS.wrong.currentTime = 0;
-            SOUNDS.wrong.play();
-          } catch (e) {}
-          return;
-        }
+        // 答錯立即扣 1 顆愛心
+        const lostLife = GreekStageSystem.loseLife('wrong_answer');
 
-        feedback.innerHTML = `<div class='feedback-box feedback-wrong'>❌ 正確答案：<b>${current.answer}</b><br>別氣餒，再接再厲！</div>`;
+        feedback.innerHTML = `<div class='feedback-box feedback-wrong'>❌ 正確答案：<b>${current.answer}</b><br>${lostLife ? '失去 ❤️ ×1' : ''}</div>`;
         inputEl.disabled = true;
         document.getElementById('submit-btn').disabled = true;
         logAnswer(false, inputEl.value.trim());
-        lives--;
-        updateLives();
 
         try {
           SOUNDS.wrong.currentTime = 0;
           SOUNDS.wrong.play();
         } catch (e) {}
 
+        // 如果遊戲結束，不繼續
+        if (GreekStageSystem.isGameOver()) {
+          return;
+        }
+
         setTimeout(() => {
-          if (lives <= 0) {
-            showGameEndScreen();
-            return;
-          }
           gameState.currentIndex++;
+          GreekStageSystem.resetQuestionState();
           showQuestion();
         }, 1300);
       }
@@ -1224,9 +1232,15 @@
     }
 
     function addStarsToTotal(stars) {
+      // 優先使用 StarSystem
+      if (typeof StarSystem !== 'undefined' && typeof StarSystem.addTotalStars === 'function') {
+        StarSystem.addTotalStars(stars, '得墨忒耳遊戲獎勵');
+        updateStarsDisplay();
+        return;
+      }
       const currentStars = loadTotalStars();
       const newTotal = currentStars + stars;
-      localStorage.setItem('totalStars', newTotal);
+      window.StarSystem.setTotalStars(newTotal);
       updateStarsDisplay();
     }
 
@@ -1237,37 +1251,139 @@
       }
     }
 
+    // ===== 遊戲結束畫面 =====
+    let greekGameEnded = false;
+
+    function setTextSafe(id, value) {
+      const element = document.getElementById(id);
+      if (!element) {
+        console.warn('[Greek Settlement] 找不到元素:', id);
+        return false;
+      }
+      element.textContent = value;
+      return true;
+    }
+
     function showGameEndScreen() {
-      stopTimer();
+      console.log('[Greek Settlement] showGameEndScreen called');
 
-      const correctCount = gameState.answerLog.filter(log => log && log.correct === true).length;
-      const wrongCount = gameState.answerLog.filter(log => log && log.correct === false).length;
-      const totalStars = loadTotalStars();
-
-      document.getElementById('endSessionStars').textContent = gameState.sessionStars;
-      document.getElementById('endCorrectCount').textContent = correctCount;
-      document.getElementById('endWrongCount').textContent = wrongCount;
-      document.getElementById('endTotalStars').textContent = totalStars;
-      document.getElementById('gameEndModal').style.display = 'flex';
-
-      unlockReviewButton();
+      if (greekGameEnded) {
+        console.warn('[Greek Settlement] 已結算，忽略重複呼叫');
+        return;
+      }
+      greekGameEnded = true;
 
       try {
-        SOUNDS.correct.currentTime = 0;
-        SOUNDS.correct.play();
-      } catch (e) {}
+        // 停止計時器
+        if (gameState.timerInterval) {
+          clearInterval(gameState.timerInterval);
+          gameState.timerInterval = null;
+        }
+
+        // 計算統計數據
+        const logs = Array.isArray(gameState.answerLog) ? gameState.answerLog : [];
+        const correctCount = logs.filter(log => log && log.correct === true).length;
+        const wrongCount = logs.filter(log => log && log.correct === false).length;
+        const sessionStars = Number(gameState.sessionStars || 0);
+
+        let totalStars = 0;
+        try {
+          totalStars = typeof loadTotalStars === 'function' ? Number(loadTotalStars() || 0) : Number(localStorage.getItem('totalStars') || 0);
+        } catch (error) {
+          console.warn('[Greek Settlement] 取得總星星失敗', error);
+        }
+
+        // 安全更新結束畫面數據
+        setTextSafe('endSessionStars', sessionStars);
+        setTextSafe('endCorrectCount', correctCount);
+        setTextSafe('endWrongCount', wrongCount);
+        setTextSafe('endTotalStars', totalStars);
+
+        // 顯示結束畫面（優先執行）
+        const modal = document.getElementById('gameEndModal');
+        if (!modal) {
+          console.error('[Greek Settlement] gameEndModal 不存在');
+          return;
+        }
+        modal.style.display = 'flex';
+        modal.classList.add('show');
+        console.log('✅ [Greek Settlement] 結算畫面已顯示');
+
+        // 停止計時器
+        stopTimer();
+
+        // 解鎖複習按鈕
+        unlockReviewButton();
+
+        // 播放完成音效
+        try {
+          SOUNDS.correct.currentTime = 0;
+          SOUNDS.correct.play();
+        } catch (e) {}
+
+        // 結算畫面顯示後，執行非必要功能（排行榜上傳等）
+        runGreekSettlementExtras({
+          correctCount,
+          wrongCount,
+          sessionStars,
+          totalStars
+        });
+
+      } catch (error) {
+        console.error('❌ [Greek Settlement] 結算發生錯誤', error);
+
+        // 就算前面有錯，最後還是嘗試打開 modal
+        const modal = document.getElementById('gameEndModal');
+        if (modal) {
+          modal.style.display = 'flex';
+        }
+      }
+    }
+
+    function runGreekSettlementExtras(settlement) {
+      if (gameState.data.length > 0 && gameState.currentIndex >= gameState.data.length && settlement.correctCount >= Math.ceil(gameState.data.length * 0.8)) {
+        const passed = JSON.parse(localStorage.getItem("passed_greek") || "[]");
+        if (!passed.includes("demeter")) {
+          passed.push("demeter");
+          localStorage.setItem("passed_greek", JSON.stringify(passed));
+        }
+      }
+      // 不阻塞 UI
+      Promise.resolve().then(async () => {
+        if (typeof window.submitGreekScore !== 'function') {
+          console.warn('[Greek Settlement] submitGreekScore 不存在');
+          return;
+        }
+
+        try {
+          await window.submitGreekScore({
+            score: settlement.sessionStars,
+            correctCount: settlement.correctCount,
+            wrongCount: settlement.wrongCount,
+            totalTime: typeof gameState.totalTimeUsed === 'number' ? gameState.totalTimeUsed : 0,
+            averageTime: settlement.correctCount > 0 ? Math.round((typeof gameState.totalTimeUsed === 'number' ? gameState.totalTimeUsed : 0) / settlement.correctCount) : 0
+          });
+        } catch (error) {
+          console.error('[Greek Settlement] 排行榜上傳失敗', error);
+        }
+      });
     }
 
     function restartGame() {
+      greekGameEnded = false;
+
       document.getElementById('gameEndModal').style.display = 'none';
       gameState.currentIndex = 0;
       gameState.sessionStars = 0;
       gameState.answerLog = [];
       gameState.totalTimeUsed = 0;
       gameState.questionStartTs = null;
-      lives = 5;
 
+      // 重置愛心系統
+      GreekStageSystem.initLives();
+      lives = GreekStageSystem.getLives();
       updateLives();
+
       initData();
       updateCounter();
       showQuestion();
@@ -1545,6 +1661,10 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      // 初始化共用愛心系統
+      GreekStageSystem.initLives();
+      lives = GreekStageSystem.getLives();
+
       updateStarsDisplay();
       document.getElementById('sessionStarsDisplay').textContent = `本次已獲得 0 顆星星`;
       updateLives();
@@ -1554,7 +1674,7 @@
       showQuestion();
 
       initBackgroundMusic();
-      
+
       // 初始化時解鎖複習按鈕
       unlockReviewButton();
 

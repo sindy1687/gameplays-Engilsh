@@ -1,11 +1,24 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
   <meta charset="UTF-8" />
   <title>填空挑戰 - 英打小英雄</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <script type="application/json" id="atlasStageMeta">
+  {
+    "type": "greek",
+    "id": "aphrodite",
+    "name": "阿芙蘿黛蒂",
+    "englishName": "Aphrodite",
+    "order": 9,
+    "description": "愛與美之神",
+    "questionCount": 40
+  }
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="responsive_enhanced.css">
+  <link rel="stylesheet" href="css/greek-game-theme.css">
   <style>
     /* 防止水平滾動 */
     html {
@@ -576,7 +589,7 @@
     }
   </style>
 </head>
-<body>
+<body data-god="aphrodite">
   <!-- 背景音樂控制按鈕 -->
   <button id="bgMusicControl" onclick="toggleBackgroundMusic()" title="背景音樂控制">🎵</button>
 
@@ -585,130 +598,168 @@
     <source src="sound/午後放鬆時光（純音樂）.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- 星星數顯示區塊 -->
-  <div id="starsDisplay">
-    ⭐<span id="totalStarsCount">0</span>
-  </div>
-
-  <!-- 頂部按鈕 -->
-  <div class="top-btns">
-    <button onclick="location.href='atlas.html?tab=greek'" aria-label="回首頁">🏠 回首頁</button>
-    <button onclick="resetProgress()" aria-label="重新開始">🔄 重新開始</button>
-    <button onclick="showReviewModal()" aria-label="複習單字">📚 複習單字</button>
-  </div>
-
-  <h1>阿芙蘿黛蒂 Aphrodite - 填空挑戰</h1>
-
-  <!-- 本次星星顯示 -->
-  <div id="sessionStarsDisplay" style="margin-bottom:10px;color:#ffd700;font-weight:bold;font-size:1.08rem;">
-    本次已獲得 0 顆星星
-  </div>
-
-  <!-- 進度顯示 -->
-  <div id="star-counter">
-    第 <span id="current-index">0</span> / <span id="total-questions">0</span> 題
-  </div>
-
-  <!-- 計時器 -->
-  <div id="timer" class="hidden">
-    ⏳ 倒數：<span id="time-left">0</span> 秒
-  </div>
-
-  <!-- 問題容器 -->
-  <div id="question-container"></div>
-
-  <!-- 遊戲結束畫面 -->
-  <div id="gameEndModal" class="modal" style="display: none;">
-    <div class="modal-content">
-      <div class="end-icon">🎉</div>
-      <h2>遊戲完成！</h2>
-      <div class="end-stats">
-        <p>⭐ 本次獲得星星：<span id="endSessionStars">0</span></p>
-        <p>✅ 答對題數：<span id="endCorrectCount">0</span></p>
-        <p>❌ 答錯題數：<span id="endWrongCount">0</span></p>
-        <p>⭐ 累積總星星：<span id="endTotalStars">0</span></p>
+  <!-- 主內容容器 -->
+  <div class="greek-game-shell">
+    <!-- HUD -->
+    <div class="greek-hud">
+      <div class="hud-left">
+        <div class="hud-stars" id="starsDisplay">
+          <span class="hud-stars-icon">⭐</span>
+          <span id="totalStarsCount">0</span>
+        </div>
       </div>
-      <div class="end-buttons">
-        <button onclick="restartGame()">🔄 重新開始</button>
-        <button onclick="location.href='atlas.html?tab=greek'">🏠 返回首頁</button>
+      <div class="hud-center">
+        阿芙蘿黛蒂 APHRODITE
+      </div>
+      <div class="hud-right">
+        <div class="hud-hearts" id="lives">
+          <span class="hud-heart-icon">❤️</span>
+          <span id="lives-count">5</span>
+        </div>
+        <div class="hud-nav">
+          <button class="hud-btn" onclick="showReviewModal()">� 複習</button>
+          <button class="hud-btn" onclick="restartGame()">� 重來</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- 複習單字彈窗 -->
-  <div id="reviewModal" class="modal" style="display: none;">
-    <div class="modal-content">
-      <div class="end-icon">📚</div>
-      <h2>單字複習</h2>
-      
-      <!-- 分類選擇器 -->
-      <div style="margin-bottom: 20px;">
-        <label for="categoryFilter" style="color: #ffd700; font-weight: bold; margin-right: 10px;">選擇分類：</label>
-        <select id="categoryFilter" style="
-          background: #222;
-          color: #fff;
-          border: 2px solid #ffd700;
+    <!-- 神祇 Hero 區塊 -->
+    <div class="god-hero">
+      <div class="god-icon">💕</div>
+      <h1 class="god-name">阿芙蘿黛蒂</h1>
+      <div class="god-name-en">APHRODITE</div>
+      <div class="god-title">愛與美之神</div>
+    </div>
+
+    <!-- 本次星星顯示 -->
+    <div id="sessionStarsDisplay" style="margin-bottom:10px;color:#ffd700;font-weight:bold;font-size:1.08rem;">
+      本次已獲得 0 顆星星
+    </div>
+
+    <!-- 問題容器 -->
+    <div id="question-container"></div>
+
+    <!-- 遊戲結束畫面 -->
+    <div id="gameEndModal" class="modal" style="display: none;">
+      <div class="game-end-content">
+        <div class="end-icon" id="end-icon">🏆</div>
+        <h2 class="end-title" id="end-title">挑戰完成</h2>
+        <div class="end-subtitle" id="end-subtitle">阿芙蘿黛蒂 APHRODITE</div>
+
+        <div class="settlement-grid">
+          <div class="settlement-item">
+            <span class="settlement-icon">⭐</span>
+            <span class="settlement-label">本次星星</span>
+            <span class="settlement-value" id="endSessionStars">0</span>
+          </div>
+          <div class="settlement-item">
+            <span class="settlement-icon">✅</span>
+            <span class="settlement-label">答對</span>
+            <span class="settlement-value" id="endCorrectCount">0</span>
+          </div>
+          <div class="settlement-item">
+            <span class="settlement-icon">❌</span>
+            <span class="settlement-label">答錯</span>
+            <span class="settlement-value" id="endWrongCount">0</span>
+          </div>
+          <div class="settlement-item">
+            <span class="settlement-icon">🎯</span>
+            <span class="settlement-label">正確率</span>
+            <span class="settlement-value" id="endAccuracy">0%</span>
+          </div>
+          <div class="settlement-item">
+            <span class="settlement-icon">⏱</span>
+            <span class="settlement-label">總時間</span>
+            <span class="settlement-value" id="endTime">0秒</span>
+          </div>
+          <div class="settlement-item">
+            <span class="settlement-icon">⭐</span>
+            <span class="settlement-label">總星星</span>
+            <span class="settlement-value" id="endTotalStars">0</span>
+          </div>
+        </div>
+
+        <div class="leaderboard-section">
+          <div class="leaderboard-title">� 希臘神祇排行榜</div>
+          <div class="leaderboard-status" id="leaderboard-status">☁️ 成績同步中...</div>
+        </div>
+
+        <div class="end-buttons">
+          <button class="btn-primary" onclick="restartGame()">🔄 再玩一次</button>
+          <button class="btn-secondary" onclick="showReviewModal()">📚 複習單字</button>
+          <button class="btn-ghost" onclick="location.href='atlas.html?tab=greek'">🏛️ 返回神祇圖鑑</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 複習單字彈窗 -->
+    <div id="reviewModal" class="modal" style="display: none;">
+      <div class="review-modal-content">
+        <h2>📚 複習單字</h2>
+
+        <div class="review-filters" style="margin-bottom: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+          <select id="categoryFilter" style="
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 1rem;
+            cursor: pointer;
+          ">
+            <option value="all">全部單字</option>
+            <option value="動作動詞">動作動詞</option>
+            <option value="身體健康">身體健康</option>
+            <option value="自然環境">自然環境</option>
+            <option value="家庭用品">家庭用品</option>
+            <option value="抽象概念">抽象概念</option>
+            <option value="數量分數">數量分數</option>
+            <option value="稱謂人際">稱謂人際</option>
+            <option value="場所位置">場所位置</option>
+            <option value="形容詞">形容詞</option>
+          </select>
+          <div>總計：<span id="totalVocabCount">0</span> 個單字</div>
+        </div>
+
+        <div id="vocabStats" style="
+          background: rgba(255, 215, 0, 0.1);
+          border: 1px solid var(--border-god);
           border-radius: 8px;
-          padding: 8px 12px;
-          font-size: 1rem;
-          cursor: pointer;
+          padding: 10px;
+          margin-bottom: 15px;
+          color: var(--god-primary);
+          font-size: 0.9rem;
+          display: flex;
+          gap: 8px;
+          align-items: center;
+          flex-wrap: wrap;
         ">
-          <option value="all">全部單字</option>
-          <option value="動作動詞">動作動詞</option>
-          <option value="身體健康">身體健康</option>
-          <option value="自然環境">自然環境</option>
-          <option value="家庭用品">家庭用品</option>
-          <option value="抽象概念">抽象概念</option>
-          <option value="數量分數">數量分數</option>
-          <option value="稱謂人際">稱謂人際</option>
-          <option value="場所位置">場所位置</option>
-          <option value="形容詞">形容詞</option>
-        </select>
-      </div>
-      
-      <!-- 統計資訊 -->
-      <div id="vocabStats" style="
-        background: rgba(255, 215, 0, 0.1);
-        border: 1px solid #ffd700;
-        border-radius: 8px;
-        padding: 10px;
-        margin-bottom: 15px;
-        color: #ffd700;
-        font-size: 0.9rem;
-      ">
-        總共 <span id="totalVocabCount">0</span> 個單字
-        <button onclick="showVocabStats()" style="
-          background: #0ff;
-          color: #000;
-          border: none;
-          border-radius: 6px;
-          padding: 4px 8px;
-          font-size: 0.8rem;
-          margin-left: 10px;
-          cursor: pointer;
-        ">📊 詳細統計</button>
-        <button onclick="exportVocabData()" style="
-          background: #4caf50;
-          color: #fff;
-          border: none;
-          border-radius: 6px;
-          padding: 4px 8px;
-          font-size: 0.8rem;
-          margin-left: 5px;
-          cursor: pointer;
-        ">📥 匯出字庫</button>
-      </div>
-      
-      <div id="reviewWordsContainer" style="max-height: 400px; overflow-y: auto; margin: 20px 0;">
-        <!-- 單字列表將在這裡動態生成 -->
-      </div>
-      <div class="end-buttons">
-        <button onclick="closeReviewModal()">關閉</button>
+          <span>總共 <span id="totalVocabCount">0</span> 個單字</span>
+          <button onclick="showVocabStats()" class="btn-secondary" style="
+            padding: 4px 8px;
+            font-size: 0.8rem;
+          ">📊 詳細統計</button>
+          <button onclick="exportVocabData()" class="btn-secondary" style="
+            padding: 4px 8px;
+            font-size: 0.8rem;
+          ">📥 匯出字庫</button>
+        </div>
+
+        <div id="reviewWordsContainer" style="max-height: 400px; overflow-y: auto; margin: 20px 0;">
+          <!-- 單字列表將在這裡動態生成 -->
+        </div>
+        <div class="end-buttons">
+          <button class="btn-primary" onclick="closeReviewModal()">關閉</button>
+        </div>
       </div>
     </div>
-  </div>
 
+    <!-- 關閉主內容容器 -->
+    </div>
+
+  <script src="js/utils.js"></script>
   <script src="js/gameDialogue.js"></script>
+<script src="js/apiConfig.js"></script>
 <script src="js/greekScoreUpload.js"></script>
   <script>
     // ===== 遊戲配置 =====
@@ -1254,38 +1305,129 @@ const VOCAB_DATA = [
     }
 
     // ===== 遊戲結束畫面 =====
+    let greekGameEnded = false;
+
+    function setTextSafe(id, value) {
+      const element = document.getElementById(id);
+      if (!element) {
+        console.warn('[Greek Settlement] 找不到元素:', id);
+        return false;
+      }
+      element.textContent = value;
+      return true;
+    }
+
     function showGameEndScreen() {
-      // 計算統計數據
-      const correctCount = gameState.answerLog.filter(log => log && log.correct === true).length;
-      const wrongCount = gameState.answerLog.filter(log => log && log.correct === false).length;
-      const totalStars = loadTotalStars();
+      console.log('[Greek Settlement] showGameEndScreen called');
 
-      // 更新結束畫面數據
-      document.getElementById('endSessionStars').textContent = gameState.sessionStars;
-      document.getElementById('endCorrectCount').textContent = correctCount;
-      document.getElementById('endWrongCount').textContent = wrongCount;
-      document.getElementById('endTotalStars').textContent = totalStars;
+      if (greekGameEnded) {
+        console.warn('[Greek Settlement] 已結算，忽略重複呼叫');
+        return;
+      }
+      greekGameEnded = true;
 
-      // 顯示結束畫面
-      document.getElementById('gameEndModal').style.display = 'flex';
-      
-      // 停止計時器
-      stopTimer();
-      
-      // 解鎖複習按鈕
-      unlockReviewButton();
-      
-      // 播放完成音效
       try {
-        SOUNDS.correct.currentTime = 0;
-        SOUNDS.correct.play();
-      } catch (e) {}
+        // 停止計時器
+        if (gameState.timerInterval) {
+          clearInterval(gameState.timerInterval);
+          gameState.timerInterval = null;
+        }
+
+        // 計算統計數據
+        const logs = Array.isArray(gameState.answerLog) ? gameState.answerLog : [];
+        const correctCount = logs.filter(log => log && log.correct === true).length;
+        const wrongCount = logs.filter(log => log && log.correct === false).length;
+        const sessionStars = Number(gameState.sessionStars || 0);
+
+        let totalStars = 0;
+        try {
+          totalStars = typeof loadTotalStars === 'function' ? Number(loadTotalStars() || 0) : Number(localStorage.getItem('totalStars') || 0);
+        } catch (error) {
+          console.warn('[Greek Settlement] 取得總星星失敗', error);
+        }
+
+        // 安全更新結束畫面數據
+        setTextSafe('endSessionStars', sessionStars);
+        setTextSafe('endCorrectCount', correctCount);
+        setTextSafe('endWrongCount', wrongCount);
+        setTextSafe('endTotalStars', totalStars);
+
+        // 顯示結束畫面（優先執行）
+        const modal = document.getElementById('gameEndModal');
+        if (!modal) {
+          console.error('[Greek Settlement] gameEndModal 不存在');
+          return;
+        }
+        modal.style.display = 'flex';
+        modal.classList.add('show');
+        console.log('✅ [Greek Settlement] 結算畫面已顯示');
+
+        // 停止計時器
+        stopTimer();
+
+        // 解鎖複習按鈕
+        unlockReviewButton();
+
+        // 播放完成音效
+        try {
+          SOUNDS.correct.currentTime = 0;
+          SOUNDS.correct.play();
+        } catch (e) {}
+
+        // 結算畫面顯示後，執行非必要功能（排行榜上傳等）
+        runGreekSettlementExtras({
+          correctCount,
+          wrongCount,
+          sessionStars,
+          totalStars
+        });
+
+      } catch (error) {
+        console.error('❌ [Greek Settlement] 結算發生錯誤', error);
+
+        // 就算前面有錯，最後還是嘗試打開 modal
+        const modal = document.getElementById('gameEndModal');
+        if (modal) {
+          modal.style.display = 'flex';
+        }
+      }
+    }
+
+    function runGreekSettlementExtras(settlement) {
+      if (gameState.data.length > 0 && gameState.currentIndex >= gameState.data.length && settlement.correctCount >= Math.ceil(gameState.data.length * 0.8)) {
+        const passed = JSON.parse(localStorage.getItem("passed_greek") || "[]");
+        if (!passed.includes("aphrodite")) {
+          passed.push("aphrodite");
+          localStorage.setItem("passed_greek", JSON.stringify(passed));
+        }
+      }
+      // 不阻塞 UI
+      Promise.resolve().then(async () => {
+        if (typeof window.submitGreekScore !== 'function') {
+          console.warn('[Greek Settlement] submitGreekScore 不存在');
+          return;
+        }
+
+        try {
+          await window.submitGreekScore({
+            score: settlement.sessionStars,
+            correctCount: settlement.correctCount,
+            wrongCount: settlement.wrongCount,
+            totalTime: typeof gameState.totalTimeUsed === 'number' ? gameState.totalTimeUsed : 0,
+            averageTime: settlement.correctCount > 0 ? Math.round((typeof gameState.totalTimeUsed === 'number' ? gameState.totalTimeUsed : 0) / settlement.correctCount) : 0
+          });
+        } catch (error) {
+          console.error('[Greek Settlement] 排行榜上傳失敗', error);
+        }
+      });
     }
 
     function restartGame() {
+      greekGameEnded = false;
+
       // 隱藏結束畫面
       document.getElementById('gameEndModal').style.display = 'none';
-      
+
       // 重置遊戲狀態
       gameState.currentIndex = 0;
       gameState.sessionStars = 0;
@@ -1406,14 +1548,23 @@ const VOCAB_DATA = [
     }
 
     function addStarsToTotal(stars) {
+      // 優先使用 StarSystem
+      if (typeof StarSystem !== 'undefined' && typeof StarSystem.addTotalStars === 'function') {
+        StarSystem.addTotalStars(stars, '阿佛洛狄忒遊戲獎勵');
+        updateStarsDisplay();
+        return;
+      }
       const currentStars = loadTotalStars();
       const newTotal = currentStars + stars;
-      localStorage.setItem('totalStars', newTotal);
+      window.StarSystem.setTotalStars(newTotal);
       updateStarsDisplay();
     }
 
     function updateStarsDisplay() {
-      document.getElementById('totalStarsCount').textContent = loadTotalStars();
+      const element = document.getElementById('totalStarsCount');
+      if (element) {
+        element.textContent = loadTotalStars();
+      }
     }
 
     // ===== 複習單字功能 =====

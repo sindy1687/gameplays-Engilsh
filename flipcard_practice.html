@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>翻牌單字練習</title>
@@ -204,6 +205,319 @@
         .back-home-btn:hover {
             transform: scale(1.08);
             box-shadow: 0 0 32px #00ffff, 0 0 48px #a259ffcc;
+        }
+
+        /* Game HUD */
+        .game-hud {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .hud-item {
+            background: rgba(10, 20, 40, 0.8);
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            color: #00ffff;
+            font-size: 1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .progress-text {
+            color: #ffd700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .progress-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            height: 12px;
+            overflow: hidden;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #00ffff, #a259ff);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Combo Display */
+        #combo-display {
+            color: #ff6b35;
+            text-shadow: 0 0 8px #ff6b35;
+            animation: combo-pop 0.3s ease-out;
+        }
+
+        @keyframes combo-pop {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Match Feedback */
+        .match-feedback {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00ffff;
+            margin-bottom: 15px;
+            min-height: 30px;
+            text-shadow: 0 0 10px #00ffff;
+        }
+
+        @keyframes feedback-pop {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Golden Card */
+        .golden-card {
+            border: 3px solid #ffd700 !important;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5) !important;
+        }
+
+        .golden-card .match-card-back {
+            background: linear-gradient(135deg, #fff8dc, #ffd700) !important;
+            color: #000 !important;
+        }
+
+        /* Boss Battle UI */
+        .boss-battle-container {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 0, 0, 0.1);
+            border-radius: 20px;
+            border: 2px solid rgba(255, 0, 0, 0.5);
+            animation: boss-pulse 1s ease-in-out infinite;
+        }
+
+        .boss-header {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #ff4444;
+            text-shadow: 0 0 12px #ff0000;
+            margin-bottom: 15px;
+        }
+
+        .boss-hp {
+            font-size: 2.5rem;
+            letter-spacing: 8px;
+            margin-bottom: 20px;
+        }
+
+        .boss-question {
+            margin: 20px 0;
+        }
+
+        .boss-question-text {
+            font-size: 1.2rem;
+            color: #ff9999;
+            margin-bottom: 10px;
+        }
+
+        .boss-question-word {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .boss-input {
+            padding: 12px 20px;
+            font-size: 1.2rem;
+            border: 2px solid #ff4444;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .boss-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .boss-option-btn {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: 2px solid #ff4444;
+            border-radius: 10px;
+            background: rgba(255, 68, 68, 0.2);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .boss-option-btn:hover {
+            background: rgba(255, 68, 68, 0.4);
+            transform: scale(1.05);
+        }
+
+        .boss-feedback {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 20px;
+            min-height: 30px;
+        }
+
+        .boss-feedback.correct {
+            color: #4caf50;
+        }
+
+        .boss-feedback.wrong {
+            color: #f44336;
+        }
+
+        .boss-result {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .boss-result-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .boss-result-title {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+
+        .boss-result-reward {
+            font-size: 1.5rem;
+            color: #00ffff;
+            margin-bottom: 20px;
+        }
+
+        .boss-result-desc {
+            font-size: 1.2rem;
+            color: #ff9999;
+            margin-bottom: 20px;
+        }
+
+        @keyframes boss-pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 0, 0, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 0, 0, 0.6); }
+        }
+
+        /* Difficulty Selection */
+        .difficulty-selection {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .difficulty-selection h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+
+        .difficulty-btn {
+            padding: 12px 24px;
+            margin: 0 8px;
+            font-size: 1.1rem;
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #00ffff;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .difficulty-btn:hover {
+            background: rgba(0, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .difficulty-btn.selected {
+            background: rgba(0, 255, 255, 0.3);
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        /* Memory Timer HUD */
+    .memory-timer {
+      position: sticky;
+      top: 14px;
+      margin: 14px auto 22px;
+      width: fit-content;
+      min-width: 260px;
+      padding: 12px 22px;
+      border-radius: 18px;
+      background: rgba(9,17,35,.94);
+      border: 1px solid rgba(0,230,255,.28);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      font-size: 1.35rem;
+      font-weight: 900;
+      z-index: 20;
+      text-align: center;
+    }
+
+    .memory-timer .timer-number {
+      color: #00eaff;
+      font-size: 1.8rem;
+      margin: 0 8px;
+    }
+
+    .memory-tip {
+      color: rgba(255,255,255,.72);
+      font-size: .9rem;
+      margin-top: 8px;
+    }
+
+    /* START Banner */
+    .start-banner {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      font-weight: 900;
+      color: #00eaff;
+      text-shadow: 0 0 20px #00eaff, 0 0 40px #a259ff;
+      pointer-events: none;
+      z-index: 1000;
+      animation: start-pop 0.6s ease-out;
+    }
+
+    @keyframes start-pop {
+      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+      50% { transform: translate(-50%, -50%) scale(1.2); }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+
+    @keyframes timer-pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.18); }
+      100% { transform: scale(1); }
+    }
+
+    /* Hint Button */
+        .hint-btn {
+            margin: 0 auto 20px auto;
+            display: block;
         }
 
         /* 響應式設計 */
@@ -449,22 +763,94 @@
         <div id="reviewArea" style="display:none;">
             <h2>本關單字複習</h2>
             <div id="reviewWordList" style="display:flex;flex-wrap:wrap;justify-content:center;gap:16px 32px;margin:24px 0 18px 0;" class="review-word-list"></div>
+            <div class="difficulty-selection">
+                <h3>選擇難度</h3>
+                <button class="difficulty-btn" data-difficulty="practice">🌱 練習</button>
+                <button class="difficulty-btn" data-difficulty="normal">⚔️ 標準</button>
+                <button class="difficulty-btn" data-difficulty="hard">🔥 挑戰</button>
+            </div>
             <button class="btn" id="startGameBtn">開始遊戲</button>
-            <button class="btn" id="skipLevelBtn1">我已經會了，跳到下一關</button>
+            <button class="btn" id="skipLevelBtn1">⚡ 快速挑戰</button>
         </div>
         <div id="matchGameArea" style="display:none;">
+            <div class="game-hud">
+                <div class="hud-item">⏱ <span id="gameTimer">60</span></div>
+                <div class="hud-item">⭐ <span id="gameStars">0</span></div>
+                <div class="hud-item" id="combo-display" style="display:none;"></div>
+                <div class="hud-item">👣 <span id="gameMoves">0</span></div>
+                <div class="hud-item">❌ <span id="gameErrors">0</span></div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-text">已完成：<span id="matchProgress">0</span> / <span id="totalPairs">0</span></div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+            <div id="match-feedback" class="match-feedback"></div>
+            <button class="btn hint-btn" id="hintBtn">💡 提示</button>
             <div class="grid" id="matchGridWrap">
                 <div id="matchGrid"></div>
             </div>
             <button class="btn" id="backToMenuBtn" style="display:none;">返回選單</button>
-            <button class="btn" id="skipLevelBtn2">我已經會了，跳到下一關</button>
+            <button class="btn" id="skipLevelBtn2">⚡ 快速挑戰</button>
         </div>
     </div>
     <audio id="successSound" src="sound/correct.mp3" preload="auto"></audio>
     <audio id="failSound" src="sound/wrong.mp3" preload="auto"></audio>
     <script src="js/sound.js"></script>
     <script src="js/vocabData.js"></script>
+    <script src="js/stageProgress.js"></script>
     <script>
+    // ===== 翻牌遊戲配置 =====
+    const FLIPCARD_GAME_CONFIG = {
+      practice: {
+        previewSeconds: 8,
+        timeLimit: 0,
+        hintCost: 0
+      },
+      normal: {
+        previewSeconds: 5,
+        timeLimit: 60,
+        hintCost: 10
+      },
+      hard: {
+        previewSeconds: 3,
+        timeLimit: 45,
+        hintCost: 15,
+        starMultiplier: 1.5
+      },
+      bossQuestions: 3,
+      bossWrongLimit: 3,
+      goldenPairChance: 0.12,
+      eventEveryMatches: 3,
+      comboMultiplier: {
+        2: 1.4,
+        3: 2.0,
+        5: 3.0
+      }
+    };
+
+    // ===== 翻牌遊戲狀態 =====
+    const matchGameState = {
+      difficulty: 'normal',
+      round: 1,
+      totalRounds: 1,
+      combo: 0,
+      maxCombo: 0,
+      moves: 0,
+      wrongAttempts: 0,
+      sessionStars: 0,
+      hintsUsed: 0,
+      reviveUsed: false,
+      currentEvent: null,
+      bossActive: false,
+      bossHp: 3,
+      bossWrongCount: 0,
+      goldenPairId: null,
+      timeLeft: 0,
+      timerInterval: null
+    };
+
     let vocabList = [];
     let currentGroup = '';
     let completedGroups = JSON.parse(localStorage.getItem('flipcard_completedGroups') || '{}');
@@ -488,9 +874,11 @@
       // 讀取 localStorage 的 book_書名
       try {
         const arr = JSON.parse(localStorage.getItem('book_' + urlBookName) || '[]');
-        // 轉換成 {en, zh} 格式
+        // 轉換成 {en, zh} 格式，並排除需要修正的單字
         if (Array.isArray(arr) && arr.length > 0) {
-          customBookVocab = arr.map(v => ({ en: v.word, zh: v.meaning }));
+          customBookVocab = arr
+            .filter(v => !v.importNeedsReview)
+            .map(v => ({ en: v.word, zh: v.meaning }));
         }
       } catch {}
     }
@@ -676,9 +1064,28 @@
         document.getElementById('matchGameArea').style.display = '';
         document.getElementById('backToMenuBtn').style.display = 'none';
         showLevelProgress();
-        // 進入時全部翻開10秒，並顯示倒數
-        let previewSec = 10;
+        
+        // 根據難度設定預覽時間
+        const config = FLIPCARD_GAME_CONFIG[matchGameState.difficulty];
+        let previewSec = config.previewSeconds;
+        
+        // 設定遊戲時間限制
+        matchGameState.timeLeft = config.timeLimit;
+        updateGameHUD();
+        
+        // 如果有時間限制，啟動計時器
+        if (config.timeLimit > 0) {
+            startGameTimer();
+        }
+        
+        // 進入時全部翻開，並顯示倒數
         showPreviewCountdown(previewSec);
+        
+        // 記憶期間禁止點擊
+        document.querySelectorAll('.match-card').forEach(card => {
+            card.classList.add('locked');
+        });
+        
         setTimeout(() => {
             document.querySelectorAll('.match-card').forEach(card => card.classList.add('flipped'));
             lockBoard = true;
@@ -688,12 +1095,32 @@
                 showPreviewCountdown(left);
                 if (left <= 0) {
                     clearInterval(timer);
-                    document.querySelectorAll('.match-card').forEach(card => card.classList.remove('flipped'));
-                    lockBoard = false;
-                    showPreviewCountdown(0, true);
+                    // 顯示 START Banner
+                    showStartBanner();
+                    
+                    setTimeout(() => {
+                        // 全部蓋牌
+                        document.querySelectorAll('.match-card').forEach(card => {
+                            card.classList.remove('flipped');
+                            card.classList.remove('locked');
+                        });
+                        lockBoard = false;
+                        showPreviewCountdown(0, true);
+                    }, 600);
                 }
             }, 1000);
         }, 100);
+    }
+
+    // ===== 自動 Grid 欄數計算 =====
+    function getMatchGridColumns(cardCount) {
+        if (cardCount <= 4) return 2;
+        if (cardCount <= 6) return 3;
+        if (cardCount <= 8) return 4;
+        if (cardCount <= 10) return 5;
+        if (cardCount <= 12) return 4;
+        if (cardCount <= 15) return 5;
+        return 4;
     }
 
     function setupMatchGrid() {
@@ -702,6 +1129,24 @@
         firstCard = null;
         lockBoard = false;
         matchedCount = 0;
+        
+        // 重置遊戲狀態
+        matchGameState.combo = 0;
+        matchGameState.maxCombo = 0;
+        matchGameState.moves = 0;
+        matchGameState.wrongAttempts = 0;
+        matchGameState.sessionStars = 0;
+        matchGameState.hintsUsed = 0;
+        matchGameState.bossActive = false;
+        matchGameState.bossHp = 3;
+        matchGameState.bossWrongCount = 0;
+        
+        // 隨機選擇黃金卡（但不顯示）
+        if (matchPairs.length > 0) {
+            const goldenIndex = Math.floor(Math.random() * matchPairs.length);
+            matchGameState.goldenPairId = goldenIndex;
+        }
+        
         // 產生英文卡片與中文卡片
         let cards = [];
         matchPairs.forEach((pair, idx) => {
@@ -710,10 +1155,16 @@
         });
         shuffleArray(cards);
         matchCards = cards;
+        
+        // 設定 Grid 欄數
+        const columns = getMatchGridColumns(cards.length);
+        grid.style.setProperty('--grid-columns', columns);
+        
         // 建立卡片元素
         cards.forEach((card, i) => {
             const div = document.createElement('div');
             div.className = 'match-card';
+            // 不在記憶階段顯示黃金卡
             div.dataset.type = card.type;
             div.dataset.value = card.value;
             div.dataset.pairId = card.pairId;
@@ -726,7 +1177,7 @@
             const back = document.createElement('div');
             back.className = 'match-card-back';
             const len = (card.value || '').length;
-            back.innerHTML = `<span style=\"--len:${len}\">${card.value}</span>`;
+            back.innerHTML = `<span style="--len:${len}">${card.value}</span>`;
             inner.appendChild(front);
             inner.appendChild(back);
             div.appendChild(inner);
@@ -752,6 +1203,7 @@
         if (!firstCard) {
             firstCard = { div, card };
         } else {
+            matchGameState.moves++; // 增加步數
             lockBoard = true;
             setTimeout(() => {
                 if (firstCard.card.pairId === card.pairId && firstCard.card.type !== card.type) {
@@ -761,26 +1213,48 @@
                     div.classList.add('matched');
                     firstCard.div.classList.add('matched');
                     matchedCount++;
+                    
+                    // 增加 Combo
+                    matchGameState.combo++;
+                    if (matchGameState.combo > matchGameState.maxCombo) {
+                        matchGameState.maxCombo = matchGameState.combo;
+                    }
+                    
+                    // 計算星星
+                    let stars = 5;
+                    const comboMultiplier = FLIPCARD_GAME_CONFIG.comboMultiplier[matchGameState.combo] || 1;
+                    stars = Math.floor(stars * comboMultiplier);
+                    
+                    // 黃金卡獎勵
+                    if (card.pairId === matchGameState.goldenPairId) {
+                        stars += 20;
+                        // 顯示黃金卡效果
+                        div.classList.add('golden-reveal');
+                        firstCard.div.classList.add('golden-reveal');
+                    }
+                    
+                    matchGameState.sessionStars += stars;
+                    
+                    // 顯示 Combo 和星星
+                    showComboDisplay();
+                    showMatchFeedback(stars, card.pairId === matchGameState.goldenPairId);
+                    updateGameHUD();
+                    updateProgress();
+                    
                     if (matchedCount === matchPairs.length) {
-                        // 進入下一關或全部完成
-                        if (currentLevel < LEVELS_PER_GROUP - 1) {
-                            currentLevel++;
-                            matchedCount = 0;
-                            setTimeout(() => {
-                                showReviewArea();
-                            }, 600);
-                        } else {
-                            // 標記本組全部完成
-                            let key = currentGroup + '_ALL';
-                            completedGroups[key] = true;
-                            localStorage.setItem('flipcard_completedGroups', JSON.stringify(completedGroups));
-                            showCompleteModal();
-                        }
+                        // 全部配對完成，進入 Boss
+                        setTimeout(() => {
+                            startBossBattle();
+                        }, 1000);
                     }
                 } else {
                     // 配對失敗
                     document.getElementById('failSound').currentTime = 0;
                     document.getElementById('failSound').play();
+                    matchGameState.combo = 0; // 重置 Combo
+                    matchGameState.wrongAttempts++; // 增加錯誤次數
+                    showComboDisplay();
+                    updateGameHUD();
                     div.classList.remove('flipped');
                     firstCard.div.classList.remove('flipped');
                 }
@@ -790,7 +1264,580 @@
         }
     }
 
-    // 自動發音函式
+    // ===== Combo 顯示 =====
+    function showComboDisplay() {
+        const comboEl = document.getElementById('combo-display');
+        if (!comboEl) return;
+        
+        if (matchGameState.combo >= 2) {
+            let comboText = `COMBO ×${matchGameState.combo}`;
+            if (matchGameState.combo >= 5) {
+                comboText = '🔥 MEMORY STREAK';
+            }
+            comboEl.textContent = comboText;
+            comboEl.style.display = 'block';
+            comboEl.style.animation = 'none';
+            setTimeout(() => {
+                comboEl.style.animation = 'combo-pop 0.3s ease-out';
+            }, 10);
+        } else {
+            comboEl.style.display = 'none';
+        }
+    }
+
+    // ===== 更新遊戲 HUD =====
+    function updateGameHUD() {
+        const timerEl = document.getElementById('gameTimer');
+        const starsEl = document.getElementById('gameStars');
+        const movesEl = document.getElementById('gameMoves');
+        const errorsEl = document.getElementById('gameErrors');
+        
+        if (timerEl) timerEl.textContent = matchGameState.timeLeft;
+        if (starsEl) starsEl.textContent = matchGameState.sessionStars;
+        if (movesEl) movesEl.textContent = matchGameState.moves;
+        if (errorsEl) errorsEl.textContent = matchGameState.wrongAttempts;
+    }
+
+    // ===== 更新進度 =====
+    function updateProgress() {
+        const progressEl = document.getElementById('matchProgress');
+        const totalEl = document.getElementById('totalPairs');
+        const fillEl = document.getElementById('progressFill');
+        
+        if (progressEl) progressEl.textContent = matchedCount;
+        if (totalEl) totalEl.textContent = matchPairs.length;
+        if (fillEl) {
+            const percent = (matchedCount / matchPairs.length) * 100;
+            fillEl.style.width = percent + '%';
+        }
+    }
+
+    // ===== 配對回饋顯示 =====
+    function showMatchFeedback(stars, isGolden) {
+        const feedbackEl = document.getElementById('match-feedback');
+        if (!feedbackEl) return;
+        
+        let feedbackText = `MATCH! +${stars}⭐`;
+        if (isGolden) {
+            feedbackText = '⭐ GOLDEN MATCH! +' + stars + '⭐';
+        }
+        
+        feedbackEl.textContent = feedbackText;
+        feedbackEl.style.display = 'block';
+        feedbackEl.style.animation = 'feedback-pop 0.5s ease-out';
+        
+        setTimeout(() => {
+            feedbackEl.style.display = 'none';
+        }, 1000);
+    }
+
+    // ===== Boss 戰系統 =====
+    function startBossBattle() {
+        matchGameState.bossActive = true;
+        matchGameState.bossHp = FLIPCARD_GAME_CONFIG.bossQuestions;
+        matchGameState.bossWrongCount = 0;
+        
+        // 顯示 Boss UI
+        showBossUI();
+    }
+
+    function showBossUI() {
+        const gameArea = document.getElementById('matchGameArea');
+        if (!gameArea) return;
+        
+        gameArea.innerHTML = `
+            <div class="boss-battle-container">
+                <div class="boss-header">👑 BOSS BATTLE</div>
+                <div class="boss-hp">${'❤️'.repeat(matchGameState.bossHp)}</div>
+                <div class="boss-question" id="bossQuestion"></div>
+                <div class="boss-options" id="bossOptions"></div>
+                <div class="boss-feedback" id="bossFeedback"></div>
+            </div>
+        `;
+        
+        loadBossQuestion();
+    }
+
+    function loadBossQuestion() {
+        // 從本關單字隨機選一題
+        const randomIndex = Math.floor(Math.random() * matchPairs.length);
+        const pair = matchPairs[randomIndex];
+        
+        const questionEl = document.getElementById('bossQuestion');
+        const optionsEl = document.getElementById('bossOptions');
+        
+        if (!questionEl || !optionsEl) return;
+        
+        // 隨機選擇題型
+        const questionType = Math.floor(Math.random() * 3);
+        
+        if (questionType === 0) {
+            // 中文 -> 英文輸入
+            questionEl.innerHTML = `
+                <div class="boss-question-text">請輸入英文：</div>
+                <div class="boss-question-word">${pair.zh}</div>
+                <input type="text" id="bossAnswerInput" class="boss-input" placeholder="輸入英文" />
+                <button id="bossSubmitBtn" class="btn">送出</button>
+            `;
+            
+            const input = document.getElementById('bossAnswerInput');
+            const submitBtn = document.getElementById('bossSubmitBtn');
+            
+            if (input) {
+                input.focus();
+                input.onkeydown = (e) => {
+                    if (e.key === 'Enter') {
+                        checkBossAnswer(input.value.trim(), pair.en);
+                    }
+                };
+            }
+            
+            if (submitBtn) {
+                submitBtn.onclick = () => {
+                    const input = document.getElementById('bossAnswerInput');
+                    if (input) {
+                        checkBossAnswer(input.value.trim(), pair.en);
+                    }
+                };
+            }
+        } else if (questionType === 1) {
+            // 英文 -> 中文選擇
+            questionEl.innerHTML = `
+                <div class="boss-question-text">請選擇中文：</div>
+                <div class="boss-question-word">${pair.en}</div>
+            `;
+            
+            // 生成選項
+            const options = [pair.zh];
+            while (options.length < 3) {
+                const randomPair = matchPairs[Math.floor(Math.random() * matchPairs.length)];
+                if (!options.includes(randomPair.zh)) {
+                    options.push(randomPair.zh);
+                }
+            }
+            shuffleArray(options);
+            
+            optionsEl.innerHTML = options.map(opt => 
+                `<button class="boss-option-btn" onclick="checkBossAnswer('${opt}', '${pair.zh}')">${opt}</button>`
+            ).join('');
+        } else {
+            // 聽力 -> 中文選擇
+            questionEl.innerHTML = `
+                <div class="boss-question-text">請選擇聽到的單字中文：</div>
+                <button class="btn" onclick="speakWord('${pair.en}')">🔊 播放</button>
+            `;
+            
+            // 生成選項
+            const options = [pair.zh];
+            while (options.length < 3) {
+                const randomPair = matchPairs[Math.floor(Math.random() * matchPairs.length)];
+                if (!options.includes(randomPair.zh)) {
+                    options.push(randomPair.zh);
+                }
+            }
+            shuffleArray(options);
+            
+            optionsEl.innerHTML = options.map(opt => 
+                `<button class="boss-option-btn" onclick="checkBossAnswer('${opt}', '${pair.zh}')">${opt}</button>`
+            ).join('');
+            
+            // 自動播放
+            setTimeout(() => speakWord(pair.en), 500);
+        }
+    }
+
+    function checkBossAnswer(userAnswer, correctAnswer) {
+        const feedbackEl = document.getElementById('bossFeedback');
+        if (!feedbackEl) return;
+        
+        if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+            // 答對
+            matchGameState.bossHp--;
+            feedbackEl.textContent = '✅ 正確！';
+            feedbackEl.className = 'boss-feedback correct';
+            
+            if (matchGameState.bossHp <= 0) {
+                // Boss 擊敗
+                setTimeout(() => {
+                    showBossDefeat();
+                }, 1000);
+            } else {
+                // 下一題
+                setTimeout(() => {
+                    updateBossHP();
+                    loadBossQuestion();
+                }, 1000);
+            }
+        } else {
+            // 答錯
+            matchGameState.bossWrongCount++;
+            feedbackEl.textContent = '❌ 錯誤！';
+            feedbackEl.className = 'boss-feedback wrong';
+            
+            if (matchGameState.bossWrongCount >= FLIPCARD_GAME_CONFIG.bossWrongLimit) {
+                // Boss 逃走
+                setTimeout(() => {
+                    showBossEscape();
+                }, 1000);
+            } else {
+                // 重新出題
+                setTimeout(() => {
+                    loadBossQuestion();
+                }, 1000);
+            }
+        }
+    }
+
+    function updateBossHP() {
+        const hpEl = document.querySelector('.boss-hp');
+        if (hpEl) {
+            hpEl.textContent = '❤️'.repeat(matchGameState.bossHp);
+        }
+    }
+
+    function showBossDefeat() {
+        matchGameState.sessionStars += 50; // Boss 擊敗獎勵
+        
+        const gameArea = document.getElementById('matchGameArea');
+        if (!gameArea) return;
+        
+        gameArea.innerHTML = `
+            <div class="boss-result">
+                <div class="boss-result-icon">👑</div>
+                <div class="boss-result-title">BOSS DEFEATED</div>
+                <div class="boss-result-reward">+50⭐</div>
+                <button class="btn" onclick="showCompleteModal()">完成</button>
+            </div>
+        `;
+    }
+
+    function showBossEscape() {
+        const gameArea = document.getElementById('matchGameArea');
+        if (!gameArea) return;
+        
+        gameArea.innerHTML = `
+            <div class="boss-result">
+                <div class="boss-result-icon">💨</div>
+                <div class="boss-result-title">BOSS ESCAPED</div>
+                <div class="boss-result-desc">Boss 逃走了，下次再挑戰！</div>
+                <button class="btn" onclick="showCompleteModal()">完成</button>
+            </div>
+        `;
+    }
+
+    // ===== 遊戲計時器 =====
+    function startGameTimer() {
+        if (matchGameState.timerInterval) {
+            clearInterval(matchGameState.timerInterval);
+        }
+        
+        matchGameState.timerInterval = setInterval(() => {
+            matchGameState.timeLeft--;
+            updateGameHUD();
+            
+            if (matchGameState.timeLeft <= 0) {
+                clearInterval(matchGameState.timerInterval);
+                // 時間到，進入復活挑戰或結束
+                if (!matchGameState.reviveUsed) {
+                    showReviveChallenge();
+                } else {
+                    showCompleteModal();
+                }
+            }
+        }, 1000);
+    }
+
+    function stopGameTimer() {
+        if (matchGameState.timerInterval) {
+            clearInterval(matchGameState.timerInterval);
+            matchGameState.timerInterval = null;
+        }
+    }
+
+    // ===== 復活挑戰 =====
+    function showReviveChallenge() {
+        matchGameState.reviveUsed = true;
+        
+        const gameArea = document.getElementById('matchGameArea');
+        if (!gameArea) return;
+        
+        // 從本關單字隨機選一題
+        const randomIndex = Math.floor(Math.random() * matchPairs.length);
+        const pair = matchPairs[randomIndex];
+        
+        gameArea.innerHTML = `
+            <div class="boss-battle-container">
+                <div class="boss-header">🔥 復活挑戰</div>
+                <div class="boss-question-text">答對獲得 +20 秒</div>
+                <div class="boss-question-word">${pair.zh}</div>
+                <input type="text" id="reviveInput" class="boss-input" placeholder="輸入英文" />
+                <button id="reviveSubmitBtn" class="btn">送出</button>
+                <div class="boss-feedback" id="reviveFeedback"></div>
+            </div>
+        `;
+        
+        const input = document.getElementById('reviveInput');
+        const submitBtn = document.getElementById('reviveSubmitBtn');
+        
+        if (input) {
+            input.focus();
+            input.onkeydown = (e) => {
+                if (e.key === 'Enter') {
+                    checkReviveAnswer(input.value.trim(), pair.en);
+                }
+            };
+        }
+        
+        if (submitBtn) {
+            submitBtn.onclick = () => {
+                const input = document.getElementById('reviveInput');
+                if (input) {
+                    checkReviveAnswer(input.value.trim(), pair.en);
+                }
+            };
+        }
+    }
+
+    function checkReviveAnswer(userAnswer, correctAnswer) {
+        const feedbackEl = document.getElementById('reviveFeedback');
+        if (!feedbackEl) return;
+        
+        if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+            // 答對
+            matchGameState.timeLeft += 20;
+            feedbackEl.textContent = '✅ 正確！+20秒';
+            feedbackEl.className = 'boss-feedback correct';
+            
+            setTimeout(() => {
+                // 恢復遊戲畫面
+                restoreGameArea();
+                startGameTimer();
+            }, 1500);
+        } else {
+            // 答錯
+            feedbackEl.textContent = '❌ 錯誤！';
+            feedbackEl.className = 'boss-feedback wrong';
+            
+            setTimeout(() => {
+                showCompleteModal();
+            }, 1500);
+        }
+    }
+
+    function restoreGameArea() {
+        const gameArea = document.getElementById('matchGameArea');
+        if (!gameArea) return;
+        
+        gameArea.innerHTML = `
+            <div class="game-hud">
+                <div class="hud-item">⏱ <span id="gameTimer">${matchGameState.timeLeft}</span></div>
+                <div class="hud-item">⭐ <span id="gameStars">${matchGameState.sessionStars}</span></div>
+                <div class="hud-item" id="combo-display" style="display:none;"></div>
+                <div class="hud-item">👣 <span id="gameMoves">${matchGameState.moves}</span></div>
+                <div class="hud-item">❌ <span id="gameErrors">${matchGameState.wrongAttempts}</span></div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-text">已完成：<span id="matchProgress">${matchedCount}</span> / <span id="totalPairs">${matchPairs.length}</span></div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill" style="width: ${(matchedCount / matchPairs.length) * 100}%"></div>
+                </div>
+            </div>
+            <div id="match-feedback" class="match-feedback"></div>
+            <button class="btn hint-btn" id="hintBtn">💡 提示</button>
+            <div class="grid" id="matchGridWrap">
+                <div id="matchGrid"></div>
+            </div>
+            <button class="btn" id="backToMenuBtn" style="display:none;">返回選單</button>
+            <button class="btn" id="skipLevelBtn2">⚡ 快速挑戰</button>
+        `;
+        
+        // 重建卡片網格
+        rebuildMatchGrid();
+        
+        // 重新綁定提示按鈕
+        setupHintButton();
+        
+        // 更新 HUD
+        updateGameHUD();
+    }
+
+    function rebuildMatchGrid() {
+        const grid = document.getElementById('matchGrid');
+        if (!grid) return;
+        
+        grid.innerHTML = '';
+        
+        matchCards.forEach((card, i) => {
+            const div = document.createElement('div');
+            div.className = 'match-card';
+            if (card.pairId === matchGameState.goldenPairId) {
+                div.classList.add('golden-card');
+            }
+            div.dataset.type = card.type;
+            div.dataset.value = card.value;
+            div.dataset.pairId = card.pairId;
+            
+            // 檢查是否已配對
+            const isMatched = card.pairId < matchedCount;
+            if (isMatched) {
+                div.classList.add('matched');
+            }
+            
+            // 3D翻牌結構
+            const inner = document.createElement('div');
+            inner.className = 'match-card-inner';
+            const front = document.createElement('div');
+            front.className = 'match-card-front';
+            front.innerHTML = '<span>?</span>';
+            const back = document.createElement('div');
+            back.className = 'match-card-back';
+            const len = (card.value || '').length;
+            back.innerHTML = `<span style="--len:${len}">${card.value}</span>`;
+            inner.appendChild(front);
+            inner.appendChild(back);
+            div.appendChild(inner);
+            div.onclick = function() { onCardClick(div, card); };
+            grid.appendChild(div);
+        });
+        
+        // 動態調整字體大小
+        setTimeout(() => {
+            grid.querySelectorAll('.match-card-back span').forEach(span => {
+                fitTextToCardOneLine(span, span.parentElement);
+            });
+        }, 0);
+    }
+
+    // ===== 計算評價 =====
+    function calculateGrade() {
+        const bossDefeated = matchGameState.bossHp <= 0;
+        const wrongAttempts = matchGameState.wrongAttempts;
+        const maxCombo = matchGameState.maxCombo;
+        
+        if (bossDefeated && wrongAttempts <= 2 && maxCombo >= 5) {
+            return 'S';
+        } else if (bossDefeated) {
+            return 'A';
+        } else if (wrongAttempts <= 3) {
+            return 'B';
+        } else {
+            return 'C';
+        }
+    }
+
+    // ===== 儲存最佳紀錄 =====
+    function saveBestRecords(grade) {
+        const levelKey = currentGroup + '_level_' + currentLevel;
+        const stats = JSON.parse(localStorage.getItem('flipcardPracticeStats') || '{}');
+        
+        if (!stats[levelKey]) {
+            stats[levelKey] = {
+                bestTime: matchGameState.timeLeft,
+                bestMoves: matchGameState.moves,
+                bestCombo: matchGameState.maxCombo,
+                bestRank: grade
+            };
+        } else {
+            const current = stats[levelKey];
+            if (matchGameState.timeLeft > current.bestTime) {
+                current.bestTime = matchGameState.timeLeft;
+            }
+            if (matchGameState.moves < current.bestMoves) {
+                current.bestMoves = matchGameState.moves;
+            }
+            if (matchGameState.maxCombo > current.bestCombo) {
+                current.bestCombo = matchGameState.maxCombo;
+            }
+            // 評價比較：S > A > B > C
+            const rankOrder = { 'S': 4, 'A': 3, 'B': 2, 'C': 1 };
+            if (rankOrder[grade] > rankOrder[current.bestRank]) {
+                current.bestRank = grade;
+            }
+        }
+        
+        localStorage.setItem('flipcardPracticeStats', JSON.stringify(stats));
+    }
+
+    // ===== 提示系統 =====
+    function setupHintButton() {
+        const hintBtn = document.getElementById('hintBtn');
+        if (!hintBtn) return;
+        
+        hintBtn.onclick = () => {
+            const config = FLIPCARD_GAME_CONFIG[matchGameState.difficulty];
+            const cost = config.hintCost;
+            
+            // 檢查星星是否足夠
+            if (matchGameState.sessionStars < cost) {
+                alert('星星不足！');
+                return;
+            }
+            
+            // 找到一組尚未完成的配對
+            const unmatchedPairs = matchPairs.filter((pair, idx) => {
+                const card1 = matchCards.find(c => c.pairId === idx);
+                const card2 = matchCards.find(c => c.pairId === idx && c !== card1);
+                const el1 = document.querySelector(`[data-pair-id="${idx}"]`);
+                const el2 = document.querySelector(`[data-pair-id="${idx}"]:not([data-pair-id="${idx}"])`);
+                return el1 && !el1.classList.contains('matched');
+            });
+            
+            if (unmatchedPairs.length === 0) {
+                alert('沒有需要提示的配對！');
+                return;
+            }
+            
+            // 隨機選一組
+            const randomPair = unmatchedPairs[Math.floor(Math.random() * unmatchedPairs.length)];
+            const pairId = matchPairs.indexOf(randomPair);
+            
+            // 找到這組的兩張卡片
+            const cards = document.querySelectorAll(`[data-pair-id="${pairId}"]`);
+            
+            // 扣除星星
+            matchGameState.sessionStars -= cost;
+            matchGameState.hintsUsed++;
+            updateGameHUD();
+            
+            // 短暫翻開
+            cards.forEach(card => {
+                card.classList.add('flipped');
+            });
+            
+            // 1秒後蓋回去
+            setTimeout(() => {
+                cards.forEach(card => {
+                    if (!card.classList.contains('matched')) {
+                        card.classList.remove('flipped');
+                    }
+                });
+            }, 1000);
+        };
+    }
+
+    // ===== 難度選擇 =====
+    function setupDifficultySelection() {
+        const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+        difficultyBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // 移除所有選中狀態
+                difficultyBtns.forEach(b => b.classList.remove('selected'));
+                // 添加選中狀態
+                btn.classList.add('selected');
+                // 設定難度
+                matchGameState.difficulty = btn.dataset.difficulty;
+            });
+        });
+        
+        // 預設選擇標準難度
+        const normalBtn = document.querySelector('.difficulty-btn[data-difficulty="normal"]');
+        if (normalBtn) {
+            normalBtn.classList.add('selected');
+            matchGameState.difficulty = 'normal';
+        }
+    }
+
+    // ===== 自動發音函式
     function speakWord(word) {
         if (!window.speechSynthesis) return;
         // 使用新的發音系統
@@ -824,6 +1871,20 @@
             let key = currentGroup + '_ALL';
             completedGroups[key] = true;
             localStorage.setItem('flipcard_completedGroups', JSON.stringify(completedGroups));
+            
+            // 使用新的 stage progress 系統標記希臘神祇通關
+            if (typeof completeStage === 'function' && typeof getGreekGodIdByName === 'function') {
+                const godId = getGreekGodIdByName(currentGroup);
+                completeStage('greek', godId, { score: 100 });
+            } else {
+                // 備用方案：使用舊系統
+                let passedFlipcard = JSON.parse(localStorage.getItem('passed_flipcard') || '[]');
+                if (!passedFlipcard.includes(currentGroup)) {
+                    passedFlipcard.push(currentGroup);
+                    localStorage.setItem('passed_flipcard', JSON.stringify(passedFlipcard));
+                }
+            }
+            
             showCompleteModal();
         }
     }
@@ -848,27 +1909,42 @@
         if (!el && !hide) {
             el = document.createElement('div');
             el.id = 'previewCountdown';
-            el.style.position = 'fixed';
-            el.style.top = '30px';
-            el.style.left = '50%';
-            el.style.transform = 'translateX(-50%)';
-            el.style.background = 'rgba(10,20,40,0.92)';
-            el.style.color = '#ffd700';
-            el.style.fontSize = '2.2em';
-            el.style.fontWeight = 'bold';
-            el.style.padding = '18px 38px';
-            el.style.borderRadius = '18px';
-            el.style.boxShadow = '0 0 32px #00ffff, 0 0 48px #a259ff99';
-            el.style.zIndex = 9999;
-            document.body.appendChild(el);
+            el.className = 'memory-timer';
+            document.querySelector('.container').insertBefore(el, document.getElementById('matchGameArea'));
         }
         if (el) {
             if (hide || sec <= 0) {
                 el.remove();
             } else {
-                el.innerHTML = '記憶時間 <span style="color:#00ffff">' + sec + '</span> 秒';
+                el.innerHTML = `
+                    <div>🧠 記憶時間 <span class="timer-number">${sec}</span> 秒</div>
+                    <div class="memory-tip">記住英文與中文的位置！</div>
+                `;
+                
+                // 最後三秒動畫
+                if (sec <= 3) {
+                    const numberEl = el.querySelector('.timer-number');
+                    if (numberEl) {
+                        numberEl.style.animation = 'none';
+                        setTimeout(() => {
+                            numberEl.style.animation = 'timer-pulse 0.5s ease-out';
+                        }, 10);
+                    }
+                }
             }
         }
+    }
+
+    // 顯示 START Banner
+    function showStartBanner() {
+        const banner = document.createElement('div');
+        banner.className = 'start-banner';
+        banner.textContent = '⚡ START!';
+        document.body.appendChild(banner);
+        
+        setTimeout(() => {
+            banner.remove();
+        }, 600);
     }
 
     // 顯示宇宙風格進度條
@@ -924,6 +2000,12 @@
 
     // 完成全部關卡時的美觀提示
     function showCompleteModal() {
+        // 計算評價
+        const grade = calculateGrade();
+        
+        // 儲存最佳紀錄
+        saveBestRecords(grade);
+        
         // 若已存在則移除
         let old = document.getElementById('completeModal');
         if (old) old.remove();
@@ -932,8 +2014,16 @@
         modal.innerHTML = `
             <div class="complete-modal-content">
                 <div class="complete-icon">🎉</div>
-                <div class="complete-title">恭喜完成全部關卡！</div>
-                <div class="complete-desc">你已完成本組所有單字配對！</div>
+                <div class="complete-title">挑戰完成</div>
+                <div class="complete-grade">評價：${grade}</div>
+                <div class="complete-stats">
+                    <div>⏱ 時間：${matchGameState.timeLeft}秒</div>
+                    <div>👣 步數：${matchGameState.moves}</div>
+                    <div>❌ 錯誤：${matchGameState.wrongAttempts}</div>
+                    <div>🔥 最大Combo：${matchGameState.maxCombo}</div>
+                    <div>⭐ 獲得星星：${matchGameState.sessionStars}</div>
+                    <div>👑 Boss：${matchGameState.bossHp <= 0 ? '擊敗' : '逃走'}</div>
+                </div>
                 <button class="btn" id="backToMenuBtn2">返回選單</button>
             </div>
         `;
@@ -980,6 +2070,27 @@
             font-size: 1.2em;
             margin-bottom: 28px;
         }
+
+        #completeModal .complete-grade {
+            font-size: 2.5em;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #ffd700;
+        }
+
+        #completeModal .complete-stats {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        #completeModal .complete-stats div {
+            margin: 8px 0;
+            font-size: 1.1em;
+        }
+
         @keyframes popIn { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         @keyframes tada {
             0% { transform: scale(1); }
@@ -1073,16 +2184,17 @@
     }
     .level-card:hover {
       transform: scale(1.07);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
-      background: #e6f0fa;
+      box-shadow: 0 0 28px #00ffffcc, 0 0 60px #a259ff44 inset, 0 4px 16px rgba(0,0,0,0.25);
+      background: linear-gradient(145deg, #232538, #3a2f5a);
+      border-color: #a259ff;
     }
     .match-card {
-      width: 120px;
-      height: 170px;
-      background: rgba(10, 20, 40, 0.9);
+      width: 145px;
+      height: 205px;
+      background: linear-gradient(145deg, #09dfe8, #00b9d2);
       border: 2px solid #00ffff;
       border-radius: 16px;
-      box-shadow: 0 4px 16px #00ffff44, 0 0 32px #a259ff22 inset, 0 8px 24px #0008;
+      box-shadow: 0 0 12px rgba(0,230,255,.45), 0 0 24px #a259ff22 inset, 0 8px 24px #0008;
       color: #00ffff;
       font-size: 1.2em;
       display: flex;
@@ -1097,7 +2209,23 @@
     }
     .match-card:hover {
       transform: translateY(-8px) scale(1.04) rotateZ(-2deg);
-      box-shadow: 0 0 32px #00ffff, 0 0 48px #a259ff99, 0 8px 32px #000b;
+      box-shadow: 0 0 20px rgba(0,230,255,.65), 0 0 48px #a259ff99, 0 8px 32px #000b;
+    }
+    .match-card.locked {
+      cursor: default;
+    }
+    .match-card.locked:hover {
+      transform: none;
+      box-shadow: 0 0 12px rgba(0,230,255,.45), 0 0 24px #a259ff22 inset, 0 8px 24px #0008;
+    }
+    #matchGrid {
+      display: grid;
+      grid-template-columns: repeat(var(--grid-columns), minmax(110px, 150px));
+      justify-content: center;
+      align-items: center;
+      gap: 22px 28px;
+      width: 100%;
+      margin: 0 auto;
     }
     .match-card-inner {
       width: 100%;
@@ -1153,16 +2281,35 @@
       text-shadow: 0 0 8px #000, 0 0 16px #00ffff;
     }
     .match-card-back {
-      background: #00ffff;
-      color: #222;
+      background: linear-gradient(145deg, #e0f7fa, #80deea);
+      color: #1a237e;
       border: 2px solid #a259ff;
-      box-shadow: 0 0 32px #00ffff, 0 0 48px #a259ff99;
+      box-shadow: 0 0 20px rgba(0,230,255,.45), 0 0 30px rgba(162,89,255,.3);
       transform: rotateY(180deg);
-      font-weight: bold;
+      font-weight: 800;
+      text-shadow: 0 1px 2px rgba(255,255,255,0.7);
+      padding: 12px;
+    }
+    .match-card-back span {
+      font-family: 'Orbitron', 'Roboto Mono', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+      letter-spacing: 0.5px;
+      line-height: 1.25;
+    }
+    .match-card[data-type="zh"] .match-card-back span {
+      font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+      letter-spacing: 0;
     }
     .match-card.matched {
       opacity: 0.3;
       pointer-events: none;
+    }
+    .match-card.golden-reveal {
+      border: 3px solid #ffd700 !important;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5) !important;
+    }
+    .match-card.golden-reveal .match-card-back {
+      background: linear-gradient(135deg, #fff8dc, #ffd700) !important;
+      color: #000 !important;
     }
     .btn {
       font-family: 'Orbitron', sans-serif;
@@ -1211,8 +2358,7 @@
       }
       #matchGrid { 
         gap: 15px; 
-        grid-template-columns: repeat(4, 1fr); 
-        grid-template-rows: repeat(3, 1fr); 
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
       }
     }
     
@@ -1249,6 +2395,18 @@
         padding: 8px 16px;
         font-size: 0.9em;
       }
+      #matchGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .memory-timer {
+        min-width: 200px;
+        font-size: 1.1rem;
+        padding: 10px 16px;
+      }
+      .memory-timer .timer-number {
+        font-size: 1.5rem;
+      }
     }
     
     /* 小手機尺寸 */
@@ -1278,9 +2436,8 @@
         border-radius: 8px; 
       }
       #matchGrid { 
-        gap: 6px; 
-        grid-template-columns: repeat(4, 1fr); 
-        grid-template-rows: repeat(3, 1fr); 
+        gap: 8px; 
+        grid-template-columns: repeat(2, minmax(0, 1fr)); 
       }
       .back-home-btn {
         top: 8px;
@@ -1294,6 +2451,18 @@
       }
       .review-word-list {
         gap: 8px 16px !important;
+      }
+    }
+    
+    /* 手機版優化 */
+    @media (max-width: 600px) {
+      #matchGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .match-card {
+        width: 100%;
+        height: 150px;
       }
     }
     
@@ -1358,8 +2527,39 @@
       letter-spacing: 1px;
       text-shadow: 0 0 8px #ffd700, 0 0 16px #fff2;
     }
+
+    /* 標題與文字版面美化 */
+    h1, h2, h3 {
+      font-family: 'Orbitron', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-align: center;
+      margin: 0 auto 20px;
+      line-height: 1.3;
+    }
+    h1 {
+      font-size: 2.6rem;
+      color: #fff;
+      text-shadow: 0 0 12px #00ffff, 0 0 24px #a259ff, 0 0 36px #00ffff44;
+    }
+    h2 {
+      font-size: 1.9rem;
+      color: #ffd700;
+      text-shadow: 0 0 10px #ffd700, 0 0 20px #fff2;
+      margin-top: 28px;
+    }
+    h3 {
+      font-size: 1.5rem;
+      color: #00ffff;
+      text-shadow: 0 0 8px #00ffff, 0 0 16px #a259ff;
+      margin-top: 18px;
+    }
     `;
     document.head.appendChild(style);
+
+    // 初始化新功能
+    setupDifficultySelection();
+    setupHintButton();
 
     showLevelSelect();
     // 延遲一點時間再初始化語音，確保 SoundSystem 已載入

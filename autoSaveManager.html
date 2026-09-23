@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
+  <script src="js/stars.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>自動儲存管理器 - 英語學習遊戲</title>
@@ -1776,6 +1777,7 @@
     <script src="js/gemSystem.js"></script>
     <script src="js/autoSaveSystem.js"></script>
     <script src="js/cards.js"></script>
+  <script src="js/cardVideoManager.js"></script>
     <!-- 移除直接載入 cardStorage.js，改為動態載入以避免初始化衝突 -->
     
     <script>
@@ -2089,16 +2091,7 @@
                     // 優先從主系統收集
                     if (typeof window.gemSystem !== 'undefined' && window.gemSystem.gems) {
                         gameData['gems'] = JSON.stringify(window.gemSystem.gems);
-                    } else {
-                        // 備用從localStorage收集
-                        const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
-                        if (userData.gems) {
-                            gameData['gems'] = JSON.stringify(userData.gems);
-                        }
                     }
-                    
-                    // 同步到備用資料
-                    localStorage.setItem('grammarGameData', JSON.stringify(gameData));
                     
                     addLog('📥 備份檔案匯入完成');
                     showNotification('備份檔案匯入成功！頁面將重新整理...', 'success');
@@ -2316,28 +2309,12 @@
                         gemTypesEl.textContent = uniqueTypes + ' 種';
                         gemTypesEl.className = 'status-value info';
                 } else {
-                    // 從備用方案檢查
-                    const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
-                    if (userData.gems) {
-                        const totalGems = Object.values(userData.gems)
-                            .reduce((total, count) => total + (parseInt(count) || 0), 0);
-                        const uniqueTypes = Object.keys(userData.gems)
-                            .filter(key => parseInt(userData.gems[key]) > 0).length;
-                            
-                        const totalGemsEl = document.getElementById('totalGems');
-                        const gemTypesEl = document.getElementById('gemTypes');
-                        totalGemsEl.textContent = totalGems + ' 顆 (備用)';
-                        totalGemsEl.className = 'status-value warning';
-                        gemTypesEl.textContent = uniqueTypes + ' 種 (備用)';
-                        gemTypesEl.className = 'status-value warning';
-                    } else {
-                        const totalGemsEl = document.getElementById('totalGems');
-                        const gemTypesEl = document.getElementById('gemTypes');
-                        totalGemsEl.textContent = '0 顆';
-                        totalGemsEl.className = 'status-value error';
-                        gemTypesEl.textContent = '0 種';
-                        gemTypesEl.className = 'status-value error';
-                    }
+                    const totalGemsEl = document.getElementById('totalGems');
+                    const gemTypesEl = document.getElementById('gemTypes');
+                    totalGemsEl.textContent = '0 顆';
+                    totalGemsEl.className = 'status-value error';
+                    gemTypesEl.textContent = '0 種';
+                    gemTypesEl.className = 'status-value error';
                 }
                 
             } catch (error) {
@@ -2378,27 +2355,12 @@
                     cardShardsEl.textContent = totalShards + ' 個';
                     cardShardsEl.className = 'status-value info';
                 } else {
-                    // 從備用方案檢查（只讀取，不修改）
-                    const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
-                    if (userData.ownedCards) {
-                        const ownedCount = Object.keys(userData.ownedCards).length;
-                        const shards = userData.cardShards || {};
-                        const totalShards = Object.values(shards).reduce((total, count) => total + (parseInt(count) || 0), 0);
-                        
-                        const collectedCardsEl = document.getElementById('collectedCards');
-                        const cardShardsEl = document.getElementById('cardShards');
-                        collectedCardsEl.textContent = ownedCount + ' 張 (備用)';
-                        collectedCardsEl.className = 'status-value warning';
-                        cardShardsEl.textContent = totalShards + ' 個 (備用)';
-                        cardShardsEl.className = 'status-value warning';
-                    } else {
-                        const collectedCardsEl = document.getElementById('collectedCards');
-                        const cardShardsEl = document.getElementById('cardShards');
-                        collectedCardsEl.textContent = '0 張';
-                        collectedCardsEl.className = 'status-value error';
-                        cardShardsEl.textContent = '0 個';
-                        cardShardsEl.className = 'status-value error';
-                    }
+                    const collectedCardsEl = document.getElementById('collectedCards');
+                    const cardShardsEl = document.getElementById('cardShards');
+                    collectedCardsEl.textContent = '0 張';
+                    collectedCardsEl.className = 'status-value error';
+                    cardShardsEl.textContent = '0 個';
+                    cardShardsEl.className = 'status-value error';
                 }
                 
             } catch (error) {
@@ -2574,11 +2536,6 @@
                 
                 // 強制觸發寶石資料更新
                 const currentGems = window.gemSystem.gems;
-                const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
-                
-                // 同步到備用資料
-                userData.gems = currentGems;
-                localStorage.setItem('grammarGameData', JSON.stringify(userData));
                 
                 // 觸發自動儲存
                 if (window.UnifiedAutoSave && window.UnifiedAutoSave.autoSaveEnabled) {
@@ -2609,10 +2566,6 @@
                 // 從寶石系統取得資料
                 if (typeof window.gemSystem !== 'undefined' && window.gemSystem.gems) {
                     gemData = window.gemSystem.gems;
-                } else {
-                    // 從備用方案取得
-                    const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
-                    gemData = userData.gems || {};
                 }
                 
                 // 創建匯出資料
@@ -2676,29 +2629,6 @@
                     issues.push('主要寶石系統未載入');
                 }
                 
-                // 檢查備用系統
-                const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
-                if (userData.gems) {
-                    let backupTotal = 0;
-                    let backupTypes = 0;
-                    
-                    for (const [gemType, count] of Object.entries(userData.gems)) {
-                        const numCount = parseInt(count);
-                        if (!isNaN(numCount) && numCount > 0) {
-                            backupTotal += numCount;
-                            backupTypes++;
-                        }
-                    }
-                    
-                    addLog(`💎 備用系統：${backupTotal} 顆寶石，${backupTypes} 種類型`);
-                    
-                    // 比較主系統和備用系統
-                    if (totalGems !== backupTotal) {
-                        issues.push(`主系統與備用系統寶石總數不符 (${totalGems} vs ${backupTotal})`);
-                    }
-                } else {
-                    issues.push('備用寶石資料不存在');
-                }
                 
                 // 報告結果
                 if (issues.length === 0) {
@@ -2746,13 +2676,6 @@
                     return;
                 }
                 
-                // 同步到備用資料
-                const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
-                userData.ownedCards = window.CardStorage.getOwnedCards();
-                userData.cardShards = window.CardStorage.getShards();
-                userData.cardStats = window.CardStorage.getCardStats();
-                localStorage.setItem('grammarGameData', JSON.stringify(userData));
-                
                 // 觸發自動儲存
                 if (window.UnifiedAutoSave && window.UnifiedAutoSave.autoSaveEnabled) {
                     window.UnifiedAutoSave.scheduleAutoSave();
@@ -2785,14 +2708,6 @@
                         ownedCards: window.CardStorage.getOwnedCards(),
                         cardShards: window.CardStorage.getShards(),
                         cardStats: window.CardStorage.getCardStats()
-                    };
-                } else {
-                    // 從備用方案取得
-                    const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
-                    cardData = {
-                        ownedCards: userData.ownedCards || {},
-                        cardShards: userData.cardShards || {},
-                        cardStats: userData.cardStats || {}
                     };
                 }
                 
@@ -2852,14 +2767,6 @@
                     }
                 } else {
                     issues.push('主要卡片系統未載入');
-                }
-                
-                // 檢查備用系統
-                const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
-                if (userData.ownedCards) {
-                    addLog(`🎴 備用系統：${Object.keys(userData.ownedCards).length} 張卡片`);
-                } else {
-                    issues.push('備用卡片資料不存在');
                 }
                 
                 // 報告結果
@@ -3621,11 +3528,6 @@
                 
                 // 強制觸發寶石資料更新
                 const currentGems = window.gemSystem.gems;
-                const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
-                
-                // 同步到備用資料
-                userData.gems = currentGems;
-                localStorage.setItem('grammarGameData', JSON.stringify(userData));
                 
                 // 觸發自動儲存
                 if (window.UnifiedAutoSave && window.UnifiedAutoSave.autoSaveEnabled) {
@@ -3656,10 +3558,6 @@
                 // 從寶石系統取得資料
                 if (typeof window.gemSystem !== 'undefined' && window.gemSystem.gems) {
                     gemData = window.gemSystem.gems;
-                } else {
-                    // 從備用方案取得
-                    const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
-                    gemData = userData.gems || {};
                 }
                 
                 // 創建匯出資料
@@ -3723,29 +3621,6 @@
                     issues.push('主要寶石系統未載入');
                 }
                 
-                // 檢查備用系統
-                const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
-                if (userData.gems) {
-                    let backupTotal = 0;
-                    let backupTypes = 0;
-                    
-                    for (const [gemType, count] of Object.entries(userData.gems)) {
-                        const numCount = parseInt(count);
-                        if (!isNaN(numCount) && numCount > 0) {
-                            backupTotal += numCount;
-                            backupTypes++;
-                        }
-                    }
-                    
-                    addLog(`💎 備用系統：${backupTotal} 顆寶石，${backupTypes} 種類型`);
-                    
-                    // 比較主系統和備用系統
-                    if (totalGems !== backupTotal) {
-                        issues.push(`主系統與備用系統寶石總數不符 (${totalGems} vs ${backupTotal})`);
-                    }
-                } else {
-                    issues.push('備用寶石資料不存在');
-                }
                 
                 // 報告結果
                 if (issues.length === 0) {

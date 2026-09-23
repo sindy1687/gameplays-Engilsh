@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
   <meta charset="UTF-8">
   <title>卡片倉庫 - Typing Hero</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="card-style.css">
+  <link rel="stylesheet" href="css/shared.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
     /* ====== 全域樣式 ====== */
@@ -76,7 +78,7 @@
 
     header {
       background: linear-gradient(135deg, rgba(10, 20, 40, 0.95) 0%, rgba(20, 40, 80, 0.9) 100%);
-      padding: 20px 32px;
+      padding: 10px 28px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -88,7 +90,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      position: relative;
+      min-height: 76px;
     }
     
     header::before {
@@ -109,7 +111,7 @@
     }
     header h1 {
       margin: 0;
-      font-size: 2.3rem;
+      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
       background: var(--gradient-primary);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -123,7 +125,7 @@
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 14px;
       flex-wrap: wrap;
       justify-content: flex-end;
     }
@@ -131,16 +133,20 @@
       background: var(--gradient-primary);
       color: #000;
       border: none;
-      padding: 12px 24px;
-      border-radius: 15px;
+      padding: 0 18px;
+      height: 44px;
+      border-radius: 14px;
       cursor: pointer;
       font-weight: bold;
       box-shadow: var(--shadow-primary), var(--shadow-secondary);
-      font-size: 1.1rem;
+      font-size: 1rem;
       letter-spacing: 1px;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     
     .btn::before {
@@ -161,45 +167,6 @@
     
     .btn:hover::before {
       left: 100%;
-    }
-
-    .shop-link-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      min-width: 120px;
-      min-height: 44px;
-      padding: 10px 16px;
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #f59e0b, #f97316);
-      color: #ffffff;
-      font-size: 16px;
-      font-weight: 900;
-      text-decoration: none;
-      cursor: pointer;
-      box-shadow: 0 6px 14px rgba(0,0,0,.22);
-      text-shadow: 0 1px 3px rgba(0,0,0,.45);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .shop-link-btn:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.05);
-    }
-
-    .shop-link-btn:active {
-      transform: translateY(1px);
-    }
-
-    @media (max-width: 600px) {
-      .shop-link-btn {
-        width: 100%;
-        min-width: 0;
-        font-size: 15px;
-        padding: 11px 12px;
-      }
     }
 
     .stars-display {
@@ -241,6 +208,31 @@
     .stars-display:hover {
       transform: translateY(-2px) scale(1.05);
       box-shadow: var(--shadow-gold), 0 8px 25px rgba(255, 215, 0, 0.3);
+    }
+
+    /* 手機版響應式 */
+    @media (max-width: 600px) {
+      header {
+        padding: 8px 12px;
+        min-height: auto;
+      }
+      
+      header h1 {
+        font-size: 1.3rem;
+      }
+      
+      .header-actions {
+        gap: 8px;
+      }
+      
+      .btn .label {
+        display: none;
+      }
+      
+      .btn {
+        padding: 0 12px;
+        font-size: 0.9rem;
+      }
     }
 
     /* ====== 管理面板（密技） ====== */
@@ -440,8 +432,11 @@
     }
 
     /* ====== 頁籤按鈕 ====== */
-    .tab-container {
+    .tab-container,
+    .card-trade-nav {
       display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 12px;
     }
     
@@ -517,8 +512,8 @@
     /* ====== 卡片格子（卡片形狀 120x160px） ====== */
     #cardGrid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(10, 160px);
+      gap: 10px;
       padding: 30px 25px 15px 25px;
       justify-content: center;
       overflow-x: hidden;
@@ -533,8 +528,224 @@
       border-image: var(--gradient-primary);
       border-image-slice: 1;
       backdrop-filter: blur(15px);
-      height: 80vh; /* 新增：固定高度 */
-      overflow-y: auto; /* 新增：可垂直捲動 */
+      min-height: auto;
+      overflow-y: auto;
+    }
+
+    /* 響應式設計 - 桌面版 */
+    @media (max-width: 1750px) {
+      #cardGrid {
+        grid-template-columns: repeat(9, 160px);
+      }
+    }
+
+    @media (max-width: 1580px) {
+      #cardGrid {
+        grid-template-columns: repeat(8, 160px);
+      }
+    }
+
+    @media (max-width: 1400px) {
+      #cardGrid {
+        grid-template-columns: repeat(7, 160px);
+      }
+    }
+
+    @media (max-width: 1220px) {
+      #cardGrid {
+        grid-template-columns: repeat(6, 160px);
+      }
+    }
+
+    @media (max-width: 1050px) {
+      #cardGrid {
+        grid-template-columns: repeat(5, 160px);
+      }
+    }
+
+    /* 平板版 */
+    @media (max-width: 880px) {
+      #cardGrid {
+        grid-template-columns: repeat(4, 150px);
+      }
+    }
+
+    @media (max-width: 680px) {
+      #cardGrid {
+        grid-template-columns: repeat(3, 145px);
+      }
+    }
+
+    /* 手機版 */
+    @media (max-width: 500px) {
+      #cardGrid {
+        grid-template-columns: repeat(2, 140px);
+      }
+    }
+
+    @media (max-width: 320px) {
+      #cardGrid {
+        grid-template-columns: repeat(1, 140px);
+      }
+    }
+
+    /* 卡片圖片 placeholder 樣式 */
+    #cardGrid .card-image-placeholder {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #1a2340 0%, #161d35 100%);
+      color: #91a0c0;
+      overflow: hidden;
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    #cardGrid .card-image-placeholder .placeholder-icon {
+      width: 0;
+      height: 0;
+      border-left: 16px solid transparent;
+      border-right: 16px solid transparent;
+      border-bottom: 20px solid #4b5878;
+      margin-bottom: 6px;
+    }
+
+    #cardGrid .card-image-placeholder .placeholder-title {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1;
+      color: #91a0c0;
+      text-shadow: 0 0 8px rgba(145, 160, 192, 0.3);
+    }
+
+    #cardGrid .card-image-placeholder .placeholder-subtitle {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #687590;
+    }
+
+    #cardGrid .card-image-placeholder .placeholder-line {
+      width: 36px;
+      height: 2px;
+      margin-top: 4px;
+      border-radius: 999px;
+      background: #44516f;
+    }
+
+    /* 分頁樣式 */
+    #paginationContainer {
+      max-width: 980px;
+      margin: 20px auto 40px;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(10, 20, 40, 0.85) 0%, rgba(20, 40, 80, 0.75) 100%);
+      border-radius: 16px;
+      border: 2px solid rgba(0, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      text-align: center;
+    }
+
+    .cards-pagination-info {
+      color: #a0aec0;
+      font-size: 14px;
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+
+    .cards-pagination {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pagination-btn {
+      padding: 8px 16px;
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 215, 0, 0.1) 100%);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      color: #00ffff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .pagination-btn:hover:not(:disabled) {
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.2) 0%, rgba(255, 215, 0, 0.2) 100%);
+      border-color: rgba(0, 255, 255, 0.6);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 255, 255, 0.3);
+    }
+
+    .pagination-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .pagination-number {
+      min-width: 40px;
+      height: 40px;
+      padding: 0 12px;
+      background: rgba(10, 20, 40, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #e2e8f0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pagination-number:hover {
+      background: rgba(0, 255, 255, 0.15);
+      border-color: rgba(0, 255, 255, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 255, 255, 0.2);
+    }
+
+    .pagination-active {
+      background: linear-gradient(135deg, #00ffff 0%, #ffd700 100%);
+      color: #071018;
+      border-color: #00ffff;
+      font-weight: 800;
+      box-shadow: 0 4px 16px rgba(0, 255, 255, 0.4);
+    }
+
+    .pagination-ellipsis {
+      padding: 0 8px;
+      color: #718096;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    /* 手機版響應式 */
+    @media (max-width: 768px) {
+      .cards-pagination {
+        gap: 6px;
+      }
+
+      .pagination-btn {
+        padding: 6px 12px;
+        font-size: 13px;
+      }
+
+      .pagination-number {
+        min-width: 36px;
+        height: 36px;
+        font-size: 13px;
+      }
     }
     #cardGrid:before {
       content: '';
@@ -549,9 +760,9 @@
       z-index: 0;
     }
     #cardGrid > * { position: relative; z-index: 1; }
-    .card {
-      width: 120px;
-      height: 160px;
+    #cardGrid .card {
+      width: 160px;
+      aspect-ratio: 5 / 7;
       position: relative;
       background: transparent;
       border-radius: 12px;
@@ -574,12 +785,31 @@
       overflow: hidden;
       z-index: 1;
     }
+
+    /* 響應式卡片尺寸調整 */
+    @media (max-width: 880px) {
+      #cardGrid .card {
+        width: 150px;
+      }
+    }
+
+    @media (max-width: 680px) {
+      #cardGrid .card {
+        width: 145px;
+      }
+    }
+
+    @media (max-width: 500px) {
+      #cardGrid .card {
+        width: 140px;
+      }
+    }
     
-    .card:hover {
-      transform: translateY(-12px) scale(1.08) rotate(-3deg);
+    #cardGrid .card:hover {
+      transform: translateY(-8px) scale(1.03);
       box-shadow: var(--shadow-primary), var(--shadow-secondary), 0 20px 40px rgba(0,0,0,0.4);
     }
-    .card.locked {
+    #cardGrid #cardGrid .card.locked {
       cursor: not-allowed;
       opacity: 0.5;
       pointer-events: none;
@@ -588,8 +818,8 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-8px); }
     }
-    .card img,
-    .card .card-media {
+    #cardGrid .card img,
+    #cardGrid .card .card-media {
       width: 100%;
       height: 100%;
       border-radius: 12px;
@@ -602,8 +832,10 @@
       box-shadow: none;
       border: none;
       pointer-events: none;
+      flex: 1;
+      min-height: 0;
     }
-    .card .card-media {
+    #cardGrid .card .card-media {
       width: 100%;
       height: 100%;
       border-radius: 0;
@@ -612,6 +844,8 @@
       object-position: center center;
       background: #0f172a;
       pointer-events: none;
+      flex: 1;
+      min-height: 0;
     }
     .card video.card-media {
       border: 2px solid rgba(0, 255, 255, 0.3);
@@ -710,12 +944,52 @@
       line-height: 1.1;
       word-wrap: break-word;
       hyphens: auto;
-      min-height: 2em;
+      min-height: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 0 4px;
+      flex: 0 0 auto;
+    }
+
+    #cardGrid .card .label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.7) 100%);
+      padding: 6px 4px;
+      border-radius: 0 0 12px 12px;
+      backdrop-filter: blur(4px);
+      margin-top: 0;
+      z-index: 5;
+    }
+
+    #cardGrid .card .label .chinese-text {
+      font-size: 0.75rem;
+      color: #00ffff;
+      margin-bottom: 1px;
+      text-shadow: 0 0 8px #00ffff, 0 0 16px #a259ff;
+      font-weight: bold;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;
+      text-align: center;
+    }
+
+    #cardGrid .card .label .english-text {
+      font-size: 0.65rem;
+      color: #ffd700;
+      text-shadow: 0 0 6px #ffd700, 0 0 12px #ffaa00;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;
+      text-align: center;
     }
     
     .card .label .chinese-text {
@@ -752,6 +1026,7 @@
       text-overflow: ellipsis;
       display: -webkit-box;
       -webkit-line-clamp: 2;
+      line-clamp: 2;
       -webkit-box-orient: vertical;
       word-wrap: break-word;
       hyphens: auto;
@@ -798,36 +1073,39 @@
     
 
     .common,
-    .rarity-a {
+    #cardGrid .card.rarity-a {
       border: 2.5px solid var(--rarity-a-border);
       box-shadow: 0 0 12px var(--rarity-a-glow);
     }
     .rare,
-    .rarity-r {
+    #cardGrid .card.rarity-r {
       border: 2.5px solid var(--rarity-r-border);
       box-shadow: 0 0 12px var(--rarity-r-glow);
     }
     .epic,
-    .rarity-ssr {
+    #cardGrid .card.rarity-ssr {
       border: 2.5px solid var(--rarity-ssr-border);
       box-shadow: 0 0 16px var(--rarity-ssr-glow);
     }
     .rank-badge {
       position: absolute;
-      top: 4px;
-      right: 4px;
+      top: 8px;
+      right: 8px;
       font-size: 0.8rem;
       font-weight: bold;
-      width: 24px;
-      height: 24px;
+      width: 46px;
+      height: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 50%;
+      border-radius: 6px;
       z-index: 10;
       background: linear-gradient(90deg, #00ffff 0%, #a259ff 100%);
       color: #000;
-      box-shadow: 0 0 8px #00ffff, 0 0 16px #a259ff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      letter-spacing: 0;
+      pointer-events: none;
+      text-shadow: none;
     }
     .card.common .rank-badge,
     .card.rarity-a .rank-badge {
@@ -888,9 +1166,10 @@
     
     /* Modal 卡片樣式 */
     .modal-card {
-      width: 240px;
-      max-width: 90vw;
-      height: 380px;
+      width: 320px;
+      max-width: 92vw;
+      height: auto;
+      max-height: 75vh;
       background: rgba(10, 20, 40, 0.95);
       border-radius: 20px;
       padding: 16px;
@@ -902,6 +1181,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      overflow-y: auto;
+      box-sizing: border-box;
     }
     
     /* Modal 稀有度顏色 */
@@ -948,12 +1229,15 @@
     }
     
     .modal-media {
-      width: 100%;
-      height: 60%;
-      margin-bottom: 12px;
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: 320px;
+      aspect-ratio: 5 / 7;
+      margin: 0 auto 12px;
       border-radius: 16px;
       overflow: hidden;
-      background: transparent;
+      background: #0a1422;
       box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
       flex-shrink: 0;
       display: flex;
@@ -967,7 +1251,7 @@
       object-fit: cover;
       object-position: center;
       border-radius: 16px;
-      background: #0f172a;
+      background: #0a1422;
     }
     
     .modal-video {
@@ -1263,10 +1547,12 @@
       font-size: 1.2rem;
       font-weight: bold;
       -moz-appearance: textfield;
+      appearance: textfield;
     }
     #disenchant-quantity::-webkit-outer-spin-button,
     #disenchant-quantity::-webkit-inner-spin-button {
       -webkit-appearance: none;
+      appearance: none;
       margin: 0;
     }
     .close-btn {
@@ -1530,10 +1816,6 @@
       box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
       pointer-events: auto; /* Modal 中可以操作 */
     }
-    #modal .card iframe.card-media::-webkit-media-controls {
-      background: rgba(0, 0, 0, 0.7);
-      border-radius: 8px;
-    }
 
     /* ====== 影片按鈕樣式 ====== */
     .video-button {
@@ -1588,12 +1870,170 @@
       object-fit: cover;
       object-position: center center;
       border-radius: 0;
-      display: block;
-      background: #0f172a;
-      padding: 0;
-      margin: 0;
     }
-    
+
+    /* 卡片上架教學區塊樣式 - 遊戲風 */
+    .card-listing-guide {
+      background: linear-gradient(135deg, rgba(30, 20, 60, 0.85) 0%, rgba(40, 30, 80, 0.75) 100%);
+      border: 2px solid transparent;
+      border-image: linear-gradient(135deg, #00ffff 0%, #a259ff 100%);
+      border-image-slice: 1;
+      border-radius: 22px;
+      padding: 25px 30px;
+      margin: 20px auto;
+      max-width: 1200px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3), 0 0 30px rgba(162, 89, 255, 0.2), 0 8px 25px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    .guide-header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .guide-title {
+      color: var(--glow-gold);
+      font-size: 1.5rem;
+      margin: 0 0 8px 0;
+      font-weight: bold;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.6), 0 0 30px rgba(255, 215, 0, 0.3);
+    }
+
+    .guide-subtitle {
+      color: #a0a0ff;
+      font-size: 0.95rem;
+      margin: 0;
+      font-weight: normal;
+    }
+
+    .guide-steps-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .listing-guide-step {
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.08) 0%, rgba(162, 89, 255, 0.08) 100%);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 15px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+
+    .listing-guide-step:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 20px rgba(0, 255, 255, 0.2);
+      border-color: rgba(0, 255, 255, 0.4);
+    }
+
+    .step-number {
+      background: linear-gradient(135deg, #00ffff 0%, #a259ff 100%);
+      color: #000;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .step-desc {
+      color: #ccc;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    .listing-guide-note {
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 215, 0, 0.1) 100%);
+      border: 1px solid rgba(255, 107, 107, 0.3);
+      border-radius: 12px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .note-icon {
+      font-size: 1.2rem;
+    }
+
+    .note-text {
+      color: #ffcc99;
+      font-size: 0.9rem;
+    }
+
+    /* 手機版相容 */
+    @media (max-width: 768px) {
+      .card-listing-guide {
+        padding: 20px;
+        margin: 15px auto;
+        border-radius: 18px;
+      }
+
+      .guide-title {
+        font-size: 1.3rem;
+      }
+
+      .guide-subtitle {
+        font-size: 0.85rem;
+      }
+
+      .guide-steps-container {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .listing-guide-step {
+        padding: 12px;
+      }
+
+      .step-number {
+        width: 28px;
+        height: 28px;
+        font-size: 0.85rem;
+      }
+
+      .step-title {
+        font-size: 0.95rem;
+      }
+
+      .step-desc {
+        font-size: 0.8rem;
+      }
+
+      .listing-guide-note {
+        padding: 10px 14px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+      }
+
+      .note-text {
+        font-size: 0.85rem;
+      }
+    }
+
     /* 新增：影片播放指示器 */
     .video-play-indicator {
       position: absolute;
@@ -1645,7 +2085,8 @@
         font-size: 0.9rem;
       }
       
-      .tab-container {
+      .tab-container,
+      .card-trade-nav {
         gap: 8px;
       }
       
@@ -1965,6 +2406,798 @@
       color: #000;
       box-shadow: 0 0 8px #ffd700, 0 0 16px #ffd70088;
     }
+
+    /* === 本地卡片交易 UI === */
+    .trade-market-section { display: none; }
+    .trade-market-section.active { display: block; }
+    #marketSection {
+      max-width: 1120px;
+      margin: 24px auto;
+      padding: 24px;
+      background: #101419;
+      color: #eef2f5;
+      box-sizing: border-box;
+      text-align: left;
+      font-family: 'Microsoft JhengHei', sans-serif;
+    }
+    #marketSection .daily-market-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: 12px 28px;
+      padding: 12px 0;
+      margin: 0 0 24px;
+      background: none;
+      border: 0;
+      border-bottom: 1px solid #343c44;
+      border-radius: 0;
+      font-size: 14px;
+    }
+    #marketSection > h2 { margin: 0 0 24px; font-size: 24px; color: #f0f4f7; }
+    .market-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding-bottom: 24px; border-bottom: 1px solid #343c44; }
+    .market-caption { color: #aebac5; font-size: 14px; margin-bottom: 8px; }
+    .market-feature-name { font-size: 20px; font-weight: 700; margin-bottom: 6px; overflow-wrap: anywhere; }
+    .market-value { color: #f4d477; font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+    .market-count { color: #aebac5; font-size: 13px; margin-top: 6px; }
+    .market-columns { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 32px; margin: 24px 0; }
+    .market-block { min-width: 0; }
+    #marketSection h3 { font-size: 18px; margin: 0 0 16px; color: #eef2f5; }
+    .market-row { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid #293139; font-size: 15px; }
+    .market-row > span { min-width: 0; overflow-wrap: anywhere; }
+    .market-rank { color: #93a2af; font-variant-numeric: tabular-nums; }
+    .market-price { color: #f4d477; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .market-empty { padding: 24px 0; color: #94a3af; font-size: 14px; }
+    #marketListingsGrid { margin: 0; max-width: none; }
+    @media (max-width: 640px) {
+      #marketSection { margin: 12px 8px; padding: 18px 14px; }
+      .market-summary { gap: 18px; }
+      .market-value { font-size: 22px; }
+      .market-feature-name { font-size: 17px; }
+      .market-columns { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+    }
+
+    #tradeModal, #sellConfirmModal, #claimModal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+      width: 92%;
+      max-width: 420px;
+      background: linear-gradient(135deg, #0f1b2e 0%, #1a103c 100%);
+      border: 2px solid #00ffff;
+      border-radius: 24px;
+      padding: 22px;
+      color: #fff;
+      box-shadow: 0 0 40px #00ffff33, 0 20px 50px #00000088;
+    }
+    #tradeModal.show, #sellConfirmModal.show, #claimModal.show { display: block; }
+    #tradeModal {
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .trade-modal-title {
+      text-align: center;
+      font-size: 1.35rem;
+      font-weight: 900;
+      margin-bottom: 14px;
+      background: linear-gradient(90deg, #00ffff, #ffd700);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .trade-card-img {
+      width: min(100px, 24vw);
+      aspect-ratio: 5/7;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px;
+      border: 2px solid #ffd700;
+      overflow: hidden;
+    }
+    .trade-card-img img,
+    .trade-card-img video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .trade-card-name { text-align: center; font-size: 1.15rem; font-weight: 800; margin-bottom: 4px; }
+    .trade-card-meta { text-align: center; color: #00ffff; font-size: 0.9rem; margin-bottom: 14px; }
+    .trade-value-box {
+      background: rgba(0,0,0,0.35);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .trade-value-box .label { color: #aaa; font-size: 0.85rem; }
+    .trade-value-box .value { font-size: 1.15rem; font-weight: 800; color: #ffd700; }
+    .trade-value-box .hot { color: #ff6b35; font-size: 0.85rem; }
+    .trade-btn {
+      width: 100%;
+      padding: 12px;
+      margin: 6px 0;
+      border: none;
+      border-radius: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.1s, filter 0.2s;
+    }
+    .trade-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+    .trade-instant { background: linear-gradient(135deg, #00ffff, #00a8a8); color: #000; }
+    .trade-list { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; }
+    .trade-cancel { background: #444; color: #fff; }
+    .trade-chat { background: linear-gradient(135deg, #a259ff, #6a0dad); color: #fff; }
+    .trade-input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #00ffff;
+      background: #0a1422;
+      color: #fff;
+      font-size: 1rem;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    .trade-hint { text-align: center; font-size: 0.85rem; margin: 6px 0 12px; }
+    .trade-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 9999;
+    }
+    .trade-overlay.show { display: block; }
+
+    /* === 賣卡 AI 聊天室 === */
+    .sell-chat-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 10001;
+    }
+    .sell-chat-overlay.show { display: block; }
+
+    #sellChatModal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10002;
+      width: 92%;
+      max-width: 420px;
+      max-height: 85vh;
+      overflow-y: auto;
+      background: linear-gradient(135deg, #0f1b2e 0%, #1a103c 100%);
+      border: 2px solid #00ffff;
+      border-radius: 24px;
+      padding: 18px;
+      color: #fff;
+      box-shadow: 0 0 40px #00ffff33, 0 20px 50px #00000088;
+      box-sizing: border-box;
+    }
+    #sellChatModal.show { display: block; }
+
+    .sell-chat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .sell-chat-title {
+      font-size: 1.25rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #00ffff, #ffd700);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .sell-chat-close {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+
+    .sell-chat-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .sell-chat-img {
+      width: min(90px, 22vw);
+      aspect-ratio: 5/7;
+      border-radius: 10px;
+      border: 2px solid #ffd700;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sell-chat-img img,
+    .sell-chat-img video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .sell-chat-card-name {
+      font-size: 1.05rem;
+      font-weight: 800;
+      text-align: center;
+      color: #00ffff;
+    }
+
+    .sell-chat-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-bottom: 10px;
+      padding: 0 4px;
+    }
+    .sell-chat-info span { color: #ffd700; font-weight: 700; }
+
+    .sell-chat-messages {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 240px;
+      min-height: 120px;
+      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .sell-chat-bubble {
+      max-width: 85%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+    .sell-chat-bubble.ai {
+      align-self: flex-start;
+      background: rgba(0, 255, 255, 0.12);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      color: #fff;
+      border-bottom-left-radius: 4px;
+    }
+    .sell-chat-bubble.user {
+      align-self: flex-end;
+      background: rgba(255, 215, 0, 0.15);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+    .sell-chat-bubble.system {
+      align-self: center;
+      background: rgba(255, 255, 255, 0.1);
+      color: #ccc;
+      font-size: 0.8rem;
+      padding: 6px 10px;
+    }
+
+    .sell-chat-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .sell-chat-input-row {
+      display: flex;
+      gap: 8px;
+    }
+    .sell-chat-input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #00ffff;
+      background: #0a1422;
+      color: #fff;
+      font-size: 1rem;
+    }
+    .sell-chat-send {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #00ffff, #00a8a8);
+      color: #000;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .sell-chat-quick {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+    .sell-chat-qbtn {
+      flex: 1 1 30%;
+      min-width: 90px;
+      padding: 9px 8px;
+      border-radius: 10px;
+      border: none;
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .sell-chat-qbtn:hover { filter: brightness(1.2); }
+
+    .listing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .listing-card {
+      background: linear-gradient(135deg, #0f1b2e, #1a103c);
+      border: 1px solid #00ffff55;
+      border-radius: 16px;
+      padding: 12px;
+      text-align: center;
+      color: #fff;
+    }
+    .listing-card img {
+      width: 80px;
+      aspect-ratio: 5/7;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    .listing-card .price { color: #ffd700; font-weight: 900; }
+    .listing-card .status { font-size: 0.8rem; margin: 4px 0; }
+    .listing-card .btn-row { display: flex; gap: 6px; justify-content: center; margin-top: 8px; }
+    .listing-card button {
+      padding: 5px 10px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .revenue-panel {
+      background: linear-gradient(135deg, #0f1b2e, #1a103c);
+      border: 2px solid #ffd700;
+      border-radius: 18px;
+      padding: 22px;
+      max-width: 420px;
+      margin: 0 auto;
+      text-align: center;
+      color: #fff;
+    }
+    .revenue-stars { font-size: 2rem; color: #ffd700; font-weight: 900; }
+    .history-list {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .history-item {
+      background: rgba(0,0,0,0.35);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin: 8px 0;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+    }
+    .for-sale-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: linear-gradient(135deg, #00ffff, #0088ff);
+      color: #000;
+      font-weight: 900;
+      font-size: 0.7rem;
+      padding: 4px 8px;
+      border-radius: 8px;
+      z-index: 10;
+      box-shadow: 0 0 10px #00ffff88;
+    }
+    .daily-market-bar {
+      background: linear-gradient(90deg, #00ffff22, #ffd70022);
+      border: 1px solid #00ffff;
+      border-radius: 14px;
+      padding: 12px 18px;
+      margin: 12px 0;
+      display: flex;
+      justify-content: space-around;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+
+    /* === 選擇出售卡片彈窗 === */
+    #selectCardModal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+      width: 92%;
+      max-width: 760px;
+      max-height: 88vh;
+      overflow-y: auto;
+      background: linear-gradient(135deg, #0f1b2e 0%, #1a103c 100%);
+      border: 2px solid #00ffff;
+      border-radius: 24px;
+      padding: 22px;
+      color: #fff;
+      box-shadow: 0 0 40px #00ffff33, 0 20px 50px #00000088;
+    }
+    #selectCardModal.show { display: block; }
+
+    .select-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .select-card-title {
+      font-size: 1.35rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #00ffff, #ffd700);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .select-card-close {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+    .select-card-subtitle {
+      text-align: center;
+      color: #aaa;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+    .select-card-toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      justify-content: center;
+    }
+    .select-card-search, .select-card-filter {
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid #00ffff;
+      background: #0a1422;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+    .select-card-search { flex: 1; min-width: 160px; }
+    .select-card-filter { min-width: 120px; }
+    .select-card-rarity-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    .select-card-rarity-tab {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid #00ffff;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .select-card-rarity-tab.active {
+      background: #00ffff;
+      color: #000;
+      font-weight: 800;
+    }
+    .select-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 14px;
+      padding: 6px 2px 40px;
+    }
+    @media (min-width: 992px) {
+      .select-card-grid { grid-template-columns: repeat(6, 1fr); }
+    }
+    @media (min-width: 640px) and (max-width: 991px) {
+      .select-card-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (min-width: 420px) and (max-width: 639px) {
+      .select-card-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 419px) {
+      .select-card-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .select-card-item {
+      position: relative;
+      background: linear-gradient(135deg, #0f1b2e, #1a103c);
+      border: 1px solid #00ffff55;
+      border-radius: 14px;
+      padding: 10px;
+      text-align: center;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.2s;
+    }
+    .select-card-item:hover:not(.listed) {
+      transform: translateY(-3px);
+      box-shadow: 0 0 20px #00ffff44;
+    }
+    .select-card-item img {
+      width: 100%;
+      aspect-ratio: 5/7;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #00ffff33;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .select-card-item .rarity {
+      font-size: 0.75rem;
+      color: #ffd700;
+      font-weight: 800;
+      margin-bottom: 2px;
+    }
+    .select-card-item .name {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      min-height: 2.4em;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .select-card-item .price {
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: #ffd700;
+      margin-bottom: 8px;
+    }
+    .select-card-item .price.high-price {
+      color: #ffd700;
+      text-shadow: 0 0 8px #ffd70088;
+    }
+    .select-card-item .select-btn {
+      width: 100%;
+      padding: 7px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #ffd700, #ff8c00);
+      color: #000;
+      font-weight: 900;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .select-card-item .select-btn:disabled {
+      background: #555;
+      color: #aaa;
+      cursor: not-allowed;
+    }
+    .select-card-item .listed-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: #00ffff;
+      font-size: 1rem;
+      z-index: 5;
+    }
+    .empty-selectable {
+      text-align: center;
+      color: #aaa;
+      padding: 30px 20px;
+      grid-column: 1 / -1;
+    }
+
+    /* ====== 賣卡資料彈窗樣式 ====== */
+    .sell-info-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .sell-info-modal.is-open {
+      display: flex;
+    }
+
+    .sell-info-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    .sell-info-modal-panel {
+      position: relative;
+      z-index: 1;
+
+      width: min(90vw, 360px);
+      max-height: 80vh;
+      overflow-y: auto;
+
+      padding: 22px 18px 18px;
+
+      background: #071426;
+      border: 1px solid rgba(0, 255, 255, 0.35);
+      border-radius: 20px;
+
+      box-sizing: border-box;
+    }
+
+    .sell-info-modal-panel h3 {
+      margin: 0 0 18px;
+      text-align: center;
+      font-size: 20px;
+      color: #00ffff;
+      text-shadow: 0 0 8px #00ffff;
+    }
+
+    .sell-info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sell-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      min-height: 40px;
+      gap: 15px;
+
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .sell-info-row span {
+      font-size: 15px;
+      color: #ccc;
+    }
+
+    .sell-info-row strong {
+      font-size: 16px;
+      text-align: right;
+      color: #ffd700;
+      text-shadow: 0 0 4px #ffd700;
+    }
+
+    .sell-info-list hr {
+      border: none;
+      border-top: 1px solid rgba(0, 255, 255, 0.2);
+      margin: 8px 0;
+    }
+
+    .sell-info-total {
+      margin-top: 8px;
+      padding-top: 8px;
+      font-size: 18px;
+    }
+
+    .sell-info-total span {
+      color: #00ffff;
+      font-weight: bold;
+    }
+
+    .sell-info-total strong {
+      color: #ffd700;
+      font-size: 20px;
+      text-shadow: 0 0 8px #ffd700;
+    }
+
+    .sell-info-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+
+      width: 34px;
+      height: 34px;
+
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 0, 0, 0.6);
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .sell-info-close:hover {
+      background: rgba(255, 0, 0, 0.8);
+      transform: scale(1.1);
+    }
+
+    .sell-info-close-btn {
+      width: 100%;
+      min-height: 44px;
+      margin-top: 18px;
+
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #00ffff 0%, #a259ff 100%);
+      color: #000;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .sell-info-close-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+    }
+
+    /* 賣卡資料按鈕樣式 */
+    .sell-info-btn {
+      width: auto;
+      min-width: 120px;
+      height: 40px;
+      padding: 0 16px;
+      border: none;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.2) 0%, rgba(162, 89, 255, 0.2) 100%);
+      border: 2px solid rgba(0, 255, 255, 0.4);
+      color: #00ffff;
+      transition: all 0.3s ease;
+      margin: 8px 0;
+      position: relative;
+      z-index: 10;
+      pointer-events: auto !important;
+    }
+
+    .sell-info-btn:hover {
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.3) 0%, rgba(162, 89, 255, 0.3) 100%);
+      border-color: rgba(0, 255, 255, 0.6);
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    }
+
+    /* 確保 modal 中的按鈕都可以點擊 */
+    .modal-card button,
+    #modalCardContainer button {
+      position: relative;
+      z-index: 20;
+      pointer-events: auto !important;
+    }
+
+    /* 特別確保賣卡按鈕可以點擊 */
+    #tradeSellButton {
+      position: relative !important;
+      z-index: 100 !important;
+      pointer-events: auto !important;
+      cursor: pointer !important;
+    }
   </style>
 </head>
 <body>
@@ -1995,56 +3228,32 @@
     <header>
       <h1>📁 卡片收藏</h1>
       <div class="header-actions">
-        <span id="totalStarsCount" class="stars-display">⭐ 0</span>
+        <div class="global-stars-pill" data-global-stars>
+          <span class="global-star-icon">⭐</span>
+          <span class="global-stars-value" data-global-stars-value>0</span>
+        </div>
         
-        <button class="btn" onclick="location.href='index.html'">🏠 首頁</button>
-        <a href="shop.html" class="btn shop-link-btn">🛒 商城</a>
+        <button class="btn" id="toggleMusic" title="開關背景音樂">🎵</button>
+        <button class="btn" onclick="location.href='index.html'">🏠 <span class="label">首頁</span></button>
       </div>
     </header>
 
-    <div style="
-      margin: 14px auto 0;
-      padding: 14px 18px;
-      max-width: 980px;
-      width: calc(100% - 40px);
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.14) 0%, rgba(0, 255, 255, 0.12) 60%, rgba(162, 89, 255, 0.12) 100%);
-      border: 2px solid rgba(255, 215, 0, 0.55);
-      border-radius: 18px;
-      box-shadow: 0 0 18px rgba(255, 215, 0, 0.25), 0 0 26px rgba(0, 255, 255, 0.18);
-      backdrop-filter: blur(10px);
-      color: #fff;
-      text-align: center;
-      line-height: 1.6;
-      font-family: 'Orbitron', sans-serif;
-    ">
-      <div style="font-size: 1.15rem; font-weight: 900; letter-spacing: 1px; text-shadow: 0 0 12px rgba(255, 215, 0, 0.45);">
-        🎁 集齊整個系列 = 拿到<span style="color: #ffd700;">優惠碼</span>
-      </div>
-      <div style="margin-top: 10px; font-size: 0.95rem; color: rgba(255,255,255,0.92);">
-        <span style="display: inline-block; padding: 2px 10px; border-radius: 999px; background: rgba(0,255,255,0.12); border: 1px solid rgba(0,255,255,0.35);">1</span>
-        收集同一<span style="font-weight: 900; color: #00ffff;">系列</span>的卡片
-        <span style="margin: 0 8px; opacity: 0.7;">→</span>
-        <span style="display: inline-block; padding: 2px 10px; border-radius: 999px; background: rgba(162,89,255,0.12); border: 1px solid rgba(162,89,255,0.35);">2</span>
-        <span style="font-weight: 900;">集齊整套</span>
-        <span style="margin: 0 8px; opacity: 0.7;">→</span>
-        <span style="display: inline-block; padding: 2px 10px; border-radius: 999px; background: rgba(255,215,0,0.14); border: 1px solid rgba(255,215,0,0.5);">3</span>
-        獲得<span style="font-weight: 900; color: #ffd700;">優惠碼</span>
-      </div>
-      <div style="margin-top: 8px; font-size: 0.88rem; color: rgba(255,255,255,0.85);">
-        提醒：先把一整個系列收齊，再去領獎／使用優惠碼。
-      </div>
-    </div>
+  <!-- 交易功能導航列：固定在上方 -->
+  <div class="card-trade-nav tab-container" id="mainTabContainer">
+    <button class="tab-btn active" data-filter="all" data-section="cardsSection">🃏 我的卡片</button>
+    <button class="tab-btn" data-filter="market" data-section="marketSection">🛒 卡片市場</button>
+  </div>
 
   <!-- 搜尋、稀有度、類別 -->
   <div id="controls">
-    <input type="text" id="searchInput" placeholder="搜尋單字或中文" oninput="renderCards(); updateCategoryStats()">
-    <select id="rarityFilter" onchange="renderCards(); updateCategoryStats()">
+    <input type="text" id="searchInput" placeholder="搜尋單字或中文" oninput="resetToFirstPage(); renderCards(); updateCategoryStats()">
+    <select id="rarityFilter" onchange="resetToFirstPage(); renderCards(); updateCategoryStats()">
       <option value="all">全部稀有度</option>
       <option value="普通">普通</option>
       <option value="稀有">稀有</option>
       <option value="超稀有">超稀有</option>
     </select>
-    <select id="categoryFilter" onchange="renderCards(); updateCategoryStats()">
+    <select id="categoryFilter" onchange="resetToFirstPage(); renderCards(); updateCategoryStats()">
       <option value="all">全部類別</option>
       <!-- JS 會動態把 cards.js 的 category 填進去 -->
     </select>
@@ -2066,10 +3275,6 @@
       position: relative;
       overflow: hidden;
     "></div>
-    <div class="tab-container">
-      <button class="tab-btn active" data-filter="all">全部卡片</button>
-      <button class="tab-btn" data-filter="owned">📦 我的收藏</button>
-    </div>
   </div>
 
   <div id="progress">已解鎖：0 / 0</div>
@@ -2077,6 +3282,7 @@
 
   
   <div id="cardGrid"></div>
+  <div id="paginationContainer"></div>
 
   <div id="overlay"></div>
   <div id="modal">
@@ -2084,18 +3290,238 @@
     <div class="close-btn" onclick="closeModal()">✕</div>
   </div>
 
+  <!-- 賣卡彈窗 -->
+  <div id="tradeOverlay" class="trade-overlay" onclick="closeTradeModal()"></div>
+  <div id="tradeModal">
+    <div class="trade-modal-title">🏷️ 出售卡片</div>
+    <div id="tradeCardImage" class="trade-card-img"></div>
+    <div id="tradeCardName" class="trade-card-name"></div>
+    <div id="tradeCardMeta" class="trade-card-meta"></div>
+    <div class="trade-value-box">
+      <div class="label">市場估值</div>
+      <div class="value"><span id="tradeMarketValue">0</span> ⭐</div>
+      <div class="hot" id="tradeHotTag"></div>
+    </div>
+    <div class="trade-value-box">
+      <div class="label">⚡ 商人收購</div>
+      <div class="value"><span id="tradeInstantPrice">0</span> ⭐</div>
+    </div>
+    <button class="trade-btn trade-instant" onclick="openSellConfirm()">⚡ 立即出售</button>
+    <button class="trade-btn trade-chat" onclick="openSellChatModal()">🗨️ AI 老闆議價</button>
+    <button class="trade-btn trade-cancel" onclick="closeTradeModal()">再想一下</button>
+  </div>
+
+  <!-- 賣卡 AI 聊天室 -->
+  <div id="sellChatOverlay" class="sell-chat-overlay" onclick="closeSellChatModal()"></div>
+  <div id="sellChatModal">
+    <div class="sell-chat-header">
+      <div class="sell-chat-title">🤝 AI 老闆議價</div>
+      <button class="sell-chat-close" onclick="closeSellChatModal()">✕</button>
+    </div>
+    <div class="sell-chat-card">
+      <div id="sellChatCardImage" class="sell-chat-img"></div>
+      <div id="sellChatCardName" class="sell-chat-card-name"></div>
+    </div>
+    <div class="sell-chat-info">
+      <div>市場估值：<span id="sellChatMarketValue">0</span> ⭐</div>
+      <div>今日行情：<span id="sellChatDailyMood">普通</span></div>
+    </div>
+    <div id="sellChatMessages" class="sell-chat-messages"></div>
+    <div class="sell-chat-actions">
+      <div class="sell-chat-input-row">
+        <input type="text" id="sellChatInput" class="sell-chat-input" placeholder="輸入訊息或開價..." maxlength="300" onkeydown="if(event.key === 'Enter' && !event.isComposing) sendSellChatOffer()">
+        <button class="sell-chat-send" onclick="sendSellChatOffer()">開價</button>
+      </div>
+      <div class="sell-chat-quick">
+        <button id="sellChatAcceptBtn" class="sell-chat-qbtn" onclick="acceptSellChatOffer()">✅ 接受報價</button>
+        <button class="sell-chat-qbtn" onclick="sellChatCounterUp()">⬆️ 我出高一點</button>
+        <button class="sell-chat-qbtn" onclick="closeSellChatModal()">❌ 放棄離開</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 出售確認彈窗 -->
+  <div id="sellConfirmModal">
+    <div class="trade-modal-title">確定出售？</div>
+    <div id="sellConfirmName" class="trade-card-name"></div>
+    <div class="trade-value-box">
+      <div class="label">你將失去這張卡片，獲得</div>
+      <div class="value">+<span id="sellConfirmPrice">0</span> ⭐</div>
+    </div>
+    <button class="trade-btn trade-instant" onclick="confirmInstantSell()">確定出售</button>
+    <button class="trade-btn trade-cancel" onclick="closeSellConfirm()">再想一下</button>
+  </div>
+
+  <!-- 成交通知彈窗 -->
+  <div id="claimModal">
+    <div class="trade-modal-title">🎉 卡片成交！</div>
+    <img id="claimCardImage" class="trade-card-img" src="" alt="" onerror="this.style.display='none'">
+    <div id="claimCardName" class="trade-card-name"></div>
+    <div class="trade-value-box">
+      <div class="label">售價</div>
+      <div class="value"><span id="claimPrice">0</span> ⭐</div>
+    </div>
+    <div class="trade-value-box">
+      <div class="label">買家</div>
+      <div class="value" id="claimBuyer"></div>
+    </div>
+    <button class="trade-btn trade-instant" onclick="claimSoldRevenue()">領取收益</button>
+    <button class="trade-btn trade-cancel" onclick="closeClaimModal()">稍後再領</button>
+  </div>
+
+  <!-- 選擇出售卡片彈窗 -->
+  <div id="selectCardOverlay" class="trade-overlay" onclick="closeSelectCardModal()"></div>
+  <div id="selectCardModal" class="select-card-modal">
+    <div class="select-card-header">
+      <div class="select-card-title">🏷️ 選擇出售卡片</div>
+      <button class="select-card-close" onclick="closeSelectCardModal()">✕</button>
+    </div>
+    <div class="select-card-subtitle">從你的收藏中選擇要出售的卡片</div>
+    <div class="select-card-toolbar">
+      <input type="text" id="selectCardSearch" class="select-card-search" placeholder="🔎 搜尋卡片名稱..." oninput="renderSelectableCards()">
+      <select id="selectCardRarity" class="select-card-filter" onchange="renderSelectableCards()">
+        <option value="all">全部</option>
+      </select>
+      <select id="selectCardSort" class="select-card-filter" onchange="renderSelectableCards()">
+        <option value="priceDesc">今日價格高→低</option>
+        <option value="priceAsc">今日價格低→高</option>
+        <option value="rarity">稀有度</option>
+        <option value="name">名稱</option>
+      </select>
+    </div>
+    <div class="select-card-rarity-tabs" id="selectCardRarityTabs"></div>
+    <div class="select-card-grid" id="selectCardGrid"></div>
+  </div>
+
+  <!-- 賣卡資料彈窗 -->
+  <div id="sellInfoModal" class="sell-info-modal">
+    <div class="sell-info-modal-backdrop" onclick="closeSellInfoModal()"></div>
+
+    <div class="sell-info-modal-panel">
+      <button
+        type="button"
+        class="sell-info-close"
+        aria-label="關閉賣卡資料"
+        onclick="closeSellInfoModal()"
+      >
+        ×
+      </button>
+
+      <h3>📊 賣卡資料</h3>
+
+      <div class="sell-info-list">
+
+        <div class="sell-info-row">
+          <span>市場估值</span>
+          <strong id="sellInfoMarketValue">0 ⭐</strong>
+        </div>
+
+        <div class="sell-info-row">
+          <span>基礎價</span>
+          <strong id="sellInfoBasePrice">0 ⭐</strong>
+        </div>
+
+        <div class="sell-info-row">
+          <span>漲跌</span>
+          <strong id="sellInfoChange">--</strong>
+        </div>
+
+        <div class="sell-info-row">
+          <span>商人收購</span>
+          <strong id="sellInfoMerchantPrice">0 ⭐</strong>
+        </div>
+
+        <hr>
+
+        <div class="sell-info-row">
+          <span>目前擁有</span>
+          <strong id="sellInfoOwned">0 張</strong>
+        </div>
+
+        <div class="sell-info-row">
+          <span>預計賣出</span>
+          <strong id="sellInfoQuantity">1 張</strong>
+        </div>
+
+        <div class="sell-info-row sell-info-total">
+          <span>預計收入</span>
+          <strong id="sellInfoTotal">0 ⭐</strong>
+        </div>
+
+      </div>
+
+      <button type="button" class="sell-info-close-btn" onclick="closeSellInfoModal()">
+        關閉
+      </button>
+    </div>
+  </div>
+
+  <!-- 市場區塊 -->
+  <div id="marketSection" class="trade-market-section">
+    <div class="daily-market-bar" id="dailyMarketBar">
+      <span>📈 今日卡市</span>
+      <span>熱門系列：<b id="marketHotSeries">--</b></span>
+      <span>市場景氣：<b id="marketMood">--</b></span>
+      <span>倍率：<b id="marketMultiplier">--</b></span>
+    </div>
+    <h2>卡片市場</h2>
+    <div class="listing-grid" id="marketListingsGrid"></div>
+  </div>
+
+  <!-- 舊交易管理：僅有未完成交易時顯示於市場 -->
+  <div id="myListingsSection" hidden>
+    <h2 style="text-align:center; color:#ffd700; margin-bottom:6px;">🏷️ 我的出售</h2>
+    <p style="text-align:center; color:#aaa; font-size:0.9rem; margin:0 0 14px;">管理目前上架與已成交的卡片</p>
+    <div style="text-align:center; margin-bottom:10px; color:#fff;">
+      <span style="margin:0 8px;">出售中 <b id="myActiveCount">0</b></span>
+      <span style="margin:0 8px;">已售出 <b id="mySoldCount">0</b></span>
+      <span style="margin:0 8px;">已取消 <b id="myCancelledCount">0</b></span>
+    </div>
+    <div class="listing-grid" id="myListingsGrid"></div>
+  </div>
+
+  <!-- 賣家收益 -->
+  <div id="revenueSection" hidden>
+    <div class="revenue-panel">
+      <h2>💰 我的交易收益</h2>
+      <div style="margin:14px 0;">待領取</div>
+      <div class="revenue-stars"><span id="claimableStars">0</span> ⭐</div>
+      <div style="margin:14px 0; font-size:0.9rem;">今日成交：<b id="todaySoldCount">0</b> 張</div>
+      <div style="font-size:0.9rem; margin-bottom:18px;">累計售出：<b id="totalSoldCount">0</b> 張</div>
+      <button class="trade-btn trade-instant" onclick="claimRevenue()">領取全部</button>
+    </div>
+  </div>
+
+  <!-- 交易紀錄 -->
+  <div id="historySection" hidden>
+    <h2 style="text-align:center; color:#ffd700;">📜 交易紀錄</h2>
+    <div class="history-list" id="historyList"></div>
+  </div>
+
   </div>
 
   <!-- 先載入 cards.js（必須放在頁面相同資料夾，或自行修改路徑） -->
   <script src="js/sound.js"></script>
   <script src="js/userData.js"></script>
+  <script src="js/starManager.js"></script>
   <script src="js/starRewardSystem.js"></script>
   <script src="js/cardUtils.js"></script> <!-- 引入共享的卡牌工具函式 -->
-  <script src="js/cards.js"></script> <!-- 載入主卡片資料，包含影片屬性 -->
+  <script src="js/cards.js"></script>
+  <script src="js/cardVideoManager.js"></script> <!-- 載入主卡片資料，包含影片屬性 -->
   <script src="js/custom_cards.js"></script> <!-- 載入自訂卡片資料 -->
+  <script src="js/localCardTrade.js"></script> <!-- 本地卡片交易市場 -->
+  <script src="js/sellCardAI.js"></script> <!-- 賣卡 AI 老闆議價 -->
   <script src="js/googleSheetApi.js"></script>
+  <script src="js/achievementProgress.js"></script>
   <script src="js/achievementSystem.js"></script>
   <script>
+    // Google Apps Script Web App URL（交易市場使用 admin_apps_script.js）
+    window.GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzx6eM_OyYsJgCGM942WT0U1q7g4vpcUg1IslWC_luRkzJExPRWSeyh11GUd4ESuFx62Q/exec';
+
+    // 分頁設定
+    const CARDS_PER_PAGE = 49;
+    let currentPage = 1;
+
     /***** 背景音樂連動系統 *****/
     let backgroundMusic = null;
     let toggleMusicBtn = null;
@@ -2114,8 +3540,7 @@
       }
       
       if (!toggleMusicBtn) {
-        console.error('❌ 找不到音樂控制按鈕');
-        return;
+        console.warn('⚠️ 找不到音樂控制按鈕，僅初始化音樂狀態');
       }
       
       // 設定音樂屬性
@@ -2509,13 +3934,80 @@
       }, 10);
     }
 
+    // 統一處理卡片圖片載入失敗 - 顯示 HTML placeholder
+    window.handleCardImageError = function(img) {
+      if (!img) return;
+      img.onerror = null;
+
+      // 隱藏失敗的圖片
+      img.style.display = 'none';
+
+      // 在圖片容器中顯示 placeholder
+      const cardDiv = img.closest('.card');
+      if (cardDiv) {
+        // 找到或創建 placeholder 容器
+        let placeholder = cardDiv.querySelector('.card-image-placeholder');
+        if (!placeholder) {
+          placeholder = document.createElement('div');
+          placeholder.className = 'card-image-placeholder';
+          placeholder.innerHTML = `
+            <div class="placeholder-icon"></div>
+            <div class="placeholder-title">CARD</div>
+            <div class="placeholder-subtitle">暫無圖片</div>
+            <div class="placeholder-line"></div>
+          `;
+          cardDiv.insertBefore(placeholder, cardDiv.firstChild);
+        }
+        placeholder.style.display = 'flex';
+      }
+    };
+
+    // 建立卡片圖片 placeholder HTML
+    function createCardPlaceholderHtml() {
+      return `
+        <div class="card-image-placeholder">
+          <div class="placeholder-icon"></div>
+          <div class="placeholder-title">CARD</div>
+          <div class="placeholder-subtitle">暫無圖片</div>
+          <div class="placeholder-line"></div>
+        </div>
+      `;
+    }
+
+    // 驗證卡片圖片 URL（開發用）
+    window.validateCardImages = function() {
+      if (!window.allCards || !Array.isArray(window.allCards)) {
+        console.warn('[卡片圖片驗證] allCards 不存在或不是陣列');
+        return;
+      }
+
+      const missing = [];
+      const external = [];
+      const local = [];
+
+      window.allCards.forEach((card, index) => {
+        const image = card && card.image ? card.image.toString().trim() : '';
+        if (!image) {
+          missing.push({ index, word: card.word, zh: card.zh });
+        } else if (image.startsWith('http://') || image.startsWith('https://')) {
+          external.push({ index, word: card.word, zh: card.zh, image });
+        } else {
+          local.push({ index, word: card.word, zh: card.zh, image });
+        }
+      });
+
+      console.log('[卡片圖片驗證] 缺少網址:', missing);
+      console.log('[卡片圖片驗證] 使用外部網址:', external);
+      console.log('[卡片圖片驗證] 使用本地網址:', local);
+    };
+
     // -------- 4. 渲染卡片倉庫(搜尋+篩選+解鎖狀態) --------
     function renderCards() {
       // 重新拿 localStorage，確保與抽卡頁同步
       try {
         ownedCards = LinkageSystem.cards.getOwnedCards();
         recentlyObtainedCards = JSON.parse(localStorage.getItem('recentlyObtainedCards') || '[]');
-        
+
         // 添加調試資訊
         console.log('🔍 renderCards 調試資訊:');
         console.log('- ownedCards 數量:', Object.keys(ownedCards).length);
@@ -2552,12 +4044,15 @@
         if (aRarity !== bRarity) {
           return bRarity - aRarity;
         }
-        
+
         // 3. 最後依照 ID 排序
         return (a.id || 0) - (b.id || 0);
       });
 
+      // 搜尋與篩選
+      const filteredCards = [];
       let unlockedCount = 0;
+
       sortedCards.forEach(card => {
         // 搜尋單字或中文
         const combinedText = (card.word + card.zh).toLowerCase();
@@ -2570,6 +4065,37 @@
         const isUnlocked = LinkageSystem.cards.isCardOwned(card.word);
         const isNewCardFlag = recentlyObtainedCards.includes(card.word);
 
+        // 篩選已有卡片 (此功能已移除，改為標記)
+        const matchOwned = !showOwnedOnly || isUnlocked;
+
+        if (!(matchSearch && matchRarity && matchCategory && matchOwned)) return;
+
+        if (isUnlocked) {
+          unlockedCount++;
+        }
+
+        filteredCards.push({
+          card: card,
+          isUnlocked: isUnlocked,
+          isNewCardFlag: isNewCardFlag
+        });
+      });
+
+      // 計算分頁
+      const totalCards = filteredCards.length;
+      const totalPages = Math.max(1, Math.ceil(totalCards / CARDS_PER_PAGE));
+
+      // 如果當前頁超過總頁數，重置到最後一頁
+      if (currentPage > totalPages) {
+        currentPage = totalPages;
+      }
+
+      const startIndex = (currentPage - 1) * CARDS_PER_PAGE;
+      const endIndex = startIndex + CARDS_PER_PAGE;
+      const pageCards = filteredCards.slice(startIndex, endIndex);
+
+      // 渲染當前頁卡片
+      pageCards.forEach(({card, isUnlocked, isNewCardFlag}) => {
         let shardDisplayHtml = '';
         if (isUnlocked) {
           shardDisplayHtml = `<div class="shard-count shard-unlocked">✔</div>`;
@@ -2577,18 +4103,13 @@
           shardDisplayHtml = `<div class="shard-count">未解鎖</div>`;
         }
 
-        // 篩選已有卡片 (此功能已移除，改為標記)
-        const matchOwned = !showOwnedOnly || isUnlocked;
-
-        if (!(matchSearch && matchRarity && matchCategory && matchOwned)) return;
-
         // CSS class
         const rarityClass = getRarityClass(card.rarity);
 
         const div = document.createElement("div");
         div.className = `card ${rarityClass}${isUnlocked ? ' unlocked' : ' locked'}`;
         div.setAttribute('data-word', card.word); // 添加data-word屬性用於定位
-        
+
         // 根據稀有度決定邊框底圖
         if (card.rarity === '普通') {
           div.style.backgroundImage = "url('img/border/common.png')";
@@ -2598,41 +4119,39 @@
           div.style.backgroundImage = "url('img/border/common.png')";
         }
 
-        // 星星圖示
-        let starIcons = '';
-        if (card.rarity === '普通') starIcons = '★';
-        else if (card.rarity === '稀有') starIcons = '★★';
-        else if (card.rarity === '超稀有') starIcons = '★★★';
-
         // 準備卡片內容
         let mediaContent = '';
         // 判斷圖片型態，產生正方形縮圖（mp4 擷取第一幀）
-        let imgSrc = card.image;
-        if (imgSrc && imgSrc.endsWith('.mp4')) {
+        const imageUrl = (typeof card.image === 'string' && card.image.trim()) ? card.image.trim() : '';
+
+        if (!imageUrl) {
+          // 沒有圖片：直接顯示 placeholder
+          mediaContent = createCardPlaceholderHtml();
+        } else if (imageUrl.endsWith('.mp4')) {
           // mp4 檔案：用 video 標籤擷取第一幀作為縮圖
           mediaContent = `
             <video class="card-media" preload="metadata" muted loop playsinline>
-              <source src="${imgSrc}" type="video/mp4">
+              <source src="${imageUrl}" type="video/mp4">
             </video>
           `;
         } else {
           // 一般圖片
           mediaContent = `
-            <img class="card-media" src="${imgSrc}" alt="${card.word}" onerror="this.onerror=null;this.src='img/shop boss.png'">
+            <img class="card-media" src="${imageUrl}" alt="${card.word}" onerror="handleCardImageError(this)">
           `;
         }
         let cardContent = `
           ${mediaContent}
         `;
-        
+
         // 如果是新卡片且已解鎖，添加NEW標籤
-        if (recentlyObtainedCards.includes(card.word) && isUnlocked) {
+        if (isNewCardFlag && isUnlocked) {
           cardContent = `
             <div class="new-card-badge">NEW!</div>
             ${cardContent}
           `;
         }
-        
+
         // 添加卡片名稱顯示
         cardContent += `
           <div class="card-name">
@@ -2640,6 +4159,15 @@
             <div class="card-name-english">${card.word}</div>
           </div>
         `;
+
+        // 若已上架，顯示 FOR SALE 標籤
+        if (isUnlocked && typeof LocalCardTrade !== 'undefined' && LocalCardTrade.isCardListed(card.word)) {
+          cardContent = `
+            <div class="for-sale-badge">🏷️ FOR SALE</div>
+            ${cardContent}
+          `;
+          div.style.position = 'relative';
+        }
 
         div.innerHTML = cardContent;
 
@@ -2650,11 +4178,11 @@
             if (event.target.closest('.video-button')) {
               return;
             }
-            
+
             // 打開 Modal
             openModal(card);
           };
-          
+
           // 只有已解鎖卡片的影片才添加點擊事件和懸停事件
           const videoElement = div.querySelector('video');
           if (videoElement) {
@@ -2667,7 +4195,7 @@
                 videoElement.pause();
               }
             });
-            
+
             // 滑鼠懸停時播放，離開時暫停
             div.addEventListener('mouseenter', () => {
               if (videoElement.paused) {
@@ -2676,19 +4204,17 @@
                 });
               }
             });
-            
+
             div.addEventListener('mouseleave', () => {
               if (!videoElement.paused) {
                 videoElement.pause();
               }
             });
           }
-          
-          unlockedCount++;
         } else {
           // 未解鎖卡片：禁用點擊打開 Modal，但允許顯示鎖頭遮罩
           div.style.cursor = 'not-allowed';
-          
+
           // 禁用未解鎖卡片的影片播放
           const videoElements = div.querySelectorAll('video');
           videoElements.forEach(video => {
@@ -2698,7 +4224,7 @@
             video.muted = true;
             video.pause();
           });
-          
+
           // 為未解鎖卡片添加鎖定遮罩
           const lockOverlay = document.createElement('div');
           lockOverlay.className = 'lock-overlay';
@@ -2707,7 +4233,7 @@
             <div class="lock-text">未解鎖</div>
           `;
           div.appendChild(lockOverlay);
-          
+
           // 未解鎖卡片點擊時不開啟 Modal
           div.onclick = (event) => {
             event.preventDefault();
@@ -2719,26 +4245,81 @@
       });
 
       document.getElementById("progress").textContent = `已解鎖：${unlockedCount} / ${window.allCards.length}`;
-      
-      // 更新卡片統計（移除重複呼叫，避免效能問題）
-      // updateCardStats();
 
-      // 為每張卡片添加右鍵選單
-      document.querySelectorAll('.card').forEach(cardElement => {
-        cardElement.addEventListener('contextmenu', function(e) {
-          e.preventDefault();
-          
-          const cardWord = this.getAttribute('data-word');
-          const card = window.allCards.find(c => c.word === cardWord);
-          
-          if (!card) return;
-          
-          // 如果是生日蛋糕卡片且未設定生日，顯示生日設定選項
-          if (card.word === 'Birthday Cake' && !BirthdaySystem.hasBirthdaySet()) {
-            showBirthdayContextMenu(e, card);
-          }
-        });
-      });
+      // 渲染分頁控制
+      renderPagination(currentPage, totalPages, totalCards, startIndex, endIndex);
+    }
+
+    // 渲染分頁控制
+    function renderPagination(currentPage, totalPages, totalCards, startIndex, endIndex) {
+      const paginationContainer = document.getElementById('paginationContainer');
+      if (!paginationContainer) return;
+
+      // 如果沒有卡片或只有一頁，隱藏分頁
+      if (totalCards === 0 || totalPages === 1) {
+        paginationContainer.innerHTML = '';
+        return;
+      }
+
+      const actualEndIndex = Math.min(endIndex, totalCards);
+      const infoText = `顯示 ${startIndex + 1}–${actualEndIndex}，共 ${totalCards} 張`;
+
+      let pageNumbers = [];
+      const maxVisiblePages = 7;
+
+      if (totalPages <= maxVisiblePages) {
+        // 頁數少，全部顯示
+        for (let i = 1; i <= totalPages; i++) {
+          pageNumbers.push(i);
+        }
+      } else {
+        // 頁數多，顯示部分頁碼
+        if (currentPage <= 3) {
+          pageNumbers = [1, 2, 3, 4, '...', totalPages];
+        } else if (currentPage >= totalPages - 2) {
+          pageNumbers = [1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+        } else {
+          pageNumbers = [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages];
+        }
+      }
+
+      const paginationHTML = `
+        <div class="cards-pagination-info">${infoText}</div>
+        <div class="cards-pagination">
+          <button class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">
+            ‹ 上一頁
+          </button>
+          ${pageNumbers.map(p => {
+            if (p === '...') {
+              return '<span class="pagination-ellipsis">...</span>';
+            }
+            const isActive = p === currentPage;
+            return `<button class="pagination-number ${isActive ? 'pagination-active' : ''}" onclick="goToPage(${p})">${p}</button>`;
+          }).join('')}
+          <button class="pagination-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">
+            下一頁 ›
+          </button>
+        </div>
+      `;
+
+      paginationContainer.innerHTML = paginationHTML;
+    }
+
+    // 切換頁面
+    function goToPage(page) {
+      currentPage = page;
+      renderCards();
+
+      // 捲動到卡片區頂端
+      const cardGrid = document.getElementById('cardGrid');
+      if (cardGrid) {
+        cardGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // 重置到第 1 頁（搜尋/篩選時呼叫）
+    function resetToFirstPage() {
+      currentPage = 1;
     }
 
     // -------- 4.5. 切換已有卡片篩選 --------
@@ -2790,12 +4371,17 @@
       // 移除該卡片的 NEW 標記
       removeNewCardMarker(card.word);
 
-      const isTradeListed = window.GoogleSheetTradeApi && window.GoogleSheetTradeApi.isCardListed(card.word);
-      const sellButtonText = isTradeListed ? '已上架' : '上架出售';
-      const sellButtonDisabled = isTradeListed ? 'disabled' : '';
-      const sellButtonStyle = isTradeListed
-        ? 'padding: 10px 18px; border: none; border-radius: 12px; cursor: not-allowed; font-weight: bold; color: #d7d7d7; background: linear-gradient(135deg, #666 0%, #444 100%); box-shadow: none; opacity: 0.9;'
-        : 'padding: 10px 18px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; color: #071018; background: linear-gradient(135deg, #00ffff 0%, #ffd700 100%); box-shadow: 0 8px 18px rgba(0,255,255,0.18);';
+      console.log('[Modal] 設定 window._modalCard:', card.word, card.zh);
+      window._modalCard = card;
+
+      const marketValue = LocalCardTrade.getMarketValue(card);
+      const basePrice = LocalCardTrade.getCardBasePrice(card);
+      const instantPrice = LocalCardTrade.getInstantSellPrice(card);
+      const change = LocalCardTrade.getDailyPriceChange(card);
+      const isTradeListed = LocalCardTrade.isCardListed(card.word);
+      const sellButtonText = isTradeListed ? '🏷️ 出售中' : '💰 賣卡';
+      const sellButtonDisabled = '';
+      const sellButtonStyle = 'padding: 10px 18px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; color: #071018; background: linear-gradient(135deg, #00ffff 0%, #ffd700 100%); box-shadow: 0 8px 18px rgba(0,255,255,0.18);';
 
       // 準備稀有度星星
       let starIcons = '';
@@ -2881,7 +4467,7 @@
               <button
                 id="tradeSellButton"
                 type="button"
-                onclick="sellCardToTradeMarket('${String(card.word).replace(/'/g, "\\'")}')"
+                onclick="openTradeModal()"
                 style="${sellButtonStyle}"
                 ${sellButtonDisabled}
               >${sellButtonText}</button>
@@ -2907,13 +4493,13 @@
         modalVideo.pause();
         modalVideo.currentTime = 0;
       }
-      
+
       // 移除YouTube iframe以停止播放
       const modalYouTube = document.querySelector('#modal iframe');
       if (modalYouTube) {
         modalYouTube.remove();
       }
-      
+
       document.getElementById("modal").classList.remove("show");
       document.getElementById("overlay").style.display = "none";
       // 使用新的發音系統停止發音
@@ -2922,20 +4508,953 @@
       }
     }
 
+    // 賣卡資料彈窗相關函數
+    function openSellInfoModal() {
+      const card = window._modalCard;
+      if (!card || typeof LocalCardTrade === 'undefined') return;
+
+      const modal = document.getElementById('sellInfoModal');
+
+      // 使用現有的交易資料，不重新計算
+      const marketValue = LocalCardTrade.getMarketValue(card);
+      const basePrice = LocalCardTrade.getCardBasePrice(card);
+      const instantPrice = LocalCardTrade.getInstantSellPrice(card);
+      const change = LocalCardTrade.getDailyPriceChange(card);
+
+      // 獲取擁有數量
+      let ownedCount = 0;
+      if (typeof LinkageSystem !== 'undefined' && LinkageSystem.cards) {
+        ownedCount = LinkageSystem.cards.getCardCount(card.word);
+      } else if (typeof getCardCount === 'function') {
+        ownedCount = getCardCount(card.word);
+      }
+
+      // 顯示漲跌
+      let changeText = '--';
+      if (change.percent > 0) {
+        changeText = `🔥 上漲 ${change.percent.toFixed(1)}%`;
+      } else if (change.percent < 0) {
+        changeText = `📉 下跌 ${Math.abs(change.percent).toFixed(1)}%`;
+      } else {
+        changeText = '➖ 持平';
+      }
+
+      // 預設賣出數量為1
+      const sellQuantity = 1;
+
+      // 更新彈窗內容
+      document.getElementById('sellInfoMarketValue').textContent =
+        `${marketValue.toLocaleString()} ⭐`;
+
+      document.getElementById('sellInfoBasePrice').textContent =
+        `${basePrice.toLocaleString()} ⭐`;
+
+      document.getElementById('sellInfoChange').textContent = changeText;
+
+      document.getElementById('sellInfoMerchantPrice').textContent =
+        `${instantPrice.toLocaleString()} ⭐`;
+
+      document.getElementById('sellInfoOwned').textContent =
+        `${ownedCount} 張`;
+
+      document.getElementById('sellInfoQuantity').textContent =
+        `${sellQuantity} 張`;
+
+      document.getElementById('sellInfoTotal').textContent =
+        `${(instantPrice * sellQuantity).toLocaleString()} ⭐`;
+
+      modal.classList.add('is-open');
+    }
+
+    function closeSellInfoModal() {
+      const modal = document.getElementById('sellInfoModal');
+      modal.classList.remove('is-open');
+    }
+
+    // 鍵盤事件監聽 - Escape 關閉彈窗
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeSellInfoModal();
+      }
+    });
+
+    // 更新賣卡資料彈窗中的數量信息（用於將來的批量出售功能）
+    function updateSellInfoModalQuantity(quantity) {
+      const modal = document.getElementById('sellInfoModal');
+      if (!modal.classList.contains('is-open')) return;
+
+      const card = window._modalCard;
+      if (!card || typeof LocalCardTrade === 'undefined') return;
+
+      const instantPrice = LocalCardTrade.getInstantSellPrice(card);
+
+      document.getElementById('sellInfoQuantity').textContent =
+        `${quantity} 張`;
+
+      document.getElementById('sellInfoTotal').textContent =
+        `${(instantPrice * quantity).toLocaleString()} ⭐`;
+    }
+
+    // =====================================================
+    // 本地卡片交易 UI 與流程
+    // =====================================================
+    function switchMainTab(sectionId, filter) {
+      document.querySelectorAll('.trade-market-section').forEach(el => el.classList.remove('active'));
+      const isCards = (sectionId === 'cardsSection');
+      const grid = document.getElementById('cardGrid');
+      const pagination = document.getElementById('paginationContainer');
+      const progress = document.getElementById('progress');
+      const controls = document.getElementById('controls');
+
+      if (grid) grid.style.display = isCards ? 'grid' : 'none';
+      if (pagination) pagination.style.display = isCards ? 'block' : 'none';
+      if (progress) progress.style.display = isCards ? 'block' : 'none';
+      if (controls) controls.style.display = isCards ? 'block' : 'none';
+
+      if (isCards) {
+        renderCards();
+        updateCategoryStats();
+      } else {
+        const el = document.getElementById(sectionId);
+        if (el) el.classList.add('active');
+        if (sectionId === 'marketSection') renderMarket();
+      }
+    }
+
+    function openTradeModal() {
+      console.log('[賣卡] openTradeModal 被調用');
+      const card = window._modalCard;
+      if (!card) {
+        console.error('[賣卡] 找不到 window._modalCard');
+        return;
+      }
+      if (typeof LocalCardTrade === 'undefined') {
+        console.error('[賣卡] LocalCardTrade 未定義');
+        return;
+      }
+
+      console.log('[賣卡] 當前卡片:', card.word, card.zh);
+
+      const marketValue = LocalCardTrade.getMarketValue(card);
+      const basePrice = LocalCardTrade.getCardBasePrice(card);
+      const instantPrice = LocalCardTrade.getInstantSellPrice(card);
+      const change = LocalCardTrade.getDailyPriceChange(card);
+      const daily = LocalCardTrade.getDailyMarket();
+      const isForSale = LocalCardTrade.isCardListed(card.word);
+
+      document.getElementById('tradeCardName').textContent = card.zh || card.word;
+      document.getElementById('tradeCardMeta').textContent = `${card.rarity}・${card.category || '未分類'}`;
+      document.getElementById('tradeMarketValue').textContent = marketValue.toLocaleString();
+      document.getElementById('tradeInstantPrice').textContent = instantPrice.toLocaleString();
+
+      const hotTag = document.getElementById('tradeHotTag');
+      const hotSeries = daily.hotSeries && (card.category === daily.hotSeries || card.series === daily.hotSeries);
+      const changeText = `${change.percent >= 0 ? '🔥 上漲' : '📉 下跌'} ${Math.abs(change.percent).toFixed(1)}%`;
+      hotTag.textContent = `基礎價 ${basePrice.toLocaleString()} ⭐ | ${changeText}${hotSeries ? ' | 今日熱門' : ''}`;
+
+      document.getElementById('tradeCardImage').innerHTML = cardMediaHtml(card, card.word);
+
+      console.log('[賣卡] 顯示交易模態框');
+      document.getElementById('tradeModal').classList.add('show');
+      document.getElementById('tradeOverlay').classList.add('show');
+
+      setTimeout(() => {
+        const v = document.querySelector('#tradeCardImage video.card-media-video');
+        if (v) {
+          v.muted = true;
+          v.loop = true;
+          v.playsInline = true;
+          v.play().catch(() => {});
+        }
+        setupLazyVideos();
+      }, 50);
+    }
+
+    function closeTradeModal() {
+      document.getElementById('tradeModal').classList.remove('show');
+      document.getElementById('tradeOverlay').classList.remove('show');
+    }
+
+    // === 賣卡 AI 聊天室 ===
+    let _sellChatState = null;
+
+    function openSellChatModal() {
+      const card = window._modalCard;
+      if (!card || typeof LocalCardTrade === 'undefined' || typeof SellCardAI === 'undefined') return;
+
+      _sellChatState = SellCardAI.start(card);
+      const state = _sellChatState;
+
+      document.getElementById('sellChatCardName').textContent = card.zh || card.word;
+      document.getElementById('sellChatCardImage').innerHTML = cardMediaHtml(card, card.word);
+
+      const marketValue = LocalCardTrade.getMarketValue(card);
+      const daily = LocalCardTrade.getDailyMarket();
+      document.getElementById('sellChatMarketValue').textContent = marketValue.toLocaleString();
+      document.getElementById('sellChatDailyMood').textContent = `${daily.mood || '普通'}${daily.multiplier ? ' x' + daily.multiplier.toFixed(2) : ''}`;
+
+      const messages = document.getElementById('sellChatMessages');
+      messages.innerHTML = '';
+      addSellChatBubble(SellCardAI.getOpeningMessage(state, card), 'ai');
+
+      const input = document.getElementById('sellChatInput');
+      if (input) input.value = '';
+      const acceptBtn = document.getElementById('sellChatAcceptBtn');
+      if (acceptBtn) { acceptBtn.textContent = '✅ 接受報價'; acceptBtn.disabled = false; }
+
+      document.getElementById('sellChatModal').classList.add('show');
+      document.getElementById('sellChatOverlay').classList.add('show');
+
+      setTimeout(() => {
+        const v = document.querySelector('#sellChatCardImage video.card-media-video');
+        if (v) {
+          v.muted = true;
+          v.loop = true;
+          v.playsInline = true;
+          v.play().catch(() => {});
+        }
+        setupLazyVideos();
+      }, 50);
+    }
+
+    function closeSellChatModal() {
+      document.getElementById('sellChatModal').classList.remove('show');
+      document.getElementById('sellChatOverlay').classList.remove('show');
+      _sellChatState = null;
+    }
+
+    function addSellChatBubble(text, sender) {
+      const messages = document.getElementById('sellChatMessages');
+      if (!messages) return;
+      const bubble = document.createElement('div');
+      bubble.className = 'sell-chat-bubble ' + (sender === 'ai' ? 'ai' : sender === 'user' ? 'user' : 'system');
+      bubble.textContent = text;
+      messages.appendChild(bubble);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function handleSellChatResponse(state, userPrice) {
+      if (!state || state.closed || typeof SellCardAI === 'undefined') return null;
+      const res = SellCardAI.respond(state, userPrice);
+      addSellChatBubble(res.message, 'ai');
+      if (res.action === 'accept') {
+        setTimeout(() => completeSellChatDeal(res.price, state), 600);
+      } else if (res.action === 'walkaway') {
+        addSellChatBubble('老闆把卡片推回來，交易破局。', 'system');
+      }
+      return res;
+    }
+
+    function sendSellChatOffer() {
+      const input = document.getElementById('sellChatInput');
+      if (!input || !_sellChatState || _sellChatState.closed) return;
+      const message = input.value.trim();
+      if (!message) return;
+      input.value = '';
+      addSellChatBubble(message, 'user');
+      handleSellChatResponse(_sellChatState, message);
+    }
+
+    function acceptSellChatOffer() {
+      if (!_sellChatState || _sellChatState.closed) return;
+      addSellChatBubble(`好，我接受 ${(_sellChatState.lastOffer).toLocaleString()}⭐。`, 'user');
+      const res = handleSellChatResponse(_sellChatState, '我接受');
+      const btn = document.getElementById('sellChatAcceptBtn');
+      if (btn && res) {
+        if (res.action === 'confirm') btn.textContent = '同意';
+        else if (res.action === 'accept') { btn.textContent = '已成交'; btn.disabled = true; }
+      }
+    }
+
+    function sellChatCounterUp() {
+      if (!_sellChatState || _sellChatState.closed) return;
+      const price = Math.max(_sellChatState.lastOffer + 10, Math.round(_sellChatState.lastOffer * 1.12));
+      const text = `我出 ${price.toLocaleString()}⭐`;
+      addSellChatBubble(text, 'user');
+      handleSellChatResponse(_sellChatState, text);
+    }
+
+    function completeSellChatDeal(price, state) {
+      if (!state || state !== _sellChatState || state.settled) return;
+      const card = state.card;
+      if (!card) return;
+      state.settled = true;
+      const result = LocalCardTrade.sellToAI(card, price);
+      if (result.success) {
+        addSellChatBubble(`成交！你獲得 ${result.price.toLocaleString()}⭐。`, 'system');
+        if (window.LinkageSystem && LinkageSystem.notifications) {
+          LinkageSystem.notifications.show(`🤝 AI 議價成功 ${card.zh || card.word} +${result.price.toLocaleString()}⭐`, 'success', 4000);
+        }
+        renderCards();
+        if (window.StarManager) StarManager.refreshDisplays();
+        setTimeout(() => {
+          if (_sellChatState !== state) return;
+          closeSellChatModal(); closeTradeModal(); closeModal();
+        }, 1400);
+      } else {
+        addSellChatBubble('交易失敗：' + result.message, 'system');
+      }
+    }
+
+    function openSellConfirm() {
+      console.log('[賣卡] openSellConfirm 被調用');
+      const card = window._modalCard;
+      if (!card) {
+        console.error('[賣卡] 找不到 window._modalCard');
+        return;
+      }
+      if (typeof LocalCardTrade === 'undefined') {
+        console.error('[賣卡] LocalCardTrade 未定義');
+        return;
+      }
+      if (LocalCardTrade.isCardListed(card.word)) {
+        console.log('[賣卡] 卡片已上架，無法立即出售');
+        return;
+      }
+
+      const price = LocalCardTrade.getInstantSellPrice(card);
+      console.log('[賣卡] 商人收購價:', price);
+
+      document.getElementById('sellConfirmName').textContent = card.zh || card.word;
+      document.getElementById('sellConfirmPrice').textContent = price.toLocaleString();
+      document.getElementById('sellConfirmModal').classList.add('show');
+      document.getElementById('tradeOverlay').classList.add('show');
+      console.log('[賣卡] 顯示確認模態框');
+    }
+
+    function closeSellConfirm() {
+      document.getElementById('sellConfirmModal').classList.remove('show');
+      if (!document.getElementById('tradeModal').classList.contains('show')) {
+        document.getElementById('tradeOverlay').classList.remove('show');
+      }
+    }
+
+    function confirmInstantSell() {
+      console.log('[賣卡] confirmInstantSell 被調用');
+      const card = window._modalCard;
+      if (!card) {
+        console.error('[賣卡] 找不到 window._modalCard');
+        return;
+      }
+      if (typeof LocalCardTrade === 'undefined') {
+        console.error('[賣卡] LocalCardTrade 未定義');
+        return;
+      }
+
+      console.log('[賣卡] 執行立即出售:', card.word, card.zh);
+      const res = LocalCardTrade.instantSell(card, true);
+      console.log('[賣卡] 出售結果:', res);
+
+      closeSellConfirm();
+
+      if (res.success) {
+        closeSellConfirm();
+        closeTradeModal();
+        if (window.LinkageSystem && LinkageSystem.notifications) {
+          LinkageSystem.notifications.show(`💰 出售成功 ${card.zh || card.word} +${(res.price || 0).toLocaleString()}⭐`, 'success', 4000);
+        }
+        renderCards();
+        if (window.StarManager) StarManager.refreshDisplays();
+        console.log('[賣卡] 出售成功，已更新畫面');
+      } else if (res.message === 'need_confirm') {
+        openSellConfirm();
+      } else {
+        console.error('[賣卡] 出售失敗:', res.message);
+        if (window.LinkageSystem && LinkageSystem.notifications) {
+          LinkageSystem.notifications.show(res.message, 'warning', 4000);
+        }
+      }
+    }
+
+    function openClaimModal(listing) {
+      if (!listing) return;
+      const card = (window.allCards || []).find(c => c.word === listing.cardId) || {};
+      document.getElementById('claimCardName').textContent = listing.cardName;
+      document.getElementById('claimPrice').textContent = (listing.price || 0).toLocaleString();
+      document.getElementById('claimBuyer').textContent = listing.buyerName || '神秘收藏家';
+
+      const img = document.getElementById('claimCardImage');
+      if (listing.cardImage && !listing.cardImage.endsWith('.mp4')) {
+        img.style.display = 'block';
+        img.src = listing.cardImage;
+        img.onerror = () => { img.style.display = 'none'; };
+      } else {
+        img.style.display = 'none';
+      }
+
+      window._claimListing = listing;
+      document.getElementById('claimModal').classList.add('show');
+      document.getElementById('tradeOverlay').classList.add('show');
+    }
+
+    function closeClaimModal() {
+      document.getElementById('claimModal').classList.remove('show');
+      document.getElementById('tradeOverlay').classList.remove('show');
+      window._claimListing = null;
+    }
+
+    function claimSoldRevenue() {
+      const listing = window._claimListing;
+      if (!listing) return;
+      LocalCardTrade.markNotified(listing.listingId);
+      const res = LocalCardTrade.claimRevenue();
+      closeClaimModal();
+      if (res.success) {
+        if (window.LinkageSystem && LinkageSystem.notifications) {
+          LinkageSystem.notifications.show(`🎉 領取成功 +${(res.amount || 0).toLocaleString()}⭐`, 'success', 4000);
+        }
+        if (window.StarManager) StarManager.refreshDisplays();
+        renderMyListings();
+        renderRevenue();
+      }
+    }
+
+    function claimRevenue() {
+      if (typeof LocalCardTrade === 'undefined') return;
+      const before = LocalCardTrade.getClaimableStars();
+      if (before <= 0) {
+        if (window.LinkageSystem && LinkageSystem.notifications) {
+          LinkageSystem.notifications.show('目前沒有待領收益', 'info', 3000);
+        }
+        return;
+      }
+      const res = LocalCardTrade.claimRevenue();
+      if (res.success) {
+        if (window.LinkageSystem && LinkageSystem.notifications) {
+          LinkageSystem.notifications.show(`💰 領取成功 +${(res.amount || 0).toLocaleString()}⭐`, 'success', 4000);
+        }
+        if (window.StarManager) StarManager.refreshDisplays();
+        renderRevenue();
+      }
+    }
+
+    function sellAllDuplicates() {
+      if (typeof LocalCardTrade === 'undefined') return;
+      const info = LocalCardTrade.sellDuplicates(false);
+      if (!info.duplicates || info.duplicates.length === 0) {
+        if (window.LinkageSystem && LinkageSystem.notifications) {
+          LinkageSystem.notifications.show('沒有重複卡可出售', 'info', 3000);
+        }
+        return;
+      }
+      const names = info.duplicates.map(d => d.card.zh || d.word).join('、');
+      const ok = confirm(`找到 ${info.duplicates.length} 種重複卡\n總收購價：${(info.total || 0).toLocaleString()}⭐\n\n卡片：${names}\n\n確定全部出售？（每種保留 1 張）`);
+      if (!ok) return;
+      const res = LocalCardTrade.sellDuplicates(true);
+      if (res.success) {
+        if (window.LinkageSystem && LinkageSystem.notifications) {
+          LinkageSystem.notifications.show(`💰 出售重複卡 +${(res.total || 0).toLocaleString()}⭐`, 'success', 4000);
+        }
+        if (window.StarManager) StarManager.refreshDisplays();
+        renderMyListings();
+        renderCards();
+      }
+    }
+
+    function formatTradeTime(ts) {
+      if (!ts) return '--';
+      const d = new Date(ts);
+      return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+    }
+
+    function isToday(ts) {
+      if (!ts) return false;
+      const d = new Date(ts);
+      const now = new Date();
+      return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
+    }
+
+    function getPlayerId() {
+      return localStorage.getItem('playerId') || localStorage.getItem('currentUser') || 'player';
+    }
+
+    function getUrlMediaType(url) {
+      if (!url) return 'none';
+      const l = url.toLowerCase();
+      if (l.endsWith('.mp4') || l.endsWith('.webm')) return 'video';
+      if (l.endsWith('.jpg') || l.endsWith('.jpeg') || l.endsWith('.png') || l.endsWith('.webp') || l.endsWith('.gif')) return 'image';
+      return 'image';
+    }
+
+    function getCardMediaData(item, explicitType) {
+      if (typeof LocalCardTrade !== 'undefined' && LocalCardTrade.getCardMedia) {
+        return LocalCardTrade.getCardMedia(item);
+      }
+      if (item && typeof item === 'object') {
+        const candidates = [item.mediaUrl, item.video_url, item.videoUrl, item.video, item.imageUrl, item.img, item.image, item.cardImage];
+        let src = '';
+        for (const c of candidates) {
+          if (!c) continue;
+          const s = String(c).trim().toLowerCase();
+          // YouTube 無法直接當 <video>/<img> 播放，跳過
+          if (s.includes('youtube.com') || s.includes('youtu.be')) continue;
+          src = c;
+          break;
+        }
+        const type = explicitType || (item.mediaType) || getUrlMediaType(src);
+        return { type, src };
+      }
+      const type = explicitType || getUrlMediaType(item);
+      return { type, src: item };
+    }
+
+    function cardMediaHtml(item, alt = '', explicitType = '') {
+      const media = getCardMediaData(item, explicitType);
+      const ph = `<div class="card-media-placeholder" style="width:100%; aspect-ratio:5/7; border:2px dashed #00ffff; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#aaa; font-size:0.7rem; text-align:center; background:#0a1422;"><div>CARD<br>暫無圖片</div></div>`;
+      if (!media.src || media.type === 'none') return ph;
+
+      if (media.type === 'video') {
+        return `<video class="card-media-video" alt="${alt}" muted loop playsinline preload="metadata" draggable="false" style="width:100%; aspect-ratio:5/7; object-fit:cover; border-radius:8px; display:block; background:#0a1422;"><source src="${media.src}" type="video/mp4" onerror="this.parentElement.style.display='none'; this.parentElement.nextElementSibling.style.display='flex';"></video><div class="card-media-placeholder" style="width:100%; aspect-ratio:5/7; border:2px dashed #00ffff; border-radius:8px; display:none; align-items:center; justify-content:center; color:#aaa; font-size:0.7rem; text-align:center; background:#0a1422;"><div>CARD<br>暫無圖片</div></div>`;
+      }
+
+      return `<img class="card-media-image" src="${media.src}" alt="${alt}" draggable="false" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" style="width:100%; aspect-ratio:5/7; object-fit:cover; border-radius:8px; display:block; background:#0a1422;"><div class="card-media-placeholder" style="width:100%; aspect-ratio:5/7; border:2px dashed #00ffff; border-radius:8px; display:none; align-items:center; justify-content:center; color:#aaa; font-size:0.7rem; text-align:center; background:#0a1422;"><div>CARD<br>暫無圖片</div></div>`;
+    }
+
+    function renderCardMedia(container, card) {
+      if (!container) return;
+      container.innerHTML = cardMediaHtml(card, card.zh || card.word);
+      setupLazyVideos();
+    }
+
+    function setupLazyVideos() {
+      if (typeof IntersectionObserver === 'undefined') return;
+      const videos = document.querySelectorAll('video.card-media-video');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const v = entry.target;
+          if (entry.isIntersecting) {
+            v.play().catch(() => {});
+          } else {
+            v.pause();
+          }
+        });
+      }, { threshold: 0.1 });
+      videos.forEach(v => {
+        v.muted = true;
+        v.loop = true;
+        v.playsInline = true;
+        observer.observe(v);
+      });
+    }
+
+    function renderMyListings() {
+      if (typeof LocalCardTrade === 'undefined') return;
+      const market = LocalCardTrade.getMarket();
+      const pid = getPlayerId();
+      const myList = market.filter(l => l.sellerId === pid);
+
+      document.getElementById('myActiveCount').textContent = myList.filter(l => l.status === 'active').length;
+      document.getElementById('mySoldCount').textContent = myList.filter(l => l.status === 'sold').length;
+      document.getElementById('myCancelledCount').textContent = myList.filter(l => l.status === 'cancelled').length;
+
+      const grid = document.getElementById('myListingsGrid');
+      if (!grid) return;
+      if (myList.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-selectable" style="grid-column:1/-1; text-align:center; color:#fff;">
+            <div style="font-size:2.5rem; margin-bottom:8px;">🏷️</div>
+            <div style="font-weight:900; color:#ffd700; font-size:1.1rem; margin-bottom:6px;">還沒有出售中的卡片</div>
+            <div style="color:#aaa; font-size:0.9rem; margin-bottom:14px;">從你的收藏中選一張卡片，設定價格後放到卡片市場吧！</div>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = myList.map(l => {
+        const statusText = l.status === 'active' ? '等待買家' : l.status === 'sold' ? `已成交・${l.buyerName || '神秘收藏家'}` : '已取消';
+        const priceChanged = l.previousPrice !== null && l.previousPrice !== undefined && l.price !== l.previousPrice;
+        const hot = LocalCardTrade.getDailyMarket().hotSeries === l.series ? '<div style="color:#ff6b35; font-size:0.7rem;">🔥 今日熱門</div>' : '';
+
+        let actions = '';
+        if (l.status === 'active') {
+          actions = `
+            <input type="number" id="edit-price-${l.listingId}" value="${l.price}" min="1" style="width:70px; padding:4px; border-radius:6px; border:1px solid #00ffff; background:#0a1422; color:#fff; text-align:center;">
+            <div class="btn-row">
+              <button onclick="updateListing('${l.listingId}')">修改價格</button>
+              <button onclick="cancelListing('${l.listingId}')" style="background:#ff6b35; color:#fff;">取消上架</button>
+            </div>
+          `;
+        } else if (l.status === 'sold' && !l.notified) {
+          actions = `<button class="trade-btn trade-instant" style="padding:6px;" onclick="openClaimModalById('${l.listingId}')">領取收益</button>`;
+        }
+
+        return `
+          <div class="listing-card">
+            ${cardMediaHtml(l, l.cardName)}
+            <div style="font-weight:800; color:#fff; margin-bottom:4px;">${l.cardName}</div>
+            <div class="status">${statusText}</div>
+            <div class="price">我的售價：${l.price.toLocaleString()} ⭐</div>
+            <div style="color:#ffd700; font-weight:800; font-size:0.85rem;">市場估值：${(l.marketValue || 0).toLocaleString()} ⭐</div>
+            <div style="color:#aaa; font-size:0.75rem;">基礎價：${(l.basePrice || 0).toLocaleString()} ⭐</div>
+            ${priceChanged ? `<div style="color:#00ffff; font-size:0.75rem;">📉 原價 ${(l.previousPrice || 0).toLocaleString()} ⭐</div>` : ''}
+            ${hot}
+            <div style="font-size:0.7rem; color:#777;">${formatTradeTime(l.createdAt)}</div>
+            ${actions}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateListing(listingId) {
+      if (typeof LocalCardTrade === 'undefined') return;
+      const input = document.getElementById(`edit-price-${listingId}`);
+      const newPrice = parseInt(input && input.value) || 0;
+      if (newPrice < 1) return;
+      const res = LocalCardTrade.updateListingPrice(listingId, newPrice);
+      if (res.success) {
+        if (window.LinkageSystem && LinkageSystem.notifications) {
+          const msg = res.listing.previousPrice ? `📉 降價 ${(res.listing.previousPrice || 0).toLocaleString()} → ${(newPrice || 0).toLocaleString()}⭐` : `🏷️ 更新售價 ${(newPrice || 0).toLocaleString()}⭐`;
+          LinkageSystem.notifications.show(msg, 'success', 3000);
+        }
+        renderMyListings();
+      }
+    }
+
+    function cancelListing(listingId) {
+      if (typeof LocalCardTrade === 'undefined') return;
+      if (!confirm('確定取消上架？卡片會回到收藏中。')) return;
+      const res = LocalCardTrade.cancelListing(listingId);
+      if (res.success) {
+        if (window.LinkageSystem && LinkageSystem.notifications) {
+          LinkageSystem.notifications.show('已取消上架', 'info', 3000);
+        }
+        renderMyListings();
+        renderCards();
+      }
+    }
+
+    function openClaimModalById(listingId) {
+      if (typeof LocalCardTrade === 'undefined') return;
+      const market = LocalCardTrade.getMarket();
+      const l = market.find(x => x.listingId === listingId);
+      openClaimModal(l);
+    }
+
+    function renderMarket() {
+      if (typeof LocalCardTrade === 'undefined') return;
+      updateDailyMarketBar();
+      refreshLegacyTradePanels();
+
+      const section = document.getElementById('marketSection');
+      const grid = document.getElementById('marketListingsGrid');
+      if (!grid || !section) return;
+
+      // 市場摘要：最高價卡、收藏總價值、Top 10、超值商品
+      let extra = document.getElementById('marketExtra');
+      if (!extra) {
+        extra = document.createElement('div');
+        extra.id = 'marketExtra';
+        section.insertBefore(extra, grid);
+      }
+
+      const topCard = LocalCardTrade.getTopValuableCards(1)[0];
+      const top10 = LocalCardTrade.getTopValuableCards(10);
+      const bestDeals = LocalCardTrade.getBestDeals(3);
+      const coll = LocalCardTrade.getCollectionValue();
+
+      const top10Html = top10.map((c, i) => {
+        const val = LocalCardTrade.getMarketValue(c);
+        return `<div class="market-row"><span class="market-rank">${i + 1}</span><span>${c.zh || c.word}</span><span class="market-price">${val.toLocaleString()} ⭐</span></div>`;
+      }).join('');
+
+      const bestDealsHtml = bestDeals.map(l => {
+        const ratio = l.marketValue > 0 ? l.price / l.marketValue : 1;
+        const pct = Math.round((1 - ratio) * 100);
+        const tag = ratio <= 1 ? `<span style="color:#00ffff;">🔥 -${Math.abs(pct)}%</span>` : `<span style="color:#ff6b35;">▲ +${Math.abs(pct)}%</span>`;
+        return `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #00ffff22;"><span>${l.cardName}</span><span style="color:#ffd700; font-weight:800;">${l.price.toLocaleString()} ⭐</span> <span>${tag}</span></div>`;
+      }).join('');
+
+      extra.innerHTML = `
+        <div>
+          <div class="market-summary">
+            <div>
+              <div class="market-caption">今日最高估值卡片</div>
+              <div class="market-feature-name">${topCard ? (topCard.zh || topCard.word) : '--'}</div>
+              <div class="market-value">${topCard ? LocalCardTrade.formatStars(LocalCardTrade.getMarketValue(topCard)) : '--'}</div>
+            </div>
+            <div>
+              <div class="market-caption">我的收藏總估值</div>
+              <div class="market-value">${coll.total.toLocaleString()} ⭐</div>
+              <div class="market-count">${coll.count} 張卡片</div>
+            </div>
+          </div>
+
+          <div class="market-columns">
+          <section class="market-block">
+            <h3>卡片估值排行 · Top 10</h3>
+            ${top10Html}
+          </section>
+          <section class="market-block">
+            <h3>今日超值商品</h3>
+            ${bestDealsHtml || '<div class="market-empty">目前沒有超值商品</div>'}
+          </section>
+          </div>
+          <h3>市場上架商品</h3>
+        </div>
+      `;
+
+      // 活躍上架列表
+      const market = LocalCardTrade.getMarket().filter(l => l.status === 'active');
+      if (market.length === 0) {
+        grid.innerHTML = '<p style="text-align:center; color:#aaa; grid-column:1/-1;">目前市場沒有商品</p>';
+        return;
+      }
+      grid.innerHTML = market.map(l => {
+        const card = (window.allCards || []).find(c => c.word === l.cardId);
+        const marketValue = card ? LocalCardTrade.getMarketValue(card) : (l.marketValue || 0);
+        const ratio = marketValue > 0 ? l.price / marketValue : 1;
+        const pct = Math.round((1 - ratio) * 100);
+        const tag = ratio <= 1
+          ? `<div style="color:#00ffff; font-size:0.8rem; font-weight:800;">🔥 -${Math.abs(pct)}%</div>`
+          : `<div style="color:#ff6b35; font-size:0.8rem; font-weight:800;">▲ +${Math.abs(pct)}%</div>`;
+
+        return `
+          <div class="listing-card">
+            ${cardMediaHtml(l, l.cardName)}
+            <div style="font-weight:800; color:#fff; margin-bottom:4px;">${l.cardName}</div>
+            <div style="color:#ffd700; font-weight:900; font-size:1.05rem;">${l.price.toLocaleString()} ⭐</div>
+            <div style="color:#aaa; font-size:0.8rem;">市場估值：${marketValue.toLocaleString()} ⭐</div>
+            ${tag}
+            <div style="font-size:0.75rem; color:#777;">賣家：${l.sellerName}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateDailyMarketBar() {
+      if (typeof LocalCardTrade === 'undefined') return;
+      const daily = LocalCardTrade.getDailyMarket();
+      document.getElementById('marketHotSeries').textContent = daily.hotSeries || '--';
+      document.getElementById('marketMood').textContent = daily.mood || '--';
+      document.getElementById('marketMultiplier').textContent = `x${(daily.multiplier || 1).toFixed(2)}`;
+    }
+
+    function renderRevenue() {
+      if (typeof LocalCardTrade === 'undefined') return;
+      const amount = LocalCardTrade.getClaimableStars();
+      document.getElementById('revenueSection').hidden = amount <= 0;
+      document.getElementById('claimableStars').textContent = amount.toLocaleString();
+
+      const market = LocalCardTrade.getMarket().filter(l => l.sellerId === getPlayerId() && l.status === 'sold');
+      const today = market.filter(l => isToday(l.soldAt)).length;
+      document.getElementById('todaySoldCount').textContent = today;
+      document.getElementById('totalSoldCount').textContent = market.length;
+
+      const coll = LocalCardTrade.getCollectionValue();
+      if (coll) {
+        let totalValue = document.getElementById('collectionTotalValue');
+        if (!totalValue) {
+          const panel = document.querySelector('#revenueSection .revenue-panel');
+          if (panel) {
+            totalValue = document.createElement('div');
+            totalValue.id = 'collectionTotalValue';
+            totalValue.style.cssText = 'margin-top:14px; font-size:0.9rem; color:#aaa;';
+            panel.appendChild(totalValue);
+          }
+        }
+        if (totalValue) totalValue.textContent = `我的收藏總價值：${coll.total.toLocaleString()} ⭐（${coll.count} 張）`;
+      }
+    }
+
+    function renderHistory() {
+      if (typeof LocalCardTrade === 'undefined') return;
+      const history = LocalCardTrade.getHistory();
+      const list = document.getElementById('historyList');
+      if (!list) return;
+      if (history.length === 0) {
+        list.innerHTML = '<p style="text-align:center; color:#aaa;">目前沒有交易紀錄</p>';
+        return;
+      }
+      list.innerHTML = history.map(h => {
+        const time = formatTradeTime(h.time);
+        let text = '';
+        let sign = '';
+        if (h.type === 'instant_sell') { text = `立即出售 ${h.cardName}`; sign = `+${(h.price || 0).toLocaleString()}⭐`; }
+        else if (h.type === 'market_sell') { text = `賣出 ${h.cardName}`; sign = `+${(h.price || 0).toLocaleString()}⭐`; }
+        else if (h.type === 'market_buy') { text = `買入 ${h.cardName}`; sign = `-${(h.price || 0).toLocaleString()}⭐`; }
+        else if (h.type === 'market_list') { text = `上架 ${h.cardName}`; sign = `${(h.price || 0).toLocaleString()}⭐`; }
+        else if (h.type === 'market_update') { text = `修改售價 ${h.cardName}`; sign = `${(h.previousPrice || 0).toLocaleString()}→${(h.price || 0).toLocaleString()}⭐`; }
+        else if (h.type === 'market_cancel') { text = `取消上架 ${h.cardName}`; sign = ''; }
+        else if (h.type === 'claim_revenue') { text = '領取收益'; sign = `+${(h.amount || 0).toLocaleString()}⭐`; }
+        else if (h.type === 'bulk_instant_sell') { text = '出售重複卡'; sign = `+${(h.total || 0).toLocaleString()}⭐`; }
+        return `
+          <div class="history-item">
+            <div>
+              <div style="font-size:0.75rem; color:#aaa;">${time}</div>
+              <div style="font-weight:700;">${text}</div>
+            </div>
+            <div style="font-weight:900; color:#ffd700;">${sign}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderSoldNotifications() {
+      if (typeof LocalCardTrade === 'undefined') return;
+      const notis = LocalCardTrade.getSoldNotifications();
+      if (notis && notis.length > 0) {
+        openClaimModal(notis[0]);
+      }
+    }
+
+    function refreshLegacyTradePanels() {
+      const market = document.getElementById('marketSection');
+      const listings = document.getElementById('myListingsSection');
+      const revenue = document.getElementById('revenueSection');
+      market.append(listings, revenue);
+      listings.hidden = !LocalCardTrade.getMarket().some(l => l.sellerId === getPlayerId() && l.status === 'active');
+      renderMyListings();
+      renderRevenue();
+    }
+
+    function refreshTradeUI() {
+      updateDailyMarketBar();
+      refreshLegacyTradePanels();
+    }
+
+    // =====================================================
+    // 選擇出售卡片彈窗
+    // =====================================================
+    function selectCardMediaHtml(url, alt) {
+      return cardMediaHtml(url, alt);
+    }
+
+    function openSelectCardModal() {
+      return;
+      initSelectCardRarityTabs();
+      document.getElementById('selectCardSearch').value = '';
+      document.getElementById('selectCardRarity').value = 'all';
+      document.getElementById('selectCardSort').value = 'priceDesc';
+      renderSelectableCards();
+      document.getElementById('selectCardModal').classList.add('show');
+      document.getElementById('selectCardOverlay').classList.add('show');
+    }
+
+    function closeSelectCardModal() {
+      document.getElementById('selectCardModal').classList.remove('show');
+      document.getElementById('selectCardOverlay').classList.remove('show');
+    }
+
+    function initSelectCardRarityTabs() {
+      const tabs = document.getElementById('selectCardRarityTabs');
+      if (!tabs) return;
+      const allRarities = Array.from(new Set((window.allCards || []).map(c => c.rarity).filter(Boolean)));
+      tabs.innerHTML = `<button class="select-card-rarity-tab active" data-rarity="all" onclick="selectCardRarity('all')">全部</button>` +
+        allRarities.map(r => `<button class="select-card-rarity-tab" data-rarity="${r}" onclick="selectCardRarity('${String(r).replace(/'/g, "\\'")}')">${r}</button>`).join('');
+    }
+
+    function selectCardRarity(rarity) {
+      document.getElementById('selectCardRarity').value = rarity;
+      document.querySelectorAll('.select-card-rarity-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.rarity === rarity);
+      });
+      renderSelectableCards();
+    }
+
+    function getOwnedCardList() {
+      const owned = (typeof LinkageSystem !== 'undefined' && LinkageSystem.cards && LinkageSystem.cards.getOwnedCards)
+        ? LinkageSystem.cards.getOwnedCards()
+        : JSON.parse(localStorage.getItem('ownedCards') || '{}');
+      const list = [];
+      Object.keys(owned).forEach(word => {
+        const count = owned[word] === true ? 1 : (Number(owned[word]) || 0);
+        if (count <= 0) return;
+        const card = (window.allCards || []).find(c => c.word === word);
+        if (card) list.push(card);
+      });
+      return list;
+    }
+
+    function renderSelectableCards() {
+      if (typeof LocalCardTrade === 'undefined') return;
+      const grid = document.getElementById('selectCardGrid');
+      if (!grid) return;
+
+      const search = (document.getElementById('selectCardSearch').value || '').trim().toLowerCase();
+      const filterRarity = document.getElementById('selectCardRarity').value;
+      const sort = document.getElementById('selectCardSort').value;
+
+      let cards = getOwnedCardList();
+
+      if (filterRarity !== 'all') {
+        cards = cards.filter(c => c.rarity === filterRarity);
+      }
+
+      if (search) {
+        cards = cards.filter(c => ((c.word + (c.zh || '') + (c.category || '')).toLowerCase().includes(search)));
+      }
+
+      cards.forEach(c => {
+        c._marketValue = LocalCardTrade.getMarketValue(c);
+        c._listed = LocalCardTrade.isCardListed(c.word);
+      });
+
+      const rarityOrder = { '超稀有': 4, 'SSR': 4, '節日限定': 5, '稀有': 3, 'R': 3, 'SR': 3, '普通': 2, 'N': 2, 'A': 2 };
+      cards.sort((a, b) => {
+        if (sort === 'priceDesc') return b._marketValue - a._marketValue;
+        if (sort === 'priceAsc') return a._marketValue - b._marketValue;
+        if (sort === 'rarity') return (rarityOrder[b.rarity] || 0) - (rarityOrder[a.rarity] || 0);
+        return (a.zh || a.word).localeCompare(b.zh || b.word);
+      });
+
+      if (cards.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-selectable" style="grid-column:1/-1; text-align:center;">
+            <div style="font-size:2.5rem; margin-bottom:8px;">🃏</div>
+            <div style="font-weight:900; color:#ffd700; font-size:1.1rem; margin-bottom:6px;">目前沒有可以出售的卡片</div>
+            <div style="color:#aaa; font-size:0.9rem;">先去抽卡獲得卡片吧！</div>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = cards.map(c => {
+        const priceClass = c._marketValue >= 100000 ? 'high-price' : '';
+        const media = selectCardMediaHtml(c, c.word);
+        const listedOverlay = c._listed ? `<div class="listed-overlay">🏷️<br>FOR SALE</div>` : '';
+        const btn = c._listed
+          ? `<button class="select-btn" disabled>已上架</button>`
+          : `<button class="select-btn" onclick="selectCardToSell('${String(c.word).replace(/'/g, "\\'")}')">選擇</button>`;
+        return `
+          <div class="select-card-item ${c._listed ? 'listed' : ''}">
+            ${listedOverlay}
+            ${media}
+            <div class="rarity">${c.rarity}</div>
+            <div class="name">${c.zh || c.word}</div>
+            <div class="price ${priceClass}">⭐ ${c._marketValue.toLocaleString()}</div>
+            ${btn}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectCardToSell(cardWord) {
+      const card = (window.allCards || []).find(c => c.word === cardWord);
+      if (!card) return;
+      window._modalCard = card;
+      openTradeModal();
+      closeSelectCardModal();
+    }
+
     function getRarityClass(rarity) {
-      if (rarity === '普通' || rarity === 'A') return 'common rarity-a';
-      if (rarity === '稀有' || rarity === 'R') return 'rare rarity-r';
-      if (rarity === '超稀有' || rarity === 'SSR') return 'epic rarity-ssr';
+      if (rarity === '普通' || rarity === 'A' || rarity === 'N') return 'common rarity-a';
+      if (rarity === '稀有' || rarity === 'R' || rarity === 'SR') return 'rare rarity-r';
+      if (rarity === '超稀有' || rarity === 'SSR' || rarity === '節日限定') return 'epic rarity-ssr';
       return 'rarity-normal';
     }
 
     async function sellCardToTradeMarket(cardWord) {
+      console.log('[交易上架] 開始上架流程，卡片:', cardWord);
+
       if (!window.GoogleSheetTradeApi) {
+        console.error('[交易上架] GoogleSheetTradeApi 不存在');
         alert('找不到 Google Sheet 交易模組');
         return;
       }
+      console.log('[交易上架] GoogleSheetTradeApi 已載入');
 
       if (window.GoogleSheetTradeApi.isCardListed(cardWord)) {
+        console.warn('[交易上架] 卡片已上架:', cardWord);
         alert('這張卡片已經上架中');
         const existingButton = document.getElementById('tradeSellButton');
         if (existingButton) {
@@ -2951,24 +5470,30 @@
 
       const ownedMap = LinkageSystem.cards.getOwnedCards();
       if (!ownedMap[cardWord]) {
+        console.error('[交易上架] 玩家沒有此卡片:', cardWord);
         alert('你沒有這張卡片');
         return;
       }
+      console.log('[交易上架] 玩家擁有此卡片，數量:', ownedMap[cardWord]);
 
       const card = (window.allCards || []).find(item => item.word === cardWord);
       if (!card) {
+        console.error('[交易上架] 找不到卡片資料:', cardWord);
         alert('找不到卡片資料');
         return;
       }
+      console.log('[交易上架] 卡片資料:', { word: card.word, zh: card.zh, id: card.id, rarity: card.rarity });
 
       const input = prompt(`請輸入「${card.zh || card.word}」的出售價格`, '500');
       if (input === null) return;
 
       const price = parseInt(input, 10);
       if (!price || price <= 0) {
+        console.error('[交易上架] 價格不正確:', input);
         alert('價格不正確');
         return;
       }
+      console.log('[交易上架] 售價:', price);
 
       const sellButton = document.getElementById('tradeSellButton');
       if (sellButton) {
@@ -2980,24 +5505,27 @@
         sellButton.style.boxShadow = 'none';
       }
 
+      let success = false;
+
       try {
+        console.log('[交易上架] 步驟1: 確保玩家資料');
         await window.GoogleSheetTradeApi.ensurePlayerProfile();
+        console.log('[交易上架] 玩家資料已確保');
+
+        console.log('[交易上架] 步驟2: 同步玩家卡片');
         await window.GoogleSheetTradeApi.syncPlayerCards([cardWord]);
+        console.log('[交易上架] 玩家卡片已同步');
+
+        console.log('[交易上架] 步驟3: 呼叫 sellCard API');
         const result = await window.GoogleSheetTradeApi.sellCard(card, price);
+        console.log('[交易上架] API 回應 RAW:', result);
 
         if (!result.success) {
-          if (sellButton) {
-            sellButton.disabled = false;
-            sellButton.textContent = '上架出售';
-            sellButton.style.background = 'linear-gradient(135deg, #00ffff 0%, #ffd700 100%)';
-            sellButton.style.color = '#071018';
-            sellButton.style.cursor = 'pointer';
-            sellButton.style.boxShadow = '0 8px 18px rgba(0,255,255,0.18)';
-          }
-          alert(result.message || '上架失敗');
-          return;
+          console.error('[交易上架] API 回傳失敗:', result);
+          throw new Error(result.message || '交易市場拒絕上架');
         }
 
+        console.log('[交易上架] API 成功，tradeId:', result.tradeId);
         window.GoogleSheetTradeApi.markCardAsListed(cardWord, result.tradeId);
 
         const owned = LinkageSystem.cards.getOwnedCards();
@@ -3007,12 +5535,14 @@
           delete owned[cardWord];
         }
         LinkageSystem.cards.setOwnedCards(owned);
+        console.log('[交易上架] 卡片數量已更新');
 
         try {
           let recent = JSON.parse(localStorage.getItem('recentlyObtainedCards') || '[]');
           recent = recent.filter(id => id !== cardWord);
           localStorage.setItem('recentlyObtainedCards', JSON.stringify(recent));
         } catch (error) {
+          console.warn('[交易上架] 更新 recentlyObtainedCards 失敗:', error);
         }
 
         if (window.LinkageSystem && LinkageSystem.notifications && typeof LinkageSystem.notifications.show === 'function') {
@@ -3023,9 +5553,13 @@
 
         closeModal();
         renderCards();
+        success = true;
       } catch (error) {
-        console.error('上架出售失敗:', error);
-        if (sellButton) {
+        console.error('[交易上架] 上架失敗:', error);
+        alert(`上架失敗：${error.message || 'Google Sheet 連線失敗，請稍後再試'}`);
+      } finally {
+        if (!success && sellButton) {
+          console.log('[交易上架] 恢復按鈕狀態');
           sellButton.disabled = false;
           sellButton.textContent = '上架出售';
           sellButton.style.background = 'linear-gradient(135deg, #00ffff 0%, #ffd700 100%)';
@@ -3033,7 +5567,6 @@
           sellButton.style.cursor = 'pointer';
           sellButton.style.boxShadow = '0 8px 18px rgba(0,255,255,0.18)';
         }
-        alert(`上架出售失敗：${error.message || 'Google Sheet 連線失敗，請稍後再試'}`);
       }
     }
 
@@ -3153,10 +5686,7 @@
       });
     }
 
-    // -------- 7. 碎片系統相關函數 --------
-    // 已刪除 toggleShardInfo 函數，因為不再需要切換說明顯示
-
-    // -------- 8. 新卡片系統相關函數 --------
+    // -------- 7. 新卡片系統相關函數 --------
     function clearNewCardMarkers() {
       // 清除最近獲得的卡片標記
       localStorage.removeItem('recentlyObtainedCards');
@@ -3443,7 +5973,7 @@
           el.textContent = stars;
         }
       }
-      localStorage.setItem("totalStars", stars);
+      window.StarSystem.setTotalStars(stars);
     }
 
     window.addEventListener("load", () => {
@@ -3461,14 +5991,6 @@
 
 
     console.log('allCards 長度:', window.allCards.length);
-
-    // 移除重複的初始化邏輯，避免多次呼叫 initializePage()
-    // if (!window.allCards || window.allCards.length === 0) {
-    //   console.error('警告：allCards 為空陣列，可能是 cards.js 載入失敗');
-    //   waitForAllCards();
-    // } else {
-    //   initializePage();
-    // }
 
     function initializePage() {
       // 初始化音效系統
@@ -3529,13 +6051,9 @@
       document.querySelectorAll('.tab-btn').forEach(button => {
         button.addEventListener('click', (e) => {
           const clickedButton = e.currentTarget;
-          if (clickedButton.classList.contains('active')) {
-            return; // 如果點擊的已經是啟用狀態，則不重複執行
-          }
           document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
           clickedButton.classList.add('active');
-          renderCards();
-          updateCategoryStats();
+          switchMainTab(clickedButton.dataset.section, clickedButton.dataset.filter);
         });
       });
       
@@ -3550,8 +6068,14 @@
       renderCards();
       updateCardStats(); // 確保星星數同步
       updateCategoryStats(); // 初始化分類統計
-      // updateShardStats(); // 已移除碎片系統
-      
+
+      // 初始化本地交易市場
+      if (typeof LocalCardTrade !== 'undefined') {
+        LocalCardTrade.init();
+        refreshTradeUI();
+        setTimeout(() => renderSoldNotifications(), 800);
+      }
+
       // 設置 Modal 事件
       setupModalEvents();
       
@@ -3676,10 +6200,6 @@
       return card.rarity === '超稀有' || card.rarity === '節日限定';
     }
 
-    // 碎片轉換星星功能已移除（碎片系統已移除）
-
-
-
     // 顯示生日設定右鍵選單
     function showBirthdayContextMenu(e, card) {
       // 移除現有的右鍵選單
@@ -3735,17 +6255,14 @@
       if (typeof BirthdaySystem !== 'undefined') {
         BirthdaySystem.checkAndGiveBirthdayCard();
       }
+      
+      // 刷新全站星星顯示
+      if (window.StarManager && typeof StarManager.refreshDisplays === 'function') {
+        StarManager.refreshDisplays();
+      }
     });
 
     console.log('allCards 長度:', window.allCards.length);
-
-    // 移除重複的初始化邏輯
-    // if (!window.allCards || window.allCards.length === 0) {
-    //   console.error('警告：allCards 為空陣列，可能是 cards.js 載入失敗');
-    //   waitForAllCards();
-    // } else {
-    //   initializePage();
-    // }
 
     // 清理無效的 ownedCards 資料
     function cleanOwnedCards() {
@@ -3885,7 +6402,7 @@
         for (let i = startIdx, poolIdx = 0; i < endIdx; i++, poolIdx++) {
           const card = filteredCards[i];
           const isUnlocked = LinkageSystem.cards.isCardOwned(card.word);
-          const rarityClass = card.rarity === '普通' ? 'common' : card.rarity === '稀有' ? 'rare' : 'epic';
+          const rarityClass = getRarityClass(card.rarity);
           const div = cardDomPool[poolIdx];
           div.className = `card ${rarityClass}${isUnlocked ? ' unlocked' : ' locked'}`;
           div.setAttribute('data-word', card.word);

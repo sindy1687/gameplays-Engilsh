@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
   <meta charset="UTF-8" />
   <title>英文文章練習 - Article Practice</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
@@ -462,7 +463,16 @@
     .level-card.unlocked .level-status {
       color: #00ff00;
     }
-    
+
+    .level-card.has-key {
+      border-color: #ffd700;
+      background: rgba(255, 215, 0, 0.1);
+    }
+
+    .level-card.has-key .level-status {
+      color: #ffd700;
+    }
+
     .level-card.completed {
       border-color: #ffd700;
       background: rgba(255, 215, 0, 0.1);
@@ -739,6 +749,8 @@
   </div>
 
   <script src="js/articleData.js"></script>
+  <script src="js/item_database.js"></script>
+  <script src="js/inventory.js"></script>
   <script src="js/starRewardSystem.js"></script>
   <script src="js/sound.js"></script>
   <script>
@@ -913,83 +925,130 @@
       }
     }
 
+    // 取得文章練習關卡鑰匙 ID
+    function getArticleLevelKeyId(levelNumber) {
+      return `reading_key_stage_${levelNumber}`;
+    }
+
     // 載入閱讀關卡
     function loadReadingLevels() {
       const levelGrid = document.getElementById('level-grid');
       const totalLevels = document.getElementById('total-levels');
-      
+
       // 更新總關卡數
       totalLevels.textContent = articleLevels.length;
-      
+
       // 計算通關統計
       const completedCount = completedReadingLevels.length;
       const completionSummary = document.getElementById('completion-summary');
       if (completionSummary) {
         completionSummary.textContent = `通關進度：${completedCount}/${articleLevels.length}`;
       }
-      
+
       // 生成關卡卡片
       levelGrid.innerHTML = articleLevels.map((level, index) => {
-        const unlockCost = (index + 1) * 5; // 每關解鎖需要花費5顆星星
-        const isUnlocked = index === 0 || localStorage.getItem(`level_${index + 1}_unlocked`) === 'true'; // 第一關默認解鎖
-        const isCompleted = completedReadingLevels.includes(index + 1);
-        
+        const levelNumber = index + 1;
+        const isUnlocked = index === 0 || localStorage.getItem(`level_${levelNumber}_unlocked`) === 'true'; // 第一關默認解鎖
+        const isCompleted = completedReadingLevels.includes(levelNumber);
+        const keyId = getArticleLevelKeyId(levelNumber);
+        const keyCount = (typeof getItemCount === 'function') ? getItemCount(keyId) : 0;
+
         let statusText = '';
         let statusClass = '';
-        let clickAction = '';
-        
+        let cardClick = '';
+        let extraHtml = '';
+
         if (isCompleted) {
           statusText = '✅ 已通關';
           statusClass = 'completed';
-          clickAction = `selectReadingLevel(${index + 1})`;
+          cardClick = `selectReadingLevel(${levelNumber})`;
         } else if (isUnlocked) {
           statusText = '🔓 已解鎖';
           statusClass = 'unlocked';
-          clickAction = `selectReadingLevel(${index + 1})`;
+          cardClick = `selectReadingLevel(${levelNumber})`;
+        } else if (keyCount > 0) {
+          statusText = '🔑 持有鑰匙';
+          statusClass = 'has-key';
+          extraHtml = `<button class="btn" style="margin-top: 10px; width: 100%; font-size: 0.85rem;" type="button" onclick="event.stopPropagation(); useKeyToUnlock(${levelNumber})">🔑 使用鑰匙解鎖</button>`;
         } else {
-          statusText = `🔒 花費 ${unlockCost} 顆星星解鎖`;
+          statusText = '🔒 未解鎖';
           statusClass = 'locked';
-          clickAction = `unlockLevel(${index + 1}, ${unlockCost})`;
+          extraHtml = `
+            <div style="margin-top: 10px; color: #ff6b6b; font-size: 0.85rem; font-weight: bold;">需要 🔑 文章第 ${levelNumber} 關鑰匙</div>
+            <div style="font-size: 0.8rem; color: #b8c7e0; margin-top: 4px;">目前持有：0</div>
+            <button class="btn btn-secondary" style="margin-top: 10px; width: 100%; font-size: 0.85rem;" type="button" onclick="event.stopPropagation(); location.href='shop.html'">🛒 前往商城</button>
+          `;
         }
-        
+
         return `
-          <div class="level-card ${statusClass}" onclick="${clickAction}">
-            <h4>${index + 1}. ${level.title}</h4>
+          <div class="level-card ${statusClass}" ${cardClick ? `onclick="${cardClick}"` : ''}>
+            <h4>${levelNumber}. ${level.title}</h4>
             <p>${level.difficulty} - ${level.category}</p>
             <div class="level-status ${statusClass}">${statusText}</div>
+            ${(!isUnlocked ? `<div style="font-size: 0.85rem; color: #ffd700; margin-top: 6px; font-weight: bold;">持有：${keyCount}</div>` : '')}
+            ${extraHtml}
             ${isCompleted ? '<div class="completion-badge">🏆 通關</div>' : ''}
           </div>
         `;
       }).join('');
     }
-    
-    // 解鎖關卡
-    function unlockLevel(levelNumber, cost) {
-      const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
-      
-      if (currentStars >= cost) {
-        // 確認是否要花費星星解鎖
-        const confirmUnlock = confirm(`🔓 確定要花費 ${cost} 顆星星解鎖第 ${levelNumber} 關嗎？\n\n您目前有 ${currentStars} 顆星星`);
-        
-        if (confirmUnlock) {
-          // 扣除星星
-          const newStars = currentStars - cost;
-          localStorage.setItem('totalStars', newStars.toString());
-          
-          // 標記關卡為已解鎖
-          localStorage.setItem(`level_${levelNumber}_unlocked`, 'true');
-          
-          // 記錄關卡解鎖
-          recordLevelUnlock();
-          
-          // 更新顯示
-          updateStarsDisplay();
-          
-          alert(`🎉 恭喜！第 ${levelNumber} 關已解鎖！\n\n花費了 ${cost} 顆星星，剩餘 ${newStars} 顆星星`);
-        }
-      } else {
-        alert(`🔒 星星不足！\n\n解鎖第 ${levelNumber} 關需要 ${cost} 顆星星\n您目前只有 ${currentStars} 顆星星\n\n請繼續練習以獲得更多星星！`);
+
+    // 使用鑰匙解鎖關卡
+    function useKeyToUnlock(levelNumber) {
+      const keyId = getArticleLevelKeyId(levelNumber);
+
+      // 已解鎖不再重複扣
+      if (localStorage.getItem(`level_${levelNumber}_unlocked`) === 'true') {
+        alert(`第 ${levelNumber} 關已經解鎖`);
+        return;
       }
+
+      // 檢查是否有鑰匙
+      const keyCount = (typeof getItemCount === 'function') ? getItemCount(keyId) : 0;
+      if (keyCount < 1) {
+        alert(`你還沒有文章第 ${levelNumber} 關鑰匙。\n\n請前往商城購買。`);
+        return;
+      }
+
+      // 確認使用鑰匙
+      const confirmed = confirm(`🔑 確定要使用 1 把「文章第 ${levelNumber} 關鑰匙」解鎖第 ${levelNumber} 關嗎？\n\n使用後鑰匙將會消耗。`);
+      if (!confirmed) return;
+
+      // 先扣除鑰匙
+      let removed = false;
+      if (typeof removeItem === 'function') {
+        removed = removeItem(keyId, 1);
+      } else {
+        // 備用方案：直接操作 localStorage
+        const keyRaw = parseInt(localStorage.getItem(keyId) || '0');
+        if (keyRaw > 0) {
+          localStorage.setItem(keyId, (keyRaw - 1).toString());
+          removed = true;
+        }
+      }
+
+      if (!removed) {
+        console.error('扣除鑰匙失敗');
+        alert('使用鑰匙失敗，請重試。');
+        return;
+      }
+
+      // 再標記解鎖
+      localStorage.setItem(`level_${levelNumber}_unlocked`, 'true');
+
+      // 顯示成功訊息
+      alert(`✅ 第 ${levelNumber} 關解鎖成功！`);
+
+      // 記錄關卡解鎖
+      recordLevelUnlock();
+
+      // 更新顯示
+      loadReadingLevels();
+    }
+
+    // 解鎖關卡（星星解鎖已全面停用）
+    function unlockLevel(levelNumber, cost) {
+      alert('⚠️ 文章練習關卡現在只能使用對應關卡鑰匙解鎖，\n請前往商城購買「文章第 ' + levelNumber + ' 關鑰匙」。');
     }
     
 
@@ -1181,7 +1240,7 @@
           } else {
             const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
             const newStars = currentStars + 5;
-            localStorage.setItem('totalStars', newStars.toString());
+            window.StarSystem.setTotalStars(newStars.toString());
           }
           updateStarsDisplay();
           playSound('correct');
@@ -1196,7 +1255,7 @@
               } else {
                 const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
                 const newStars = currentStars + 5;
-                localStorage.setItem('totalStars', newStars.toString());
+                window.StarSystem.setTotalStars(newStars.toString());
               }
               updateStarsDisplay();
               playSound('complete');
@@ -1292,7 +1351,7 @@
           // 備用星星系統
           const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
           const newStars = currentStars + starsEarned;
-          localStorage.setItem('totalStars', newStars.toString());
+          window.StarSystem.setTotalStars(newStars.toString());
         }
         
         // 立即更新星星顯示
@@ -1493,7 +1552,7 @@
           // 備用星星系統
           const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
           const newStars = currentStars + starsEarned;
-          localStorage.setItem('totalStars', newStars.toString());
+          window.StarSystem.setTotalStars(newStars.toString());
         }
         
         // 立即更新星星顯示
@@ -1762,6 +1821,7 @@
     function markExerciseComplete(exercise) {
       if (!completedExercises.includes(exercise)) {
         completedExercises.push(exercise);
+        localStorage.setItem('articlePracticeCount', String((Number(localStorage.getItem('articlePracticeCount')) || 0) + 1));
         
         // 計算進度：包含閱讀關卡完成度
         let totalProgress = completedExercises.length;
@@ -2165,7 +2225,7 @@
           StarRewardSystem.addStars(1);
         } else {
           const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
-          localStorage.setItem('totalStars', (currentStars + 1).toString());
+          window.StarSystem.setTotalStars((currentStars + 1).toString());
         }
         
         // 更新分數顯示
@@ -2210,7 +2270,7 @@
         StarRewardSystem.addStars(finalStars);
       } else {
         const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
-        localStorage.setItem('totalStars', (currentStars + finalStars).toString());
+        window.StarSystem.setTotalStars((currentStars + finalStars).toString());
       }
       
       // 更新星星顯示
@@ -2312,7 +2372,7 @@
           StarRewardSystem.addStars(2);
         } else {
           const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
-          localStorage.setItem('totalStars', (currentStars + 2).toString());
+          window.StarSystem.setTotalStars((currentStars + 2).toString());
         }
         
         document.getElementById('cards-score').textContent = `配對: ${matchedPairs}`;
@@ -2357,7 +2417,7 @@
         StarRewardSystem.addStars(finalStars);
       } else {
         const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
-        localStorage.setItem('totalStars', (currentStars + finalStars).toString());
+        window.StarSystem.setTotalStars((currentStars + finalStars).toString());
       }
       
       // 更新星星顯示
@@ -2494,7 +2554,7 @@
           StarRewardSystem.addStars(5);
         } else {
           const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
-          localStorage.setItem('totalStars', (currentStars + 5).toString());
+          window.StarSystem.setTotalStars((currentStars + 5).toString());
         }
         
         // 如果不是最後一題，顯示下一題按鈕
@@ -2539,7 +2599,7 @@
           StarRewardSystem.addStars(5);
         } else {
           const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
-          localStorage.setItem('totalStars', (currentStars + 5).toString());
+          window.StarSystem.setTotalStars((currentStars + 5).toString());
         }
         
         // 重置問題索引
@@ -2586,7 +2646,7 @@
         StarRewardSystem.addStars(starsEarned);
       } else {
         const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
-        localStorage.setItem('totalStars', (currentStars + starsEarned).toString());
+        window.StarSystem.setTotalStars((currentStars + starsEarned).toString());
       }
       
       // 更新星星顯示
@@ -2629,7 +2689,7 @@
       if (typeof StarRewardSystem !== 'undefined') {
         StarRewardSystem.addStars(-5);
       } else {
-        localStorage.setItem('totalStars', (currentStars - 5).toString());
+        window.StarSystem.setTotalStars((currentStars - 5).toString());
       }
       
       // 更新星星顯示
@@ -2887,7 +2947,7 @@
           // 備用星星系統
           const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
           const newStars = currentStars + starsEarned;
-          localStorage.setItem('totalStars', newStars.toString());
+          window.StarSystem.setTotalStars(newStars.toString());
         }
         
         // 立即更新星星顯示
@@ -2942,7 +3002,7 @@
         { id: 'reading_vocab', requirement: 100, reward: 60, icon: '📝', name: '詞彙閱讀', description: '在閱讀關卡中答對100個詞彙問題' },
         { id: 'reading_comprehension', requirement: 50, reward: 80, icon: '🧠', name: '理解大師', description: '在閱讀測驗中答對50個理解問題' },
         { id: 'reading_audio', requirement: 20, reward: 30, icon: '🔊', name: '聽力練習', description: '使用20次文章發音功能，提升聽力理解' },
-        { id: 'reading_unlock', requirement: 10, reward: 50, icon: '🔓', name: '關卡解鎖者', description: '使用星星解鎖10個閱讀關卡' },
+        { id: 'reading_unlock', requirement: 10, reward: 50, icon: '🔓', name: '關卡解鎖者', description: '使用鑰匙解鎖10個閱讀關卡' },
         { id: 'reading_all', requirement: 1, reward: 300, icon: '🌟', name: '全關卡通關', description: '完成所有閱讀關卡，達到閱讀學習的巔峰' }
       ];
       
@@ -3214,7 +3274,7 @@
       } else {
         const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
         const newStars = currentStars + achievement.reward;
-        localStorage.setItem('totalStars', newStars.toString());
+        window.StarSystem.setTotalStars(newStars.toString());
       }
       
       // 記錄已領取的成就
@@ -3312,7 +3372,7 @@
         } else {
           const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
           const newStars = currentStars + achievement.reward;
-          localStorage.setItem('totalStars', newStars.toString());
+          window.StarSystem.setTotalStars(newStars.toString());
         }
         
         // 更新星星顯示

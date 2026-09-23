@@ -801,27 +801,514 @@ function applyRewardToPlayer_(userId, reward) {
 
 function claimAllRewards_(payload) {
   var userId = String(payload.userId || '').trim();
-  
+
   if (!userId) {
     throw new Error('缺少玩家 ID');
   }
-  
+
   var result = getMyRewards_(payload);
   var rewards = result.rewards || [];
   var claimedCount = 0;
-  
+
   for (var i = 0; i < rewards.length; i++) {
     claimReward_({
       userId: userId,
       rewardId: rewards[i].rewardId
     });
-    
+
     claimedCount++;
   }
-  
+
   return {
     success: true,
     message: '全部領取完成',
     claimedCount: claimedCount
+  };
+}
+
+// ==================== 交易市場系統 ====================
+
+function getTradeMarketSheet_() {
+  var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  var sheet = ss.getSheetByName('TradeMarket');
+
+  if (!sheet) {
+    sheet = ss.insertSheet('TradeMarket');
+    sheet.appendRow([
+      'listingId',
+      'sellerId',
+      'sellerName',
+      'cardId',
+      'cardName',
+      'cardImage',
+      'rarity',
+      'series',
+      'price',
+      'quantity',
+      'status',
+      'createdAt',
+      'updatedAt'
+    ]);
+    sheet.getRange(1, 1, 1, 13).setFontWeight('bold');
+    sheet.getRange(1, 1, 1, 13).setBackground('#4285f4');
+    sheet.getRange(1, 1, 1, 13).setFontColor('white');
+    sheet.autoResizeColumns(1, 13);
+  }
+
+  return sheet;
+}
+
+function sellCard_(payload) {
+  var playerId = String(payload.playerId || '').trim();
+  var playerName = String(payload.playerName || '').trim();
+  var cardId = String(payload.cardId || '').trim();
+  var cardName = String(payload.cardName || '').trim();
+  var cardImage = String(payload.imageUrl || payload.cardImage || '').trim();
+  var rarity = String(payload.rarity || '').trim();
+  var price = Number(payload.price || 0);
+
+  if (!playerId) {
+    return {success: false, message: '缺少玩家 ID'};
+  }
+
+  if (!cardId) {
+    return {success: false, message: '缺少卡片 ID'};
+  }
+
+  if (!cardName) {
+    return {success: false, message: '缺少卡片名稱'};
+  }
+
+  if (!Number.isFinite(price) || price <= 0) {
+    return {success: false, message: '價格必須大於 0'};
+  }
+
+  var sheet = getTradeMarketSheet_();
+  var listingId = Utilities.getUuid();
+
+  sheet.appendRow([
+    listingId,
+    playerId,
+    playerName,
+    cardId,
+    cardName,
+    cardImage,
+    rarity,
+    '',
+    price,
+    1,
+    'active',
+    new Date(),
+    new Date()
+  ]);
+
+  return {
+    success: true,
+    tradeId: listingId,
+    listingId: listingId,
+    message: '上架成功'
+  };
+}
+
+function buyCard_(payload) {
+  var tradeId = String(payload.tradeId || '').trim();
+  var buyerId = String(payload.buyerId || '').trim();
+  var buyerName = String(payload.buyerName || '').trim();
+  var initialStars = Number(payload.initialStars || 0);
+
+  if (!tradeId) {
+    return {success: false, message: '缺少交易 ID'};
+  }
+
+  if (!buyerId) {
+    return {success: false, message: '缺少買家 ID'};
+  }
+
+  var sheet = getTradeMarketSheet_();
+  var values = sheet.getDataRange().getValues();
+
+  if (values.length < 2) {
+    return {success: false, message: '找不到交易商品'};
+  }
+
+  var headers = values[0];
+  var listingIdCol = headers.indexOf('listingId');
+  var sellerIdCol = headers.indexOf('sellerId');
+  var priceCol = headers.indexOf('price');
+  var statusCol = headers.indexOf('status');
+  var updatedAtCol = headers.indexOf('updatedAt');
+
+  if (listingIdCol === -1 || statusCol === -1) {
+    return {success: false, message: '交易資料格式錯誤'};
+  }
+
+  var targetRow = -1;
+  var sellerId = '';
+  var price = 0;
+
+  for (var i = 1; i < values.length; i++) {
+    if (String(values[i][listingIdCol] || '') === tradeId) {
+      targetRow = i + 1;
+      sellerId = String(values[i][sellerIdCol] || '');
+      price = Number(values[i][priceCol] || 0);
+      break;
+    }
+  }
+
+  if (targetRow === -1) {
+    return {success: false, message: '找不到此交易商品'};
+  }
+
+  if (sellerId === buyerId) {
+    return {success: false, message: '不能購買自己的卡片'};
+  }
+
+  if (initialStars < price) {
+    return {success: false, message: '星星不足'};
+  }
+
+  sheet.getRange(targetRow, statusCol + 1).setValue('sold');
+  if (updatedAtCol >= 0) {
+    sheet.getRange(targetRow, updatedAtCol + 1).setValue(new Date());
+  }
+
+  return {
+    success: true,
+    message: '購買成功',
+    tradeId: tradeId,
+    price: price
+  };
+}
+
+function cancelTrade_(payload) {
+  var tradeId = String(payload.tradeId || '').trim();
+  var playerId = String(payload.playerId || '').trim();
+  var playerName = String(payload.playerName || '').trim();
+
+  if (!tradeId) {
+    return {success: false, message: '缺少交易 ID'};
+  }
+
+  if (!playerId) {
+    return {success: false, message: '缺少玩家 ID'};
+  }
+
+  var sheet = getTradeMarketSheet_();
+  var values = sheet.getDataRange().getValues();
+
+  if (values.length < 2) {
+    return {success: false, message: '找不到交易商品'};
+  }
+
+  var headers = values[0];
+  var listingIdCol = headers.indexOf('listingId');
+  var sellerIdCol = headers.indexOf('sellerId');
+  var statusCol = headers.indexOf('status');
+  var updatedAtCol = headers.indexOf('updatedAt');
+
+  if (listingIdCol === -1 || statusCol === -1) {
+    return {success: false, message: '交易資料格式錯誤'};
+  }
+
+  var targetRow = -1;
+
+  for (var i = 1; i < values.length; i++) {
+    if (String(values[i][listingIdCol] || '') === tradeId) {
+      targetRow = i + 1;
+      break;
+    }
+  }
+
+  if (targetRow === -1) {
+    return {success: false, message: '找不到此交易商品'};
+  }
+
+  var rowSellerId = String(values[targetRow - 1][sellerIdCol] || '');
+
+  if (rowSellerId !== playerId) {
+    return {success: false, message: '只能取消自己的上架商品'};
+  }
+
+  sheet.getRange(targetRow, statusCol + 1).setValue('cancelled');
+  if (updatedAtCol >= 0) {
+    sheet.getRange(targetRow, updatedAtCol + 1).setValue(new Date());
+  }
+
+  return {
+    success: true,
+    message: '已取消上架',
+    tradeId: tradeId
+  };
+}
+
+function getMarketListings_(payload) {
+  var sheet = getTradeMarketSheet_();
+  var values = sheet.getDataRange().getValues();
+
+  if (values.length < 2) {
+    return {
+      success: true,
+      cards: []
+    };
+  }
+
+  var headers = values[0];
+  var listingIdCol = headers.indexOf('listingId');
+  var sellerIdCol = headers.indexOf('sellerId');
+  var sellerNameCol = headers.indexOf('sellerName');
+  var cardIdCol = headers.indexOf('cardId');
+  var cardNameCol = headers.indexOf('cardName');
+  var cardImageCol = headers.indexOf('cardImage');
+  var rarityCol = headers.indexOf('rarity');
+  var seriesCol = headers.indexOf('series');
+  var priceCol = headers.indexOf('price');
+  var quantityCol = headers.indexOf('quantity');
+  var statusCol = headers.indexOf('status');
+  var createdAtCol = headers.indexOf('createdAt');
+
+  var cards = [];
+
+  for (var i = 1; i < values.length; i++) {
+    var status = String(values[i][statusCol] || '').trim();
+
+    if (status === 'active') {
+      cards.push({
+        tradeId: values[i][listingIdCol],
+        listingId: values[i][listingIdCol],
+        sellerId: values[i][sellerIdCol],
+        sellerName: values[i][sellerNameCol],
+        playerId: values[i][sellerIdCol],
+        cardId: values[i][cardIdCol],
+        cardName: values[i][cardNameCol],
+        word: values[i][cardIdCol],
+        imageUrl: values[i][cardImageCol],
+        image: values[i][cardImageCol],
+        rarity: values[i][rarityCol],
+        series: values[i][seriesCol],
+        price: Number(values[i][priceCol] || 0),
+        quantity: Number(values[i][quantityCol] || 1),
+        status: status,
+        createdAt: values[i][createdAtCol],
+        listingDate: values[i][createdAtCol]
+      });
+    }
+  }
+
+  return {
+    success: true,
+    cards: cards
+  };
+}
+
+function getMyListings_(payload) {
+  var playerId = String(payload.playerId || '').trim();
+
+  if (!playerId) {
+    return {success: false, message: '缺少玩家 ID'};
+  }
+
+  var sheet = getTradeMarketSheet_();
+  var values = sheet.getDataRange().getValues();
+
+  if (values.length < 2) {
+    return {
+      success: true,
+      orders: []
+    };
+  }
+
+  var headers = values[0];
+  var listingIdCol = headers.indexOf('listingId');
+  var sellerIdCol = headers.indexOf('sellerId');
+  var cardIdCol = headers.indexOf('cardId');
+  var cardNameCol = headers.indexOf('cardName');
+  var priceCol = headers.indexOf('price');
+  var statusCol = headers.indexOf('status');
+  var createdAtCol = headers.indexOf('createdAt');
+
+  var orders = [];
+
+  for (var i = 1; i < values.length; i++) {
+    var rowSellerId = String(values[i][sellerIdCol] || '').trim();
+
+    if (rowSellerId === playerId) {
+      orders.push({
+        tradeId: values[i][listingIdCol],
+        cardId: values[i][cardIdCol],
+        cardName: values[i][cardNameCol],
+        price: Number(values[i][priceCol] || 0),
+        status: values[i][statusCol],
+        createdAt: values[i][createdAtCol]
+      });
+    }
+  }
+
+  return {
+    success: true,
+    orders: orders
+  };
+}
+
+function getSellerClaimableTrades_(payload) {
+  var sellerId = String(payload.sellerId || '').trim();
+
+  if (!sellerId) {
+    return {success: false, message: '缺少賣家 ID'};
+  }
+
+  var sheet = getTradeMarketSheet_();
+  var values = sheet.getDataRange().getValues();
+
+  if (values.length < 2) {
+    return {
+      success: true,
+      trades: []
+    };
+  }
+
+  var headers = values[0];
+  var listingIdCol = headers.indexOf('listingId');
+  var sellerIdCol = headers.indexOf('sellerId');
+  var cardIdCol = headers.indexOf('cardId');
+  var priceCol = headers.indexOf('price');
+  var statusCol = headers.indexOf('status');
+  var createdAtCol = headers.indexOf('createdAt');
+
+  var trades = [];
+  var totalAmount = 0;
+
+  for (var i = 1; i < values.length; i++) {
+    var rowSellerId = String(values[i][sellerIdCol] || '').trim();
+    var status = String(values[i][statusCol] || '').trim();
+
+    if (rowSellerId === sellerId && status === 'sold') {
+      var price = Number(values[i][priceCol] || 0);
+      trades.push({
+        tradeId: values[i][listingIdCol],
+        cardId: values[i][cardIdCol],
+        price: price,
+        status: status,
+        createdAt: values[i][createdAtCol]
+      });
+      totalAmount += price;
+    }
+  }
+
+  return {
+    success: true,
+    trades: trades,
+    totalAmount: totalAmount,
+    count: trades.length
+  };
+}
+
+function claimSoldCardStars_(payload) {
+  var tradeId = String(payload.tradeId || '').trim();
+  var sellerId = String(payload.sellerId || '').trim();
+  var sellerName = String(payload.sellerName || '').trim();
+
+  if (!tradeId) {
+    return {success: false, message: '缺少交易 ID'};
+  }
+
+  if (!sellerId) {
+    return {success: false, message: '缺少賣家 ID'};
+  }
+
+  var sheet = getTradeMarketSheet_();
+  var values = sheet.getDataRange().getValues();
+
+  if (values.length < 2) {
+    return {success: false, message: '找不到交易商品'};
+  }
+
+  var headers = values[0];
+  var listingIdCol = headers.indexOf('listingId');
+  var sellerIdCol = headers.indexOf('sellerId');
+  var priceCol = headers.indexOf('price');
+  var statusCol = headers.indexOf('status');
+
+  var targetRow = -1;
+  var price = 0;
+
+  for (var i = 1; i < values.length; i++) {
+    if (String(values[i][listingIdCol] || '') === tradeId) {
+      targetRow = i + 1;
+      price = Number(values[i][priceCol] || 0);
+      break;
+    }
+  }
+
+  if (targetRow === -1) {
+    return {success: false, message: '找不到此交易商品'};
+  }
+
+  sheet.getRange(targetRow, statusCol + 1).setValue('claimed');
+
+  var playerSheet = getPlayersSheet_();
+  var playerValues = playerSheet.getDataRange().getValues();
+  var playerHeaders = playerValues[0];
+  var playerIdCol = findColumn_(playerHeaders, ['userId', 'id', '玩家ID']);
+  var starsCol = findColumn_(playerHeaders, ['stars', '星星']);
+  var updatedAtCol = findColumn_(playerHeaders, ['updatedAt', '最後更新', '更新時間']);
+
+  var playerTargetRow = -1;
+
+  for (var i = 1; i < playerValues.length; i++) {
+    if (String(playerValues[i][playerIdCol] || '') === sellerId) {
+      playerTargetRow = i + 1;
+      break;
+    }
+  }
+
+  if (playerTargetRow !== -1 && starsCol >= 0) {
+    var oldStars = Number(playerSheet.getRange(playerTargetRow, starsCol + 1).getValue() || 0);
+    var newStars = oldStars + price;
+    playerSheet.getRange(playerTargetRow, starsCol + 1).setValue(newStars);
+
+    if (updatedAtCol >= 0) {
+      playerSheet.getRange(playerTargetRow, updatedAtCol + 1).setValue(new Date());
+    }
+  }
+
+  return {
+    success: true,
+    message: '已領取星星',
+    tradeId: tradeId,
+    amount: price
+  };
+}
+
+function claimAllSoldCardStars_(payload) {
+  var sellerId = String(payload.sellerId || '').trim();
+  var sellerName = String(payload.sellerName || '').trim();
+
+  if (!sellerId) {
+    return {success: false, message: '缺少賣家 ID'};
+  }
+
+  var result = getSellerClaimableTrades_({sellerId: sellerId});
+  var trades = result.trades || [];
+  var claimedCount = 0;
+  var totalAmount = 0;
+
+  for (var i = 0; i < trades.length; i++) {
+    var claimResult = claimSoldCardStars_({
+      tradeId: trades[i].tradeId,
+      sellerId: sellerId,
+      sellerName: sellerName
+    });
+
+    if (claimResult.success) {
+      claimedCount++;
+      totalAmount += claimResult.amount || 0;
+    }
+  }
+
+  return {
+    success: true,
+    message: '全部領取完成',
+    claimedCount: claimedCount,
+    totalAmount: totalAmount
   };
 }

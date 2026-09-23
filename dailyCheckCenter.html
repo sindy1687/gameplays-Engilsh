@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
+  <script src="js/stars.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>每日簽到中心 - 英打小英雄</title>
@@ -964,6 +965,7 @@
         </div>
     </div>
 
+  <script src="js/achievementProgress.js"></script>
     <script src="js/achievementSystem.js"></script>
     <script>
         // ==================== 資料初始化 ====================
@@ -1145,7 +1147,7 @@
                 if (rewards.stars > 0) {
                     let currentStars = parseInt(localStorage.getItem('totalStars') || '0');
                     currentStars += rewards.stars;
-                    localStorage.setItem('totalStars', currentStars.toString());
+                    window.StarSystem.setTotalStars(currentStars.toString());
                 }
 
                 // 發放抽卡券（支援分類）
@@ -1436,7 +1438,7 @@
             
             if (isMakeup) {
                 currentStars -= 100;
-                localStorage.setItem('totalStars', currentStars.toString());
+                window.StarSystem.setTotalStars(currentStars.toString());
             }
             
             // 計算獎勵
@@ -1595,7 +1597,7 @@
                     case 'stars':
                         let currentStars = parseInt(localStorage.getItem('totalStars') || '0');
                         currentStars += reward.value;
-                        localStorage.setItem('totalStars', currentStars.toString());
+                        window.StarSystem.setTotalStars(currentStars.toString());
                         break;
                     case 'normal_ticket':
                         addGachaTicket('normal', reward.value);
@@ -1661,7 +1663,7 @@
                 showSystemMessage('商品設定異常，已改發星星補償');
                 let stars = parseInt(localStorage.getItem('totalStars') || '0');
                 stars += 50;
-                localStorage.setItem('totalStars', stars.toString());
+                window.StarSystem.setTotalStars(stars.toString());
             }
 
             showSystemMessage(`購買成功！獲得 ${item.name}`);
@@ -1683,7 +1685,7 @@
                     case 'stars_100':
                         let stars = parseInt(localStorage.getItem('totalStars') || '0');
                         stars += 100;
-                        localStorage.setItem('totalStars', stars.toString());
+                        window.StarSystem.setTotalStars(stars.toString());
                         break;
                     default:
                         return { success: false, error: 'Unknown shop item' };
