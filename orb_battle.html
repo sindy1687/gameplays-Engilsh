@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <script src="js/stars.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>轉珠戰鬥</title>
+    <link rel="stylesheet" href="orb_battle.css">
+    <script src="js/cards.js"></script>
+  <script src="js/cardVideoManager.js"></script>
+    <script src="js/cardStorage.js"></script>
+    <script src="js/orb_stages.js"></script>
+    <script src="js/orb_teams.js"></script>
+    <script src="js/orb_skills.js"></script>
+    <script src="js/orb_progress.js"></script>
+    <script src="js/orb_battle_cards.js"></script>
+</head>
+<body>
+    <div id="game-container">
+        <!-- 關卡資訊 -->
+        <div class="battle-header">
+            <div class="stage-info">關卡 1</div>
+            <div class="turn-info">回合 <span id="turn-display">1</span></div>
+        </div>
+
+        <!-- 敵人區域 -->
+        <div class="enemy-section">
+            <div class="boss-message" id="boss-message"></div>
+            <div class="enemy-container" id="enemy-container">
+                <div class="enemy-media" id="enemy-media"></div>
+                <div class="enemy-name" id="enemy-name">暗影魔獸</div>
+            </div>
+            <div class="enemy-hp-bar">
+                <div class="hp-bar-fill" id="enemy-hp-fill"></div>
+            </div>
+            <div class="enemy-hp-text">
+                <span id="enemy-hp">30000</span> / <span id="enemy-max-hp">30000</span>
+            </div>
+            <div class="enemy-cooldown">
+                <span id="enemy-cooldown-text">2</span> 回合後攻擊
+            </div>
+        </div>
+
+        <!-- 玩家 HP -->
+        <div class="player-hp-section">
+            <div class="hp-label">❤️ 玩家 HP</div>
+            <div class="player-hp-bar">
+                <div class="hp-bar-fill player-hp-fill" id="player-hp-fill"></div>
+            </div>
+            <div class="player-hp-text">
+                <span id="player-hp">15000</span> / <span id="player-max-hp">15000</span>
+            </div>
+        </div>
+
+        <!-- 角色卡 -->
+        <div class="characters-section">
+            <div class="character-card" id="char-0" data-index="0"></div>
+            <div class="character-card" id="char-1" data-index="1"></div>
+            <div class="character-card" id="char-2" data-index="2"></div>
+            <div class="character-card" id="char-3" data-index="3"></div>
+            <div class="character-card" id="char-4" data-index="4"></div>
+        </div>
+
+        <!-- 技能面板 -->
+        <div class="skill-panel" id="skill-panel" style="display: none;">
+            <div class="skill-title" id="skill-title">火焰轉換</div>
+            <div class="skill-description" id="skill-description">將所有木符石轉成火符石。</div>
+            <div class="skill-cd" id="skill-cd">CD：READY</div>
+            <button class="skill-use-btn" id="skill-use-btn">使用技能</button>
+            <button class="skill-cancel-btn" id="skill-cancel-btn">取消</button>
+        </div>
+
+        <!-- 棋盤 -->
+        <div class="board-section">
+            <div class="timer-bar">
+                <div class="timer-fill" id="timer-fill"></div>
+                <div class="timer-text" id="timer-text">8.0</div>
+            </div>
+            <div class="board" id="board"></div>
+        </div>
+
+        <!-- Combo 和傷害 -->
+        <div class="battle-info">
+            <div class="combo-display">
+                <span class="combo-label">Combo</span>
+                <span class="combo-value" id="combo-value">0</span>
+            </div>
+            <div class="damage-display">
+                <span class="damage-label">Damage</span>
+                <span class="damage-value" id="damage-value">0</span>
+            </div>
+        </div>
+
+        <!-- Combo 動畫 -->
+        <div class="combo-animation" id="combo-animation"></div>
+
+        <!-- 勝利/失敗畫面 -->
+        <div class="result-screen" id="result-screen" style="display: none;">
+            <div class="result-title" id="result-title">VICTORY</div>
+            <div class="result-stats">
+                <div class="stat-item">最高 Combo：<span id="result-max-combo">0</span></div>
+                <div class="stat-item">總傷害：<span id="result-total-damage">0</span></div>
+                <div class="stat-item">回合數：<span id="result-turns">0</span></div>
+            </div>
+            <div class="result-buttons">
+                <button class="result-btn" id="restart-btn">重新挑戰</button>
+                <button class="result-btn" id="return-btn">返回</button>
+            </div>
+        </div>
+
+        <!-- 角色詳細資訊彈窗 -->
+        <div class="character-modal" id="character-modal" style="display: none;">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeCharacterModal()">×</button>
+                <div class="modal-header">
+                    <div class="modal-media" id="modal-media"></div>
+                    <div class="modal-info">
+                        <h2 id="modal-name">角色名稱</h2>
+                        <div class="modal-attribute" id="modal-attribute">🔥 火</div>
+                        <div class="modal-rarity" id="modal-rarity">稀有</div>
+                    </div>
+                </div>
+                <div class="modal-stats">
+                    <div class="stat-row">
+                        <span>HP：</span>
+                        <span id="modal-hp">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>攻擊：</span>
+                        <span id="modal-attack">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>回復：</span>
+                        <span id="modal-recovery">0</span>
+                    </div>
+                </div>
+                <div class="modal-skill" id="modal-skill-section">
+                    <h3>技能</h3>
+                    <div class="skill-name" id="modal-skill-name">技能名稱</div>
+                    <div class="skill-description" id="modal-skill-description">技能描述</div>
+                    <div class="skill-cd" id="modal-skill-cd">CD: 5</div>
+                    <button class="skill-btn" id="modal-skill-btn" onclick="useCharacterSkill()">使用技能</button>
+                </div>
+                <div class="modal-leader-skill" id="modal-leader-skill-section">
+                    <h3>隊長技能</h3>
+                    <div class="leader-skill-name" id="modal-leader-skill-name">隊長技能名稱</div>
+                    <div class="leader-skill-description" id="modal-leader-skill-description">隊長技能描述</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="orb_battle.js"></script>
+</body>
+</html>

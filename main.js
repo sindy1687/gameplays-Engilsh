@@ -60,7 +60,7 @@ function showResultPanel() {
   const earnedStars = Math.min(correctCount, 10);
   const sessionStars = earnedStars * 2;
   totalStarCount += sessionStars;
-  localStorage.setItem('totalStars', totalStarCount);
+  window.StarSystem.setTotalStars(totalStarCount);
 
   document.getElementById('sessionStars').textContent = sessionStars;
   document.getElementById('sessionCorrect').textContent = correctCount;

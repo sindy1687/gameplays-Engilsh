@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <script src="js/stars.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎒 我的背包 - Typing Hero</title>
+  <link rel="stylesheet" href="responsive_enhanced.css">
+  <link rel="stylesheet" href="css/shared.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Orbitron', 'Microsoft JhengHei', sans-serif;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* 星空背景動畫 */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+        radial-gradient(2px 2px at 160px 30px, #ddd, transparent);
+      background-repeat: repeat;
+      background-size: 200px 100px;
+      animation: stars 20s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes stars {
+      from { transform: translateY(0); }
+      to { transform: translateY(-100px); }
+    }
+
+    /* 頭部樣式 */
+    header {
+      background: rgba(10, 20, 40, 0.9);
+      border-bottom: 3px solid #00ffff;
+      padding: 30px 20px;
+      backdrop-filter: blur(10px);
+      position: relative;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .back-btn {
+      background: linear-gradient(135deg, #00ffff 0%, #00aaff 100%);
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      color: #041018;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 255, 255, 0.4);
+    }
+
+    .header-title {
+      font-size: 2rem;
+      font-weight: bold;
+      text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+
+    /* 主內容區 */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    /* 背包標題區 */
+    .inventory-title-section {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .inventory-title-section h1 {
+      font-size: 2rem;
+      color: #ffd700;
+      margin-bottom: 8px;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+
+    .inventory-title-section p {
+      color: #ccc;
+      font-size: 0.95rem;
+    }
+
+    /* 背包容量區 */
+    .inventory-capacity-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
+      padding: 16px 24px;
+      background: rgba(10, 20, 40, 0.6);
+      border: 2px solid rgba(0, 255, 255, 0.2);
+      border-radius: 16px;
+      flex-wrap: wrap;
+    }
+
+    .inventory-status-group {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .inventory-stars {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .inventory-capacity-text {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 4px;
+    }
+
+    .inventory-status-label {
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .inventory-stars-value {
+      color: #ffd900;
+      font-size: clamp(26px, 2.2vw, 38px);
+      font-weight: 900;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .capacity-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .capacity-label {
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    .capacity-value {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #ffd700;
+    }
+
+    .capacity-bar {
+      width: 220px;
+      height: 16px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .capacity-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #22d3ee, #8b5cf6);
+      transition: width 0.3s ease;
+    }
+
+    .expand-btn {
+      background: linear-gradient(135deg, #a259ff, #6a11cb);
+      border: none;
+      border-radius: 12px;
+      padding: 10px 20px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .expand-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 20px rgba(162, 89, 255, 0.4);
+    }
+
+    .expand-btn:disabled {
+      background: #666;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* 分類頁籤 */
+    .inventory-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .inventory-tab {
+      min-width: 90px;
+      height: 52px;
+      padding: 8px 16px;
+      border-radius: 16px 16px 0 0;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      color: #ccc;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .inventory-tab:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .inventory-tab.active {
+      background: rgba(255, 255, 255, 0.12);
+      border-bottom: 3px solid #ffd900;
+      color: #ffd700;
+    }
+
+    /* 背包網格 - 遊戲式格子 */
+    .inventory-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(100px, 1fr));
+      gap: 14px;
+    }
+
+    /* 道具格子 */
+    .inventory-slot {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.055);
+      border: 2px solid rgba(255, 255, 255, 0.09);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .inventory-slot:hover {
+      border-color: rgba(0, 255, 255, 0.4);
+      transform: scale(1.05);
+      box-shadow: 0 5px 20px rgba(0, 255, 255, 0.2);
+    }
+
+    .inventory-slot.empty::after {
+      content: '';
+      width: 58%;
+      height: 58%;
+      border-radius: 50%;
+      border: 2px dashed rgba(255, 255, 255, 0.09);
+    }
+
+    .inventory-slot.empty {
+      background: rgba(255, 255, 255, 0.025);
+      border: 2px dashed rgba(255, 255, 255, 0.07);
+      opacity: 0.75;
+    }
+
+    /* 道具圖示 */
+    .inventory-item-icon {
+      font-size: 52px;
+      line-height: 1;
+    }
+
+    /* 道具數量 */
+    .inventory-item-count {
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+      min-width: 32px;
+      height: 32px;
+      padding: 0 8px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10, 20, 40, 0.92);
+      border: 2px solid rgba(255, 255, 255, 0.18);
+      color: white;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    /* 道具名稱提示 */
+    .inventory-item-name {
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10, 20, 40, 0.95);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      color: #ffd700;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 10;
+    }
+
+    .inventory-slot:hover .inventory-item-name {
+      opacity: 1;
+    }
+
+    /* 空背包提示 */
+    .empty-inventory {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      color: #ccc;
+      font-size: 1.2rem;
+    }
+
+    .empty-inventory .icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+
+    /* 改名 Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, rgba(20, 40, 80, 0.95), rgba(10, 20, 40, 0.95));
+      border: 2px solid #00ffff;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      color: #ffd700;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    .modal-row {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .modal-label {
+      color: #ccc;
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+    }
+
+    .modal-value {
+      color: #fff;
+      font-size: 1.1rem;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 2px solid rgba(0, 255, 255, 0.3);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      font-family: 'Microsoft JhengHei', sans-serif;
+    }
+
+    .modal-input:focus {
+      outline: none;
+      border-color: #00ffff;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .modal-btn-confirm {
+      background: linear-gradient(135deg, #00ffff 0%, #00aaff 100%);
+      color: #041018;
+    }
+
+    .modal-btn-confirm:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 255, 255, 0.4);
+    }
+
+    .modal-btn-cancel {
+      background: linear-gradient(135deg, #666 0%, #444 100%);
+      color: #fff;
+    }
+
+    .modal-btn-cancel:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Toast 提示 */
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 10px;
+      z-index: 10001;
+      animation: slideIn 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .toast.success {
+      background: #4caf50;
+      color: white;
+    }
+
+    .toast.error {
+      background: #f44336;
+      color: white;
+    }
+
+    .toast.info {
+      background: #2196f3;
+      color: white;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* 響應式 */
+    @media (max-width: 768px) {
+      .header-title {
+        font-size: 1.5rem;
+      }
+
+      .inventory-capacity-section {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+      }
+
+      .inventory-status-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+      }
+
+      .capacity-bar {
+        width: 100%;
+      }
+
+      .inventory-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 9px;
+      }
+
+      .inventory-item-icon {
+        font-size: 36px;
+      }
+
+      .inventory-item-count {
+        min-width: 28px;
+        height: 28px;
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .inventory-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 900px) {
+      .inventory-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="header-left">
+        <button class="back-btn" onclick="window.location.href='index.html'">← 返回</button>
+        <h1 class="header-title">🎒 我的背包</h1>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="inventory-title-section">
+      <h1>🎒 我的背包</h1>
+      <p>收藏與管理你的遊戲道具</p>
+    </div>
+
+    <div class="inventory-capacity-section">
+      <div class="inventory-status-group">
+        <div class="inventory-stars">
+          <div class="inventory-status-label">⭐ 總星星</div>
+          <div class="inventory-stars-value" id="inventoryStarsValue">0</div>
+        </div>
+        <div class="capacity-info">
+          <div class="capacity-label">🎒 背包容量</div>
+          <div class="capacity-value">
+            <span id="usedSlots">0</span> / <span id="totalCapacity">10</span>
+          </div>
+          <div class="inventory-capacity-text" id="inventoryCapacityText">背包容量：0 / 10</div>
+        </div>
+      </div>
+      <div class="capacity-bar">
+        <div class="capacity-fill" id="capacityFill" style="width: 0%"></div>
+      </div>
+      <button class="expand-btn" id="expandBtn" onclick="expandInventory()">＋ 擴充</button>
+    </div>
+
+    <div class="inventory-tabs" id="inventoryTabs">
+      <button class="inventory-tab active" data-category="all">全部</button>
+      <button class="inventory-tab" data-category="gacha">抽卡道具</button>
+      <button class="inventory-tab" data-category="exp">經驗道具</button>
+      <button class="inventory-tab" data-category="key">鑰匙</button>
+      <button class="inventory-tab" data-category="special">特殊道具</button>
+    </div>
+
+    <div id="inventoryGrid" class="inventory-grid">
+      <!-- 道具格子將由 JavaScript 動態生成 -->
+    </div>
+  </main>
+
+  <!-- 改名 Modal -->
+  <div id="renameModal" class="modal">
+    <div class="modal-content">
+      <h3 class="modal-title">✏️ 修改玩家名稱</h3>
+      
+      <div class="modal-row">
+        <div class="modal-label">目前名稱</div>
+        <div id="currentPlayerName" class="modal-value">未設定</div>
+      </div>
+      
+      <div class="modal-row">
+        <div class="modal-label">新名稱</div>
+        <input type="text" id="newPlayerName" class="modal-input" placeholder="請輸入新名稱（2-12 字元）" maxlength="12">
+      </div>
+      
+      <div class="modal-row">
+        <div class="modal-label">改名卡</div>
+        <div id="renameCardCount" class="modal-value">剩餘 1 張</div>
+      </div>
+      
+      <div class="modal-row">
+        <div class="modal-label">使用後剩餘</div>
+        <div id="renameCardAfter" class="modal-value">0 張</div>
+      </div>
+      
+      <div class="modal-buttons">
+        <button class="modal-btn modal-btn-cancel" id="cancelRenameBtn">取消</button>
+        <button class="modal-btn modal-btn-confirm" id="confirmRenameBtn">確認修改</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 載入必要的 JS 檔案 -->
+  <script src="js/item_database.js"></script>
+  <script src="js/inventory.js"></script>
+  <script src="js/seriesGacha.js"></script>
+
+  <script>
+    // 當前選中的分類
+    let currentCategory = 'all';
+
+    // 顯示 Toast 提示
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.animation = 'slideIn 0.3s ease reverse';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // 取得玩家星星數量
+    function getPlayerStars() {
+      const totalStars = Number(localStorage.getItem('totalStars') || 0);
+      const playerStars = Number(localStorage.getItem('playerStars') || 0);
+      return totalStars > 0 ? totalStars : playerStars;
+    }
+
+    // 更新星星顯示
+    function updateStarsDisplay() {
+      const stars = getPlayerStars();
+      const element = document.getElementById('inventoryStarsValue');
+      if (element) {
+        element.textContent = Number(stars).toLocaleString('zh-TW');
+      }
+    }
+
+    // 更新容量顯示
+    function updateCapacityDisplay() {
+      const usedSlots = window.getUsedSlots();
+      const capacity = window.getInventoryCapacity();
+      const percentage = (usedSlots / capacity) * 100;
+
+      document.getElementById('usedSlots').textContent = usedSlots;
+      document.getElementById('totalCapacity').textContent = capacity;
+      document.getElementById('capacityFill').style.width = `${percentage}%`;
+
+      // 更新背包容量文字
+      const capacityText = document.getElementById('inventoryCapacityText');
+      if (capacityText) {
+        capacityText.textContent = `背包容量：${usedSlots} / ${capacity}`;
+      }
+
+      // 更新星星顯示
+      updateStarsDisplay();
+
+      // 檢查是否可以擴充
+      const expandBtn = document.getElementById('expandBtn');
+      if (expandBtn) {
+        expandBtn.disabled = capacity >= INVENTORY_CONFIG.maxCapacity;
+        if (capacity >= INVENTORY_CONFIG.maxCapacity) {
+          expandBtn.textContent = '已達上限';
+        } else {
+          expandBtn.textContent = '＋ 擴充 (⭐500)';
+        }
+      }
+    }
+
+    // 擴充背包
+    function expandInventory() {
+      const currentCapacity = window.getInventoryCapacity();
+      
+      if (currentCapacity >= 100) {
+        showToast('背包容量已達上限', 'error');
+        return;
+      }
+
+      // 檢查星星是否足夠
+      const currentStars = getPlayerStars();
+      if (currentStars < 500) {
+        showToast(`⭐ 星星不足\n\n擴充背包需要 500 顆星星。\n目前擁有：${currentStars} 顆\n還需要：${500 - currentStars} 顆`, 'error');
+        return;
+      }
+
+      // 扣除星星
+      const newStars = currentStars - 500;
+      window.StarSystem.setTotalStars(String(newStars));
+      localStorage.setItem('playerStars', String(newStars));
+
+      // 增加容量
+      const newCapacity = Math.min(currentCapacity + 5, 100);
+      window.saveInventoryCapacity(newCapacity);
+
+      // 更新顯示
+      updateCapacityDisplay();
+      renderInventory();
+
+      showToast(`背包擴充成功！容量：${newCapacity} 格`, 'success');
+
+      // 確認 DOM 格子數量
+      console.log('擴充後格子數量:', document.querySelectorAll('.inventory-slot').length);
+    }
+
+    // 篩選道具
+    function filterItemsByCategory(items, category) {
+      if (category === 'all') {
+        return items;
+      }
+
+      const filtered = {};
+      Object.keys(items).forEach(itemId => {
+        const item = window.getItemInfo(itemId);
+        // 優先使用 category，如果沒有 category 則回退到 type
+        if (item && (item.category === category || (item.type === category && !item.category))) {
+          filtered[itemId] = items[itemId];
+        }
+      });
+
+      return filtered;
+    }
+
+    // 渲染背包
+    function renderInventory() {
+      const grid = document.getElementById('inventoryGrid');
+      if (!grid) return;
+
+      const allItems = window.getInventoryItems();
+      const filteredItems = filterItemsByCategory(allItems, currentCategory);
+      const itemIds = Object.keys(filteredItems);
+      const capacity = window.getInventoryCapacity();
+
+      // 更新容量顯示
+      updateCapacityDisplay();
+
+      // 如果背包是空的，顯示空格而不是提示訊息
+      if (itemIds.length === 0) {
+        let html = '';
+        for (let i = 0; i < capacity; i++) {
+          html += `<div class="inventory-slot empty"></div>`;
+        }
+        grid.innerHTML = html;
+        return;
+      }
+
+      // 渲染道具格子
+      let html = '';
+      itemIds.forEach(itemId => {
+        // 對於系列抽卡券，動態建立道具定義
+        let item = window.getItemInfo(itemId);
+        if (!item && itemId.startsWith('series_ticket_')) {
+          const seriesName = itemId.replace('series_ticket_', '');
+          if (typeof window.getSeriesTicketItem === 'function') {
+            item = window.getSeriesTicketItem(seriesName);
+          }
+        }
+
+        if (!item) {
+          console.warn('找不到道具資訊:', itemId);
+          return;
+        }
+
+        const count = filteredItems[itemId];
+
+        html += `
+          <div class="inventory-slot" onclick="showItemDetail('${itemId}')">
+            <div class="inventory-item-icon">${item.icon}</div>
+            <div class="inventory-item-count">${count}</div>
+            <div class="inventory-item-name">${item.name}</div>
+          </div>
+        `;
+      });
+
+      // 填充空格
+      const emptySlots = capacity - itemIds.length;
+      for (let i = 0; i < emptySlots; i++) {
+        html += `<div class="inventory-slot empty"></div>`;
+      }
+
+      grid.innerHTML = html;
+
+      // 確認 DOM 格子數量
+      console.log('背包容量:', capacity, '實際格子數:', document.querySelectorAll('.inventory-slot').length);
+    }
+
+    // 顯示道具詳細資訊
+    function showItemDetail(itemId) {
+      let item = window.getItemInfo(itemId);
+      if (!item && itemId.startsWith('series_ticket_')) {
+        const seriesName = itemId.replace('series_ticket_', '');
+        if (typeof window.getSeriesTicketItem === 'function') {
+          item = window.getSeriesTicketItem(seriesName);
+        }
+      }
+
+      if (!item) {
+        console.warn('找不到道具資訊:', itemId);
+        return;
+      }
+
+      const count = window.getItemCount(itemId);
+      const categoryNames = {
+        'gacha_ticket': '抽卡道具',
+        'series_gacha_ticket': '抽卡道具',
+        'exp': '經驗道具',
+        'rename': '特殊道具',
+        'special': '特殊道具',
+        'consumable': '消耗品'
+      };
+      const categoryName = categoryNames[item.type] || '道具';
+
+      const message = `
+${item.icon} ${item.name}
+
+數量：${count}
+類型：${categoryName}
+說明：${item.description}
+      `;
+
+      if (item.type === 'gacha_ticket' || item.type === 'series_gacha_ticket') {
+        if (confirm(`${message}\n\n立即抽卡？`)) {
+          if (item.type === 'series_gacha_ticket' && item.series) {
+            window.location.href = `gacha.html?series=${encodeURIComponent(item.series)}&autoDraw=1&ticket=${encodeURIComponent(itemId)}`;
+          } else {
+            window.location.href = `gacha.html?autoDraw=1&ticket=${encodeURIComponent(itemId)}`;
+          }
+        }
+      } else if (item.type === 'exp') {
+        if (confirm(`${message}\n\n使用此經驗卡？`)) {
+          useItem(itemId);
+        }
+      } else if (item.type === 'rename') {
+        // 改名卡顯示詳細資訊和使用按鈕
+        const renameMessage = `
+${item.icon} ${item.name}
+
+持有：
+${count} 張
+
+用途：
+可以修改一次玩家名稱。
+
+每次使用：
+消耗 1 張
+        `;
+
+        if (confirm(`${renameMessage}\n\n使用改名卡？`)) {
+          openRenameModal();
+        }
+      } else if (item.type === 'stage_key') {
+        // 關卡鑰匙顯示詳細資訊和使用按鈕
+        const stageNumber = item.stageNumber || '未知';
+        const keyMessage = `
+${item.icon} ${item.name}
+
+持有：
+${count}
+
+用途：
+解鎖文章練習第 ${stageNumber} 關
+
+[前往文章關卡]
+        `;
+
+        if (confirm(`${keyMessage}\n\n使用鑰匙解鎖？`)) {
+          // 跳轉到文章練習頁面
+          window.location.href = 'article_practice.html';
+        }
+      } else {
+        alert(message);
+      }
+    }
+
+    // 使用道具
+    function useItem(itemId) {
+      const count = window.getItemCount(itemId);
+      if (count <= 0) {
+        showToast('道具數量不足', 'error');
+        return;
+      }
+
+      const item = window.getItemInfo(itemId);
+      if (!item) {
+        showToast('道具資訊錯誤', 'error');
+        return;
+      }
+
+      if (item.type === 'exp') {
+        // 使用經驗卡
+        const expValue = item.expValue || 100;
+        
+        // 扣除道具
+        window.removeItem(itemId, 1);
+        
+        // 增加經驗值（如果系統有支援）
+        if (typeof addExp === 'function') {
+          addExp(expValue);
+          showToast(`獲得 ${expValue} EXP！`, 'success');
+        } else {
+          showToast('經驗值系統未載入', 'error');
+        }
+        
+        renderInventory();
+      } else if (item.type === 'rename') {
+        // 改名卡使用 openRenameModal
+        openRenameModal();
+      } else {
+        showToast('此道具暫時無法使用', 'info');
+      }
+    }
+
+    // 分類頁籤切換
+    function setupCategoryTabs() {
+      const tabs = document.querySelectorAll('.inventory-tab');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          // 移除所有 active
+          tabs.forEach(t => t.classList.remove('active'));
+          // 加入 active
+          tab.classList.add('active');
+          // 更新當前分類
+          currentCategory = tab.dataset.category;
+          // 重新渲染
+          renderInventory();
+        });
+      });
+    }
+
+    // 開啟改名 Modal
+    function openRenameModal() {
+      // 使用共用 inventory.js 的 useRenameCard 函式
+      if (typeof window.useRenameCard === 'function') {
+        window.useRenameCard();
+      } else {
+        // 備用方案：直接顯示 Modal
+        const currentName = localStorage.getItem('playerName') || localStorage.getItem('currentUser') || '';
+        const renameCardCount = window.getItemCount('rename_card');
+        
+        const modal = document.getElementById('renameModal');
+        if (!modal) {
+          console.error('找不到改名 Modal');
+          showToast('改名功能異常', 'error');
+          return;
+        }
+        
+        // 設定目前名稱
+        const currentNameEl = document.getElementById('currentPlayerName');
+        if (currentNameEl) {
+          currentNameEl.textContent = currentName || '未設定';
+        }
+        
+        // 設定改名卡數量
+        const renameCardCountEl = document.getElementById('renameCardCount');
+        if (renameCardCountEl) {
+          renameCardCountEl.textContent = `剩餘 ${renameCardCount} 張`;
+        }
+        
+        // 設定使用後數量
+        const renameCardAfterEl = document.getElementById('renameCardAfter');
+        if (renameCardAfterEl) {
+          const afterCount = Math.max(0, renameCardCount - 1);
+          renameCardAfterEl.textContent = `${afterCount} 張`;
+        }
+        
+        // 清空輸入框
+        const newNameInput = document.getElementById('newPlayerName');
+        if (newNameInput) {
+          newNameInput.value = '';
+        }
+        
+        // 顯示 Modal
+        modal.style.display = 'flex';
+      }
+    }
+
+    // 更新玩家名稱顯示
+    function updatePlayerNameDisplay(newName) {
+      console.log('更新玩家名稱顯示:', newName);
+      // 更新所有顯示玩家名稱的地方
+      const nameElements = document.querySelectorAll('#playerNameDisplay, #playerName');
+      nameElements.forEach(el => {
+        if (el) {
+          if (el.tagName === 'INPUT') {
+            el.value = newName;
+          } else {
+            el.textContent = newName;
+          }
+        }
+      });
+    }
+
+    // 確認改名
+    function confirmRename() {
+      // 防止重複提交
+      if (window.isRenaming) {
+        console.warn('正在改名中，請稍候');
+        return false;
+      }
+      
+      window.isRenaming = true;
+      
+      const confirmBtn = document.getElementById('confirmRenameBtn');
+      
+      try {
+        const newNameInput = document.getElementById('newPlayerName');
+        if (!newNameInput) {
+          console.error('找不到新名稱輸入框');
+          showToast('改名功能異常', 'error');
+          return false;
+        }
+        
+        const newName = newNameInput.value.trim();
+        const currentName = localStorage.getItem('playerName') || localStorage.getItem('currentUser') || '';
+        
+        // 驗證新名稱
+        if (!newName) {
+          showToast('請輸入新的玩家名稱', 'error');
+          return false;
+        }
+        
+        if (newName === currentName) {
+          showToast('新名稱與目前名稱相同，不消耗改名卡', 'info');
+          return false;
+        }
+        
+        // 名稱長度限制（2-12 字元）
+        if (newName.length < 2 || newName.length > 12) {
+          showToast('玩家名稱長度必須在 2-12 字元之間', 'error');
+          return false;
+        }
+        
+        // 確認改名
+        if (!confirm(`確定要修改玩家名稱嗎？\n\n${currentName || '未設定'} → ${newName}\n\n本次將消耗 1 張改名卡。`)) {
+          return false;
+        }
+        
+        // 禁用按鈕防止重複提交
+        if (confirmBtn) {
+          confirmBtn.disabled = true;
+          confirmBtn.textContent = '處理中...';
+        }
+        
+        // 修改玩家名稱 - 同步所有位置
+        localStorage.setItem('playerName', newName);
+        localStorage.setItem('currentUser', newName);
+        
+        // 如果有 LinkageSystem，也更新那裡的名稱
+        if (typeof LinkageSystem !== 'undefined' && LinkageSystem.player && LinkageSystem.player.setName) {
+          LinkageSystem.player.setName(newName);
+        }
+        
+        // 扣除改名卡
+        const success = window.removeItem('rename_card', 1);
+        if (!success) {
+          console.error('扣除改名卡失敗');
+          showToast('扣除改名卡失敗', 'error');
+          // 恢復舊名稱
+          localStorage.setItem('playerName', currentName);
+          localStorage.setItem('currentUser', currentName);
+          // 重新啟用按鈕
+          if (confirmBtn) {
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = '確認修改';
+          }
+          return false;
+        }
+        
+        // 更新顯示
+        updatePlayerNameDisplay(newName);
+        
+        // 重新渲染背包
+        renderInventory();
+        
+        // 關閉 Modal
+        const modal = document.getElementById('renameModal');
+        if (modal) {
+          modal.style.display = 'none';
+        }
+        
+        // 顯示成功訊息
+        showToast(`✅ 玩家名稱修改成功\n${currentName || '未設定'} → ${newName}`, 'success');
+        
+        console.log(`改名成功: ${currentName || '未設定'} -> ${newName}`);
+        
+        // 重新啟用按鈕
+        if (confirmBtn) {
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = '確認修改';
+        }
+        
+        // 發送自訂事件通知其他頁面
+        window.dispatchEvent(new CustomEvent('playerNameChanged', {
+          detail: { oldName: currentName, newName: newName }
+        }));
+        
+        return true;
+      } catch (error) {
+        console.error('改名失敗:', error);
+        showToast('改名失敗', 'error');
+        // 重新啟用按鈕
+        if (confirmBtn) {
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = '確認修改';
+        }
+        return false;
+      } finally {
+        window.isRenaming = false;
+      }
+    }
+
+    // 頁面載入時初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      // 確保 inventory.js 的函式可用
+      if (typeof window.initInventory === 'function') {
+        window.initInventory();
+      } else if (typeof initInventory === 'function') {
+        initInventory();
+      } else {
+        console.warn('initInventory 函式未載入，跳過初始化');
+      }
+      
+      setupCategoryTabs();
+      renderInventory();
+      
+      // 確保 cancelRename 函式可用（從 inventory.js）
+      if (typeof window.cancelRename !== 'function') {
+        window.cancelRename = function() {
+          const modal = document.getElementById('renameModal');
+          if (modal) {
+            modal.style.display = 'none';
+          }
+          
+          // 清空輸入框
+          const newNameInput = document.getElementById('newPlayerName');
+          if (newNameInput) {
+            newNameInput.value = '';
+          }
+        };
+      }
+      
+
+      
+      // 初始化玩家名稱顯示
+      const currentName = localStorage.getItem('playerName') || localStorage.getItem('currentUser');
+      if (currentName) {
+        updatePlayerNameDisplay(currentName);
+      }
+      
+      // 綁定改名 Modal 按鈕事件
+      const cancelRenameBtn = document.getElementById('cancelRenameBtn');
+      if (cancelRenameBtn) {
+        cancelRenameBtn.addEventListener('click', () => {
+          if (typeof window.cancelRename === 'function') {
+            window.cancelRename();
+          } else {
+            cancelRename();
+          }
+        });
+      }
+      
+      const confirmRenameBtn = document.getElementById('confirmRenameBtn');
+      if (confirmRenameBtn) {
+        confirmRenameBtn.addEventListener('click', () => {
+          if (typeof window.confirmRename === 'function') {
+            window.confirmRename();
+          } else {
+            confirmRename();
+          }
+        });
+      }
+    });
+    
+    // 處理 bfcache (前進/後退按鈕)
+    window.addEventListener('pageshow', (e) => {
+      if (e.persisted) {
+        // 頁面從 bfcache 恢復，重新載入資料
+        renderInventory();
+        const currentName = localStorage.getItem('playerName') || localStorage.getItem('currentUser');
+        if (currentName) {
+          updatePlayerNameDisplay(currentName);
+        }
+      }
+    });
+
+    // 監聽 localStorage 變化（跨頁面同步）
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'playerInventory' || e.key === 'inventoryCapacity' || e.key === 'totalStars' || e.key === 'playerStars') {
+        renderInventory();
+      }
+      // 監聽玩家名稱變化
+      if (e.key === 'playerName' || e.key === 'currentUser') {
+        const newName = localStorage.getItem('playerName') || localStorage.getItem('currentUser');
+        if (newName) {
+          updatePlayerNameDisplay(newName);
+        }
+      }
+    });
+    
+    // 監聽自訂玩家名稱變更事件
+    window.addEventListener('playerNameChanged', (e) => {
+      if (e.detail && e.detail.newName) {
+        updatePlayerNameDisplay(e.detail.newName);
+      }
+    });
+    // 監聽父層彈窗傳來的刷新指令
+    window.addEventListener('message', (e) => {
+      if (e.data && e.data.type === 'REFRESH_INVENTORY' && typeof renderInventory === 'function') {
+        renderInventory();
+      }
+    });
+  </script>
+</body>
+</html>

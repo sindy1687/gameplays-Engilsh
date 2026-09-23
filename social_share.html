@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
   <meta charset="UTF-8">
   <title>社交分享 - Typing Hero</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -494,12 +495,13 @@
   <script src="js/sound.js"></script>
   <script src="js/userData.js"></script>
       <script src="js/cards.js"></script>
+  <script src="js/cardVideoManager.js"></script>
   <script>
     // 簡單測試函數
     console.log('social_share.html JavaScript 已載入');
     
     // 載入 cards.js 資料
-    let allCards = [];
+    let pageCards = [];
     let ownedCards = {};
     let stars = 0;
 
@@ -518,8 +520,8 @@
       
       // 檢查是否已載入 cards.js
       if (typeof window.allCards !== 'undefined') {
-        allCards = window.allCards;
-        console.log('成功載入 cards.js 資料，共', allCards.length, '張卡片');
+        pageCards = window.allCards;
+        console.log('成功載入 cards.js 資料，共', pageCards.length, '張卡片');
         loadUserData();
         updateAllStats();
       } else {
@@ -528,8 +530,8 @@
         const script = document.createElement('script');
         script.src = 'js/cards.js';
         script.onload = function() {
-          allCards = window.allCards || [];
-          console.log('動態載入 cards.js 成功，共', allCards.length, '張卡片');
+          pageCards = window.allCards || [];
+          console.log('動態載入 cards.js 成功，共', pageCards.length, '張卡片');
           loadUserData();
           updateAllStats();
         };
@@ -573,7 +575,7 @@
 
     // 更新基本統計
     function updateBasicStats() {
-      const totalCards = allCards.length;
+      const totalCards = pageCards.length;
       const collectedCards = Object.keys(ownedCards).length;
       const collectionProgress = totalCards > 0 ? Math.round((collectedCards / totalCards) * 100) : 0;
       const totalShards = Object.values(shards).reduce((sum, count) => sum + count, 0);
@@ -594,7 +596,7 @@
     function updateCategoryStats() {
       const categoryStats = {};
       
-      allCards.forEach(card => {
+      pageCards.forEach(card => {
         if (!categoryStats[card.category]) {
           categoryStats[card.category] = { total: 0, collected: 0, shards: 0 };
         }
@@ -630,7 +632,7 @@
     function updateRarityStats() {
       const rarityStats = {};
       
-      allCards.forEach(card => {
+      pageCards.forEach(card => {
         if (!rarityStats[card.rarity]) {
           rarityStats[card.rarity] = { total: 0, collected: 0, shards: 0 };
         }
@@ -668,7 +670,7 @@
       const rarityProgress = {};
       
       // 統計各稀有度的進度
-      allCards.forEach(card => {
+      pageCards.forEach(card => {
         if (!rarityProgress[card.rarity]) {
           rarityProgress[card.rarity] = { total: 0, collected: 0, shards: 0 };
         }
@@ -719,7 +721,7 @@
       
       const shardHtml = sortedShards
         .map(([word, count]) => {
-          const card = allCards.find(c => c.word === word);
+          const card = pageCards.find(c => c.word === word);
           const isOwned = ownedCards[word];
           const status = isOwned ? '✅ 已擁有' : '⏳ 收集中';
           const statusColor = isOwned ? '#00ff00' : '#ff6b6b';
@@ -741,7 +743,7 @@
     function showCategoryBreakdown() {
       const categoryStats = {};
       
-      allCards.forEach(card => {
+      pageCards.forEach(card => {
         if (!categoryStats[card.category]) {
           categoryStats[card.category] = { total: 0, collected: 0, shards: 0, cards: [] };
         }
@@ -783,7 +785,7 @@
     function showRarityBreakdown() {
       const rarityStats = {};
       
-      allCards.forEach(card => {
+      pageCards.forEach(card => {
         if (!rarityStats[card.rarity]) {
           rarityStats[card.rarity] = { total: 0, collected: 0, shards: 0, cards: [] };
         }
@@ -850,7 +852,7 @@
     function showNextTargets() {
       const categoryStats = {};
       
-      allCards.forEach(card => {
+      pageCards.forEach(card => {
         if (!categoryStats[card.category]) {
           categoryStats[card.category] = { total: 0, collected: 0, shards: 0 };
         }
@@ -929,7 +931,7 @@
               
               // 儲存到 localStorage
               localStorage.setItem('ownedCards', JSON.stringify(ownedCards));
-              localStorage.setItem('totalStars', stars.toString());
+              window.StarSystem.setTotalStars(stars.toString());
               
               updateAllStats();
               alert('資料匯入成功！');
@@ -961,20 +963,20 @@
     // 測試資料
     function testData() {
       console.log('=== 測試資料 ===');
-      console.log('allCards 長度:', allCards.length);
+      console.log('pageCards 長度:', pageCards.length);
       console.log('ownedCards:', ownedCards);
       console.log('stars:', stars);
       
       // 生成一些測試資料
-      if (allCards.length > 0) {
-        const testCard = allCards[0];
+      if (pageCards.length > 0) {
+        const testCard = pageCards[0];
         if (!ownedCards[testCard.word]) {
           ownedCards[testCard.word] = true;
         }
         stars = 100;
         
         localStorage.setItem('ownedCards', JSON.stringify(ownedCards));
-        localStorage.setItem('totalStars', stars.toString());
+        window.StarSystem.setTotalStars(stars.toString());
         
         updateAllStats();
         alert('已生成測試資料！');
@@ -1004,15 +1006,15 @@
       });
       
       // 生成測試資料
-      if (allCards.length > 0) {
-        const testCard = allCards[0];
+      if (pageCards.length > 0) {
+        const testCard = pageCards[0];
         if (!ownedCards[testCard.word]) {
           ownedCards[testCard.word] = true;
         }
         stars = 100;
         
         localStorage.setItem('ownedCards', JSON.stringify(ownedCards));
-        localStorage.setItem('totalStars', stars.toString());
+        window.StarSystem.setTotalStars(stars.toString());
         
         updateAllStats();
         alert('測試資料已生成！請檢查頁面顯示是否正常。');
@@ -1111,7 +1113,7 @@
 
     // 分享進度
     function shareProgress() {
-      const totalCards = allCards.length;
+      const totalCards = pageCards.length;
       const collectedCards = Object.keys(ownedCards).length;
       const collectionProgress = totalCards > 0 ? Math.round((collectedCards / totalCards) * 100) : 0;
       
@@ -1135,7 +1137,7 @@
 
     // 分享成就
     function shareAchievement() {
-      const totalCards = allCards.length;
+      const totalCards = pageCards.length;
       const collectedCards = Object.keys(ownedCards).length;
       const totalShards = Object.values(shards).reduce((sum, count) => sum + count, 0);
       
@@ -1167,7 +1169,7 @@
     function shareRarity() {
       const rarityStats = {};
       
-      allCards.forEach(card => {
+      pageCards.forEach(card => {
         if (!rarityStats[card.rarity]) {
           rarityStats[card.rarity] = { total: 0, collected: 0 };
         }
@@ -1199,12 +1201,12 @@
 
     // 分享收藏
     function shareCollection() {
-      const totalCards = allCards.length;
+      const totalCards = pageCards.length;
       const collectedCards = Object.keys(ownedCards).length;
       const totalShards = Object.values(shards).reduce((sum, count) => sum + count, 0);
       
       // 找出最稀有的已收集卡片
-      const ownedCardList = allCards.filter(card => ownedCards[card.word]);
+      const ownedCardList = pageCards.filter(card => ownedCards[card.word]);
       const rarestCard = ownedCardList.sort((a, b) => {
         const rarityOrder = { '普通': 1, '稀有': 2, '超稀有': 3 };
         return rarityOrder[b.rarity] - rarityOrder[a.rarity];
@@ -1247,11 +1249,11 @@
       loadUserData();
       
       // 檢查資料
-      const totalCards = allCards.length;
+      const totalCards = pageCards.length;
       const collectedCards = Object.keys(ownedCards).length;
       const totalShards = Object.values(shards).reduce((sum, count) => sum + count, 0);
       
-      console.log('allCards 長度:', totalCards);
+      console.log('pageCards 長度:', totalCards);
       console.log('ownedCards:', ownedCards);
       console.log('stars:', stars);
       

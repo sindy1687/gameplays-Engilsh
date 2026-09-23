@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
+  <script src="js/stars.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🌟 商城 - Typing Hero</title>
+  <title>🌟 道具商城 - Typing Hero</title>
   <link rel="stylesheet" href="responsive_enhanced.css">
+  <link rel="stylesheet" href="css/shared.css">
+  <script src="js/item_database.js"></script>
+  <script src="js/inventory.js"></script>
   <style>
     * {
       margin: 0;
@@ -78,30 +82,71 @@
       align-items: center;
     }
 
-    .player-star-panel {
-      display: inline-flex;
+    .global-stars-pill {
+      margin: 0;
+    }
+
+    /* 資產顯示區域 */
+    .assets-display {
+      display: flex;
+      gap: 12px;
       align-items: center;
-      gap: 8px;
-      padding: 12px 20px;
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 170, 0, 0.2));
-      border: 2px solid #ffd700;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
     }
 
-    .star-icon {
-      font-size: 1.5rem;
+    .asset-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(10, 20, 40, 0.9), rgba(20, 40, 80, 0.9));
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
     }
 
-    .stars-count {
-      font-size: 1.3rem;
+    .asset-pill[data-asset="stars"] {
+      border-color: rgba(255, 215, 0, 0.5);
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    }
+
+    .asset-pill:hover {
+      transform: translateY(-2px);
+    }
+
+    .asset-icon {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .asset-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .asset-value {
+      font-size: 16px;
+      font-weight: 900;
+      color: #fff;
+      min-width: 24px;
+      text-align: right;
+    }
+
+    .asset-pill[data-asset="stars"] .asset-value {
       color: #ffd700;
-      font-weight: bold;
-      text-shadow: 0 0 10px #ffd700;
-      max-width: 200px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+    }
+
+    /* 資產更新動畫 */
+    @keyframes assetPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+
+    .asset-value.updated {
+      animation: assetPulse 0.3s ease-out;
     }
 
     .shop-title-panel {
@@ -184,37 +229,67 @@
     /* 抽卡券網格 - 響應式佈局 */
     .tickets-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
       margin-bottom: 30px;
+      align-items: stretch;
     }
 
-    /* 共用商品卡片樣式 - 5:7 比例 */
-    .shop-item-card {
+    .tickets-section {
       width: 100%;
-      max-width: 220px;
-      aspect-ratio: 5 / 7;
-      border-radius: 20px;
-      overflow: hidden;
+      min-width: 0;
+    }
+
+    .shop-category-title {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 12px 0 0;
+      color: #d8b4fe;
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .shop-category-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(168, 85, 247, 0.3);
+    }
+
+    .shop-item-card + .shop-category-title {
+      margin-top: 20px;
+    }
+
+    /* 共用商品卡片樣式 */
+    .shop-item-card {
       display: flex;
       flex-direction: column;
-      background: linear-gradient(180deg, #1e293b, #0f172a);
+      min-width: 0;
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(10, 20, 45, 0.94);
+      border: 1px solid rgba(168, 85, 247, 0.55);
       box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
-      border: 2px solid rgba(168, 85, 247, 0.8);
-      transition: all 0.3s ease;
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
     }
 
     .shop-item-card:hover {
-      transform: translateY(-4px) scale(1.03);
-      box-shadow: 0 15px 35px rgba(162, 89, 255, 0.4);
-      border-color: #c47aff;
+      transform: translateY(-4px);
+      border-color: rgba(192, 132, 252, 0.85);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
     }
 
     .shop-card-media-wrap {
       width: 100%;
-      height: 62%;
+      aspect-ratio: 16 / 10;
+      flex-shrink: 0;
       overflow: hidden;
-      background: #111827;
+      background: linear-gradient(180deg, rgba(168, 85, 247, 0.10), rgba(255, 255, 255, 0.02));
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .shop-card-media,
@@ -228,62 +303,93 @@
     }
 
     .shop-card-media-placeholder {
-      width: 100%;
-      height: 100%;
+      width: 88px;
+      height: 88px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 48px;
+      border-radius: 24px;
+      background: rgba(168, 85, 247, 0.12);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      font-size: 52px;
       color: #a259ff;
     }
 
     .shop-card-body {
       flex: 1;
-      padding: 8px 10px 10px;
+      min-width: 0;
+      padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
     }
 
     .shop-card-title {
-      font-size: 16px;
+      margin: 0;
+      min-height: 48px;
+      overflow-wrap: anywhere;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #d8b4fe;
+      font-size: 19px;
       font-weight: 900;
       text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: #c084fc;
+      line-height: 1.25;
     }
 
     .shop-card-info {
-      font-size: 12px;
+      margin-top: 6px;
+      min-height: 42px;
+      overflow-wrap: anywhere;
+      color: rgba(255, 255, 255, 0.68);
+      font-size: 14px;
+      line-height: 1.45;
       text-align: center;
-      color: #e5e7eb;
+    }
+
+    .shop-owned-badge {
+      align-self: center;
+      margin-top: 12px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.08);
+      border: 1px solid rgba(34, 211, 238, 0.2);
+      color: #67e8f9;
+      font-size: 13px;
+      font-weight: 800;
     }
 
     .shop-card-price {
       margin-top: auto;
-      font-size: 15px;
-      font-weight: 900;
+      padding-top: 16px;
       text-align: center;
-      color: #facc15;
+      color: #ffd900;
+      font-size: 23px;
+      font-weight: 900;
+      overflow-wrap: anywhere;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .shop-card-price.free {
+      color: #22d3ee;
     }
 
     .shop-card-button {
-      min-height: 36px;
+      width: 100%;
+      height: 48px;
+      margin-top: 14px;
       border-radius: 14px;
+      font-size: 18px;
       font-weight: 900;
       background: linear-gradient(135deg, #a259ff, #6a11cb);
       border: none;
       color: white;
       cursor: pointer;
       transition: all 0.3s ease;
-      margin: 8px;
     }
 
     .shop-card-button:hover:not(:disabled) {
       background: linear-gradient(135deg, #c47aff, #8a2be2);
-      transform: scale(1.05);
     }
 
     .shop-card-button:disabled {
@@ -292,45 +398,28 @@
       opacity: 0.6;
     }
 
-    .shop-item-card.used {
-      opacity: 0.6;
-      border-color: #4a4a4a;
+    .shop-card-button:focus-visible {
+      outline: 3px solid #67e8f9;
+      outline-offset: 3px;
     }
 
-    .shop-item-card.used:hover {
-      transform: none;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
-    }
-
-    /* 共用 Grid 佈局 */
-    .shop-card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-      gap: 18px;
-      justify-items: center;
-    }
-
-    @media (min-width: 1200px) {
-      .shop-card-grid {
-        grid-template-columns: repeat(5, 1fr);
+    /* 商品依可用寬度換行，避免卡片撐出畫面。 */
+    @media (max-width: 1100px) {
+      .tickets-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
     }
 
-    @media (min-width: 768px) and (max-width: 1199px) {
-      .shop-card-grid {
-        grid-template-columns: repeat(3, 1fr);
+    @media (max-width: 800px) {
+      .tickets-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
       }
     }
 
-    @media (min-width: 480px) and (max-width: 767px) {
-      .shop-card-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 479px) {
-      .shop-card-grid {
-        grid-template-columns: 1fr;
+    @media (max-width: 460px) {
+      .tickets-grid {
+        grid-template-columns: minmax(0, 1fr);
       }
     }
 
@@ -368,47 +457,55 @@
 
     /* 系列卡池商店美化樣式 */
     .series-shop-section {
-      padding: 30px 20px;
+      width: min(1280px, calc(100% - 32px));
+      margin: 20px auto;
+      padding: 28px;
       background: rgba(20, 10, 40, 0.5);
       border-radius: 24px;
       border: 2px solid rgba(162, 89, 255, 0.3);
       margin-bottom: 30px;
+      box-sizing: border-box;
     }
 
     .series-shop-header {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 22px;
     }
 
     .series-shop-title {
-      font-size: 2.2rem;
+      margin: 0;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      line-height: 1.2;
       color: #ffd700;
       font-weight: 900;
       text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-      margin-bottom: 10px;
     }
 
     .series-shop-subtitle {
+      margin-top: 8px;
       font-size: 1rem;
-      color: #a259ff;
+      color: rgba(210, 190, 255, 0.82);
       font-weight: 500;
     }
 
     .series-pool-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 25px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+      align-items: start;
+      max-width: 1280px;
+      margin: 0 auto;
     }
 
-    @media (min-width: 1200px) {
+    @media (min-width: 1024px) and (max-width: 1279px) {
       .series-pool-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
-    @media (min-width: 768px) and (max-width: 1199px) {
+    @media (min-width: 768px) and (max-width: 1023px) {
       .series-pool-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
@@ -416,38 +513,53 @@
       .series-pool-grid {
         grid-template-columns: 1fr;
       }
+      
+      .series-shop-section {
+        width: calc(100% - 32px);
+        padding: 20px;
+      }
     }
 
     .series-pool-card {
-      background: linear-gradient(135deg, rgba(30, 20, 60, 0.9), rgba(15, 10, 40, 0.95));
-      border: 2px solid rgba(162, 89, 255, 0.5);
       border-radius: 22px;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      background: linear-gradient(180deg, rgba(25, 12, 55, 0.96), rgba(13, 8, 35, 0.96));
+      border: 1px solid rgba(145, 95, 255, 0.55);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
       transition: all 0.3s ease;
       backdrop-filter: blur(10px);
     }
 
     .series-pool-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 40px rgba(162, 89, 255, 0.4);
-      border-color: #c47aff;
+      transform: translateY(-4px);
+      border-color: rgba(170, 110, 255, 0.85);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
     }
 
     .series-pool-cover {
       width: 100%;
-      height: 200px;
+      aspect-ratio: 16 / 8;
       overflow: hidden;
       background: #111827;
       position: relative;
+    }
+    
+    @media (max-width: 767px) {
+      .series-pool-cover {
+        aspect-ratio: 16 / 9;
+      }
     }
 
     .series-pool-cover-img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: 50% 30%;
       display: block;
+      transition: transform 0.3s ease;
+    }
+    
+    .series-pool-card:hover .series-pool-cover-img {
+      transform: scale(1.025);
     }
 
     .series-pool-cover video {
@@ -457,98 +569,128 @@
     }
 
     .series-pool-info {
-      padding: 20px;
+      padding: 18px 20px 20px;
     }
 
     .series-pool-title {
+      margin: 0 0 12px;
       font-size: 1.5rem;
-      color: #fff;
       font-weight: 900;
-      margin-bottom: 12px;
+      color: #fff;
       text-shadow: 0 0 10px rgba(162, 89, 255, 0.5);
     }
 
     .series-pool-rates {
       display: flex;
       gap: 8px;
-      margin-bottom: 15px;
+      margin-bottom: 14px;
       flex-wrap: wrap;
     }
 
     .series-rate-badge {
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      font-weight: 800;
+      min-width: 42px;
+      height: 30px;
+      padding: 0 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.82rem;
+      font-weight: 900;
     }
 
     .series-rate-ssr {
-      background: linear-gradient(135deg, #ffd700, #ffaa00);
-      color: #000;
+      background: linear-gradient(135deg, #ffdf28, #ffb800);
+      color: #17120b;
     }
 
     .series-rate-a {
-      background: linear-gradient(135deg, #a259ff, #6a11cb);
+      background: linear-gradient(135deg, #9c47ff, #6f29d9);
       color: #fff;
     }
 
     .series-rate-r {
-      background: linear-gradient(135deg, #00ffff, #0099ff);
-      color: #000;
+      background: linear-gradient(135deg, #20d7ff, #079edc);
+      color: #08111c;
     }
 
     .series-daily-limit {
-      margin-bottom: 15px;
+      margin-bottom: 14px;
     }
 
-    .series-daily-progress {
-      width: 100%;
-      height: 8px;
+    .daily-limit-track {
+      height: 6px;
+      border-radius: 999px;
       background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
       overflow: hidden;
-      margin-top: 8px;
+    }
+    
+    .daily-limit-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00ddff, #905bff);
     }
 
     .series-daily-progress-fill {
       height: 100%;
-      background: linear-gradient(90deg, #00ffff, #a259ff, #ffd700);
+      background: linear-gradient(90deg, #00ddff, #905bff);
       border-radius: 4px;
       transition: width 0.3s ease;
     }
 
-    .series-daily-text {
+    .series-daily-status {
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      font-size: 0.9rem;
-      color: #cfd6ff;
-      margin-bottom: 5px;
+      gap: 12px;
+      padding: 10px 12px;
+      margin: 12px 0;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 0.92rem;
+    }
+    
+    .pool-remaining {
+      color: #ffd94b;
+      font-weight: 900;
     }
 
-    .series-buy-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 15px;
+    .pool-buy-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 14px;
     }
 
     @media (max-width: 767px) {
-      .series-buy-actions {
-        flex-direction: column;
+      .pool-buy-options {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
       }
     }
 
-    .series-buy-btn {
-      flex: 1;
-      padding: 12px 16px;
+    .buy-option-btn {
+      min-height: 44px;
+      padding: 8px 10px;
       border: none;
-      border-radius: 14px;
+      border-radius: 12px;
       font-weight: 900;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       cursor: pointer;
       transition: all 0.3s ease;
       background: linear-gradient(135deg, #a259ff, #6a11cb);
       color: #fff;
       box-shadow: 0 4px 15px rgba(162, 89, 255, 0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+    
+    .buy-option-btn .price {
+      font-size: 0.75rem;
+      opacity: 0.9;
     }
 
     .series-buy-btn:hover:not(:disabled) {
@@ -573,18 +715,6 @@
 
     .series-pool-soldout .series-daily-progress-fill {
       background: #ff6b6b;
-    }
-
-    @media (max-width: 1024px) {
-      .tickets-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 600px) {
-      .tickets-grid {
-        grid-template-columns: 1fr;
-      }
     }
 
     /* 抽卡券卡片 */
@@ -1046,6 +1176,30 @@
 
       header h1 {
         font-size: 2rem;
+      }
+
+      .assets-display {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .asset-pill {
+        padding: 6px 10px;
+        gap: 4px;
+      }
+
+      .asset-icon {
+        font-size: 16px;
+      }
+
+      .asset-label {
+        font-size: 11px;
+      }
+
+      .asset-value {
+        font-size: 14px;
+        min-width: 20px;
       }
 
       .stars-count {
@@ -3119,24 +3273,6 @@
       box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.12);
     }
 
-    #submitTradeCardBtn {
-      width: 100%;
-      min-height: 42px;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #00ffff 0%, #00aaff 100%);
-      color: #041018;
-      font-weight: 900;
-      cursor: pointer;
-      box-sizing: border-box;
-    }
-
-    #submitTradeCardBtn:disabled {
-      background: linear-gradient(135deg, #666 0%, #444 100%);
-      color: #ddd;
-      cursor: not-allowed;
-    }
-
     .trade-selected-card-preview,
     .sell-card-preview {
       width: 100%;
@@ -3653,6 +3789,7 @@
       text-align: center;
       display: -webkit-box;
       -webkit-line-clamp: 2;
+      line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
@@ -4282,6 +4419,86 @@
       color: rgba(255, 255, 255, 0.72);
     }
 
+    .shop-pagination {
+      grid-column: 1 / -1;
+      width: 100%;
+      margin: 22px auto 4px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      border: 1px solid rgba(34, 211, 238, 0.26);
+      background: rgba(10, 20, 40, 0.58);
+      box-shadow: 0 0 18px rgba(34, 211, 238, 0.10);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .shop-pagination-info {
+      color: rgba(226, 232, 240, 0.76);
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-align: center;
+    }
+
+    .shop-pagination-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .shop-page-btn,
+    .shop-page-arrow {
+      min-width: 42px;
+      height: 42px;
+      padding: 0 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(34, 211, 238, 0.30);
+      background: rgba(15, 23, 42, 0.88);
+      color: #dbeafe;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .shop-page-arrow {
+      min-width: 88px;
+      color: #22d3ee;
+    }
+
+    .shop-page-btn:hover,
+    .shop-page-arrow:hover {
+      transform: translateY(-1px);
+      border-color: rgba(34, 211, 238, 0.70);
+      box-shadow: 0 0 14px rgba(34, 211, 238, 0.22);
+    }
+
+    .shop-page-btn.active {
+      color: #03151a;
+      background: linear-gradient(135deg, #2cf3ff, #d7ff47);
+      border-color: rgba(215, 255, 71, 0.85);
+      box-shadow: 0 0 16px rgba(44, 243, 255, 0.42);
+    }
+
+    .shop-page-btn:disabled,
+    .shop-page-arrow:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .shop-page-ellipsis {
+      min-width: 26px;
+      color: rgba(226, 232, 240, 0.58);
+      text-align: center;
+      font-weight: 900;
+    }
+
     /* 議價按鈕樣式 */
     .negotiate-btn {
       background: linear-gradient(135deg, #00ccff 0%, #0099ff 100%);
@@ -4337,7 +4554,7 @@
     .quick-nav-toolbar {
       position: fixed;
       top: 20px;
-      right: 20px;
+      right: 16px;
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -4348,6 +4565,9 @@
       border-radius: 16px;
       padding: 12px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      max-width: calc(100vw - 32px);
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
     }
 
     .quick-nav-btn {
@@ -4431,6 +4651,10 @@
       <span class="quick-nav-icon">🎴</span>
       <span class="quick-nav-label">倉庫</span>
     </button>
+    <button class="quick-nav-btn" type="button" onclick="openInventoryModal()" title="開啟背包">
+      <span class="quick-nav-icon">🎒</span>
+      <span class="quick-nav-label">背包</span>
+    </button>
     <button class="quick-nav-btn" onclick="location.href='atlas.html'" title="卡片圖鑑">
       <span class="quick-nav-icon">📖</span>
       <span class="quick-nav-label">圖鑑</span>
@@ -4447,9 +4671,12 @@
 
   <header>
     <div class="header-left">
-      <div class="player-star-panel">
-        <span class="star-icon">⭐</span>
-        <span id="totalStarsCount" class="stars-count">0</span>
+      <div class="assets-display">
+        <div class="asset-pill" data-asset="stars">
+          <span class="asset-icon">⭐</span>
+          <span class="asset-label">星星</span>
+          <span class="asset-value" data-asset-value="stars">0</span>
+        </div>
       </div>
     </div>
     <div class="header-center">
@@ -4466,10 +4693,8 @@
     <!-- 商城分類標籤 -->
     <div class="shop-tabs">
       <button class="tab-btn active" onclick="ShopSystem.switchTab('invite')">🎫 邀請碼兌換</button>
-      <button class="tab-btn" onclick="ShopSystem.switchTab('tickets')">🎫 普通抽卡券商店</button>
+      <button class="tab-btn" onclick="ShopSystem.switchTab('tickets')">🎫 道具商城</button>
       <button class="tab-btn" onclick="ShopSystem.switchTab('series')">🎴 系列抽卡池商店</button>
-      <button class="tab-btn" onclick="ShopSystem.switchTab('chests')">📦 邀請碼寶箱</button>
-      <button class="tab-btn" onclick="ShopSystem.switchTab('trade')">🤝 卡片交易</button>
       <button id="adminTabBtn" class="tab-btn" onclick="ShopSystem.switchTab('admin')" style="display:none;">🛠️ 邀請碼管理</button>
     </div>
 
@@ -4503,9 +4728,10 @@
     <!-- 抽卡券商店 -->
     <div id="tickets-shop" class="shop-section" style="display:none;">
       <div class="tickets-section">
-        <h3 style="color: #ffd700; text-align: center; margin-bottom: 10px; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">🎫 普通抽卡券商店</h3>
-        <p style="color: #ccc; text-align: center; margin-bottom: 30px;">購買抽卡券後，可到抽卡頁使用。</p>
+        <h3 style="color: #ffd700; text-align: center; margin-bottom: 10px; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">🎫 道具商城</h3>
+        <p style="color: #ccc; text-align: center; margin-bottom: 30px;">購買道具後，可到抽卡頁或背包使用。</p>
         <div id="ticketsGrid" class="tickets-grid"></div>
+        <div id="ticketsPagination" class="shop-pagination" style="display:none;"></div>
       </div>
     </div>
 
@@ -4513,19 +4739,31 @@
     <div id="series-shop" class="shop-section" style="display:none;">
       <div class="series-shop-section">
         <div class="series-shop-header">
-          <h2 class="series-shop-title">🎴 系列卡池商店</h2>
-          <p class="series-shop-subtitle">選擇喜歡的系列卡池，每個系列每日最多購買 10 次</p>
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 0;">
+              <h2 class="series-shop-title">🎴 系列卡池商店</h2>
+              <p class="series-shop-subtitle">選擇喜歡的系列卡池，每個系列每日最多購買 10 次</p>
+              <div style="margin-top: 8px; font-size: 0.85rem; color: rgba(255, 215, 0, 0.9); font-weight: 600;">
+                <span>🎴 本週精選 9 個系列</span>
+                <span style="margin: 0 8px;">|</span>
+                <span>🗓 每週一刷新</span>
+              </div>
+              <div id="refreshStatus" style="margin-top: 12px; font-size: 0.8rem; color: rgba(255, 255, 255, 0.7); font-weight: 500;">
+                本週剩餘刷新：<span id="weeklyRefreshCount">3</span> / 3
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
+              <div class="global-stars-pill" data-global-stars style="margin: 0;">
+                <span class="global-star-icon">⭐</span>
+                <span class="global-stars-value" data-global-stars-value>0</span>
+              </div>
+              <button id="refreshSeriesBtn" class="btn" style="padding: 8px 16px; font-size: 0.9rem; min-width: 140px;">
+                🔄 刷新商品 ⭐1000
+              </button>
+            </div>
+          </div>
         </div>
         <div id="seriesGrid" class="series-pool-grid"></div>
-      </div>
-    </div>
-
-    <!-- 邀請碼寶箱 -->
-    <div id="chest-shop" class="shop-section" style="display:none;">
-      <div class="chest-section">
-        <h3>📦 邀請碼寶箱</h3>
-        <p>完成分類套裝後獲得的邀請碼會先放在寶箱裡。未使用的寶箱才能兌換。</p>
-        <div id="chestGrid" class="chest-grid"></div>
       </div>
     </div>
 
@@ -4546,46 +4784,21 @@
         </div>
 
         <div class="trade-center-tabs">
-          <button class="trade-tab-btn active" data-trade-tab="list">我要上架</button>
-          <button class="trade-tab-btn" data-trade-tab="market">交易市場</button>
+          <button class="trade-tab-btn active" data-trade-tab="market">交易市場</button>
           <button class="trade-tab-btn" data-trade-tab="selling">我的出售</button>
           <button class="trade-tab-btn" data-trade-tab="income">賣家收益</button>
         </div>
 
         <div class="trade-tab-panels">
 
-          <section class="trade-panel active" data-trade-panel="list">
-            <div class="trade-panel-header">
-              <h3>我要上架卡片</h3>
-              <p>選擇自己的卡片，設定星星價格後上架。</p>
-            </div>
-
-            <div class="trade-list-card-panel">
-              <div class="trade-list-layout">
-                <div class="trade-list-form">
-                  <label for="sellCardSelect">選擇卡片</label>
-                  <select id="sellCardSelect">
-                    <option value="">請選擇要出售的卡片</option>
-                  </select>
-
-                  <label for="sellPriceInput">出售價格</label>
-                  <input id="sellPriceInput" type="number" min="1" step="1" placeholder="請輸入出售價格">
-
-                  <button id="submitTradeCardBtn" type="button">上架出售</button>
-                </div>
-                <div id="sellCardPreview" class="trade-selected-card-preview"></div>
-              </div>
-            </div>
-            <div id="tradeStatusMessage" class="trade-empty" style="display:none;"></div>
-          </section>
-
-          <section class="trade-panel" data-trade-panel="market">
+          <section class="trade-panel active" data-trade-panel="market">
             <div class="trade-panel-header">
               <h3>交易市場</h3>
               <p>查看其他玩家正在出售的卡片。</p>
             </div>
 
             <div id="tradeGrid" class="trade-card-grid"></div>
+            <div id="tradePagination" class="shop-pagination" style="display:none;"></div>
           </section>
 
           <section class="trade-panel" data-trade-panel="selling">
@@ -4695,12 +4908,17 @@
 
   <!-- 載入必要的JavaScript -->
   <script src="js/sound.js"></script>
-  <script src="js/stars.js"></script>
   <script src="js/userData.js"></script>
+  <script src="js/starManager.js"></script>
   <script src="js/starRewardSystem.js"></script>
   <script src="js/cardUtils.js"></script>
   <script src="js/cards.js"></script>
+  <script src="js/cardVideoManager.js"></script>
+  <script>
+    window.GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzx6eM_OyYsJgCGM942WT0U1q7g4vpcUg1IslWC_luRkzJExPRWSeyh11GUd4ESuFx62Q/exec';
+  </script>
   <script src="js/googleSheetApi.js"></script>
+  <script src="js/achievementProgress.js"></script>
   <script src="js/achievementSystem.js"></script>
   <script src="js/seriesGacha.js"></script>
 
@@ -4755,6 +4973,286 @@
       };
     }
 
+    // 系列卡池商店配置
+    const SERIES_SHOP_CONFIG = {
+      weeklyPoolCount: 9,
+      refreshDay: 1, // 1 = Monday
+      dailyPurchaseLimit: 10,
+      manualRefreshCost: 1000,
+      weeklyRefreshLimit: 3
+    };
+
+    // 取得週 key (以週一為基準)
+    function getWeekKey() {
+      const now = new Date();
+      const date = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const day = date.getDay();
+      const diffToMonday = day === 0 ? -6 : 1 - day;
+      date.setDate(date.getDate() + diffToMonday);
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      const dd = String(date.getDate()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    // 取得下週一日期
+    function getNextMonday() {
+      const now = new Date();
+      const result = new Date(now);
+      const day = now.getDay();
+      let addDays;
+      if (day === 0) {
+        addDays = 1;
+      } else {
+        addDays = 8 - day;
+      }
+      result.setDate(now.getDate() + addDays);
+      result.setHours(0, 0, 0, 0);
+      return result;
+    }
+
+    // 洗牌陣列
+    function shuffleArray(array) {
+      const result = [...array];
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+      }
+      return result;
+    }
+
+    // 補足週選擇 (如果儲存的系列已不存在)
+    function fillWeeklySelection(selectedIds, allSeries, targetCount) {
+      const selectedSet = new Set(selectedIds);
+      const available = allSeries.filter(series => !selectedSet.has(series));
+      const needed = targetCount - selectedIds.length;
+      
+      if (needed > 0 && available.length > 0) {
+        const shuffled = shuffleArray(available);
+        const toAdd = shuffled.slice(0, Math.min(needed, available.length));
+        return [...selectedIds, ...toAdd];
+      }
+      
+      return selectedIds;
+    }
+
+    // 取得每週隨機系列卡池
+    function getWeeklySeriesPools(allSeries) {
+      const weekKey = getWeekKey();
+      const storedWeekKey = localStorage.getItem('weeklySeriesPoolKey');
+      const storedSelection = JSON.parse(localStorage.getItem('weeklySeriesPoolSelection') || '[]');
+
+      // 如果週 key 相同且選擇有效，直接使用
+      if (storedWeekKey === weekKey && Array.isArray(storedSelection) && storedSelection.length > 0) {
+        const selectedPools = storedSelection
+          .filter(seriesName => allSeries.includes(seriesName));
+        
+        if (selectedPools.length > 0) {
+          // 如果有系列被刪除，補足
+          if (selectedPools.length < storedSelection.length) {
+            const filled = fillWeeklySelection(selectedPools, allSeries, SERIES_SHOP_CONFIG.weeklyPoolCount);
+            localStorage.setItem('weeklySeriesPoolSelection', JSON.stringify(filled));
+            return filled;
+          }
+          return selectedPools;
+        }
+      }
+
+      // 需要重新選擇
+      const count = Math.min(SERIES_SHOP_CONFIG.weeklyPoolCount, allSeries.length);
+      let selected = shuffleArray(allSeries).slice(0, count);
+
+      // 避免連續兩週完全相同 (如果總系列數 > 9)
+      if (allSeries.length > SERIES_SHOP_CONFIG.weeklyPoolCount && storedSelection.length > 0) {
+        const oldIds = new Set(storedSelection);
+        let attempts = 0;
+        const maxAttempts = 5;
+
+        while (attempts < maxAttempts) {
+          const newIds = new Set(selected);
+          let isIdentical = true;
+          
+          for (const id of newIds) {
+            if (!oldIds.has(id)) {
+              isIdentical = false;
+              break;
+            }
+          }
+
+          if (!isIdentical) break;
+          
+          selected = shuffleArray(allSeries).slice(0, count);
+          attempts++;
+        }
+      }
+
+      // 儲存新選擇
+      localStorage.setItem('weeklySeriesPoolKey', weekKey);
+      localStorage.setItem('weeklySeriesPoolSelection', JSON.stringify(selected));
+
+      return selected;
+    }
+
+    // 取得玩家ID
+    function getPlayerId() {
+      return localStorage.getItem('playerId') || 'default';
+    }
+
+    // 取得手動刷新狀態
+    function getManualRefreshState() {
+      const playerId = getPlayerId();
+      const weekKey = getWeekKey();
+      const stateKey = `manualRefreshState_${playerId}`;
+      
+      try {
+        const state = JSON.parse(localStorage.getItem(stateKey) || '{}');
+        
+        // 如果週次不同，重置狀態
+        if (state.weekKey !== weekKey) {
+          const newState = {
+            weekKey: weekKey,
+            used: 0
+          };
+          localStorage.setItem(stateKey, JSON.stringify(newState));
+          return newState;
+        }
+        
+        return state;
+      } catch (e) {
+        console.error('讀取刷新狀態失敗:', e);
+        return { weekKey: weekKey, used: 0 };
+      }
+    }
+
+    // 保存手動刷新狀態
+    function saveManualRefreshState(state) {
+      const playerId = getPlayerId();
+      const stateKey = `manualRefreshState_${playerId}`;
+      localStorage.setItem(stateKey, JSON.stringify(state));
+    }
+
+    // 手動刷新系列卡池
+    function manualRefreshSeriesPools(allSeries) {
+      const count = Math.min(SERIES_SHOP_CONFIG.weeklyPoolCount, allSeries.length);
+      const selected = shuffleArray(allSeries).slice(0, count);
+
+      // 儲存新選擇
+      const weekKey = getWeekKey();
+      localStorage.setItem('weeklySeriesPoolKey', weekKey);
+      localStorage.setItem('weeklySeriesPoolSelection', JSON.stringify(selected));
+
+      return selected;
+    }
+
+    // 更新刷新按鈕狀態
+    function updateRefreshButtonState() {
+      const refreshBtn = document.getElementById('refreshSeriesBtn');
+      const refreshCountEl = document.getElementById('weeklyRefreshCount');
+      
+      if (!refreshBtn || !refreshCountEl) return;
+
+      const state = getManualRefreshState();
+      const remaining = SERIES_SHOP_CONFIG.weeklyRefreshLimit - state.used;
+      const currentStars = ShopSystem.getLocalPlayerStars();
+
+      refreshCountEl.textContent = remaining;
+
+      if (remaining <= 0) {
+        refreshBtn.disabled = true;
+        refreshBtn.textContent = '🔒 本週刷新次數已用完';
+      } else if (currentStars < SERIES_SHOP_CONFIG.manualRefreshCost) {
+        refreshBtn.disabled = true;
+        refreshBtn.textContent = '🔄 刷新商品 ⭐1000 (星星不足)';
+      } else {
+        refreshBtn.disabled = false;
+        refreshBtn.textContent = '🔄 刷新商品 ⭐1000';
+      }
+    }
+
+    // 處理手動刷新
+    async function handleManualRefresh() {
+      const refreshBtn = document.getElementById('refreshSeriesBtn');
+      
+      // 防止連點
+      if (refreshBtn && refreshBtn.disabled) return;
+      
+      const state = getManualRefreshState();
+      const remaining = SERIES_SHOP_CONFIG.weeklyRefreshLimit - state.used;
+      const currentStars = ShopSystem.getLocalPlayerStars();
+
+      // 檢查次數
+      if (remaining <= 0) {
+        ShopSystem.showToast('本週刷新次數已用完，請下週再來', 'error');
+        return;
+      }
+
+      // 檢查星星
+      if (currentStars < SERIES_SHOP_CONFIG.manualRefreshCost) {
+        ShopSystem.showToast('星星不足，需要 1000 顆星星才能刷新', 'error');
+        return;
+      }
+
+      // 確認視窗
+      const confirmed = confirm(
+        `確定花費 ⭐${SERIES_SHOP_CONFIG.manualRefreshCost} 重新刷新9個系列抽卡券嗎？\n\n本週剩餘刷新次數：${remaining}次`
+      );
+      
+      if (!confirmed) return;
+
+      // 鎖定按鈕
+      if (refreshBtn) {
+        refreshBtn.disabled = true;
+        refreshBtn.textContent = '刷新中...';
+      }
+
+      try {
+        // 再次檢查星星和次數
+        const finalStars = ShopSystem.getLocalPlayerStars();
+        const finalState = getManualRefreshState();
+        const finalRemaining = SERIES_SHOP_CONFIG.weeklyRefreshLimit - finalState.used;
+
+        if (finalRemaining <= 0) {
+          ShopSystem.showToast('本週刷新次數已用完，請下週再來', 'error');
+          updateRefreshButtonState();
+          return;
+        }
+
+        if (finalStars < SERIES_SHOP_CONFIG.manualRefreshCost) {
+          ShopSystem.showToast('星星不足，需要 1000 顆星星才能刷新', 'error');
+          updateRefreshButtonState();
+          return;
+        }
+
+        // 扣除星星
+        const newStars = finalStars - SERIES_SHOP_CONFIG.manualRefreshCost;
+        ShopSystem.saveLocalPlayerStars(newStars);
+        ShopSystem.updateStarsDisplay(newStars);
+
+        // 增加刷新次數
+        finalState.used += 1;
+        saveManualRefreshState(finalState);
+
+        // 重新生成系列
+        if (typeof SeriesGachaSystem !== 'undefined') {
+          const allSeries = SeriesGachaSystem.getAllSeries();
+          manualRefreshSeriesPools(allSeries);
+        }
+
+        // 更新UI
+        ShopSystem.renderSeriesShop();
+        updateRefreshButtonState();
+        ShopSystem.updateAssetsDisplay();
+
+        const newRemaining = SERIES_SHOP_CONFIG.weeklyRefreshLimit - finalState.used;
+        ShopSystem.showToast(`商店已刷新！剩餘刷新：${newRemaining} / ${SERIES_SHOP_CONFIG.weeklyRefreshLimit}`, 'success');
+
+      } catch (error) {
+        console.error('刷新失敗:', error);
+        ShopSystem.showToast('刷新失敗，請稍後再試', 'error');
+        updateRefreshButtonState();
+      }
+    }
+
     // 商城系統
     const ShopSystem = {
       currentTab: 'invite',
@@ -4765,24 +5263,41 @@
       currentMyOrders: [],
       currentSellerOrders: [],
       currentPlayerStars: 0,
+      tradeItemsPerPage: 20,
+      tradeCurrentPage: 1,
+      ticketsItemsPerPage: 20,
+      ticketsCurrentPage: 1,
       sellableCards: [],
       selectedSellCard: null,
+      tradeCloudInitialized: false,
 
       // 初始化商城系統
       init() {
         console.log('商城系統初始化中...');
+
+        // 初始化背包系統（包含資料遷移）
+        if (typeof initInventory === 'function') {
+          initInventory();
+        }
 
         // 先讀取本地星星
         const localStars = this.getLocalPlayerStars();
         this.currentPlayerStars = localStars;
         this.updateStarsDisplay(localStars);
 
+        // 初始化資產顯示
+        this.updateAssetsDisplay();
+
         this.loadInviteCodes();
         this.setupEventListeners();
         this.initAdminMode();
         this.ensureTradeIdentity();
-        this.setupTradeListPanel();
-        this.renderTradeShop();
+
+        // 卡片交易所已暫時關閉，等待 CORS 問題解決
+        // if (window.GoogleSheetTradeApi && window.GoogleSheetTradeApi.testGoogleSheetCors) {
+        //   window.GoogleSheetTradeApi.testGoogleSheetCors();
+        // }
+        // this.renderTradeShop();
 
         // 延遲更新統計信息，等待邀請碼載入完成
         setTimeout(() => {
@@ -4834,7 +5349,7 @@
           StarSystem.setTotalStars(value);
         } else {
           // 備用方案：同時保存到 totalStars 和 playerStars 以確保跨頁面同步
-          localStorage.setItem('totalStars', String(value));
+          window.StarSystem.setTotalStars(String(value));
           if (window.GoogleSheetTradeApi && typeof window.GoogleSheetTradeApi.saveLocalPlayerStars === 'function') {
             window.GoogleSheetTradeApi.saveLocalPlayerStars(value);
           } else {
@@ -4871,7 +5386,16 @@
           throw new Error('找不到 Google Sheet 交易模組');
         }
 
-        await window.GoogleSheetTradeApi.ensurePlayerProfile();
+        if (this.tradeCloudInitialized) {
+          return;
+        }
+
+        try {
+          await window.GoogleSheetTradeApi.ensurePlayerProfile();
+        } catch (error) {
+          console.warn('[交易市場] 玩家資料同步失敗（繼續讀取市場）:', error);
+        }
+        this.tradeCloudInitialized = true;
       },
 
       setTradeStatus(message, isError = false) {
@@ -4925,26 +5449,36 @@
         const target = document.getElementById(targetId);
         if (!target) return;
         target.innerHTML = `<div class="trade-empty">${this.escapeHTML(message)}</div>`;
+        if (targetId === 'tradeGrid') {
+          const pagination = document.getElementById('tradePagination');
+          if (pagination) pagination.style.display = 'none';
+        }
       },
 
-      setupTradeListPanel() {
-        const select = document.getElementById('sellCardSelect');
-        const button = document.getElementById('submitTradeCardBtn');
+      // 格式化上架日期
+      // 顯示 YYYY-MM-DD HH:mm
+      // Google Sheet createdAt 轉換
+      formatListingDate(date) {
+        if (!date) return '';
 
-        if (select) {
-          select.addEventListener('change', () => {
-            this.handleTradeCardSelection(select.value);
-          });
+        let dateObj;
+        if (typeof date === 'string') {
+          dateObj = new Date(date);
+        } else if (date instanceof Date) {
+          dateObj = date;
+        } else {
+          return '';
         }
 
-        if (button) {
-          button.addEventListener('click', () => {
-            this.submitTradeCard();
-          });
-        }
+        if (isNaN(dateObj.getTime())) return '';
 
-        this.renderTradeCardPreview();
-        this.waitForCardsThenRenderSellOptions();
+        const year = dateObj.getFullYear();
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const hours = String(dateObj.getHours()).padStart(2, '0');
+        const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+
+        return `${year}-${month}-${day} ${hours}:${minutes}`;
       },
 
       getAllCardSource() {
@@ -5119,272 +5653,6 @@
         );
       },
 
-      getSellableCards() {
-        const ownedCards = this.getLocalOwnedCardsForSell();
-        const result = [];
-
-        Object.entries(ownedCards).forEach(([cardKey, count]) => {
-          if (!count || count <= 0) return;
-
-          const cardData = this.findCardDataByAnyKey(cardKey);
-
-          if (!cardData) {
-            console.warn('ownedCards 有卡，但 allCards 找不到資料：', cardKey);
-            return;
-          }
-
-          if (this.isCardAlreadyListedForSell(cardKey, cardData)) {
-            console.log('已上架，排除：', cardKey);
-            return;
-          }
-
-          result.push({
-            ...cardData,
-            cardId: cardData.word || cardKey,
-            cardName: cardData.zh || cardData.word || cardKey,
-            imageUrl: cardData.image || '',
-            quantity: count,
-            count
-          });
-        });
-
-        console.log('可上架卡片數量=', result.length, result);
-        return result;
-      },
-
-      deductOwnedCardAfterSell(cardWord) {
-        const raw = localStorage.getItem('ownedCards');
-        if (!raw) return;
-
-        const owned = JSON.parse(raw);
-        const cardData = this.findCardDataByAnyKey(cardWord);
-
-        const keys = [
-          cardWord,
-          cardData?.word,
-          cardData?.zh,
-          String(cardData?.id)
-        ].filter(Boolean);
-
-        for (const key of keys) {
-          if (owned[key] !== undefined) {
-            if (typeof owned[key] === 'number') {
-              owned[key] -= 1;
-              if (owned[key] <= 0) delete owned[key];
-            } else if (owned[key] === true) {
-              delete owned[key];
-            } else if (owned[key] && typeof owned[key] === 'object') {
-              owned[key].count = Number(owned[key].count || 1) - 1;
-              if (owned[key].count <= 0) delete owned[key];
-            }
-
-            localStorage.setItem('ownedCards', JSON.stringify(owned));
-            console.log('上架後已扣除 ownedCards：', key);
-            return;
-          }
-        }
-      },
-
-      async loadSellableCards() {
-        console.log('ownedCards raw=', localStorage.getItem('ownedCards'));
-        console.log('listedCards raw=', localStorage.getItem('listedCards'));
-        console.log('allCards length=', window.allCards?.length);
-        this.sellableCards = this.getSellableCards();
-        console.log('sellableCards=', this.sellableCards);
-        this.renderSellCardSelect();
-      },
-
-      waitForCardsThenRenderSellOptions(retry = 0) {
-        if ((window.allCards && window.allCards.length > 0) || (window.baseCards && window.baseCards.length > 0)) {
-          this.loadSellableCards();
-          return;
-        }
-
-        if (retry > 30) {
-          console.error('cards.js 載入失敗，無法產生上架清單');
-          this.loadSellableCards();
-          return;
-        }
-
-        setTimeout(() => this.waitForCardsThenRenderSellOptions(retry + 1), 100);
-      },
-
-      renderSellCardSelect() {
-        const select = document.getElementById('sellCardSelect');
-        if (!select) {
-          console.warn('找不到 sellCardSelect');
-          return;
-        }
-
-        const currentValue = this.selectedSellCard ? String(this.selectedSellCard.id || this.selectedSellCard.cardId || this.selectedSellCard.word) : '';
-        const ownedCards = this.getPlayerOwnedCards();
-        const groupedMap = new Map();
-
-        ownedCards.forEach(card => {
-          const key = String(card.id || card.word || card.zh);
-          if (!groupedMap.has(key)) {
-            groupedMap.set(key, { ...card, count: 0 });
-          }
-          groupedMap.get(key).count += 1;
-        });
-
-        this.sellableCards = Array.from(groupedMap.values());
-
-        select.innerHTML = '<option value="">請選擇要出售的卡片</option>';
-
-        if (!this.sellableCards.length) {
-          const option = document.createElement('option');
-          option.value = '';
-          option.textContent = '沒有可上架卡片，請先抽卡或檢查卡片資料';
-          option.disabled = true;
-          select.appendChild(option);
-          this.selectedSellCard = null;
-          this.renderTradeCardPreview();
-          return;
-        }
-
-        this.sellableCards.forEach(card => {
-          const option = document.createElement('option');
-          option.value = String(card.id || card.word || card.cardId);
-          option.textContent = `${this.escapeHTML(card.zh || card.word || card.cardName)}｜${this.escapeHTML(card.category || '未分類')}｜${this.escapeHTML(card.rarity || '普通')}`;
-          select.appendChild(option);
-        });
-
-        if (currentValue && this.sellableCards.find(card => String(card.id || card.cardId || card.word) === currentValue)) {
-          select.value = currentValue;
-        } else {
-          this.selectedSellCard = null;
-          select.value = '';
-        }
-
-        this.renderTradeCardPreview();
-      },
-
-      renderTradeCardSelect() {
-        this.renderSellCardSelect();
-      },
-
-      handleTradeCardSelection(cardId) {
-        this.selectedSellCard = this.sellableCards.find(card => String(card.id || card.word || card.cardId) === String(cardId)) || null;
-        this.renderSelectedCardPreview(cardId);
-      },
-
-      renderSelectedCardPreview(cardId) {
-        const preview = document.getElementById('sellCardPreview');
-        if (!preview) return;
-
-        preview.replaceChildren();
-
-        if (!cardId) {
-          const empty = document.createElement('div');
-          empty.className = 'sell-preview-empty';
-          empty.textContent = '選擇卡片後，這裡會顯示卡片預覽。';
-          preview.appendChild(empty);
-          return;
-        }
-
-        const selectedCard = this.sellableCards.find(card => String(card.id || card.word || card.cardId) === String(cardId))
-          || this.findCardDataByAnyKey(cardId)
-          || this.getAllCardSource().find(card => String(card.id || card.word || card.zh) === String(cardId));
-
-        console.log('目前選到的卡片ID：', cardId);
-        console.log('完整卡片資料：', selectedCard);
-
-        if (!selectedCard) {
-          const error = document.createElement('div');
-          error.className = 'sell-preview-error';
-          error.textContent = '找不到卡片資料';
-          preview.appendChild(error);
-          return;
-        }
-
-        const imageUrl = this.getCardImage(selectedCard);
-        console.log('卡片圖片網址：', imageUrl);
-
-        const rarity = this.getCardRarity(selectedCard);
-        const rarityClass = this.getRarityClass(selectedCard.rarity);
-        console.log('卡片稀有度：', rarity);
-        console.log('套用外框 class：', rarityClass);
-
-        const cardBox = document.createElement('div');
-        cardBox.className = `sell-preview-card ${rarityClass}`;
-
-        const badge = document.createElement('div');
-        badge.className = 'sell-preview-rarity-badge';
-        badge.textContent = rarity;
-
-        const imgWrap = document.createElement('div');
-        imgWrap.className = 'sell-preview-img-wrap';
-
-        if (imageUrl) {
-          const isVideo = /\.(mp4|webm)$/i.test(String(imageUrl));
-          if (isVideo) {
-            const video = document.createElement('video');
-            video.className = 'sell-preview-img';
-            video.src = imageUrl;
-            video.muted = true;
-            video.loop = true;
-            video.playsInline = true;
-            video.autoplay = true;
-            video.onerror = function () {
-              imgWrap.innerHTML = '';
-              const errorText = document.createElement('div');
-              errorText.className = 'sell-preview-error';
-              errorText.textContent = '圖片無法載入';
-              imgWrap.appendChild(errorText);
-            };
-            imgWrap.appendChild(video);
-          } else {
-            const img = document.createElement('img');
-            img.className = 'sell-preview-img';
-            img.src = imageUrl;
-            img.alt = selectedCard.zh || selectedCard.word || selectedCard.cardName || '卡片圖片';
-            img.onerror = function () {
-              imgWrap.innerHTML = '';
-              const errorText = document.createElement('div');
-              errorText.className = 'sell-preview-error';
-              errorText.textContent = '圖片無法載入';
-              imgWrap.appendChild(errorText);
-            };
-            imgWrap.appendChild(img);
-          }
-        } else {
-          const noImg = document.createElement('div');
-          noImg.className = 'sell-preview-error';
-          noImg.textContent = '圖片無法載入';
-          imgWrap.appendChild(noImg);
-        }
-
-        const textBox = document.createElement('div');
-        textBox.className = 'sell-preview-text';
-
-        const name = document.createElement('div');
-        name.className = 'sell-preview-name';
-        name.textContent = selectedCard.zh || selectedCard.word || selectedCard.cardName || '未命名卡片';
-
-        const series = document.createElement('div');
-        series.className = 'sell-preview-series';
-        series.textContent = selectedCard.category || selectedCard.series || selectedCard.theme || '未分類系列';
-
-        const rarityText = document.createElement('div');
-        rarityText.className = 'sell-preview-rarity-text';
-        rarityText.textContent = `稀有度：${rarity}`;
-
-        textBox.appendChild(name);
-        textBox.appendChild(series);
-        textBox.appendChild(rarityText);
-
-        cardBox.appendChild(badge);
-        cardBox.appendChild(imgWrap);
-        cardBox.appendChild(textBox);
-
-        preview.appendChild(cardBox);
-      },
-
-      renderTradeCardPreview() {
-        this.renderSelectedCardPreview(this.selectedSellCard ? String(this.selectedSellCard.id || this.selectedSellCard.word || this.selectedSellCard.cardId) : '');
-      },
-
       // 格式化上架日期
       // 顯示 YYYY-MM-DD HH:mm
       // Google Sheet createdAt 轉換
@@ -5441,213 +5709,6 @@
         }
       },
 
-      async submitTradeCard() {
-        const select = document.getElementById('sellCardSelect');
-        const priceInput = document.getElementById('sellPriceInput');
-        const button = document.getElementById('submitTradeCardBtn');
-
-        if (!this.selectedSellCard) {
-          this.showNotification('請先選擇要出售的卡片', 'error');
-          return;
-        }
-
-        const price = parseInt(priceInput?.value || '0', 10);
-        if (!price || price <= 0) {
-          this.showNotification('請輸入正確的出售價格', 'error');
-          return;
-        }
-
-        const selectedCard = this.selectedSellCard;
-        if (!selectedCard.cardId) {
-          this.showNotification('這張卡片目前無法出售', 'error');
-          return;
-        }
-
-        if (Number(selectedCard.quantity || 0) <= 0) {
-          this.showNotification('你沒有這張卡片', 'error');
-          return;
-        }
-
-        if (button) {
-          button.disabled = true;
-          button.textContent = '上架中...';
-        }
-
-        try {
-          // 建立上架日期
-          const now = new Date();
-          const listingDate = this.formatListingDate(now);
-
-          await window.GoogleSheetTradeApi.ensurePlayerProfile();
-          await window.GoogleSheetTradeApi.syncPlayerCards([selectedCard.word || selectedCard.cardId]);
-
-          const result = await window.GoogleSheetTradeApi.sellCard({
-            cardId: selectedCard.word || selectedCard.cardId,
-            cardName: selectedCard.zh || selectedCard.cardName || selectedCard.name,
-            rarity: selectedCard.rarity,
-            imageUrl: selectedCard.image || selectedCard.imageUrl,
-            category: selectedCard.category,
-            description: selectedCard.description,
-            video: selectedCard.video,
-            createdAt: listingDate // 建立上架時間
-          }, price);
-
-          if (!result.success) {
-            this.showNotification(result.message || '上架失敗', 'error');
-            return;
-          }
-
-          const listedCards = JSON.parse(localStorage.getItem('listedCards') || '{}');
-          listedCards[selectedCard.word || selectedCard.cardId] = {
-            tradeId: result.tradeId,
-            price: price,
-            listedAt: Date.now()
-          };
-          localStorage.setItem('listedCards', JSON.stringify(listedCards));
-
-          if (window.GoogleSheetTradeApi && typeof window.GoogleSheetTradeApi.markCardAsListed === 'function') {
-            window.GoogleSheetTradeApi.markCardAsListed(selectedCard.word || selectedCard.cardId, result.tradeId);
-          }
-
-          this.deductOwnedCardAfterSell(selectedCard.word || selectedCard.cardId);
-
-          if (select) select.value = '';
-          if (priceInput) priceInput.value = '';
-          this.selectedSellCard = null;
-
-          this.showNotification('卡片已成功上架', 'success');
-          await this.renderTradeShop();
-          await this.loadSellableCards();
-        } catch (error) {
-          console.error('交易頁上架出售失敗:', error);
-          const message = error && error.message
-            ? error.message.includes('Failed to fetch')
-              ? 'Google Sheet 連線失敗，請檢查網路'
-              : error.message
-            : '上架失敗，請稍後再試';
-          this.showNotification(message, 'error');
-        } finally {
-          if (button) {
-            button.disabled = false;
-            button.textContent = '上架出售';
-          }
-        }
-      },
-
-      getInviteCodeChests() {
-        try {
-          const arr = JSON.parse(localStorage.getItem('inviteCodeChests') || '[]');
-          return Array.isArray(arr) ? arr : [];
-        } catch (e) {
-          return [];
-        }
-      },
-
-      setInviteCodeChests(chests) {
-        localStorage.setItem('inviteCodeChests', JSON.stringify(chests));
-      },
-
-      renderInviteCodeChests() {
-        const grid = document.getElementById('chestGrid');
-        if (!grid) return;
-
-        const chests = this.getInviteCodeChests();
-        if (!chests.length) {
-          grid.innerHTML = '<div class="chest-empty">目前沒有邀請碼寶箱。</div>';
-          return;
-        }
-
-        // 用本地 usedInviteCodes 判斷是否已用過
-        const usedLocal = JSON.parse(localStorage.getItem('usedInviteCodes') || '[]');
-        const usedSet = new Set((Array.isArray(usedLocal) ? usedLocal : []).map(x => x && x.code).filter(Boolean));
-
-        const normalized = chests.map(c => {
-          const isUsed = Boolean(c?.used) || (c?.code && usedSet.has(c.code));
-          return { ...c, used: isUsed };
-        });
-        this.setInviteCodeChests(normalized);
-
-        const sorted = [...normalized].sort((a, b) => {
-          if (a.used !== b.used) return a.used ? 1 : -1;
-          return String(b.earnedAt || '').localeCompare(String(a.earnedAt || ''));
-        });
-
-        grid.innerHTML = sorted.map((c, idx) => {
-          const title = c.categoryName ? `分類：${this.escapeHTML(c.categoryName)}` : (this.escapeHTML(c.setId) || '套裝獎勵');
-          const codeText = c.code ? this.escapeHTML(c.code) : '（尚未分配）';
-          const stars = c.stars || 0;
-          const earnedAt = c.earnedAt ? new Date(c.earnedAt).toLocaleString('zh-TW') : '';
-          return `
-            <div class="shop-item-card ${c.used ? 'used' : ''}">
-              <div class="shop-card-media-wrap">
-                <img src="https://i.pinimg.com/736x/66/11/c6/6611c6066259ccd89441b4449d66f28b.jpg" alt="邀請碼寶箱" onerror="this.parentElement.innerHTML='<div class=\\'shop-card-media-placeholder\\'>🎁</div>'">
-              </div>
-              <div class="shop-card-body">
-                <div class="shop-card-title">🎁 邀請碼寶箱</div>
-                <div class="shop-card-info">${title}</div>
-                <div class="shop-card-info">⭐ ${this.escapeHTML(String(stars))}</div>
-                <div class="shop-card-info">${codeText}</div>
-                <div class="shop-card-info">${earnedAt}</div>
-                <button class="shop-card-button" 
-                        onclick="ShopSystem.claimChest('${c.code}', ${stars})"
-                        ${c.used ? 'disabled' : ''}>
-                  ${c.used ? '已兌換' : '兌換'}
-                </button>
-              </div>
-            </div>
-          `;
-        }).join('');
-      },
-
-      redeemInviteChest(index) {
-        const chests = this.getInviteCodeChests();
-        const chest = chests[index];
-        if (!chest) return;
-
-        const code = String(chest.code || '').toUpperCase();
-        const stars = parseInt(chest.stars || '0');
-        if (!code || !stars) {
-          this.showNotification('此寶箱沒有可兌換的邀請碼', 'error');
-          return;
-        }
-
-        const usedInviteCodes = JSON.parse(localStorage.getItem('usedInviteCodes') || '[]');
-        const alreadyUsed = Array.isArray(usedInviteCodes) ? usedInviteCodes.find(c => c.code === code) : null;
-        if (chest.used || alreadyUsed) {
-          this.showNotification('此邀請碼已被使用，無法重複兌換', 'error');
-          // 同步狀態
-          chest.used = true;
-          chest.usedAt = chest.usedAt || new Date().toISOString();
-          this.setInviteCodeChests(chests);
-          this.renderInviteCodeChests();
-          return;
-        }
-
-        const ok = confirm(`確定要兌換此寶箱嗎？\n\n🎫 邀請碼：${code}\n⭐ 可獲得：${stars} 星星`);
-        if (!ok) return;
-
-        // 增加星星
-        if (typeof StarSystem !== 'undefined' && typeof StarSystem.addTotalStars === 'function') {
-          StarSystem.addTotalStars(stars, '兌換邀請碼寶箱');
-        } else {
-          const currentStars = this.getLocalPlayerStars();
-          this.saveLocalPlayerStars(currentStars + stars);
-        }
-
-        // 標記為已使用
-        const record = { code, stars, used: true, usedAt: new Date().toISOString(), usedBy: 'user' };
-        const nextUsed = Array.isArray(usedInviteCodes) ? [...usedInviteCodes, record] : [record];
-        localStorage.setItem('usedInviteCodes', JSON.stringify(nextUsed));
-
-        chest.used = true;
-        chest.usedAt = record.usedAt;
-        this.setInviteCodeChests(chests);
-
-        this.showNotification(`🎉 兌換成功！獲得 ${stars} 顆星星！`, 'success');
-        this.updateStarsDisplay();
-        this.renderInviteCodeChests();
-      },
-
       // 更新星星顯示
       updateStarsDisplay(stars) {
         const starsCount = document.getElementById('totalStarsCount');
@@ -5659,6 +5720,53 @@
         document.querySelectorAll('[data-player-stars]').forEach(el => {
           el.textContent = String(currentStars);
         });
+      },
+
+      // 更新資產顯示（星星、普通券、卡池券、道具）
+      updateAssetsDisplay() {
+        // 更新星星
+        const stars = this.getLocalPlayerStars();
+        const starsElement = document.querySelector('[data-asset-value="stars"]');
+        if (starsElement) {
+          starsElement.textContent = stars;
+          this.triggerAssetUpdateAnimation(starsElement);
+        }
+
+        // 更新改名卡（從背包系統讀取）
+        const renameCardCount = getItemCount('rename_card');
+        const renameCardElement = document.querySelector('[data-asset-value="rename-card"]');
+        if (renameCardElement) {
+          renameCardElement.textContent = renameCardCount;
+          this.triggerAssetUpdateAnimation(renameCardElement);
+        }
+      },
+      
+      // 更新玩家名稱顯示
+      updatePlayerNameDisplay(newName) {
+        console.log('Shop 更新玩家名稱顯示:', newName);
+        // 更新商店頁面中所有顯示玩家名稱的地方
+        const playerNameElements = document.querySelectorAll('[data-player-name], .player-name-display');
+        playerNameElements.forEach(el => {
+          if (el) {
+            if (el.tagName === 'INPUT') {
+              el.value = newName;
+            } else {
+              el.textContent = newName;
+            }
+          }
+        });
+        
+        // 如果有 Google Sheet API，也更新那裡的名稱
+        if (typeof window.GoogleSheetTradeApi !== 'undefined' && window.GoogleSheetTradeApi.syncPlayerName) {
+          window.GoogleSheetTradeApi.syncPlayerName(newName);
+        }
+      },
+
+      // 觸發資產更新動畫
+      triggerAssetUpdateAnimation(element) {
+        element.classList.remove('updated');
+        void element.offsetWidth; // 觸發重繪
+        element.classList.add('updated');
       },
 
       // 更新已使用邀請碼統計
@@ -5676,7 +5784,6 @@
         const inviteSection = document.getElementById('invite-shop');
         const ticketsSection = document.getElementById('tickets-shop');
         const seriesSection = document.getElementById('series-shop');
-        const chestSection = document.getElementById('chest-shop');
         const tradeSection = document.getElementById('trade-shop');
         const adminSection = document.getElementById('invite-admin');
         const tabButtons = document.querySelectorAll('.shop-tabs .tab-btn');
@@ -5687,7 +5794,6 @@
         if (inviteSection) inviteSection.style.display = 'none';
         if (ticketsSection) ticketsSection.style.display = 'none';
         if (seriesSection) seriesSection.style.display = 'none';
-        if (chestSection) chestSection.style.display = 'none';
         if (tradeSection) tradeSection.style.display = 'none';
         if (adminSection) adminSection.style.display = 'none';
 
@@ -5718,28 +5824,16 @@
           return;
         }
 
-        if (tab === 'chests') {
-          if (chestSection) chestSection.style.display = 'block';
-          const chestBtn = document.querySelectorAll('.shop-tabs .tab-btn')[3];
-          if (chestBtn) chestBtn.classList.add('active');
-          this.currentTab = 'chests';
-          this.renderInviteCodeChests();
-          return;
-        }
-
         if (tab === 'trade') {
           if (tradeSection) tradeSection.style.display = 'block';
-          const tradeBtn = document.querySelectorAll('.shop-tabs .tab-btn')[4];
+          const tradeBtn = document.querySelectorAll('.shop-tabs .tab-btn')[3];
           if (tradeBtn) tradeBtn.classList.add('active');
           this.currentTab = 'trade';
-          // 確保使用本地星星進行購買判斷
-          const localStars = this.getLocalPlayerStars();
-          this.currentPlayerStars = localStars;
-          this.updateStarsDisplay(localStars);
           this.renderTradeShop();
           return;
         }
 
+        // 預設顯示邀請碼商店
         if (inviteSection) inviteSection.style.display = 'block';
         const firstBtn = document.querySelector('.shop-tabs .tab-btn');
         if (firstBtn) firstBtn.classList.add('active');
@@ -5759,8 +5853,19 @@
       },
 
       async renderTradeShop() {
+        // 避免重複載入
+        if (this._isLoadingTradeShop) {
+          console.log('[交易市場] renderTradeShop 已在執行，跳過');
+          return;
+        }
+        this._isLoadingTradeShop = true;
+
+        console.log('[交易市場] renderTradeShop START');
         const grid = document.getElementById('tradeGrid');
-        if (!grid) return;
+        if (!grid) {
+          this._isLoadingTradeShop = false;
+          return;
+        }
 
         try {
           this.setTradeStatus('正在同步跨裝置交易資料...');
@@ -5770,18 +5875,55 @@
           this.currentPlayerStars = localStars;
           this.updateStarsDisplay(localStars);
 
-          const [marketResult, myOrdersResult, sellerOrdersResult, claimableResult] = await Promise.all([
-            window.GoogleSheetTradeApi.getMarketCards(),
-            window.GoogleSheetTradeApi.getMyOrders(),
-            window.GoogleSheetTradeApi.getSellerOrders(),
-            this.loadSellerClaimableTrades()
-          ]);
+          console.log('[交易市場] 開始呼叫 API 讀取...');
 
-          this.currentTradeMarket = Array.isArray(marketResult.cards) ? marketResult.cards : [];
-          this.currentMyOrders = Array.isArray(myOrdersResult.orders) ? myOrdersResult.orders : [];
-          this.currentSellerOrders = Array.isArray(sellerOrdersResult.orders) ? sellerOrdersResult.orders : [];
+          const playerId = this.getCurrentPlayerId();
 
-          await this.loadSellableCards();
+          // 市場讀取獨立，務必先顯示
+          let marketResult = null;
+          try {
+            marketResult = await window.GoogleSheetTradeApi.getMarketListings();
+            console.log('[交易市場] API market RAW:', marketResult);
+          } catch (error) {
+            console.error('[交易市場] 市場讀取失敗:', error);
+            this.renderTradeEmpty('tradeGrid', '交易市場讀取失敗，請檢查 Apps Script 部署與 CORS 設定');
+            this.currentTradeMarket = [];
+            marketResult = null;
+          }
+
+          if (marketResult && marketResult.success === false) {
+            console.error('[交易市場] 市場讀取失敗:', marketResult.message || marketResult);
+            this.renderTradeEmpty('tradeGrid', `交易市場載入失敗：${marketResult.message || '後端錯誤'}`);
+            this.currentTradeMarket = [];
+          } else if (marketResult) {
+            this.currentTradeMarket = Array.isArray(marketResult.trades) ? marketResult.trades : [];
+          }
+
+          // 我的上架
+          try {
+            const myListingsResult = await window.GoogleSheetTradeApi.getMyListings(playerId);
+            console.log('[交易市場] API myListings RAW:', myListingsResult);
+            this.currentMyOrders = (myListingsResult && Array.isArray(myListingsResult.trades))
+              ? myListingsResult.trades
+              : [];
+          } catch (error) {
+            console.warn('[交易市場] 我的上架讀取失敗:', error);
+            this.currentMyOrders = [];
+          }
+
+          // 待領收益
+          try {
+            await this.loadSellerClaimableTrades();
+          } catch (error) {
+            console.warn('[交易市場] 待領收益讀取失敗:', error);
+          }
+
+          this.currentSellerOrders = [];
+
+          console.log('[交易市場] 市場商品數量:', this.currentTradeMarket.length);
+          console.log('[交易市場] 我的上架數量:', this.currentMyOrders.length);
+
+          this.tradeCurrentPage = 1;
           this.renderMarketCards();
           this.renderMyTradeCards();
           this.renderMyOrders();
@@ -5795,6 +5937,8 @@
           this.renderTradeEmpty('myOrdersGrid', '目前無法讀取你的議價紀錄。');
           this.renderTradeEmpty('sellerOrdersGrid', '目前無法讀取賣家通知。');
           this.setTradeStatus(`交易市場載入失敗：${errorMessage}`, true);
+        } finally {
+          this._isLoadingTradeShop = false;
         }
       },
 
@@ -5802,9 +5946,17 @@
         const grid = document.getElementById('tradeGrid');
         if (!grid) return;
 
+        console.log('[交易市場] renderMarketCards, 待render數量:', this.currentTradeMarket.length);
+
         if (!this.currentTradeMarket.length) {
+          console.log('[交易市場] currentTradeMarket 為空，顯示 empty');
           this.renderTradeEmpty('tradeGrid', '目前沒有玩家上架卡片。');
           return;
+        }
+
+        // 印出第一筆
+        if (this.currentTradeMarket[0]) {
+          console.log('[交易市場] 即將 render 第一筆:', this.currentTradeMarket[0]);
         }
 
         // 依照 createdAt 最新排序
@@ -5817,7 +5969,13 @@
 
         const currentPlayerId = this.getCurrentPlayerId();
         const myStars = Number(this.currentPlayerStars) || this.getLocalPlayerStars();
-        grid.innerHTML = this.currentTradeMarket.map(item => {
+        const totalItems = this.currentTradeMarket.length;
+        const totalPages = Math.max(1, Math.ceil(totalItems / this.tradeItemsPerPage));
+        this.tradeCurrentPage = Math.min(Math.max(1, Number(this.tradeCurrentPage) || 1), totalPages);
+        const startIndex = (this.tradeCurrentPage - 1) * this.tradeItemsPerPage;
+        const pageItems = this.currentTradeMarket.slice(startIndex, startIndex + this.tradeItemsPerPage);
+
+        grid.innerHTML = pageItems.map(item => {
           const isOwn = String(item.sellerId) === String(currentPlayerId);
           const price = Number(item.price || 0);
           const canBuy = Number(myStars) >= Number(price);
@@ -5881,19 +6039,106 @@
             </article>
           `;
         }).join('');
+
+        this.renderTradePagination(totalItems, totalPages, startIndex, pageItems.length);
+      },
+
+      getTradePageNumbers(currentPage, totalPages) {
+        const pages = new Set([1, totalPages, currentPage, currentPage - 1, currentPage + 1]);
+        if (currentPage <= 3) {
+          pages.add(2);
+          pages.add(3);
+        }
+        if (currentPage >= totalPages - 2) {
+          pages.add(totalPages - 1);
+          pages.add(totalPages - 2);
+        }
+        return [...pages]
+          .filter(page => page >= 1 && page <= totalPages)
+          .sort((a, b) => a - b);
+      },
+
+      renderTradePagination(totalItems, totalPages, startIndex, pageCount) {
+        const pagination = document.getElementById('tradePagination');
+        if (!pagination) return;
+
+        if (totalItems <= this.tradeItemsPerPage) {
+          pagination.style.display = 'none';
+          pagination.innerHTML = '';
+          return;
+        }
+
+        const from = startIndex + 1;
+        const to = startIndex + pageCount;
+        const pages = this.getTradePageNumbers(this.tradeCurrentPage, totalPages);
+        let lastPage = 0;
+        const pageButtons = [];
+
+        pages.forEach(page => {
+          if (lastPage && page - lastPage > 1) {
+            pageButtons.push('<span class="shop-page-ellipsis">...</span>');
+          }
+          pageButtons.push(`
+            <button
+              type="button"
+              class="shop-page-btn ${page === this.tradeCurrentPage ? 'active' : ''}"
+              onclick="ShopSystem.goTradePage(${page})"
+              ${page === this.tradeCurrentPage ? 'disabled' : ''}
+            >${page}</button>
+          `);
+          lastPage = page;
+        });
+
+        pagination.style.display = 'flex';
+        pagination.innerHTML = `
+          <div class="shop-pagination-info">顯示 ${from}-${to}，共 ${totalItems} 張</div>
+          <div class="shop-pagination-controls">
+            <button
+              type="button"
+              class="shop-page-arrow"
+              onclick="ShopSystem.goTradePage(${this.tradeCurrentPage - 1})"
+              ${this.tradeCurrentPage <= 1 ? 'disabled' : ''}
+            >‹ 上一頁</button>
+            ${pageButtons.join('')}
+            <button
+              type="button"
+              class="shop-page-arrow"
+              onclick="ShopSystem.goTradePage(${this.tradeCurrentPage + 1})"
+              ${this.tradeCurrentPage >= totalPages ? 'disabled' : ''}
+            >下一頁 ›</button>
+          </div>
+        `;
+      },
+
+      goTradePage(page) {
+        const totalItems = Array.isArray(this.currentTradeMarket) ? this.currentTradeMarket.length : 0;
+        const totalPages = Math.max(1, Math.ceil(totalItems / this.tradeItemsPerPage));
+        const nextPage = Math.min(Math.max(1, Number(page) || 1), totalPages);
+        if (nextPage === this.tradeCurrentPage) return;
+
+        this.tradeCurrentPage = nextPage;
+        this.renderMarketCards();
+
+        const panel = document.querySelector('[data-trade-panel="market"]');
+        if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
       },
 
       async loadSellerClaimableTrades() {
         try {
           const sellerId = this.getCurrentPlayerId();
-          if (!sellerId) return;
+          if (!sellerId) return { success: true, trades: [], totalAmount: 0, count: 0 };
 
           const result = await window.GoogleSheetTradeApi.getSellerClaimableTrades(sellerId);
+          console.log('[交易市場] claimable result:', result);
+
           if (result && result.success) {
             this.renderSellerIncomeList(result.trades || [], result.totalAmount || 0, result.count || 0);
+            return result;
           }
+          return { success: true, trades: [], totalAmount: 0, count: 0 };
         } catch (error) {
           console.error('載入待領取星星失敗:', error);
+          return { success: true, trades: [], totalAmount: 0, count: 0 };
         }
       },
 
@@ -6191,7 +6436,6 @@
         this.showNotification(`✅ 出售成功！獲得 ⭐ ${price} 星星`, 'success');
         this.updateStarsDisplay();
         this.renderTradeShop();
-        this.renderSellCardSelect();
       },
 
       // ========== 議價系統 ==========
@@ -6562,7 +6806,6 @@
         this.showNotification(`✅ 成交！${displayName} 以 ⭐ ${price} 售出！`, 'success');
         this.updateStarsDisplay();
         this.renderTradeShop();
-        this.renderSellCardSelect();
       },
 
       initAdminMode() {
@@ -6988,7 +7231,7 @@
           document.getElementById('inviteCodeInput').value = '';
 
           // 更新顯示
-          this.updateStarsDisplay();
+          this.updateAssetsDisplay();
           this.updateUsedCodesInfo();
 
           // 播放音效
@@ -7442,10 +7685,6 @@
               panel.classList.toggle('active', panel.dataset.tradePanel === tab);
             });
 
-            if (tab === 'list') {
-              this.loadSellableCards();
-            }
-
             if (tab === 'market') {
               this.renderTradeShop();
             }
@@ -7466,6 +7705,12 @@
         // 綁定交易所分頁切換
         this.bindTradeCenterTabs();
 
+        // 綁定刷新按鈕
+        const seriesRefreshBtn = document.getElementById('refreshSeriesBtn');
+        if (seriesRefreshBtn) {
+          seriesRefreshBtn.addEventListener('click', handleManualRefresh);
+        }
+
         // 邀請碼輸入框Enter鍵支援
         document.getElementById('inviteCodeInput').addEventListener('keypress', (e) => {
           if (e.key === 'Enter') {
@@ -7474,9 +7719,9 @@
         });
 
         // 重新讀取收益按鈕
-        const refreshBtn = document.getElementById('refreshSellerIncomeBtn');
-        if (refreshBtn) {
-          refreshBtn.addEventListener('click', async () => {
+        const refreshIncomeBtn = document.getElementById('refreshSellerIncomeBtn');
+        if (refreshIncomeBtn) {
+          refreshIncomeBtn.addEventListener('click', async () => {
             await this.loadSellerClaimableTrades();
           });
         }
@@ -7500,6 +7745,35 @@
           await this.handleClaimSingleStars(tradeId, btn);
         });
 
+        // 跨頁面同步：監聽 localStorage 變化
+        window.addEventListener('storage', (e) => {
+          if (e.key === 'totalStars' || e.key === 'playerStars' || e.key === 'seriesGachaTickets' || e.key === 'playerInventory') {
+            console.log('檢測到跨頁面資產變化:', e.key);
+            this.updateAssetsDisplay();
+          }
+          // 監聽玩家名稱變化
+          if (e.key === 'playerName' || e.key === 'currentUser') {
+            const newName = localStorage.getItem('playerName') || localStorage.getItem('currentUser');
+            if (newName) {
+              this.updatePlayerNameDisplay(newName);
+            }
+          }
+        });
+        
+        // 監聽自訂玩家名稱變更事件
+        window.addEventListener('playerNameChanged', (e) => {
+          if (e.detail && e.detail.newName) {
+            this.updatePlayerNameDisplay(e.detail.newName);
+          }
+        });
+
+        // 頁面可見性變化時更新資產（當用戶切換回此頁面時）
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) {
+            this.updateAssetsDisplay();
+          }
+        });
+
         // 添加滑入動畫樣式
         const style = document.createElement('style');
         style.textContent = `
@@ -7516,21 +7790,42 @@
         const ticketsGrid = document.getElementById('ticketsGrid');
         if (!ticketsGrid) return;
 
-        // 抽卡券商品列表 - 只保留普通抽卡券
+        // 抽卡券商品列表 - 普通抽卡券 + 改名卡
         const ticketProducts = [
           { id: 'normal_1', name: '普通抽卡券 x1', icon: '🎫', quantity: 1, price: 100, type: 'normal', image: 'https://i.pinimg.com/736x/9f/c4/97/9fc4972feb0c8175a33a6934a98b4788.jpg', description: '單次購買 1 張抽卡券' },
           { id: 'normal_5', name: '普通抽卡券 x5', icon: '🎫', quantity: 5, price: 450, type: 'normal', image: 'https://i.pinimg.com/736x/2c/e6/51/2ce6513bca15b29ffb791a576b87cdbc.jpg', description: '一次購買 5 張，省 50 星星！' },
-          { id: 'normal_10', name: '普通抽卡券 x10', icon: '🎫', quantity: 10, price: 850, type: 'normal', image: 'https://i.pinimg.com/736x/be/50/e9/be50e93e06d1a24782a7f94a248a8840.jpg', description: '一次購買 10 張，最划算！' }
+          { id: 'normal_10', name: '普通抽卡券 x10', icon: '🎫', quantity: 10, price: 850, type: 'normal', image: 'https://i.pinimg.com/736x/be/50/e9/be50e93e06d1a24782a7f94a248a8840.jpg', description: '一次購買 10 張，最划算！' },
+          { id: 'rename_card', name: '改名卡', icon: '✏️', quantity: 1, price: 500, type: 'item', image: '', description: '使用後可以修改一次玩家名稱' },
+          { id: 'time_freeze_potion', name: '時間暫停藥水', icon: '⏸️', quantity: 1, price: 150, type: 'item', image: '', description: '暫停計時 5 秒' },
+          { id: 'heart_shield', name: '愛心護盾', icon: '🛡️', quantity: 1, price: 200, type: 'item', image: '', description: '抵銷一次愛心扣除' },
+          { id: 'hint_potion', name: '三字母提示藥水', icon: '💡', quantity: 1, price: 120, type: 'item', image: '', description: '顯示答案前三個字母' },
+          { id: 'reading_key_ring', name: '打包所有關卡鑰匙', icon: '🔑', quantity: 1, price: 0, type: 'key_ring', image: '', description: '補齊目前缺少的文章關卡鑰匙', dynamicPrice: true }
         ];
+
+        // 動態產生文章練習關卡鑰匙（第 2 關起）
+        const levelCount = typeof window.ARTICLE_LEVEL_COUNT !== 'undefined' ? window.ARTICLE_LEVEL_COUNT : 45;
+        const keyProducts = [];
+        for (let i = 2; i <= levelCount; i++) {
+          keyProducts.push({
+            id: `reading_key_stage_${i}`,
+            name: `文章第 ${i} 關鑰匙`,
+            icon: '🔑',
+            quantity: 1,
+            price: 500,
+            type: 'stage_key',
+            image: '',
+            description: `用來解鎖文章練習第 ${i} 關`
+          });
+        }
 
         // 獲取當前星星數量
         const currentStars = this.getLocalPlayerStars();
 
-        let html = '';
-        ticketProducts.forEach(product => {
+        // 渲染單一商品卡片
+        const renderCard = (product) => {
           const canAfford = currentStars >= product.price;
-          
-          // 處理圖片/影片
+
+          // 處理圖片/影片/圖示
           let mediaHtml = '';
           if (product.image) {
             if (product.image.endsWith('.mp4')) {
@@ -7539,28 +7834,164 @@
               mediaHtml = `<img src="${product.image}" alt="${product.name}" onerror="this.parentElement.innerHTML='<div class=\\'shop-card-media-placeholder\\'>🎫</div>'">`;
             }
           } else {
-            mediaHtml = '<div class="shop-card-media-placeholder">🎫</div>';
+            mediaHtml = `<div class="shop-card-media-placeholder">${product.icon}</div>`;
           }
-          
-          html += `
+
+          // 取得目前持有數量和動態價格
+          let ownedCount = 0;
+          let actualPrice = product.price;
+          let displayPrice = product.price === 0 ? '免費' : `⭐${product.price}`;
+          let ownedBadge = '';
+          let buttonDisabled = !canAfford;
+          let buttonText = canAfford ? '購買' : '星星不足';
+
+          // 背包容量檢查
+          let canAddToInventory = true;
+
+          if (product.type === 'item' || product.type === 'stage_key') {
+            const itemId = product.type === 'item' ? (product.id === 'rename_card' ? 'rename_card' : product.id) : product.id;
+            ownedCount = getItemCount(itemId);
+            const unit = product.type === 'stage_key' ? '把' : '個';
+            ownedBadge = `<div class="shop-owned-badge">持有 ${ownedCount} ${unit}</div>`;
+            canAddToInventory = typeof canAddItem === 'function' ? canAddItem(itemId) : true;
+          } else if (product.type === 'key_ring') {
+            // 鑰匙圈特殊處理
+            if (typeof getMissingReadingStageKeys === 'function') {
+              const missingKeys = getMissingReadingStageKeys();
+              const missingCount = missingKeys.length;
+              const pricePerKey = 500; // 每把鑰匙 500 星星
+
+              if (missingCount === 0) {
+                displayPrice = '✅ 已全部解鎖';
+                ownedBadge = '<div class="shop-owned-badge" style="background: rgba(0, 255, 0, 0.08); border-color: rgba(0, 255, 0, 0.2); color: #00ff00;">已全部解鎖</div>';
+                buttonDisabled = true;
+                buttonText = '暫無需要';
+              } else {
+                actualPrice = missingCount * pricePerKey;
+                displayPrice = `⭐${actualPrice}`;
+                ownedBadge = `<div class="shop-owned-badge">尚缺 ${missingCount} 把</div>`;
+                buttonDisabled = currentStars < actualPrice;
+                buttonText = currentStars >= actualPrice ? '購買' : '星星不足';
+
+                const usedSlots = typeof getInventoryUsedSlots === 'function' ? getInventoryUsedSlots() : 0;
+                const maxSlots = typeof getInventoryMaxSlots === 'function' ? getInventoryMaxSlots() : 20;
+                canAddToInventory = usedSlots + missingCount <= maxSlots;
+              }
+            } else {
+              displayPrice = '系統錯誤';
+              buttonDisabled = true;
+              buttonText = '系統錯誤';
+            }
+          } else {
+            ownedCount = getItemCount('normal_gacha_ticket');
+            ownedBadge = `<div class="shop-owned-badge">持有 ${ownedCount} 張</div>`;
+            canAddToInventory = typeof canAddItem === 'function' ? canAddItem('normal_gacha_ticket') : true;
+          }
+
+          if (!canAddToInventory) {
+            buttonDisabled = true;
+            buttonText = '背包已滿';
+          }
+
+          return `
             <div class="shop-item-card">
               <div class="shop-card-media-wrap">${mediaHtml}</div>
               <div class="shop-card-body">
                 <div class="shop-card-title">${product.name}</div>
                 <div class="shop-card-info">${product.description}</div>
-                <div class="shop-card-price">⭐${product.price}</div>
-                <div class="shop-card-info">獲得 🎫x${product.quantity}</div>
-                <button class="shop-card-button" 
-                        onclick="ShopSystem.buyTicket('${product.id}', ${product.price}, ${product.quantity}, '${product.type}')"
-                        ${canAfford ? '' : 'disabled'}>
-                  ${canAfford ? '購買' : '星星不足'}
+                ${ownedBadge}
+                <div class="shop-card-price ${actualPrice === 0 ? 'free' : ''}">${displayPrice}</div>
+                <button class="shop-card-button"
+                        onclick="ShopSystem.buyTicket('${product.id}', ${actualPrice}, ${product.quantity}, '${product.type}')"
+                        ${buttonDisabled ? 'disabled' : ''}>
+                  ${buttonText}
                 </button>
               </div>
             </div>
           `;
-        });
+        };
+
+        let html = '';
+
+        // 道具區（抽卡券、改名卡、商城消耗品、鑰匙圈）
+        html += '<h4 class="shop-category-title">🎁 道具</h4>';
+        ticketProducts.forEach(product => { html += renderCard(product); });
+
+        // 文章關卡鑰匙區（第 2 關起）
+        const keyTotalItems = keyProducts.length;
+        const keyTotalPages = Math.max(1, Math.ceil(keyTotalItems / this.ticketsItemsPerPage));
+        this.ticketsCurrentPage = Math.min(Math.max(1, Number(this.ticketsCurrentPage) || 1), keyTotalPages);
+        const keyStartIndex = (this.ticketsCurrentPage - 1) * this.ticketsItemsPerPage;
+        const keyPageProducts = keyProducts.slice(keyStartIndex, keyStartIndex + this.ticketsItemsPerPage);
+
+        html += '<h4 class="shop-category-title">🔑 文章關卡鑰匙</h4>';
+        keyPageProducts.forEach(product => { html += renderCard(product); });
 
         ticketsGrid.innerHTML = html;
+        this.renderTicketsPagination(keyTotalItems, keyTotalPages, keyStartIndex, keyPageProducts.length);
+      },
+
+      renderTicketsPagination(totalItems, totalPages, startIndex, pageCount) {
+        const pagination = document.getElementById('ticketsPagination');
+        if (!pagination) return;
+
+        if (totalItems <= this.ticketsItemsPerPage) {
+          pagination.style.display = 'none';
+          pagination.innerHTML = '';
+          return;
+        }
+
+        const from = startIndex + 1;
+        const to = startIndex + pageCount;
+        const pages = this.getTradePageNumbers(this.ticketsCurrentPage, totalPages);
+        let lastPage = 0;
+        const pageButtons = [];
+
+        pages.forEach(page => {
+          if (lastPage && page - lastPage > 1) {
+            pageButtons.push('<span class="shop-page-ellipsis">...</span>');
+          }
+          pageButtons.push(`
+            <button
+              type="button"
+              class="shop-page-btn ${page === this.ticketsCurrentPage ? 'active' : ''}"
+              onclick="ShopSystem.goTicketsPage(${page})"
+              ${page === this.ticketsCurrentPage ? 'disabled' : ''}
+            >${page}</button>
+          `);
+          lastPage = page;
+        });
+
+        pagination.style.display = 'flex';
+        pagination.innerHTML = `
+          <div class="shop-pagination-info">顯示 ${from}-${to}，共 ${totalItems} 個</div>
+          <div class="shop-pagination-controls">
+            <button
+              type="button"
+              class="shop-page-arrow"
+              onclick="ShopSystem.goTicketsPage(${this.ticketsCurrentPage - 1})"
+              ${this.ticketsCurrentPage <= 1 ? 'disabled' : ''}
+            >‹ 上一頁</button>
+            ${pageButtons.join('')}
+            <button
+              type="button"
+              class="shop-page-arrow"
+              onclick="ShopSystem.goTicketsPage(${this.ticketsCurrentPage + 1})"
+              ${this.ticketsCurrentPage >= totalPages ? 'disabled' : ''}
+            >下一頁 ›</button>
+          </div>
+        `;
+      },
+
+      goTicketsPage(page) {
+        const nextPage = Math.max(1, Number(page) || 1);
+        if (nextPage === this.ticketsCurrentPage) return;
+
+        this.ticketsCurrentPage = nextPage;
+        this.renderTicketsShop();
+
+        const section = document.getElementById('tickets-shop');
+        if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
       },
 
       // 渲染系列抽卡池商店
@@ -7577,15 +8008,21 @@
         // 獲取所有系列
         const allSeries = SeriesGachaSystem.getAllSeries();
         
+        // 取得每週隨機選擇的系列
+        const weeklySeries = getWeeklySeriesPools(allSeries);
+        
         // 獲取當前星星數量
         const currentStars = this.getLocalPlayerStars();
         
         // 獲取系列抽卡券數量
         const ticketsData = SeriesGachaSystem.getGachaTicketsData();
 
+        // 更新刷新按鈕狀態
+        updateRefreshButtonState();
+
         let html = '';
         
-        allSeries.forEach(seriesName => {
+        weeklySeries.forEach(seriesName => {
           // 獲取該系列的卡片
           const seriesCards = SeriesGachaSystem.getSeriesCards(seriesName);
           const cardCount = seriesCards.length;
@@ -7611,10 +8048,14 @@
           const progressPercent = (todayCount / 10) * 100;
           const isSoldOut = todayCount >= 10;
           
+          // 檢查系列抽卡券背包容量
+          const seriesTicketId = `series_ticket_${seriesName}`;
+          const canAddSeriesTicket = typeof canAddItem === 'function' ? canAddItem(seriesTicketId) : true;
+
           // 檢查各種購買數量是否可用
-          const canBuy1 = canBuySeriesPack(seriesName, 1) && currentStars >= price;
-          const canBuy5 = canBuySeriesPack(seriesName, 5) && currentStars >= price * 5;
-          const canBuy10 = canBuySeriesPack(seriesName, 10) && currentStars >= price * 10;
+          const canBuy1 = canBuySeriesPack(seriesName, 1) && currentStars >= price && canAddSeriesTicket;
+          const canBuy5 = canBuySeriesPack(seriesName, 5) && currentStars >= price * 5 && canAddSeriesTicket;
+          const canBuy10 = canBuySeriesPack(seriesName, 10) && currentStars >= price * 10 && canAddSeriesTicket;
 
           // 取得圖片重點位置
           const pool = { focusX: coverCard?.focusX, focusY: coverCard?.focusY };
@@ -7635,36 +8076,40 @@
             <div class="series-pool-card ${isSoldOut ? 'series-pool-soldout' : ''}">
               <div class="series-pool-cover">${mediaHtml}</div>
               <div class="series-pool-info">
-                <div class="series-pool-title">${seriesName}</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <div class="series-pool-title">${seriesName}</div>
+                  <span style="font-size: 0.7rem; background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; padding: 2px 8px; border-radius: 999px; font-weight: 900; letter-spacing: 0.5px;">WEEKLY</span>
+                </div>
                 <div class="series-pool-rates">
                   <span class="series-rate-badge series-rate-ssr">SSR</span>
                   <span class="series-rate-badge series-rate-a">A</span>
                   <span class="series-rate-badge series-rate-r">R</span>
                 </div>
-                <div class="series-daily-limit">
-                  <div class="series-daily-text">
-                    <span>今日已購買：${todayCount} / 10</span>
-                    <span>剩餘：${remaining} 次</span>
-                  </div>
-                  <div class="series-daily-progress">
-                    <div class="series-daily-progress-fill" style="width: ${progressPercent}%"></div>
-                  </div>
+                <div class="series-daily-status">
+                  <span>今日 ${todayCount} / 10</span>
+                  <span class="pool-remaining">剩餘 ${remaining}次</span>
                 </div>
-                <div class="series-buy-actions">
-                  <button class="series-buy-btn" 
+                <div class="daily-limit-track">
+                  <div class="daily-limit-fill" style="width: ${progressPercent}%"></div>
+                </div>
+                <div class="pool-buy-options">
+                  <button class="buy-option-btn ${!canBuy1 ? 'series-buy-btn' : ''}" 
                           onclick="ShopSystem.buySeriesTicket('${seriesName}', ${price}, 1)"
                           ${canBuy1 ? '' : 'disabled'}>
-                    🎫×1
+                    🎫 ×1
+                    <span class="price">⭐ ${price}</span>
                   </button>
-                  <button class="series-buy-btn" 
+                  <button class="buy-option-btn ${!canBuy5 ? 'series-buy-btn' : ''}" 
                           onclick="ShopSystem.buySeriesTicket('${seriesName}', ${price}, 5)"
                           ${canBuy5 ? '' : 'disabled'}>
-                    🎫×5
+                    🎫 ×5
+                    <span class="price">⭐ ${price * 5}</span>
                   </button>
-                  <button class="series-buy-btn" 
+                  <button class="buy-option-btn ${!canBuy10 ? 'series-buy-btn' : ''}" 
                           onclick="ShopSystem.buySeriesTicket('${seriesName}', ${price}, 10)"
                           ${canBuy10 ? '' : 'disabled'}>
-                    🎫×10
+                    🎫 ×10
+                    <span class="price">⭐ ${price * 10}</span>
                   </button>
                 </div>
               </div>
@@ -7697,6 +8142,13 @@
           return;
         }
 
+        // 檢查背包容量（系列抽卡券可堆疊，只檢查 1 格）
+        const seriesTicketId = `series_ticket_${seriesName}`;
+        if (typeof canAddItem === 'function' && !canAddItem(seriesTicketId)) {
+          this.showToast('背包已滿，無法購買系列抽卡券', 'error');
+          return;
+        }
+
         // 檢查 SeriesGachaSystem 是否可用
         if (typeof SeriesGachaSystem === 'undefined') {
           this.showToast('系列抽卡系統尚未載入', 'error');
@@ -7705,7 +8157,7 @@
 
         // 扣除星星
         const newStars = currentStars - totalPrice;
-        localStorage.setItem('totalStars', newStars.toString());
+        window.StarSystem.setTotalStars(newStars.toString());
         this.currentPlayerStars = newStars;
         this.updateStarsDisplay(newStars);
 
@@ -7720,14 +8172,26 @@
 
         // 更新UI
         this.renderSeriesShop();
+        this.updateAssetsDisplay();
         this.showToast(`購買成功！獲得 ${seriesName} 抽卡券 x${amount}`, 'success');
 
         // 顯示購買特效
         this.showTicketPurchaseEffect(amount);
+
+        // 如果背包頁面有更新函數，調用它
+        if (typeof renderInventory === 'function') {
+          renderInventory();
+        }
       },
 
-      // 購買抽卡券
+      // 購買抽卡券/道具
       buyTicket(productId, price, quantity, type) {
+        // 特殊處理鑰匙圈
+        if (productId === 'reading_key_ring') {
+          this.buyReadingKeyRing(price);
+          return;
+        }
+
         // 檢查星星是否足夠
         const currentStars = this.getLocalPlayerStars();
         if (currentStars < price) {
@@ -7735,45 +8199,191 @@
           return;
         }
 
-        // 扣除星星
-        const newStars = currentStars - price;
-        localStorage.setItem('totalStars', newStars.toString());
-        this.currentPlayerStars = newStars;
-        this.updateStarsDisplay(newStars);
+        // 決定實際給予的道具 ID
+        let targetItemId;
+        let successMessage = '';
+        if (type === 'item' || type === 'stage_key') {
+          targetItemId = productId;
+          const itemName = (typeof getItemInfo === 'function' && getItemInfo(productId)) ? getItemInfo(productId).name : productId;
+          successMessage = `購買成功！獲得 ${itemName} x${quantity}`;
+        } else {
+          targetItemId = 'normal_gacha_ticket';
+          successMessage = `購買成功！獲得 ${quantity} 張抽卡券`;
+        }
 
-        // 增加抽卡券
-        const currentTickets = parseInt(localStorage.getItem('gachaTickets') || '0');
-        const newTickets = currentTickets + quantity;
-        localStorage.setItem('gachaTickets', newTickets.toString());
+        // 檢查背包容量
+        if (typeof canAddItem === 'function' && !canAddItem(targetItemId)) {
+          this.showToast('背包已滿，無法購買新的道具', 'error');
+          return;
+        }
+
+        // 使用 StarManager 扣除星星（確保排行榜同步）
+        if (typeof StarManager !== 'undefined' && StarManager.deductStars) {
+          const result = StarManager.deductStars(price, 'shop_purchase');
+          if (!result.success) {
+            this.showToast('星星扣除失敗', 'error');
+            return;
+          }
+        } else {
+          // 備用方案：直接操作 localStorage
+          const newStars = currentStars - price;
+          window.StarSystem.setTotalStars(newStars.toString());
+          this.currentPlayerStars = newStars;
+          this.updateStarsDisplay(newStars);
+        }
+
+        // 加入背包
+        addItem(targetItemId, quantity);
 
         // 記錄購買紀錄
         this.recordPurchase(productId, quantity, price, type);
 
         // 更新UI
         this.renderTicketsShop();
-        this.showToast(`購買成功！獲得 ${quantity} 張抽卡券`, 'success');
+        this.updateAssetsDisplay();
+        this.showToast(successMessage, 'success');
 
-        // 顯示購買特效
-        this.showTicketPurchaseEffect(quantity);
+        // 抽卡券購買特效
+        if (type === 'normal') {
+          this.showTicketPurchaseEffect(quantity);
+          if (typeof updateGachaTicketsDisplay === 'function') {
+            updateGachaTicketsDisplay();
+          }
+        }
 
-        // 如果抽卡頁面有更新函數，調用它
-        if (typeof updateGachaTicketsDisplay === 'function') {
-          updateGachaTicketsDisplay();
+        // 如果背包頁面有更新函數，調用它
+        if (typeof renderInventory === 'function') {
+          renderInventory();
+        }
+      },
+
+      // 購買文章練習關卡鑰匙圈
+      buyReadingKeyRing(price) {
+        // 重新計算缺少的鑰匙（購買前再次確認）
+        if (typeof getMissingReadingStageKeys !== 'function') {
+          this.showToast('系統錯誤：無法計算缺少的鑰匙', 'error');
+          return;
+        }
+
+        const missingKeys = getMissingReadingStageKeys();
+        const missingCount = missingKeys.length;
+
+        if (missingCount === 0) {
+          this.showToast('目前沒有缺少的關卡鑰匙', 'info');
+          return;
+        }
+
+        // 檢查星星是否足夠
+        const currentStars = this.getLocalPlayerStars();
+        if (currentStars < price) {
+          this.showToast(`星星不足，需要 ${price} 顆星星`, 'error');
+          return;
+        }
+
+        // 檢查背包容量（每把缺少的鑰匙都需要 1 格）
+        if (typeof getInventoryUsedSlots === 'function' && typeof getInventoryMaxSlots === 'function') {
+          const usedSlots = getInventoryUsedSlots();
+          const maxSlots = getInventoryMaxSlots();
+          if (usedSlots + missingCount > maxSlots) {
+            this.showToast(`背包空間不足，需要 ${missingCount} 格，目前剩餘 ${maxSlots - usedSlots} 格`, 'error');
+            return;
+          }
+        }
+
+        // 確認購買
+        const confirmed = confirm(
+          `🔑 確定要購買文章練習關卡鑰匙圈嗎？\n\n` +
+          `尚缺：${missingCount} 把鑰匙\n` +
+          `總價：⭐${price}\n\n` +
+          `購買後會自動將缺少的鑰匙放入背包。`
+        );
+
+        if (!confirmed) return;
+
+        // 扣除星星
+        if (typeof StarManager !== 'undefined' && StarManager.deductStars) {
+          const result = StarManager.deductStars(price, 'key_ring_purchase');
+          if (!result.success) {
+            this.showToast('星星扣除失敗', 'error');
+            return;
+          }
+        } else {
+          const newStars = currentStars - price;
+          window.StarSystem.setTotalStars(newStars.toString());
+          this.currentPlayerStars = newStars;
+          this.updateStarsDisplay(newStars);
+        }
+
+        // 發放缺少的鑰匙
+        if (typeof grantMissingReadingStageKeys === 'function') {
+          const result = grantMissingReadingStageKeys();
+
+          if (result.success && result.grantedKeys.length > 0) {
+            // 顯示成功訊息
+            const keyNames = result.grantedKeys.map(k => k.keyItem.name).join('\n');
+            const message = 
+              `🎉 購買成功！\n\n` +
+              `🔑 文章練習關卡鑰匙圈\n\n` +
+              `已獲得：\n${keyNames}\n\n` +
+              `共 ${result.grantedKeys.length} 把\n\n` +
+              `已放入背包。`;
+
+            alert(message);
+
+            // 更新UI
+            this.renderTicketsShop();
+            this.updateAssetsDisplay();
+
+            // 如果背包頁面有更新函數，調用它
+            if (typeof renderInventory === 'function') {
+              renderInventory();
+            }
+          } else {
+            // 發放失敗，退還星星
+            if (typeof StarManager !== 'undefined' && StarManager.addStars) {
+              StarManager.addStars(price, 'key_ring_refund');
+            } else {
+              const refundStars = currentStars + price;
+              window.StarSystem.setTotalStars(refundStars.toString());
+              this.currentPlayerStars = refundStars;
+              this.updateStarsDisplay(refundStars);
+            }
+            this.showToast('發放鑰匙失敗，已退還星星', 'error');
+          }
+        } else {
+          this.showToast('系統錯誤：無法發放鑰匙', 'error');
         }
       },
 
       // 記錄購買紀錄
       recordPurchase(productId, quantity, price, type) {
         const purchaseHistory = JSON.parse(localStorage.getItem('purchaseHistory') || '[]');
+
+        // 根據商品類型設定紀錄資訊
+        let recordType, recordName;
+        if (type === 'item' && productId === 'rename_card') {
+          recordType = 'renameCard';
+          recordName = '改名卡';
+        } else if (type === 'stage_key') {
+          recordType = 'stageKey';
+          recordName = (typeof getItemInfo === 'function' && getItemInfo(productId)) ? getItemInfo(productId).name : productId;
+        } else if (type === 'key_ring') {
+          recordType = 'keyRing';
+          recordName = '文章練習關卡鑰匙圈';
+        } else {
+          recordType = 'normalTicket';
+          recordName = '普通抽卡券';
+        }
+
         const purchase = {
           date: new Date().toISOString(),
           productId: productId,
           quantity: quantity,
           price: price,
-          type: 'normalTicket', // 統一記錄為普通抽卡券
-          name: '普通抽卡券',
+          type: recordType,
+          name: recordName,
           starsAfter: this.getLocalPlayerStars(),
-          ticketsAfter: parseInt(localStorage.getItem('gachaTickets') || '0')
+          itemsAfter: (typeof getItemCount === 'function' ? getItemCount(productId) : 0)
         };
         purchaseHistory.push(purchase);
         localStorage.setItem('purchaseHistory', JSON.stringify(purchaseHistory));
@@ -7856,6 +8466,13 @@
     window.removeUsedInviteCode = (code) => ShopSystem.removeUsedInviteCode(code);
     window.resetUsedSeriesInviteCodes = () => ShopSystem.resetUsedSeriesInviteCodes();
 
+    // 開發測試：強制刷新每週卡池
+    window.debugRefreshWeeklyPools = function() {
+      localStorage.removeItem('weeklySeriesPoolKey');
+      localStorage.removeItem('weeklySeriesPoolSelection');
+      location.reload();
+    };
+
     // 頁面載入時初始化
     window.addEventListener('load', function() {
       // 直接初始化邀請碼系統，不需要等待cards.js
@@ -7871,5 +8488,6 @@
       SoundSystem.addClickSoundToElements(document.querySelectorAll('a, .card, .avatarSlide'));
     }
   </script>
+  <script src="js/inventoryModal.js"></script>
 </body>
 </html>

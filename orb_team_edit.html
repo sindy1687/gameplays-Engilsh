@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <script src="js/stars.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>轉珠戰鬥 - 隊伍編輯</title>
+    <link rel="stylesheet" href="orb_battle.css">
+    <script src="js/cards.js"></script>
+  <script src="js/cardVideoManager.js"></script>
+    <script src="js/cardStorage.js"></script>
+    <script src="js/orb_teams.js"></script>
+    <script src="js/orb_battle_cards.js"></script>
+    <style>
+        .team-edit-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a1428 0%, #1a2a4a 50%, #0a1428 100%);
+        }
+
+        .team-edit-header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        .team-edit-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #00ffff, #a259ff, #ffd700);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .team-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .team-tab {
+            padding: 15px 30px;
+            background: rgba(10, 20, 40, 0.9);
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .team-tab:hover {
+            background: rgba(0, 255, 255, 0.2);
+        }
+
+        .team-tab.active {
+            background: rgba(0, 255, 255, 0.3);
+            border-color: #ffd700;
+        }
+
+        .team-section {
+            background: rgba(10, 20, 40, 0.9);
+            border: 2px solid #00ffff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .team-section h2 {
+            color: #00ffff;
+            margin-bottom: 20px;
+        }
+
+        .team-slots {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .team-slot {
+            width: 120px;
+            height: 150px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px dashed #666;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .team-slot:hover {
+            border-color: #00ffff;
+            background: rgba(0, 255, 255, 0.1);
+        }
+
+        .team-slot.filled {
+            border-style: solid;
+            border-color: #00ff88;
+        }
+
+        .team-slot-empty {
+            color: #666;
+            font-size: 2rem;
+        }
+
+        .card-preview {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .card-name {
+            color: #fff;
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 0 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-stats {
+            color: #ccc;
+            font-size: 0.7rem;
+            text-align: center;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 25px;
+            height: 25px;
+            background: #ff6b6b;
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            display: none;
+        }
+
+        .team-slot:hover .remove-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-selection {
+            background: rgba(10, 20, 40, 0.9);
+            border: 2px solid #a259ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card-selection h2 {
+            color: #a259ff;
+            margin-bottom: 20px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .card-option {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #666;
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .card-option:hover {
+            border-color: #00ffff;
+            transform: scale(1.05);
+        }
+
+        .card-option.selected {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .card-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .card-option-img {
+            width: 100%;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .card-option-name {
+            color: #fff;
+            font-size: 0.7rem;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-option-rarity {
+            color: #ffd700;
+            font-size: 0.6rem;
+            text-align: center;
+        }
+
+        .card-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-group label {
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: #00ffff;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .action-btn {
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #00ffff, #a259ff);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .action-btn.secondary {
+            background: linear-gradient(45deg, #666, #888);
+        }
+
+        .team-stats {
+            background: rgba(10, 20, 40, 0.9);
+            border: 2px solid #00ff88;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        .team-stats h2 {
+            color: #00ff88;
+            margin-bottom: 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 10px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00ff88;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .back-button {
+            display: block;
+            width: 200px;
+            margin: 0 auto;
+            padding: 15px;
+            background: linear-gradient(45deg, #00ffff, #a259ff);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="team-edit-container">
+        <div class="team-edit-header">
+            <h1>轉珠戰鬥 - 隊伍編輯</h1>
+        </div>
+
+        <div class="team-selector">
+            <div class="team-tab active" data-team="1" onclick="selectTeam(1)">隊伍 1</div>
+            <div class="team-tab" data-team="2" onclick="selectTeam(2)">隊伍 2</div>
+            <div class="team-tab" data-team="3" onclick="selectTeam(3)">隊伍 3</div>
+        </div>
+
+        <div class="team-section">
+            <h2>隊伍成員 (最多5張卡片)</h2>
+            <div class="team-slots" id="team-slots">
+                <!-- Team slots will be rendered here -->
+            </div>
+        </div>
+
+        <div class="team-stats">
+            <h2>隊伍總數值</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="total-hp">0</div>
+                    <div class="stat-label">總 HP</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="total-attack">0</div>
+                    <div class="stat-label">總攻擊</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="total-recovery">0</div>
+                    <div class="stat-label">總回復</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-selection">
+            <h2>可選卡片</h2>
+            
+            <!-- Filter and Search -->
+            <div class="card-filters">
+                <div class="filter-group">
+                    <label>屬性篩選：</label>
+                    <select id="attribute-filter" onchange="renderCardGrid()">
+                        <option value="all">全部</option>
+                        <option value="fire">🔥 火</option>
+                        <option value="water">💧 水</option>
+                        <option value="wood">🌿 木</option>
+                        <option value="light">✦ 光</option>
+                        <option value="dark">🌑 暗</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>搜尋：</label>
+                    <input type="text" id="card-search" placeholder="中文名稱或英文" oninput="renderCardGrid()">
+                </div>
+                
+                <div class="filter-group">
+                    <label>排序：</label>
+                    <select id="card-sort" onchange="renderCardGrid()">
+                        <option value="name">名稱</option>
+                        <option value="rarity">稀有度</option>
+                        <option value="hp">HP</option>
+                        <option value="attack">攻擊</option>
+                        <option value="recovery">回復</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="card-grid" id="card-grid">
+                <!-- Cards will be rendered here -->
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-btn" onclick="saveTeam()">儲存隊伍</button>
+            <button class="action-btn secondary" onclick="clearTeam()">清空隊伍</button>
+        </div>
+
+        <button class="back-button" onclick="goBack()">返回關卡選擇</button>
+    </div>
+
+    <script>
+        let currentTeam = 1;
+        let selectedSlot = null;
+        let teamCards = [];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTeamData();
+            renderTeamSlots();
+            renderCardGrid();
+            updateTeamStats();
+        });
+
+        // Select team
+        function selectTeam(teamNumber) {
+            currentTeam = teamNumber;
+            
+            // Update tabs
+            document.querySelectorAll('.team-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (parseInt(tab.dataset.team) === teamNumber) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            loadTeamData();
+            renderTeamSlots();
+            updateTeamStats();
+        }
+
+        // Load team data
+        function loadTeamData() {
+            const teams = getOrbTeams();
+            teamCards = teams[currentTeam] || [];
+        }
+
+        // Render team slots
+        function renderTeamSlots() {
+            const container = document.getElementById('team-slots');
+            container.innerHTML = '';
+
+            for (let i = 0; i < 5; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'team-slot';
+                slot.dataset.slot = i;
+                slot.onclick = () => selectSlot(i);
+
+                if (teamCards[i]) {
+                    // 使用 orb_battle_cards.js 取得戰鬥卡片
+                    if (typeof getBattleCardById === 'function') {
+                        const battleCard = getBattleCardById(teamCards[i]);
+                        if (battleCard) {
+                            slot.classList.add('filled');
+                            slot.innerHTML = `
+                                <button class="remove-btn" onclick="removeCard(event, ${i})">×</button>
+                                <img src="${battleCard.image}" class="card-preview" alt="${battleCard.name}">
+                                <div class="card-name">${battleCard.name}</div>
+                                <div class="card-stats">${getAttributeSymbol(battleCard.attribute)} HP:${battleCard.hp} ATK:${battleCard.attack}</div>
+                            `;
+                        }
+                    }
+                } else {
+                    slot.innerHTML = '<div class="team-slot-empty">+</div>';
+                }
+
+                container.appendChild(slot);
+            }
+        }
+
+        // Select slot
+        function selectSlot(slotIndex) {
+            selectedSlot = slotIndex;
+            
+            // Highlight selected slot
+            document.querySelectorAll('.team-slot').forEach(slot => {
+                slot.style.borderColor = slot.dataset.slot == slotIndex ? '#ffd700' : '';
+            });
+        }
+
+        // Remove card from slot
+        function removeCard(event, slotIndex) {
+            event.stopPropagation();
+            teamCards[slotIndex] = null;
+            renderTeamSlots();
+            updateTeamStats();
+        }
+
+        // Render card grid
+        function renderCardGrid() {
+            const container = document.getElementById('card-grid');
+            container.innerHTML = '';
+
+            // 使用 orb_battle_cards.js 取得玩家擁有的卡片
+            if (typeof getOwnedCardsForBattle === 'function') {
+                let ownedCards = getOwnedCardsForBattle();
+                
+                if (ownedCards.length === 0) {
+                    container.innerHTML = '<div style="color: #fff; grid-column: 1/-1; text-align: center; padding: 40px;">目前沒有可以使用的戰鬥卡片。<br>請先前往抽卡或卡片收藏系統取得卡片。<br><br><a href="cards.html" style="color: #00ffff; text-decoration: underline;">前往卡片系統</a></div>';
+                    return;
+                }
+
+                // 轉換為戰鬥卡片
+                let battleCards = ownedCards.map(card => normalizeBattleCard(card)).filter(card => card !== null);
+
+                // 屬性篩選
+                const attributeFilter = document.getElementById('attribute-filter').value;
+                if (attributeFilter !== 'all') {
+                    battleCards = battleCards.filter(card => card.attribute === attributeFilter);
+                }
+
+                // 搜尋
+                const searchTerm = document.getElementById('card-search').value.toLowerCase();
+                if (searchTerm) {
+                    battleCards = battleCards.filter(card => 
+                        card.name.toLowerCase().includes(searchTerm) ||
+                        card.englishName.toLowerCase().includes(searchTerm)
+                    );
+                }
+
+                // 排序
+                const sortBy = document.getElementById('card-sort').value;
+                battleCards.sort((a, b) => {
+                    switch (sortBy) {
+                        case 'name':
+                            return a.name.localeCompare(b.name);
+                        case 'rarity':
+                            const rarityOrder = { '超稀有': 3, '稀有': 2, '普通': 1 };
+                            return (rarityOrder[b.rarity] || 0) - (rarityOrder[a.rarity] || 0);
+                        case 'hp':
+                            return b.hp - a.hp;
+                        case 'attack':
+                            return b.attack - a.attack;
+                        case 'recovery':
+                            return b.recovery - a.recovery;
+                        default:
+                            return 0;
+                    }
+                });
+
+                for (const battleCard of battleCards) {
+                    const cardOption = document.createElement('div');
+                    cardOption.className = 'card-option';
+                    
+                    // 檢查是否已在隊伍中
+                    const isInTeam = teamCards.includes(battleCard.id);
+                    if (isInTeam) {
+                        cardOption.classList.add('selected');
+                    }
+
+                    cardOption.innerHTML = `
+                        <img src="${battleCard.image}" class="card-option-img" alt="${battleCard.name}">
+                        <div class="card-option-name">${battleCard.name}</div>
+                        <div class="card-option-rarity">${getAttributeSymbol(battleCard.attribute)} ${battleCard.rarity}</div>
+                    `;
+
+                    if (!isInTeam) {
+                        cardOption.onclick = () => addCardToTeam(battleCard.id);
+                    }
+
+                    container.appendChild(cardOption);
+                }
+            } else {
+                container.innerHTML = '<div style="color: #fff;">載入卡片資料中...</div>';
+            }
+        }
+
+        // Add card to team
+        function addCardToTeam(cardId) {
+            if (selectedSlot === null) {
+                alert('請先選擇一個隊伍空位');
+                return;
+            }
+
+            // Check if card is already in team
+            if (teamCards.includes(cardId)) {
+                alert('此卡片已在隊伍中');
+                return;
+            }
+
+            teamCards[selectedSlot] = cardId;
+            renderTeamSlots();
+            updateTeamStats();
+        }
+
+        // Update team stats
+        function updateTeamStats() {
+            let totalHp = 0;
+            let totalAttack = 0;
+            let totalRecovery = 0;
+
+            for (const cardId of teamCards) {
+                if (cardId) {
+                    // 使用 orb_battle_cards.js 取得戰鬥卡片
+                    if (typeof getBattleCardById === 'function') {
+                        const battleCard = getBattleCardById(cardId);
+                        if (battleCard) {
+                            totalHp += battleCard.hp;
+                            totalAttack += battleCard.attack;
+                            totalRecovery += battleCard.recovery;
+                        }
+                    }
+                }
+            }
+
+            document.getElementById('total-hp').textContent = totalHp;
+            document.getElementById('total-attack').textContent = totalAttack;
+            document.getElementById('total-recovery').textContent = totalRecovery;
+        }
+
+        // Save team
+        function saveTeam() {
+            const validCards = teamCards.filter(cardId => cardId !== null);
+            
+            if (validCards.length === 0) {
+                alert('隊伍不能為空');
+                return;
+            }
+
+            const success = setTeam(currentTeam, validCards);
+            
+            if (success) {
+                alert('隊伍儲存成功！');
+                
+                // Set as active team
+                setActiveTeamNumber(currentTeam);
+            } else {
+                alert('儲存失敗');
+            }
+        }
+
+        // Clear team
+        function clearTeam() {
+            if (confirm('確定要清空此隊伍嗎？')) {
+                teamCards = [null, null, null, null, null];
+                renderTeamSlots();
+                updateTeamStats();
+            }
+        }
+
+        // Go back
+        function goBack() {
+            window.location.href = 'orb_stage_select.html';
+        }
+    </script>
+</body>
+</html>

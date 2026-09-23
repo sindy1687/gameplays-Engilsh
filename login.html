@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
   <meta charset="UTF-8">
   <title>星際英打冒險 - Typing Hero</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -197,7 +198,7 @@
       <button onclick="location.href='atlas.html'">🚀 開始冒險</button>
       <button onclick="location.href='dictionary.html'">📚 單字本</button>
       <button onclick="location.href='cards.html'">👩‍🏫 卡片收藏</button>
-      <button onclick="location.href='grammar_levels.html'">🏰 文法高塔</button>
+      <button onclick="location.href='atlas.html'">🏰 文法高塔</button>
     </div>
   </div>
 
@@ -258,7 +259,7 @@
     const canvas = document.getElementById('stars');
     const ctx = canvas.getContext('2d');
     let width, height;
-    let stars = [];
+    let backgroundStars = [];
     const numStars = 100;
 
     function initCanvas() {
@@ -266,9 +267,9 @@
       height = window.innerHeight;
       canvas.width = width;
       canvas.height = height;
-      stars = [];
+      backgroundStars = [];
       for (let i = 0; i < numStars; i++) {
-        stars.push({
+        backgroundStars.push({
           x: Math.random() * width,
           y: Math.random() * height,
           size: Math.random() * 1.5 + 0.5,
@@ -277,8 +278,8 @@
       }
     }
 
-    function updateStars() {
-      for (let star of stars) {
+    function updateBackgroundStars() {
+      for (let star of backgroundStars) {
         star.y += star.speed;
         if (star.y > height) {
           star.y = 0;
@@ -290,7 +291,7 @@
     function drawStars() {
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = '#ffffff';
-      for (let star of stars) {
+      for (let star of backgroundStars) {
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
         ctx.fill();
@@ -298,7 +299,7 @@
     }
 
     function animate() {
-      updateStars();
+      updateBackgroundStars();
       drawStars();
       requestAnimationFrame(animate);
     }
@@ -318,7 +319,7 @@
     function updateStars() {
       const el = document.getElementById("stars") || document.getElementById("totalStarsCount");
       if (el) el.textContent = stars;
-      localStorage.setItem("totalStars", stars);
+      window.StarSystem.setTotalStars(stars);
     }
 
     function runTesterInstructions() {
@@ -337,7 +338,7 @@
 
       if (instructions.addStars) {
         stars += 999;
-        localStorage.setItem("totalStars", stars);
+        window.StarSystem.setTotalStars(stars);
         console.log("⭐ 已加 999 星星");
         updateStars();
       }

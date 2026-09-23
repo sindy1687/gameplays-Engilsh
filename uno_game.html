@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <script src="js/stars.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNO 卡牌大戰</title>
+  <link rel="stylesheet" href="uno_game.css">
+  <script src="js/userData.js"></script>
+</head>
+<body>
+  <!-- 遊戲開始畫面 -->
+  <div id="startScreen" class="start-screen">
+    <div class="start-content">
+      <h1 class="game-title">UNO 卡牌大戰</h1>
+      <p class="game-subtitle">配對顏色與數字，使用功能牌擊敗三名電腦玩家</p>
+      
+      <div class="difficulty-selection">
+        <h3>選擇難度</h3>
+        <div class="difficulty-buttons">
+          <button class="difficulty-btn easy" data-difficulty="easy">
+            <span class="difficulty-name">簡單模式</span>
+            <span class="difficulty-cost">扣除 500 星星</span>
+            <span class="difficulty-reward">獲勝獎勵：300 星星</span>
+          </button>
+          <button class="difficulty-btn normal" data-difficulty="normal">
+            <span class="difficulty-name">普通模式</span>
+            <span class="difficulty-cost">扣除 700 星星</span>
+            <span class="difficulty-reward">獲勝獎勵：600 星星</span>
+          </button>
+          <button class="difficulty-btn hard" data-difficulty="hard">
+            <span class="difficulty-name">困難模式</span>
+            <span class="difficulty-cost">扣除 1000 星星</span>
+            <span class="difficulty-reward">獲勝獎勵：1000 星星</span>
+          </button>
+        </div>
+      </div>
+      
+      <div class="start-actions">
+        <button id="startGameBtn" class="start-btn" disabled>開始遊戲</button>
+        <button id="backToCenterBtn" class="back-btn">返回遊戲中心</button>
+      </div>
+      
+      <div class="game-rules">
+        <h3>遊戲規則</h3>
+        <ul>
+          <li>出牌必須符合顏色、數字或功能符號</li>
+          <li>萬用牌可以隨時出，並選擇顏色</li>
+          <li>萬用加四牌只能在沒有符合顏色的牌時使用</li>
+          <li>剩下一張牌時必須喊 UNO</li>
+          <li>手牌歸零者獲勝</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 遊戲主畫面 -->
+  <div id="gameScreen" class="game-screen hidden">
+    <!-- 頂部資訊欄 -->
+    <div class="game-header">
+      <button id="leaveGameBtn" class="leave-btn">離開遊戲</button>
+      <button id="settingsBtn" class="settings-btn">設定</button>
+      <div class="game-stats">
+        <span class="stat-item">回合：<span id="turnCount">0</span></span>
+        <span class="stat-item">時間：<span id="gameTime">00:00</span></span>
+      </div>
+    </div>
+
+    <!-- 遊戲桌面 -->
+    <div class="game-table">
+      <!-- 電腦玩家 2 (上方) -->
+      <div class="computer-player computer-top" id="computer-2">
+        <div class="player-info">
+          <span class="player-name">電腦 2</span>
+          <span class="card-count">剩餘 <span class="count">7</span> 張</span>
+        </div>
+        <div class="player-cards"></div>
+        <div class="player-status"></div>
+      </div>
+
+      <!-- 中間區域 -->
+      <div class="table-center">
+        <!-- 電腦玩家 1 (左側) -->
+        <div class="computer-player computer-left" id="computer-1">
+          <div class="player-info">
+            <span class="player-name">電腦 1</span>
+            <span class="card-count">剩餘 <span class="count">7</span> 張</span>
+          </div>
+          <div class="player-cards"></div>
+          <div class="player-status"></div>
+        </div>
+
+        <!-- 中央牌堆區 -->
+        <div class="center-area">
+          <div class="deck-area">
+            <div class="draw-pile" id="drawPile">
+              <div class="card-back"></div>
+              <span class="deck-count">抽牌堆：<span id="deckCount">0</span></span>
+            </div>
+            <div class="discard-pile" id="discardPile">
+              <!-- 棄牌堆頂部牌 -->
+            </div>
+          </div>
+          
+          <div class="game-info">
+            <div class="current-color" id="currentColor">
+              <span class="color-label">目前顏色：</span>
+              <span class="color-indicator" id="colorIndicator"></span>
+            </div>
+            <div class="turn-direction" id="turnDirection">
+              <span class="direction-label">方向：</span>
+              <span class="direction-arrow" id="directionArrow">→</span>
+            </div>
+            <div class="current-turn" id="currentTurn">
+              <span class="turn-label">輪到：</span>
+              <span class="turn-player" id="turnPlayer">你</span>
+            </div>
+            <div class="pending-draw" id="pendingDraw">
+              <span class="draw-label">待抽牌：</span>
+              <span class="draw-count" id="drawCount">0</span> 張
+            </div>
+          </div>
+        </div>
+
+        <!-- 電腦玩家 3 (右側) -->
+        <div class="computer-player computer-right" id="computer-3">
+          <div class="player-info">
+            <span class="player-name">電腦 3</span>
+            <span class="card-count">剩餘 <span class="count">7</span> 張</span>
+          </div>
+          <div class="player-cards"></div>
+          <div class="player-status"></div>
+        </div>
+      </div>
+
+      <!-- 玩家區域 (下方) -->
+      <div class="player-area" id="playerArea">
+        <div class="player-info">
+          <span class="player-name">你</span>
+          <span class="card-count">剩餘 <span class="count">7</span> 張</span>
+        </div>
+        <div class="player-hand" id="playerHand">
+          <!-- 玩家手牌 -->
+        </div>
+        <div class="player-controls">
+          <button id="drawCardBtn" class="control-btn draw-btn">抽牌</button>
+          <button id="unoBtn" class="control-btn uno-btn" disabled>UNO！</button>
+          <button id="catchUnoBtn" class="control-btn catch-uno-btn" disabled>抓 UNO</button>
+          <button id="sortCardsBtn" class="control-btn sort-btn">整理手牌</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 遊戲訊息 -->
+    <div id="gameMessage" class="game-message hidden"></div>
+  </div>
+
+  <!-- 設定彈窗 -->
+  <div id="settingsModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>遊戲設定</h2>
+        <button class="close-btn" id="closeSettingsBtn">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="setting-item">
+          <label class="setting-label">
+            <input type="checkbox" id="allowStackDraw2">
+            <span>允許加二疊加</span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <label class="setting-label">
+            <input type="checkbox" id="allowStackDraw4">
+            <span>允許加四疊加</span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <label class="setting-label">
+            <input type="checkbox" id="drawUntilPlayable">
+            <span>抽到可以出為止</span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <label class="setting-label">
+            <input type="checkbox" id="enableSound" checked>
+            <span>開啟音效</span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <label class="setting-label">
+            <span>音量：</span>
+            <input type="range" id="volumeSlider" min="0" max="100" value="50">
+            <span id="volumeValue">50%</span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <label class="setting-label">
+            <span>動畫速度：</span>
+            <select id="animationSpeed">
+              <option value="slow">慢</option>
+              <option value="normal" selected>正常</option>
+              <option value="fast">快</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="saveSettingsBtn" class="save-btn">儲存設定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 顏色選擇彈窗 -->
+  <div id="colorPickerModal" class="modal hidden">
+    <div class="modal-content color-picker">
+      <div class="modal-header">
+        <h2>選擇顏色</h2>
+      </div>
+      <div class="modal-body">
+        <div class="color-options">
+          <button class="color-option red" data-color="red">紅色</button>
+          <button class="color-option yellow" data-color="yellow">黃色</button>
+          <button class="color-option green" data-color="green">綠色</button>
+          <button class="color-option blue" data-color="blue">藍色</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 遊戲結束彈窗 -->
+  <div id="gameOverModal" class="modal hidden">
+    <div class="modal-content game-over">
+      <div class="modal-header">
+        <h2 id="gameOverTitle">遊戲結束</h2>
+      </div>
+      <div class="modal-body">
+        <div class="game-result">
+          <div class="result-message" id="resultMessage"></div>
+          <div class="result-stats">
+            <div class="stat">
+              <span class="stat-label">使用時間：</span>
+              <span class="stat-value" id="resultTime">00:00</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">總回合數：</span>
+              <span class="stat-value" id="resultTurns">0</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">獲得獎勵：</span>
+              <span class="stat-value reward" id="resultReward">0 星星</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="playAgainBtn" class="play-again-btn">再玩一次</button>
+        <button id="viewRulesBtn" class="view-rules-btn">查看規則</button>
+        <button id="backToCenterBtn2" class="back-btn">返回遊戲中心</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 確認離開彈窗 -->
+  <div id="confirmLeaveModal" class="modal hidden">
+    <div class="modal-content confirm">
+      <div class="modal-header">
+        <h2>確認離開</h2>
+      </div>
+      <div class="modal-body">
+        <p>遊戲尚未結束，確定要離開嗎？</p>
+      </div>
+      <div class="modal-footer">
+        <button id="confirmLeaveBtn" class="confirm-btn">確定離開</button>
+        <button id="cancelLeaveBtn" class="cancel-btn">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 排序選項彈窗 -->
+  <div id="sortOptionsModal" class="modal hidden">
+    <div class="modal-content sort-options">
+      <div class="modal-header">
+        <h2>整理手牌</h2>
+        <button class="close-btn" id="closeSortBtn">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="sort-options">
+          <button class="sort-option" data-sort="color">依顏色排序</button>
+          <button class="sort-option" data-sort="number">依數字排序</button>
+          <button class="sort-option" data-sort="type">依功能排序</button>
+          <button class="sort-option" data-sort="none">不排序</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="uno_game.js"></script>
+</body>
+</html>

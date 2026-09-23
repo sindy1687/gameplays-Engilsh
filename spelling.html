@@ -1,42 +1,766 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>英打小英雄 - 打字音效版</title>
+<title>拼字挑戰</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{--c:#00ffff;--m:#a259ff;--g:#ffd700}
-body{margin:0;font-family:'Orbitron',sans-serif;color:#fff;background:linear-gradient(#020111,#000010)}
-#wrap{max-width:520px;margin:40px auto;padding:20px;background:rgba(10,20,40,.7);border:2px solid var(--c);border-radius:16px;box-shadow:0 0 30px #0ff4;text-align:center}
-h1{color:var(--c);text-shadow:0 0 12px #0ff,0 0 32px #a259ff}
-#word{font-size:2.2rem;color:#ffd700;text-shadow:0 0 10px #ffd700;margin:20px 0}
-#ipt{font-family:'Roboto Mono';font-size:1.2rem;width:85%;padding:14px;border-radius:14px;border:3px solid #00ffff;background:rgba(10,20,40,.9);color:#fff;text-align:center;outline:none}
-#ipt:focus{border-color:#ffd700;box-shadow:0 0 20px #ffd70080}
-#fb{height:28px;margin:10px 0;color:#ffd700;font-weight:700}
-.hud{display:flex;justify-content:center;gap:10px;margin-top:8px;font-size:1rem;color:#ffd700;text-shadow:0 0 10px #ffd700}
-.row{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:10px}
-button{font-family:'Orbitron';font-weight:700;border:none;border-radius:10px;padding:10px 18px;cursor:pointer;color:#000;box-shadow:0 0 14px #0ff;background:linear-gradient(90deg,#00ffff,#a259ff);transition:.15s}
-button:hover{transform:scale(1.07)}
-#skipBtn{background:linear-gradient(90deg,#ff8a00,#ff3c3c);color:#fff;text-shadow:0 0 5px #fff;box-shadow:0 0 16px rgba(255,60,60,.6)}
-#spk{background:linear-gradient(90deg,#ffd700,#ffaa00)}
-#hint{background:linear-gradient(90deg,#a259ff,#ff6b6b);color:#fff}
+:root {
+  --primary: #00ffff;
+  --secondary: #a259ff;
+  --accent: #ffd700;
+  --success: #00ff88;
+  --error: #ff4757;
+  --bg-dark: #0a0e1a;
+  --bg-card: rgba(10, 20, 40, 0.85);
+  --border: rgba(0, 255, 255, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  color: #fff;
+  background: linear-gradient(135deg, #020111 0%, #0a0e1a 50%, #000010 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.spelling-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.spelling-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: rgba(10, 14, 26, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 255, 255, 0.1);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-center {
+  flex: 1;
+  text-align: center;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.star-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.page-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--primary);
+  text-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
+  margin: 0;
+}
+
+.header-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: rgba(0, 255, 255, 0.1);
+  color: var(--primary);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.header-btn:hover {
+  background: rgba(0, 255, 255, 0.2);
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+}
+
+.spelling-main {
+  flex: 1;
+  margin-top: 70px;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(1100px, calc(100% - 32px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.spelling-status {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.status-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.status-chip .value {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.spelling-game-card {
+  width: 100%;
+  max-width: 760px;
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: 24px;
+  padding: 36px;
+  box-shadow: 0 8px 32px rgba(0, 255, 255, 0.15);
+  text-align: center;
+}
+
+.book-name {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 24px;
+}
+
+.question-word {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--accent);
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+  margin: 0 0 32px 0;
+  line-height: 1.3;
+}
+
+.spelling-input {
+  width: 100%;
+  height: 64px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  padding: 0 20px;
+  border-radius: 18px;
+  border: 3px solid var(--border);
+  background: rgba(10, 20, 40, 0.9);
+  color: #fff;
+  text-align: center;
+  outline: none;
+  letter-spacing: 2px;
+  transition: all 0.25s ease;
+  margin-bottom: 20px;
+}
+
+.spelling-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
+}
+
+.spelling-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 1px;
+}
+
+.feedback-area {
+  min-height: 48px;
+  margin-bottom: 24px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feedback-area.correct {
+  color: var(--success);
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+.feedback-area.incorrect {
+  color: var(--error);
+  text-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+}
+
+.button-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.game-btn {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  cursor: pointer;
+  color: #0a0e1a;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  min-width: 100px;
+}
+
+.game-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 255, 255, 0.3);
+}
+
+.game-btn:active {
+  transform: translateY(0);
+}
+
+.game-btn.submit {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+  min-width: 140px;
+  font-size: 1.1rem;
+}
+
+.game-btn.skip {
+  background: linear-gradient(135deg, #ff8a00, #ff4757);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+}
+
+.game-btn.speak {
+  background: linear-gradient(135deg, var(--accent), #ffaa00);
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+.game-btn.hint {
+  background: linear-gradient(135deg, var(--secondary), #ff6b6b);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(162, 89, 255, 0.3);
+}
+
+.game-btn.restart {
+  background: linear-gradient(135deg, #00ff88, #00cc6a);
+  box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+}
+
+.setup-section {
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.setup-label {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.setup-value {
+  font-size: 1.1rem;
+  color: var(--primary);
+  font-weight: 700;
+  padding: 10px 16px;
+  background: rgba(0, 255, 255, 0.1);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.range-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.range-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.range-input {
+  width: 90px;
+  height: 48px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  background: rgba(10, 20, 40, 0.9);
+  color: #fff;
+  text-align: center;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.range-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.range-separator {
+  font-size: 1.5rem;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.range-info {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  padding: 8px;
+  background: rgba(0, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.question-count-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.question-count-input {
+  width: 120px;
+  height: 52px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  background: rgba(10, 20, 40, 0.9);
+  color: #fff;
+  text-align: center;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.question-count-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.quick-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.quick-btn {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  color: #0a0e1a;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(162, 89, 255, 0.3));
+  border: 1px solid var(--border);
+}
+
+.quick-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.5), rgba(162, 89, 255, 0.5));
+}
+
+.setup-error {
+  min-height: 32px;
+  margin-top: 16px;
+  font-size: 0.95rem;
+  color: var(--error);
+  text-align: center;
+  font-weight: 600;
+}
+
+.range-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.range-word-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 12px;
+  max-height: 320px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 255, 255, 0.1);
+}
+
+.range-word-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.range-word-list::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.range-word-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.range-word-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 255, 0.5);
+}
+
+.range-word-item {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px;
+  background: rgba(10, 20, 40, 0.6);
+  border-radius: 10px;
+  border: 1px solid rgba(0, 255, 255, 0.15);
+  transition: all 0.2s ease;
+}
+
+.range-word-item:hover {
+  background: rgba(10, 20, 40, 0.8);
+  border-color: rgba(0, 255, 255, 0.3);
+}
+
+.range-word-number {
+  font-size: 0.8rem;
+  color: var(--primary);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.range-word-en {
+  font-size: 1rem;
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 2px;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.range-word-zh {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.range-word-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 20px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .spelling-header {
+    height: 60px;
+    padding: 0 12px;
+  }
+
+  .page-title {
+    font-size: 1.1rem;
+  }
+
+  .header-btn {
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+  }
+
+  .star-display {
+    font-size: 0.9rem;
+  }
+
+  .spelling-main {
+    margin-top: 60px;
+    padding: 20px 12px;
+  }
+
+  .spelling-status {
+    gap: 10px;
+  }
+
+  .status-chip {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+  }
+
+  .spelling-game-card {
+    padding: 24px 20px;
+    border-radius: 18px;
+  }
+
+  .setup-section {
+    margin-bottom: 20px;
+  }
+
+  .range-inputs {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .range-input {
+    width: 100%;
+  }
+
+  .range-separator {
+    display: none;
+  }
+
+  .question-count-input {
+    width: 100%;
+  }
+
+  .quick-buttons {
+    gap: 8px;
+  }
+
+  .quick-btn {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+
+  .range-word-list {
+    grid-template-columns: 1fr;
+  }
+
+  .question-word {
+    font-size: 1.8rem;
+    margin-bottom: 24px;
+  }
+
+  .spelling-input {
+    height: 56px;
+    font-size: 1.3rem;
+  }
+
+  .button-row {
+    gap: 8px;
+  }
+
+  .game-btn {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    min-width: 80px;
+  }
+
+  .game-btn.submit {
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .spelling-header {
+    height: 56px;
+    padding: 0 10px;
+  }
+
+  .page-title {
+    font-size: 1rem;
+  }
+
+  .header-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .spelling-main {
+    padding: 16px 10px;
+  }
+
+  .spelling-status {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .spelling-game-card {
+    padding: 20px 16px;
+  }
+
+  .question-word {
+    font-size: 1.5rem;
+  }
+
+  .spelling-input {
+    height: 52px;
+    font-size: 1.2rem;
+  }
+
+  .button-row {
+    flex-direction: column;
+  }
+
+  .game-btn {
+    width: 100%;
+  }
+}
 </style>
 </head>
 <body>
-<div id="wrap">
-  <h1>⭐ 自訂關卡：<span id="bookName">英檢單字</span></h1>
-  <div class="hud"><span id="totalStarsCount">⭐ 0</span></div>
-  <div id="word">準備中...</div>
-  <input id="ipt" placeholder="請輸入英文..." autocomplete="off">
-  <div id="fb"></div>
-  <div class="row">
-    <button onclick="checkAns()">✅ 送出</button>
-    <button id="skipBtn" onclick="skipWord()">⏭️ 跳過</button>
-    <button id="spk" onclick="speakCur()">🔈 發音</button>
-    <button id="hint" onclick="showHint()">💡 提示</button>
-    <button onclick="restart()">🔁 重玩</button>
-  </div>
+<div class="spelling-page">
+  <header class="spelling-header">
+    <div class="header-left">
+      <div class="star-display">
+        <span>⭐</span>
+        <span id="totalStarsCount">0</span>
+      </div>
+    </div>
+    <div class="header-center">
+      <h1 class="page-title">✏️ 拼字挑戰</h1>
+    </div>
+    <div class="header-right">
+      <button class="header-btn" onclick="location.href='book.html'" title="返回首頁">🏠</button>
+    </div>
+  </header>
+
+  <main class="spelling-main">
+    <div class="spelling-status">
+      <div class="status-chip">
+        <span>📚</span>
+        <span id="bookName">英檢單字</span>
+      </div>
+      <div class="status-chip">
+        <span>🔥</span>
+        <span>連擊</span>
+        <span class="value" id="streakCount">0</span>
+      </div>
+      <div class="status-chip">
+        <span>📊</span>
+        <span>進度</span>
+        <span class="value" id="progressCount">0/0</span>
+      </div>
+    </div>
+
+    <div class="spelling-game-card" id="setupCard">
+      <div class="book-name">🎯 自訂拼字關卡</div>
+      <div class="setup-section">
+        <div class="setup-label">單字來源</div>
+        <div class="setup-value" id="bookSourceDisplay">載入中...</div>
+      </div>
+      <div class="setup-section">
+        <div class="setup-label">出題範圍</div>
+        <div class="range-inputs">
+          <div class="range-input-group">
+            <span>第</span>
+            <input type="number" id="startRange" min="1" value="1" class="range-input">
+            <span>題</span>
+          </div>
+          <span class="range-separator">～</span>
+          <div class="range-input-group">
+            <span>第</span>
+            <input type="number" id="endRange" min="1" value="20" class="range-input">
+            <span>題</span>
+          </div>
+        </div>
+        <div class="range-info" id="rangeInfo">此範圍共有：20 個單字</div>
+      </div>
+      <div class="setup-section">
+        <div class="range-preview-header">
+          <span>📋 本範圍單字</span>
+          <span id="rangeWordCount">共20個</span>
+        </div>
+        <div id="rangeWordList" class="range-word-list"></div>
+      </div>
+      <div class="setup-section">
+        <div class="setup-label">本局題數</div>
+        <div class="question-count-group">
+          <input type="number" id="questionCount" min="1" value="10" class="question-count-input">
+          <span>題</span>
+        </div>
+      </div>
+      <div class="setup-section">
+        <div class="setup-label">快速選擇</div>
+        <div class="quick-buttons">
+          <button class="quick-btn" onclick="setQuickCount(5)">5題</button>
+          <button class="quick-btn" onclick="setQuickCount(10)">10題</button>
+          <button class="quick-btn" onclick="setQuickCount(20)">20題</button>
+          <button class="quick-btn" onclick="setQuickCount(-1)">全部</button>
+        </div>
+      </div>
+      <div class="button-row">
+        <button class="game-btn submit" onclick="startCustomGame()">🚀 開始挑戰</button>
+      </div>
+      <div id="setupError" class="setup-error"></div>
+    </div>
+
+    <div class="spelling-game-card" id="gameCard" style="display:none;">
+      <div class="book-name">拼字挑戰</div>
+      <div id="word" class="question-word">準備中...</div>
+      <input id="ipt" class="spelling-input" placeholder="輸入英文單字" autocomplete="off">
+      <div id="fb" class="feedback-area"></div>
+      <div class="button-row">
+        <button class="game-btn submit" onclick="checkAns()">✅ 送出</button>
+        <button class="game-btn skip" id="skipBtn" onclick="skipWord()">⏭️ 跳過</button>
+        <button class="game-btn speak" id="spk" onclick="speakCur()">🔈 發音</button>
+        <button class="game-btn hint" id="hint" onclick="showHint()">💡 提示</button>
+        <button class="game-btn restart" onclick="backToSetup()">🔁 重新設定</button>
+      </div>
+    </div>
+
+    <div class="spelling-game-card" id="resultCard" style="display:none;">
+      <div class="book-name">🎉 挑戰完成</div>
+      <div style="font-size:2.2rem;font-weight:900;color:#ffd700;margin:24px 0;text-shadow:0 0 12px rgba(255,215,0,0.4);">通關！</div>
+      <div style="font-size:1.3rem;color:#c7e6ff;margin-bottom:8px;">答對 <span id="resultCorrect" style="color:#00ff88;font-weight:900;">0</span> / <span id="resultTotal">0</span> 題</div>
+      <div style="font-size:1.1rem;color:#a8b8cc;margin-bottom:24px;">最高連擊：<span id="resultStreak" style="color:#2cf3ff;font-weight:900;">0</span></div>
+      <div class="button-row" style="justify-content:center;gap:14px;">
+        <button class="game-btn submit" onclick="restartGame()">🔄 再玩一次</button>
+        <button class="game-btn restart" onclick="backToSetup()">🔁 重新設定</button>
+      </div>
+    </div>
+  </main>
 </div>
 
 <audio id="typeSound" src="sound/type.mp3" preload="auto"></audio>
@@ -49,6 +773,22 @@ const fb=document.getElementById('fb');
 const word=document.getElementById('word');
 const typeSound=document.getElementById('typeSound');
 const bookTitleEl=document.getElementById('bookName');
+const streakCountEl=document.getElementById('streakCount');
+const progressCountEl=document.getElementById('progressCount');
+const bookSourceDisplay=document.getElementById('bookSourceDisplay');
+const startRangeInput=document.getElementById('startRange');
+const endRangeInput=document.getElementById('endRange');
+const questionCountInput=document.getElementById('questionCount');
+const rangeInfo=document.getElementById('rangeInfo');
+const rangeWordCount=document.getElementById('rangeWordCount');
+const rangeWordList=document.getElementById('rangeWordList');
+const setupError=document.getElementById('setupError');
+const setupCard=document.getElementById('setupCard');
+const gameCard=document.getElementById('gameCard');
+const resultCard=document.getElementById('resultCard');
+const resultCorrectEl=document.getElementById('resultCorrect');
+const resultTotalEl=document.getElementById('resultTotal');
+const resultStreakEl=document.getElementById('resultStreak');
 const params=new URLSearchParams(location.search);
 const selectedBook=params.get('book')||'英檢單字';
 bookTitleEl.textContent=selectedBook;
@@ -58,6 +798,7 @@ const fallbackWords=[
   {zh:'昂貴的',word:'expensive'},
   {zh:'烏龜',word:'turtle'}
 ];
+let allWords=[...fallbackWords];
 let words=[...fallbackWords];
 let curIndex=0;
 let order=[];
@@ -65,6 +806,10 @@ let orderPos=0;
 let lastWordKey='';
 let questionStartTime=Date.now();
 let correctStreak=0;
+let maxStreak=0;
+let totalCorrect=0;
+let isCustomMode=false;
+let customQuestionCount=0;
 
 function dedupeWordList(list){
   const seen=new Set();
@@ -88,11 +833,13 @@ function loadCustomWords(){
   try{
     const raw=localStorage.getItem(storageKey);
     if(!raw){
+      allWords=[...fallbackWords];
       words=[...fallbackWords];
       return;
     }
     const parsed=JSON.parse(raw);
     if(!Array.isArray(parsed)||parsed.length===0){
+      allWords=[...fallbackWords];
       words=[...fallbackWords];
       return;
     }
@@ -101,9 +848,11 @@ function loadCustomWords(){
       zh:(item?.meaning||item?.zh||'').trim()
     }));
     const cleaned=dedupeWordList(mapped);
-    words=cleaned.length>0?cleaned:[...fallbackWords];
+    allWords=cleaned.length>0?cleaned:[...fallbackWords];
+    words=[...allWords];
   }catch(e){
     console.warn('載入單字本失敗，改用預設題庫',e);
+    allWords=[...fallbackWords];
     words=[...fallbackWords];
   }
 }
@@ -133,11 +882,261 @@ function shuffleInPlace(arr){
 
 function rebuildOrder(){
   order=shuffleInPlace(Array.from({length:words.length},(_,i)=>i));
-  // 避免「新一輪第一題」馬上等於上一輪最後一題
   if(words.length>1 && lastWordKey && words[order[0]] && words[order[0]].word===lastWordKey){
     [order[0],order[1]]=[order[1],order[0]];
   }
   orderPos=0;
+}
+
+function updateProgress(){
+  streakCountEl.textContent=correctStreak;
+  if(isCustomMode){
+    progressCountEl.textContent=(orderPos)+'/'+customQuestionCount;
+  }else{
+    progressCountEl.textContent=(orderPos)+'/'+words.length;
+  }
+}
+
+function updateSetupUI(){
+  const totalWords=allWords.length;
+  bookSourceDisplay.textContent=selectedBook+'（共 '+totalWords+' 個單字）';
+  
+  const defaultEnd=Math.min(20, totalWords);
+  startRangeInput.value=1;
+  startRangeInput.max=totalWords;
+  endRangeInput.value=defaultEnd;
+  endRangeInput.max=totalWords;
+  questionCountInput.value=Math.min(10, defaultEnd);
+  questionCountInput.max=totalWords;
+  
+  updateRangeInfo();
+}
+
+function updateRangeInfo(){
+  const start=Number(startRangeInput.value);
+  const end=Number(endRangeInput.value);
+  const totalWords=allWords.length;
+
+  const validStart=Math.max(1, Math.min(start, totalWords));
+  const validEnd=Math.max(validStart, Math.min(end, totalWords));
+
+  const rangeSize=validEnd-validStart+1;
+  rangeInfo.textContent='此範圍共有：'+rangeSize+' 個單字';
+
+  questionCountInput.max=rangeSize;
+  if(Number(questionCountInput.value)>rangeSize){
+    questionCountInput.value=rangeSize;
+  }
+
+  updateCustomRangePreview();
+}
+
+function updateCustomRangePreview(){
+  const start=Number(startRangeInput.value);
+  const end=Number(endRangeInput.value);
+  const totalWords=allWords.length;
+
+  rangeWordList.innerHTML='';
+
+  if(!Number.isInteger(start)||!Number.isInteger(end)){
+    const emptyDiv=document.createElement('div');
+    emptyDiv.className='range-word-empty';
+    emptyDiv.textContent='⚠️ 請輸入有效的題號';
+    rangeWordList.appendChild(emptyDiv);
+    rangeWordCount.textContent='共0個';
+    return;
+  }
+
+  if(start<1||end>totalWords||start>end){
+    const emptyDiv=document.createElement('div');
+    emptyDiv.className='range-word-empty';
+    if(start>end){
+      emptyDiv.textContent='⚠️ 起始題號不能大於結束題號';
+    }else if(end>totalWords){
+      emptyDiv.textContent='⚠️ 結束題號超過單字本總數（'+totalWords+'）';
+    }else{
+      emptyDiv.textContent='⚠️ 請輸入有效的出題範圍';
+    }
+    rangeWordList.appendChild(emptyDiv);
+    rangeWordCount.textContent='共0個';
+    return;
+  }
+
+  if(totalWords===0){
+    const emptyDiv=document.createElement('div');
+    emptyDiv.className='range-word-empty';
+    emptyDiv.textContent='此單字本目前沒有可用單字';
+    rangeWordList.appendChild(emptyDiv);
+    rangeWordCount.textContent='共0個';
+    return;
+  }
+
+  const startIndex=start-1;
+  const endIndex=end;
+  const rangeWords=allWords.slice(startIndex, endIndex);
+
+  rangeWordCount.textContent='共'+rangeWords.length+'個';
+
+  rangeWords.forEach((wordItem, index)=>{
+    const wordNumber=start+index;
+    const itemDiv=document.createElement('div');
+    itemDiv.className='range-word-item';
+
+    const numberSpan=document.createElement('span');
+    numberSpan.className='range-word-number';
+    numberSpan.textContent=wordNumber+'.';
+
+    const enSpan=document.createElement('span');
+    enSpan.className='range-word-en';
+    enSpan.textContent=wordItem.word||'—';
+
+    const zhSpan=document.createElement('span');
+    zhSpan.className='range-word-zh';
+    zhSpan.textContent=wordItem.zh||'—';
+
+    itemDiv.appendChild(numberSpan);
+    itemDiv.appendChild(enSpan);
+    itemDiv.appendChild(zhSpan);
+
+    rangeWordList.appendChild(itemDiv);
+  });
+}
+
+function setQuickCount(count){
+  const start=Number(startRangeInput.value);
+  const end=Number(endRangeInput.value);
+  const rangeSize=end-start+1;
+  
+  if(count===-1){
+    questionCountInput.value=rangeSize;
+  }else{
+    questionCountInput.value=Math.min(count, rangeSize);
+  }
+}
+
+function validateCustomSettings(){
+  setupError.textContent='';
+  
+  const start=Number(startRangeInput.value);
+  const end=Number(endRangeInput.value);
+  const questionCount=Number(questionCountInput.value);
+  const totalWords=allWords.length;
+  
+  if(!Number.isInteger(start)||!Number.isInteger(end)||!Number.isInteger(questionCount)){
+    setupError.textContent='請輸入有效的整數';
+    return false;
+  }
+  
+  if(start<1){
+    setupError.textContent='起始題號不能小於 1';
+    return false;
+  }
+  
+  if(end>totalWords){
+    setupError.textContent='結束題號不能超過單字本總數（'+totalWords+'）';
+    return false;
+  }
+  
+  if(start>end){
+    setupError.textContent='起始題號不能大於結束題號';
+    return false;
+  }
+  
+  if(questionCount<1){
+    setupError.textContent='題數不能小於 1';
+    return false;
+  }
+  
+  const rangeSize=end-start+1;
+  if(questionCount>rangeSize){
+    setupError.textContent='目前範圍只有 '+rangeSize+' 個單字，最多只能出 '+rangeSize+' 題';
+    return false;
+  }
+  
+  if(totalWords===0){
+    setupError.textContent='這本單字本目前沒有可出題的單字';
+    return false;
+  }
+  
+  return true;
+}
+
+let spellingResultRecorded = false;
+function startCustomGame(){
+  spellingResultRecorded = false;
+  if(!validateCustomSettings()){
+    return;
+  }
+  
+  const start=Number(startRangeInput.value);
+  const end=Number(endRangeInput.value);
+  const questionCount=Number(questionCountInput.value);
+  
+  const startIndex=start-1;
+  const endIndex=end;
+  
+  const rangeWords=allWords.slice(startIndex, endIndex);
+  
+  if(rangeWords.length===0){
+    setupError.textContent='範圍內沒有可用的單字';
+    return;
+  }
+  
+  const shuffled=[...rangeWords];
+  shuffleInPlace(shuffled);
+  
+  words=shuffled.slice(0, questionCount);
+  
+  if(words.length===0){
+    setupError.textContent='無法產生題目';
+    return;
+  }
+  
+  isCustomMode=true;
+  customQuestionCount=questionCount;
+  
+  setupCard.style.display='none';
+  resultCard.style.display='none';
+  gameCard.style.display='block';
+  
+  curIndex=-1;
+  orderPos=0;
+  correctStreak=0;
+  maxStreak=0;
+  totalCorrect=0;
+  rebuildOrder();
+  updateProgress();
+  next();
+}
+
+function backToSetup(){
+  isCustomMode=false;
+  customQuestionCount=0;
+  words=[...allWords];
+  
+  gameCard.style.display='none';
+  resultCard.style.display='none';
+  setupCard.style.display='block';
+  
+  updateSetupUI();
+}
+
+function showResult(){
+  if (!spellingResultRecorded && words.length > 0) {
+    spellingResultRecorded = true;
+    localStorage.setItem('spellingGamesCompleted', String((Number(localStorage.getItem('spellingGamesCompleted')) || 0) + 1));
+  }
+  const total = isCustomMode ? customQuestionCount : words.length;
+  resultCorrectEl.textContent=totalCorrect;
+  resultTotalEl.textContent=total;
+  resultStreakEl.textContent=maxStreak;
+  gameCard.style.display='none';
+  resultCard.style.display='block';
+}
+
+function restartGame(){
+  resultCard.style.display='none';
+  startCustomGame();
 }
 
 function next(){
@@ -145,17 +1144,24 @@ function next(){
     word.textContent='題庫為空';
     return;
   }
-  if(order.length!==words.length || orderPos>=order.length){
+  if(order.length!==words.length){
     rebuildOrder();
+  }
+  if(orderPos>=order.length){
+    showResult();
+    return;
   }
   curIndex=order[orderPos++];
   lastWordKey=words[curIndex]?.word||'';
   word.textContent=words[curIndex].zh;
   ipt.value='';
   fb.textContent='';
+  fb.className='feedback-area';
   questionStartTime=Date.now();
+  updateProgress();
   speakCur();
 }
+
 function calcStarReward(timeUsed,wordLength){
   let stars=1;
   const reasons=[];
@@ -183,16 +1189,16 @@ function grantStars(amount){
     StarRewardSystem.updateStarsDisplay();
   }else{
     const total=parseInt(localStorage.getItem('totalStars')||'0',10)+amount;
-    localStorage.setItem('totalStars',total);
+    window.StarSystem.setTotalStars(total);
     const hud=document.getElementById('totalStarsCount');
-    if(hud){hud.textContent='⭐ '+total;}
+    if(hud){hud.textContent=total;}
   }
 }
 
 function updateStarHud(){
   const total=parseInt(localStorage.getItem('totalStars')||'0',10);
   const hud=document.getElementById('totalStarsCount');
-  if(hud){hud.textContent='⭐ '+total;}
+  if(hud){hud.textContent=total;}
 }
 
 function checkAns(){
@@ -201,11 +1207,15 @@ function checkAns(){
   const target=words[curIndex].word.toLowerCase();
   if(answer===target){
     correctStreak++;
+    if(correctStreak>maxStreak){maxStreak=correctStreak;}
+    totalCorrect++;
     const timeUsed=(Date.now()-questionStartTime)/1000;
     const reward=calcStarReward(timeUsed,words[curIndex].word.length);
     grantStars(reward.stars);
-    const extra=reward.reasons.length?'（'+reward.reasons.join('、')+'）':'';
+    const extra=reward.reasons.length?'('+reward.reasons.join('、')+')':'';
     fb.textContent='✅ 正確！ ⭐+'+reward.stars+extra;
+    fb.className='feedback-area correct';
+    updateProgress();
     if(typeof VocabularyAchievementSystem!=='undefined'){
       VocabularyAchievementSystem.recordCorrectWord(words[curIndex].word,selectedBook);
     }
@@ -213,19 +1223,44 @@ function checkAns(){
   }else{
     correctStreak=0;
     fb.textContent='❌ 正解：'+words[curIndex].word;
+    fb.className='feedback-area incorrect';
+    updateProgress();
     setTimeout(next,1000);
   }
 }
-function skipWord(){playType();fb.textContent='⏭️ 已跳過：'+words[curIndex].zh+'（'+words[curIndex].word+'）';setTimeout(next,1000)}
-function showHint(){fb.textContent='💡 提示：'+words[curIndex].word[0].toUpperCase()+'...';playType()}
-function restart(){curIndex=-1;next();playType()}
+
+function skipWord(){
+  playType();
+  fb.textContent='⏭️ 已跳過：'+words[curIndex].zh+'（'+words[curIndex].word+'）';
+  fb.className='feedback-area';
+  setTimeout(next,1000);
+}
+
+function showHint(){
+  fb.textContent='💡 提示：'+words[curIndex].word[0].toUpperCase()+'...';
+  fb.className='feedback-area';
+  playType();
+}
+
+function restart(){
+  if(isCustomMode){
+    backToSetup();
+  }else{
+    curIndex=-1;
+    next();
+    playType();
+  }
+}
+
+startRangeInput.addEventListener('input',updateRangeInfo);
+endRangeInput.addEventListener('input',updateRangeInfo);
 
 ipt.addEventListener('input',()=>playType());
 ipt.addEventListener('keydown',e=>{if(e.key==='Enter')checkAns()});
 loadCustomWords();
-rebuildOrder();
+updateSetupUI();
 updateStarHud();
-next();
+updateProgress();
 </script>
 </body>
 </html>

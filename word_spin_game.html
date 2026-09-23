@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
+  <script src="js/stars.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎰 拉霸機遊戲</title>
@@ -581,32 +582,35 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 10000;
+            backdrop-filter: blur(10px);
         }
 
         .exchange-content {
-            background: white;
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
             border-radius: 25px;
             padding: 0;
-            max-width: 400px;
+            max-width: 450px;
             width: 90%;
-            max-height: 85vh;
+            max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
             position: relative;
+            border: 2px solid #ffd700;
         }
 
         .bank-header {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
             color: white;
-            padding: 25px 20px;
+            padding: 30px 20px;
             border-radius: 25px 25px 0 0;
             text-align: center;
             position: relative;
+            border-bottom: 3px solid #ffd700;
         }
 
         .bank-header::before {
@@ -617,14 +621,16 @@
             transform: translateX(-50%);
             width: 40px;
             height: 4px;
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 215, 0, 0.5);
             border-radius: 2px;
         }
 
         .exchange-title {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             font-weight: bold;
             margin: 0;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .bank-balance {
@@ -633,6 +639,7 @@
             margin: 20px;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.3);
         }
 
         .balance-title {
@@ -640,20 +647,23 @@
             color: #6c757d;
             margin-bottom: 10px;
             text-align: center;
+            font-weight: bold;
         }
 
         .balance-amount {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: bold;
             color: #2c3e50;
             text-align: center;
             margin-bottom: 5px;
+            font-family: 'Arial', monospace;
         }
 
         .balance-label {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: #6c757d;
             text-align: center;
+            font-weight: 500;
         }
 
         .bank-section {
@@ -666,6 +676,10 @@
             color: #2c3e50;
             margin-bottom: 15px;
             text-align: center;
+            padding: 10px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
         }
 
         .bank-buttons {
@@ -679,13 +693,30 @@
             background: linear-gradient(135deg, #28a745, #20c997);
             color: white;
             border: none;
-            padding: 15px 10px;
+            padding: 18px 12px;
             border-radius: 12px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 0.9rem;
             box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bank-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .bank-btn:hover::before {
+            left: 100%;
         }
 
         .bank-btn:hover {
@@ -697,11 +728,17 @@
             transform: translateY(0);
         }
 
+        .bank-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .bank-close {
             background: linear-gradient(135deg, #6c757d, #495057);
             color: white;
             border: none;
-            padding: 15px;
+            padding: 18px;
             border-radius: 12px;
             font-weight: bold;
             cursor: pointer;
@@ -709,6 +746,7 @@
             margin: 20px;
             width: calc(100% - 40px);
             font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
         }
 
         .bank-close:hover {
@@ -1452,7 +1490,7 @@
             }
         }
 
-        // 星星系統類別
+        // 星星系統類別 - 使用 LinkageSystem.stars 作為唯一資料來源
         class StarSystem {
             constructor() {
                 this.stars = 0;
@@ -1460,72 +1498,59 @@
             }
 
             getStars() {
-                return this.stars;
+                // 優先使用 LinkageSystem.stars
+                if (typeof LinkageSystem !== 'undefined' && LinkageSystem.stars && typeof LinkageSystem.stars.get === 'function') {
+                    return Number(LinkageSystem.stars.get()) || 0;
+                }
+                // 回退到 localStorage
+                const savedStars = localStorage.getItem('totalStars');
+                return savedStars ? Number(savedStars) : 0;
             }
 
             addStars(amount) {
-                this.stars += amount;
-                this.saveStars();
+                if (typeof LinkageSystem !== 'undefined' && LinkageSystem.stars && typeof LinkageSystem.stars.add === 'function') {
+                    LinkageSystem.stars.add(amount);
+                } else {
+                    const currentStars = this.getStars();
+                    window.StarSystem.setTotalStars((currentStars + amount).toString());
+                }
+                this.loadTotalStars();
                 this.updateDisplay();
             }
 
             useStars(amount) {
-                if (this.stars >= amount) {
-                    this.stars -= amount;
-                    this.saveStars();
+                const currentStars = this.getStars();
+                if (currentStars >= amount) {
+                    if (typeof LinkageSystem !== 'undefined' && LinkageSystem.stars && typeof LinkageSystem.stars.set === 'function') {
+                        LinkageSystem.stars.set(currentStars - amount);
+                    } else {
+                        window.StarSystem.setTotalStars((currentStars - amount).toString());
+                    }
+                    this.loadTotalStars();
                     this.updateDisplay();
                     return true;
                 }
                 return false;
             }
 
-            // 載入總星星數（從所有來源）
+            // 載入總星星數（從 LinkageSystem.stars）
             loadTotalStars() {
-                let totalStars = 0;
-                
-                // 從 StarRewardSystem 獲取星星
-                if (window.StarRewardSystem) {
-                    totalStars += window.StarRewardSystem.getStars();
-                }
-                
-                // 從 localStorage 獲取其他星星系統的星星
-                try {
+                if (typeof LinkageSystem !== 'undefined' && LinkageSystem.stars && typeof LinkageSystem.stars.get === 'function') {
+                    this.stars = Number(LinkageSystem.stars.get()) || 0;
+                } else {
                     const savedStars = localStorage.getItem('totalStars');
-                    if (savedStars) {
-                        totalStars += parseInt(savedStars);
-                    }
-                } catch (error) {
-                    console.log('載入其他星星系統失敗:', error);
+                    this.stars = savedStars ? Number(savedStars) : 0;
                 }
-                
-                // 從當前遊戲的星星
-                try {
-                    const currentStars = localStorage.getItem('stars');
-                    if (currentStars) {
-                        totalStars += parseInt(currentStars);
-                    }
-                } catch (error) {
-                    console.log('載入當前遊戲星星失敗:', error);
-                }
-                
-                this.stars = totalStars;
                 console.log('⭐ 總星星數載入完成:', this.stars);
             }
 
-            // 保存星星到所有相關系統
+            // 保存星星到 LinkageSystem.stars
             saveStars() {
-                // 保存到當前遊戲的星星
-                localStorage.setItem('stars', this.stars.toString());
-                
-                // 保存到總星星系統
-                localStorage.setItem('totalStars', this.stars.toString());
-                
-                // 如果 StarRewardSystem 存在，同步更新
-                if (window.StarRewardSystem) {
-                    window.StarRewardSystem.addStars(0); // 觸發更新顯示
+                // LinkageSystem.stars 會自動處理保存
+                if (typeof LinkageSystem !== 'undefined' && LinkageSystem.stars && typeof LinkageSystem.stars.updateDisplay === 'function') {
+                    LinkageSystem.stars.updateDisplay();
                 }
-                
-                console.log('⭐ 星星已同步保存到所有系統:', this.stars);
+                console.log('⭐ 星星已同步保存到 LinkageSystem.stars:', this.stars);
             }
 
             updateDisplay() {
@@ -1618,6 +1643,23 @@
         // 金幣和星星系統實例
         let coinSystem;
         let starSystem;
+
+        // 兌換處理鎖
+        let isExchangeProcessing = false;
+
+        // 兌換商品資料結構
+        const EXCHANGE_PRODUCTS = {
+            // 星星換金幣
+            'star-to-coin-1': { type: 'star-to-coin', cost: 1, reward: 100, currency: 'stars', rewardCurrency: 'coins', name: '1星星換100金幣' },
+            'star-to-coin-10': { type: 'star-to-coin', cost: 10, reward: 1000, currency: 'stars', rewardCurrency: 'coins', name: '10星星換1,000金幣' },
+            'star-to-coin-20': { type: 'star-to-coin', cost: 20, reward: 2000, currency: 'stars', rewardCurrency: 'coins', name: '20星星換2,000金幣' },
+            'star-to-coin-50': { type: 'star-to-coin', cost: 50, reward: 5000, currency: 'stars', rewardCurrency: 'coins', name: '50星星換5,000金幣' },
+            // 金幣換星星
+            'coin-to-star-1': { type: 'coin-to-star', cost: 10000000, reward: 1, currency: 'coins', rewardCurrency: 'stars', name: '1,000萬金幣換1星星' },
+            'coin-to-star-10': { type: 'coin-to-star', cost: 100000000, reward: 10, currency: 'coins', rewardCurrency: 'stars', name: '1億金幣換10星星' },
+            'coin-to-star-50': { type: 'coin-to-star', cost: 500000000, reward: 50, currency: 'coins', rewardCurrency: 'stars', name: '5億金幣換50星星' },
+            'coin-to-star-100': { type: 'coin-to-star', cost: 1000000000, reward: 100, currency: 'coins', rewardCurrency: 'stars', name: '10億金幣換100星星' }
+        };
 
         // 符號定義
         const symbols = ['🍎', '🍊', '🍇', '🍓', '🍌', '🍒', '🍑', '🥝'];
@@ -2673,35 +2715,35 @@
             modal.innerHTML = `
                 <div class="exchange-content">
                     <div class="bank-header">
-                        <h2 class="exchange-title">🏦 星星銀行</h2>
+                        <h2 class="exchange-title">🏦 星星兌換銀行</h2>
                     </div>
                     
                     <div class="bank-balance">
-                        <div class="balance-title">當前餘額</div>
-                        <div class="balance-amount">${currentStars} ⭐</div>
-                        <div class="balance-label">總星星數</div>
+                        <div class="balance-title">帳戶餘額</div>
+                        <div class="balance-amount" id="bankStars">${currentStars.toLocaleString()}</div>
+                        <div class="balance-label">⭐ 總星星數</div>
                     </div>
                     
                     <div class="bank-balance">
                         <div class="balance-title">金幣餘額</div>
-                        <div class="balance-amount">${currentCoins.toLocaleString()} 🪙</div>
-                        <div class="balance-label">可用金幣</div>
+                        <div class="balance-amount" id="bankCoins">${currentCoins.toLocaleString()}</div>
+                        <div class="balance-label">🪙 可用金幣</div>
                     </div>
                     
                     <div class="bank-section">
                         <div class="section-title">💱 星星兌換金幣</div>
                         <div class="bank-buttons">
-                            <button class="bank-btn" id="starToCoin1Btn">
-                                ⭐ 1星星 = 100🪙
+                            <button class="bank-btn" data-product-id="star-to-coin-1">
+                                ⭐ 1 = 100🪙
                             </button>
-                            <button class="bank-btn" id="starToCoin10Btn">
-                                ⭐ 10星星 = 1,000🪙
+                            <button class="bank-btn" data-product-id="star-to-coin-10">
+                                ⭐ 10 = 1,000🪙
                             </button>
-                            <button class="bank-btn" id="starToCoin20Btn">
-                                ⭐ 20星星 = 2,000🪙
+                            <button class="bank-btn" data-product-id="star-to-coin-20">
+                                ⭐ 20 = 2,000🪙
                             </button>
-                            <button class="bank-btn" id="starToCoin50Btn">
-                                ⭐ 50星星 = 5,000🪙
+                            <button class="bank-btn" data-product-id="star-to-coin-50">
+                                ⭐ 50 = 5,000🪙
                             </button>
                         </div>
                     </div>
@@ -2711,17 +2753,17 @@
                     <div class="bank-section">
                         <div class="section-title">💱 金幣兌換星星</div>
                         <div class="bank-buttons">
-                            <button class="bank-btn" id="coinToStar1Btn">
-                                🪙 1,000萬 = ⭐ 1星星
+                            <button class="bank-btn" data-product-id="coin-to-star-1">
+                                🪙 1,000萬 = ⭐1
                             </button>
-                            <button class="bank-btn" id="coinToStar10Btn">
-                                🪙 1億 = ⭐ 10星星
+                            <button class="bank-btn" data-product-id="coin-to-star-10">
+                                🪙 1億 = ⭐10
                             </button>
-                            <button class="bank-btn" id="coinToStar50Btn">
-                                🪙 5億 = ⭐ 50星星
+                            <button class="bank-btn" data-product-id="coin-to-star-50">
+                                🪙 5億 = ⭐50
                             </button>
-                            <button class="bank-btn" id="coinToStar100Btn">
-                                🪙 10億 = ⭐ 100星星
+                            <button class="bank-btn" data-product-id="coin-to-star-100">
+                                🪙 10億 = ⭐100
                             </button>
                         </div>
                     </div>
@@ -2732,120 +2774,169 @@
             
             document.body.appendChild(modal);
             
-            // 星星換金幣函數
-            function exchangeStarsToCoins(starAmount, coinAmount) {
-                if (starSystem && starSystem.getStars() >= starAmount) {
-                    // 計算需要從各個系統扣除的星星
-                    let remainingStars = starAmount;
+            // 統一兌換處理函式
+            function handleBankExchange(productId) {
+                // 防止重複提交
+                if (isExchangeProcessing) {
+                    alert('正在處理兌換中，請稍候...');
+                    return;
+                }
+                
+                // 取得商品資料
+                const product = EXCHANGE_PRODUCTS[productId];
+                if (!product) {
+                    alert('商品資料錯誤');
+                    return;
+                }
+                
+                // 重新讀取最新餘額
+                const currentStars = starSystem ? starSystem.getStars() : 0;
+                const currentCoins = coinSystem ? coinSystem.getCoins() : 0;
+                
+                // 驗證餘額
+                if (product.currency === 'stars' && currentStars < product.cost) {
+                    const missingStars = product.cost - currentStars;
+                    alert(`星星不足！還需要 ${missingStars} 顆星星才能兌換。`);
+                    return;
+                }
+                
+                if (product.currency === 'coins' && currentCoins < product.cost) {
+                    const missingCoins = product.cost - currentCoins;
+                    alert(`金幣不足！還需要 ${missingCoins.toLocaleString()} 金幣才能兌換。`);
+                    return;
+                }
+                
+                // 顯示確認視窗
+                const confirmed = confirm(
+                    `兌換確認\n\n` +
+                    `商品：${product.name}\n` +
+                    `支付：${product.currency === 'stars' ? '⭐' + product.cost : '🪙' + product.cost.toLocaleString()}\n` +
+                    `獲得：${product.rewardCurrency === 'stars' ? '⭐' : '🪙'}${product.reward.toLocaleString()}\n\n` +
+                    `目前餘額：\n` +
+                    `⭐ ${currentStars.toLocaleString()}\n` +
+                    `🪙 ${currentCoins.toLocaleString()}\n\n` +
+                    `確定要兌換嗎？`
+                );
+                
+                if (!confirmed) {
+                    return;
+                }
+                
+                // 鎖定處理
+                isExchangeProcessing = true;
+                
+                try {
+                    // 再次讀取最新餘額
+                    const latestStars = starSystem ? starSystem.getStars() : 0;
+                    const latestCoins = coinSystem ? coinSystem.getCoins() : 0;
                     
-                    // 優先從 StarRewardSystem 扣除星星
-                    if (window.StarRewardSystem && window.StarRewardSystem.getStars() > 0) {
-                        const currentStarRewardStars = window.StarRewardSystem.getStars();
-                        const deductFromStarReward = Math.min(remainingStars, currentStarRewardStars);
-                        window.StarRewardSystem.addStars(-deductFromStarReward);
-                        remainingStars -= deductFromStarReward;
+                    // 再次驗證餘額
+                    if (product.currency === 'stars' && latestStars < product.cost) {
+                        alert('星星不足，兌換取消');
+                        return;
                     }
                     
-                    // 如果還需要扣除星星，從 localStorage 扣除
-                    if (remainingStars > 0) {
-                        try {
-                            const savedStars = localStorage.getItem('totalStars');
-                            if (savedStars) {
-                                const currentStars = parseInt(savedStars);
-                                const deductFromLocalStorage = Math.min(remainingStars, currentStars);
-                                if (deductFromLocalStorage > 0) {
-                                    localStorage.setItem('totalStars', (currentStars - deductFromLocalStorage).toString());
-                                }
-                            }
-                        } catch (error) {
-                            console.log('扣除其他星星系統失敗:', error);
+                    if (product.currency === 'coins' && latestCoins < product.cost) {
+                        alert('金幣不足，兌換取消');
+                        return;
+                    }
+                    
+                    // 執行兌換
+                    if (product.type === 'star-to-coin') {
+                        // 扣除星星
+                        const deductSuccess = starSystem.useStars(product.cost);
+                        if (!deductSuccess) {
+                            throw new Error('扣除星星失敗');
                         }
+                        
+                        // 增加金幣
+                        coinSystem.addCoins(product.reward);
+                        
+                    } else if (product.type === 'coin-to-star') {
+                        // 扣除金幣
+                        const deductSuccess = coinSystem.useCoins(product.cost);
+                        if (!deductSuccess) {
+                            throw new Error('扣除金幣失敗');
+                        }
+                        
+                        // 增加星星
+                        starSystem.addStars(product.reward);
                     }
                     
-                    // 重新載入總星星數
-                    starSystem.loadTotalStars();
+                    // 記錄交易
+                    recordTransaction(product);
                     
-                    // 增加金幣
-                    coinSystem.addCoins(coinAmount);
+                    // 顯示成功訊息
+                    showExchangeNotification(product.reward, product.type === 'coin-to-star');
                     
-                    // 顯示兌換成功訊息
-                    showExchangeNotification(coinAmount, false);
+                    // 更新銀行顯示
+                    updateBankDisplay();
                     
-                    // 更新模態框顯示
-                    updateModalDisplay();
-                } else {
-                    alert(`❌ 總星星不足！需要至少${starAmount}顆星星才能兌換。`);
+                } catch (error) {
+                    console.error('兌換失敗:', error);
+                    alert('兌換失敗，請稍後再試');
+                } finally {
+                    // 解除鎖定
+                    isExchangeProcessing = false;
                 }
             }
             
-            // 金幣換星星函數
-            function exchangeCoinsToStars(coinAmount, starAmount) {
-                if (coinSystem && coinSystem.getCoins() >= coinAmount) {
-                    // 扣除金幣
-                    coinSystem.useCoins(coinAmount);
-                    
-                    // 增加星星到 StarRewardSystem
-                    if (window.StarRewardSystem) {
-                        window.StarRewardSystem.addStars(starAmount);
-                    }
-                    
-                    // 同時更新總星星系統
-                    try {
-                        const currentTotalStars = parseInt(localStorage.getItem('totalStars')) || 0;
-                        localStorage.setItem('totalStars', (currentTotalStars + starAmount).toString());
-                    } catch (error) {
-                        console.log('更新總星星系統失敗:', error);
-                    }
-                    
-                    // 重新載入總星星數
-                    starSystem.loadTotalStars();
-                    
-                    // 顯示兌換成功訊息
-                    showExchangeNotification(starAmount, true);
-                    
-                    // 更新模態框顯示
-                    updateModalDisplay();
-                } else {
-                    alert(`❌ 金幣不足！需要至少${coinAmount.toLocaleString()}金幣才能兌換。`);
-                }
-            }
-            
-            // 更新模態框顯示
-            function updateModalDisplay() {
-                // 重新載入最新星星數
+            // 更新銀行顯示
+            function updateBankDisplay() {
                 if (starSystem) {
                     starSystem.loadTotalStars();
                 }
                 
-                const starsDisplay = modal.querySelector('.exchange-stats div:first-child div:nth-child(2)');
-                const coinsDisplay = modal.querySelector('.exchange-stats div:nth-child(2) div:nth-child(2)');
-                if (starsDisplay) starsDisplay.textContent = starSystem.getStars().toLocaleString();
-                if (coinsDisplay) coinsDisplay.textContent = coinSystem.getCoins().toLocaleString();
+                const starsDisplay = modal.querySelector('#bankStars');
+                const coinsDisplay = modal.querySelector('#bankCoins');
                 
-                console.log('⭐ 兌換商城顯示已更新，總星星數:', starSystem.getStars());
+                if (starsDisplay) {
+                    starsDisplay.textContent = starSystem.getStars().toLocaleString();
+                }
+                if (coinsDisplay) {
+                    coinsDisplay.textContent = coinSystem.getCoins().toLocaleString();
+                }
+                
+                console.log('⭐ 銀行顯示已更新');
             }
             
-            // 星星換金幣按鈕事件
-            const starToCoin1Btn = modal.querySelector('#starToCoin1Btn');
-            const starToCoin10Btn = modal.querySelector('#starToCoin10Btn');
-            const starToCoin20Btn = modal.querySelector('#starToCoin20Btn');
-            const starToCoin50Btn = modal.querySelector('#starToCoin50Btn');
+            // 記錄交易
+            function recordTransaction(product) {
+                try {
+                    const transactions = JSON.parse(localStorage.getItem('wordSpinBankTransactions') || '[]');
+                    const transaction = {
+                        id: Date.now().toString(36) + Math.random().toString(36).substr(2, 9),
+                        productName: product.name,
+                        type: product.type,
+                        cost: product.cost,
+                        reward: product.reward,
+                        timestamp: new Date().toISOString(),
+                        starsAfter: starSystem.getStars(),
+                        coinsAfter: coinSystem.getCoins()
+                    };
+                    
+                    transactions.unshift(transaction);
+                    
+                    // 只保留最近20筆
+                    if (transactions.length > 20) {
+                        transactions.pop();
+                    }
+                    
+                    localStorage.setItem('wordSpinBankTransactions', JSON.stringify(transactions));
+                    console.log('💳 交易已記錄:', transaction);
+                } catch (error) {
+                    console.error('記錄交易失敗:', error);
+                }
+            }
             
-            starToCoin1Btn.addEventListener('click', () => exchangeStarsToCoins(1, 100));
-            starToCoin10Btn.addEventListener('click', () => exchangeStarsToCoins(10, 1000));
-            starToCoin20Btn.addEventListener('click', () => exchangeStarsToCoins(20, 2000));
-            starToCoin50Btn.addEventListener('click', () => exchangeStarsToCoins(50, 5000));
-            
-            // 金幣換星星按鈕事件
-            const coinToStar1Btn = modal.querySelector('#coinToStar1Btn');
-            const coinToStar10Btn = modal.querySelector('#coinToStar10Btn');
-            const coinToStar50Btn = modal.querySelector('#coinToStar50Btn');
-            const coinToStar100Btn = modal.querySelector('#coinToStar100Btn');
-            
-            coinToStar1Btn.addEventListener('click', () => exchangeCoinsToStars(10000000, 1));
-            coinToStar10Btn.addEventListener('click', () => exchangeCoinsToStars(100000000, 10));
-            coinToStar50Btn.addEventListener('click', () => exchangeCoinsToStars(500000000, 50));
-            coinToStar100Btn.addEventListener('click', () => exchangeCoinsToStars(1000000000, 100));
+            // 綁定所有兌換按鈕
+            const exchangeButtons = modal.querySelectorAll('.bank-btn[data-product-id]');
+            exchangeButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const productId = btn.dataset.productId;
+                    handleBankExchange(productId);
+                });
+            });
             
             // 關閉按鈕事件
             const closeBtn = modal.querySelector('#closeShopBtn');

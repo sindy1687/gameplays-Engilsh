@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <script src="js/stars.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>轉珠冒險 - Puzzle Adventure</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/puzzle_battle.css">
+</head>
+<body>
+    <!-- 頂部資訊列 -->
+    <div class="top-status-bar">
+        <div class="status-left">
+            <button class="status-btn" id="back-to-home">🏠 返回首頁</button>
+        </div>
+        <div class="status-center">
+            <div class="status-title">🔮 轉珠冒險</div>
+        </div>
+        <div class="status-right">
+            <div class="status-item">
+                <span class="status-label">⭐ 星星:</span>
+                <span class="status-value" id="stars-display">0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主容器 -->
+    <div class="main-container">
+        <!-- 關卡選擇畫面 -->
+        <div id="stage-screen" class="game-screen">
+            <h2 class="screen-title">🗺️ 關卡地圖</h2>
+            <div id="stage-map" class="stage-map">
+                <!-- 關卡節點會在這裡動態生成 -->
+            </div>
+        </div>
+
+        <!-- 隊伍編成畫面 -->
+        <div id="team-screen" class="game-screen" style="display: none;">
+            <h2 class="screen-title">⚔️ 編輯隊伍</h2>
+            <div class="team-section">
+                <h3>目前隊伍</h3>
+                <div id="current-team" class="team-slots">
+                    <!-- 隊伍槽位會在這裡動態生成 -->
+                </div>
+            </div>
+            <div class="team-section">
+                <h3>已解鎖卡片</h3>
+                <div id="unlocked-cards" class="card-grid">
+                    <!-- 已解鎖卡片會在這裡動態生成 -->
+                </div>
+            </div>
+            <div class="team-actions">
+                <button class="action-btn" id="save-team">💾 保存隊伍</button>
+                <button class="action-btn" id="back-to-stage">← 返回關卡</button>
+            </div>
+        </div>
+
+        <!-- 戰鬥畫面 -->
+        <div id="battle-screen" class="game-screen" style="display: none;">
+            <div class="battle-header">
+                <button class="battle-btn" id="abandon-battle">← 放棄戰鬥</button>
+                <div class="battle-info">
+                    <span id="battle-stage">第1-1關</span>
+                    <span id="battle-wave">Wave 1/3</span>
+                    <span id="battle-turn">回合 1</span>
+                </div>
+            </div>
+
+            <!-- 敵人區 -->
+            <div id="enemy-area" class="enemy-area">
+                <!-- 敵人會在這裡動態生成 -->
+            </div>
+
+            <!-- 玩家隊伍區 -->
+            <div id="player-team" class="player-team">
+                <!-- 玩家隊伍會在這裡動態生成 -->
+            </div>
+
+            <!-- 轉珠盤面 -->
+            <div id="puzzle-board-container">
+                <div id="combo-display" class="combo-display">0 COMBO</div>
+                <div id="puzzle-board" class="puzzle-board">
+                    <!-- 珠子會在這裡動態生成 -->
+                </div>
+                <div id="puzzle-timer" class="puzzle-timer">5.0秒</div>
+            </div>
+
+            <!-- 技能按鈕區 -->
+            <div id="skill-buttons" class="skill-buttons">
+                <!-- 技能按鈕會在這裡動態生成 -->
+            </div>
+        </div>
+
+        <!-- 結果畫面 -->
+        <div id="result-screen" class="game-screen" style="display: none;">
+            <h2 id="result-title" class="screen-title">🎉 勝利！</h2>
+            <div id="result-content" class="result-content">
+                <!-- 結果會在這裡動態生成 -->
+            </div>
+            <div class="result-actions">
+                <button class="action-btn" id="next-stage">下一關</button>
+                <button class="action-btn" id="retry-stage">再次挑戰</button>
+                <button class="action-btn" id="back-to-map">返回地圖</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 載入卡片資料 -->
+    <script src="js/cards.js"></script>
+  <script src="js/cardVideoManager.js"></script>
+    <script src="js/puzzle_battle.js"></script>
+</body>
+</html>

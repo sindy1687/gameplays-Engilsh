@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <script src="js/stars.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>轉珠戰鬥 - 關卡選擇</title>
+    <link rel="stylesheet" href="orb_battle.css">
+    <script src="js/cards.js"></script>
+  <script src="js/cardVideoManager.js"></script>
+    <script src="js/cardStorage.js"></script>
+    <script src="js/orb_stages.js"></script>
+    <script src="js/orb_progress.js"></script>
+    <script src="js/orb_battle_cards.js"></script>
+    <style>
+        .stage-select-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a1428 0%, #1a2a4a 50%, #0a1428 100%);
+        }
+
+        .stage-select-header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        .stage-select-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #00ffff, #a259ff, #ffd700);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .star-display {
+            font-size: 1.2rem;
+            color: #ffd700;
+        }
+
+        .stage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stage-card {
+            background: rgba(10, 20, 40, 0.9);
+            border: 2px solid #00ffff;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stage-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+        }
+
+        .stage-card.locked {
+            border-color: #666;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .stage-card.locked:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .stage-card.cleared {
+            border-color: #00ff88;
+        }
+
+        .stage-icon {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .stage-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .stage-boss {
+            font-size: 1rem;
+            color: #a259ff;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .stage-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .stage-info span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .entry-cost {
+            color: #ffd700;
+        }
+
+        .difficulty {
+            color: #ff6b6b;
+        }
+
+        .stage-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .stage-status.cleared {
+            background: #00ff88;
+            color: #000;
+        }
+
+        .stage-status.locked {
+            background: #666;
+            color: #fff;
+        }
+
+        .practice-section {
+            background: rgba(10, 20, 40, 0.9);
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .practice-section h2 {
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+
+        .back-button {
+            display: block;
+            width: 200px;
+            margin: 0 auto;
+            padding: 15px;
+            background: linear-gradient(45deg, #00ffff, #a259ff);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .progress-summary {
+            background: rgba(10, 20, 40, 0.9);
+            border: 2px solid #00ff88;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        .progress-summary h2 {
+            color: #00ff88;
+            margin-bottom: 15px;
+        }
+
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .progress-stat {
+            text-align: center;
+            padding: 10px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 10px;
+        }
+
+        .progress-stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00ff88;
+        }
+
+        .progress-stat-label {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="stage-select-container">
+        <div class="stage-select-header">
+            <h1>轉珠戰鬥 - 關卡選擇</h1>
+            <div class="star-display">
+                ⭐ <span id="star-count">0</span>
+            </div>
+        </div>
+
+        <div class="progress-summary">
+            <h2>通關進度</h2>
+            <div class="progress-stats">
+                <div class="progress-stat">
+                    <div class="progress-stat-value" id="cleared-count">0</div>
+                    <div class="progress-stat-label">已通關</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-value" id="total-clears">0</div>
+                    <div class="progress-stat-label">總通關次數</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-value" id="remaining-count">12</div>
+                    <div class="progress-stat-label">未通關</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="practice-section">
+            <h2>練習模式</h2>
+            <div class="stage-grid">
+                <div class="stage-card" onclick="startStage('practice')">
+                    <div class="stage-icon">🎯</div>
+                    <div class="stage-name">轉珠練習</div>
+                    <div class="stage-boss">訓練假人</div>
+                    <div class="stage-info">
+                        <span class="entry-cost">⭐ 0</span>
+                        <span class="difficulty">難度: 練習</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="color: #fff; margin-bottom: 20px;">十二星座試煉</h2>
+        <div class="stage-grid" id="zodiac-stage-grid">
+            <!-- Stages will be rendered here -->
+        </div>
+
+        <button class="back-button" onclick="goBack()">返回遊戲中心</button>
+    </div>
+
+    <script>
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            renderStages();
+            updateStarDisplay();
+            updateProgressSummary();
+        });
+
+        // Render all stages
+        function renderStages() {
+            const grid = document.getElementById('zodiac-stage-grid');
+            const stages = getZodiacStages();
+            const progress = getOrbProgress();
+
+            grid.innerHTML = '';
+
+            for (const stage of stages) {
+                const isUnlocked = isStageUnlocked(stage.id);
+                const isCleared = progress[stage.id]?.cleared || false;
+
+                const card = document.createElement('div');
+                card.className = `stage-card ${isUnlocked ? '' : 'locked'} ${isCleared ? 'cleared' : ''}`;
+                
+                card.innerHTML = `
+                    <div class="stage-status ${isCleared ? 'cleared' : 'locked'}">
+                        ${isCleared ? '已通關' : (isUnlocked ? '未通關' : '未解鎖')}
+                    </div>
+                    <div class="stage-icon">${stage.icon}</div>
+                    <div class="stage-name">${stage.name}</div>
+                    <div class="stage-boss">${stage.bossName}</div>
+                    <div class="stage-info">
+                        <span class="entry-cost">⭐ ${stage.entryCost}</span>
+                        <span class="difficulty">難度: ${stage.difficulty}</span>
+                    </div>
+                `;
+
+                if (isUnlocked) {
+                    card.onclick = () => startStage(stage.id);
+                }
+
+                grid.appendChild(card);
+            }
+        }
+
+        // Start a stage
+        function startStage(stageId) {
+            window.location.href = `orb_battle.html?stage=${stageId}`;
+        }
+
+        // Update star display
+        function updateStarDisplay() {
+            const starCount = typeof StarSystem !== 'undefined' 
+                ? StarSystem.getTotalStars() 
+                : 0;
+            document.getElementById('star-count').textContent = starCount;
+        }
+
+        // Update progress summary
+        function updateProgressSummary() {
+            const clearedCount = getClearedStageCount();
+            const totalClears = getTotalClearCount();
+            const remainingCount = 12 - clearedCount;
+
+            document.getElementById('cleared-count').textContent = clearedCount;
+            document.getElementById('total-clears').textContent = totalClears;
+            document.getElementById('remaining-count').textContent = remainingCount;
+        }
+
+        // Go back to game center
+        function goBack() {
+            window.location.href = 'game_center_simple.html';
+        }
+    </script>
+</body>
+</html>

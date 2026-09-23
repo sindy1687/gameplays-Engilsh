@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>選卡刮刮樂</title>
@@ -434,112 +435,1061 @@ button:disabled{
 .modal.show{ display:flex; }
 
 .modalCard{
-  width:min(420px, 100%);
-  border-radius:18px;
-  background:rgba(10,20,40,0.95);
-  border:1px solid rgba(255,215,0,0.35);
-  box-shadow:0 20px 60px rgba(0,0,0,0.55);
-  padding:14px;
+  width:min(94vw, 520px);
+  max-width:520px;
+  max-height:94vh;
+  overflow-y:auto;
+  margin:0 auto;
+  padding:16px 18px 18px;
+  border-radius:24px;
+  background:linear-gradient(180deg, rgba(8,22,48,0.98), rgba(4,17,37,0.98));
+  border:1px solid rgba(255,210,50,0.35);
+  box-shadow:0 18px 50px rgba(0,0,0,0.4);
 }
 
  .boostWrap{
-   margin-top:12px;
+   margin-top:8px;
    display:none;
-   border-radius:16px;
-   border:1px solid rgba(255,255,255,0.10);
-   background:rgba(0,0,0,0.18);
-   padding:12px;
  }
 
  .boostWrap.show{ display:block; }
 
- .wheelArea{
-   display:flex;
-   flex-direction:column;
-   align-items:center;
-   gap:10px;
- }
+/* ===== New Bonus Wheel Styles ===== */
+.bonusWheelPanel{
+  padding:8px;
+}
 
- .wheelShell{
-   position:relative;
-   width:220px;
-   height:220px;
- }
+.bonusWheelHeader{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  margin-bottom:4px;
+}
 
- .wheel{
-   position:absolute;
-   inset:0;
-   border-radius:50%;
-   background: conic-gradient(
-     rgba(255,215,0,0.95) 0deg 90deg,
-     rgba(0,245,255,0.90) 90deg 180deg,
-     rgba(162,89,255,0.90) 180deg 270deg,
-     rgba(255,255,255,0.85) 270deg 360deg
-   );
-   border:1px solid rgba(255,255,255,0.22);
-   box-shadow: 0 18px 55px rgba(0,0,0,0.55);
-   transform: rotate(0deg);
-   transition: transform 2600ms cubic-bezier(.12,.78,.12,1);
- }
+.bonusWheelIcon{
+  width:32px;
+  height:32px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(141, 92, 246, 0.18);
+  border: 1px solid rgba(189, 145, 255, 0.35);
+  font-size:18px;
+}
 
- .wheelCenter{
-   position:absolute;
-   left:50%;
-   top:50%;
-   transform: translate(-50%, -50%);
-   width:70px;
-   height:70px;
-   border-radius:50%;
-   background:rgba(10,20,40,0.95);
-   border:1px solid rgba(255,255,255,0.18);
-   display:flex;
-   align-items:center;
-   justify-content:center;
-   font-weight:1000;
- }
+.bonusWheelTitle{
+  font-size:clamp(16px, 4.5vw, 18px);
+  font-weight:800;
+  color:#ffffff;
+  text-align:center;
+}
 
- .wheelPointer{
-   position:absolute;
-   left:50%;
-   top:-6px;
-   transform: translateX(-50%);
-   width:0;
-   height:0;
-   border-left:10px solid transparent;
-   border-right:10px solid transparent;
-   border-bottom:18px solid rgba(255,255,255,0.95);
-   filter: drop-shadow(0 6px 10px rgba(0,0,0,0.45));
- }
+.bonusWheelSubtitle{
+  margin-top:1px;
+  font-size:clamp(11px, 2.8vw, 12px);
+  color:rgba(255,255,255,0.62);
+  text-align:center;
+}
 
- .wheelLabels{
-   position:absolute;
-   inset:0;
-   display:flex;
-   align-items:center;
-   justify-content:center;
-   pointer-events:none;
-   font-weight:1000;
-   color:#0b1220;
- }
+.wheelStage{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+}
 
- .wheelLabels span{
-   position:absolute;
-   width:70px;
-   text-align:center;
-   transform-origin: 0 110px;
- }
+.wheelGlow{
+  position:absolute;
+  inset:-20px;
+  background:radial-gradient(circle, rgba(0,245,255,0.15) 0%, transparent 70%);
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 0.3s ease;
+}
+
+.wheelStage.is-spinning .wheelGlow{
+  opacity:1;
+  animation:wheelGlowPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes wheelGlowPulse{
+  from{ opacity:0.6; transform:scale(0.95); }
+  to{ opacity:1; transform:scale(1.05); }
+}
+
+.wheelOuterFrame{
+  position:relative;
+  width:min(270px, 70vw);
+  height:min(270px, 70vw);
+  max-width:280px;
+  max-height:280px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:
+    radial-gradient(
+      circle at 35% 25%,
+      #fff8cf 0%,
+      #ffd96a 8%,
+      #bd741f 28%,
+      #4b2408 70%,
+      #160c17 100%
+    );
+
+  border:2px solid rgba(255,226,137,0.85);
+
+  box-shadow:
+    0 0 0 5px rgba(78,53,145,0.4),
+    0 0 22px rgba(255,194,52,0.17),
+    0 20px 35px rgba(0,0,0,0.5),
+    inset 0 2px 5px rgba(255,255,255,0.7),
+    inset 0 -6px 12px rgba(43,20,8,0.65);
+}
+
+.wheelBulbs{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+.wheelBulb{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+
+  transform:
+    rotate(var(--bulb-angle))
+    translateY(-117px)
+    rotate(calc(var(--bulb-angle) * -1));
+
+  box-shadow:
+    0 0 5px currentColor,
+    0 0 10px currentcolor,
+    0 0 15px currentcolor;
+
+  animation:
+    bonusBulbPulse 1.5s ease-in-out
+    var(--bulb-delay) infinite alternate;
+}
+
+.wheelBulb.bulb-gold{ background:#ffd700; color:#ffd700; }
+.wheelBulb.bulb-cyan{ background:#00f5ff; color:#00f5ff; }
+.wheelBulb.bulb-purple{ background:#a259ff; color:#a259ff; }
+.wheelBulb.bulb-white{ background:#ffffff; color:#ffffff; }
+
+@keyframes bonusBulbPulse{
+  0%{
+    opacity:0.45;
+    transform:
+      rotate(var(--bulb-angle))
+      translateY(-117px)
+      rotate(calc(var(--bulb-angle) * -1))
+      scale(0.75);
+  }
+  100%{
+    opacity:1;
+    transform:
+      rotate(var(--bulb-angle))
+      translateY(-117px)
+      rotate(calc(var(--bulb-angle) * -1))
+      scale(1.15);
+  }
+}
+
+.wheelStage.is-spinning .wheelBulb{
+  animation-duration:0.3s;
+}
+
+.wheelPointerEnhanced{
+  position:absolute;
+  top:-12px;
+  left:50%;
+  z-index:30;
+  width:28px;
+  height:42px;
+  transform:translateX(-50%);
+  transform-origin:50% 14px;
+}
+
+.wheelPointerEnhanced::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:50%;
+  width:18px;
+  height:18px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:
+    radial-gradient(
+      circle at 32% 25%,
+      #ffffff,
+      #ff8cde 30%,
+      #8a249f 68%,
+      #361048
+    );
+  border:3px solid #ffe49a;
+  box-shadow:
+    0 0 10px rgba(255,115,220,0.9),
+    0 0 20px rgba(255,215,103,0.5);
+}
+
+.wheelPointerEnhanced::after{
+  content:'';
+  position:absolute;
+  top:14px;
+  left:50%;
+  width:0;
+  height:0;
+  transform:translateX(-50%);
+  border-left:9px solid transparent;
+  border-right:9px solid transparent;
+  border-top:22px solid #ffe16d;
+  filter:
+    drop-shadow(0 4px 3px rgba(0,0,0,0.5))
+    drop-shadow(0 0 5px rgba(255,220,96,0.8));
+}
+
+.wheelPointerEnhanced.is-ticking{
+  animation:pointerTick 0.12s ease-in-out infinite alternate;
+}
+
+@keyframes pointerTick{
+  from{
+    transform:translateX(-50%) rotate(-5deg);
+  }
+  to{
+    transform:translateX(-50%) rotate(5deg);
+  }
+}
+
+.wheelPointerEnhanced.is-hit{
+  animation:pointerHit 0.55s ease;
+}
+
+@keyframes pointerHit{
+  0%{
+    transform:translateX(-50%) rotate(0deg);
+  }
+  30%{
+    transform:translateX(-50%) rotate(-18deg);
+  }
+  60%{
+    transform:translateX(-50%) rotate(10deg);
+  }
+  100%{
+    transform:translateX(-50%) rotate(0deg);
+  }
+}
+
+.wheelDisc{
+  position:absolute;
+  inset:0;
+  width:calc(100% - 28px);
+  height:calc(100% - 28px);
+  border-radius:50%;
+  background: conic-gradient(
+    from -45deg,
+    #24d8e2 0deg 90deg,
+    #8d5cf6 90deg 180deg,
+    #fff0c7 180deg 270deg,
+    #ffd326 270deg 360deg
+  );
+  border:1px solid rgba(255,255,255,0.22);
+  box-shadow:0 18px 55px rgba(0,0,0,0.55);
+  transform:rotate(0deg);
+  transition:transform 2600ms cubic-bezier(.12,.78,.12,1);
+}
+
+.wheelSegmentLabel{
+  position:absolute;
+  z-index:5;
+  width:clamp(52px, 14vw, 64px);
+  min-height:clamp(42px, 11vw, 50px);
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+
+  text-align:center;
+  line-height:1.05;
+  pointer-events:none;
+
+  transform:translate(-50%, -50%);
+}
+
+.wheelSegmentLabel .segmentIcon{
+  display:block;
+  font-size:clamp(14px, 4vw, 18px);
+  line-height:1;
+}
+
+.wheelSegmentLabel strong{
+  display:block;
+  font-size:clamp(11px, 3vw, 14px);
+  font-weight:1000;
+  line-height:1;
+  white-space:nowrap;
+}
+
+/* 上方青色區塊 */
+.wheelSegmentLabel.label0{
+  top:24%;
+  left:50%;
+  right:auto;
+  bottom:auto;
+  color:#071522;
+}
+
+/* 右方紫色區塊 */
+.wheelSegmentLabel.label2{
+  top:50%;
+  left:76%;
+  right:auto;
+  bottom:auto;
+  color:#ffffff;
+}
+
+/* 下方米白色區塊 */
+.wheelSegmentLabel.label5{
+  top:76%;
+  left:50%;
+  right:auto;
+  bottom:auto;
+  color:#10182c;
+}
+
+/* 左方黃色區塊 */
+.wheelSegmentLabel.label10{
+  top:50%;
+  left:24%;
+  right:auto;
+  bottom:auto;
+  color:#17120a;
+}
+
+.wheelCenter{
+  position:absolute;
+  left:50%;
+  top:50%;
+  z-index:20;
+  transform:translate(-50%, -50%);
+  width:calc(100% * 0.26);
+  height:calc(100% * 0.26);
+  min-width:54px;
+  min-height:54px;
+  max-width:78px;
+  max-height:78px;
+  border-radius:50%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+
+  background:
+    radial-gradient(
+      circle at 35% 25%,
+      #27365e,
+      #111b39 55%,
+      #080d20 100%
+    );
+
+  border:3px solid rgba(255,230,146,0.95);
+
+  box-shadow:
+    0 0 0 4px rgba(13,22,51,0.85),
+    0 0 18px rgba(255,218,106,0.45),
+    inset 0 2px 4px rgba(255,255,255,0.2);
+}
+
+.wheelCenterIcon{
+  font-size:clamp(14px, 4vw, 18px);
+  color:#ffe27d;
+  line-height:1;
+}
+
+.wheelCenterText{
+  margin-top:1px;
+  font-size:clamp(9px, 2.5vw, 12px);
+  font-weight:1000;
+  letter-spacing:0.5px;
+  color:#ffffff;
+}
+
+.wheelStage.is-spinning .wheelOuterFrame{
+  animation:wheelFrameEnergy 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes wheelFrameEnergy{
+  from{
+    filter:brightness(1) saturate(1);
+  }
+  to{
+    filter:brightness(1.18) saturate(1.22);
+  }
+}
+
+.wheelStage.is-winning::before{
+  content:'';
+  position:absolute;
+  top:50%;
+  left:50%;
+  z-index:2;
+  width:70%;
+  aspect-ratio:1/1;
+  border:6px solid rgba(255,235,139,0.95);
+  border-radius:50%;
+  transform:translate(-50%, -50%) scale(0.65);
+  animation:winnerRing 1.15s ease-out forwards;
+  pointer-events:none;
+}
+
+@keyframes winnerRing{
+  0%{
+    opacity:1;
+    transform:translate(-50%, -50%) scale(0.65);
+  }
+  100%{
+    opacity:0;
+    transform:translate(-50%, -50%) scale(1.55);
+  }
+}
+
+.bonusSpinButton{
+  width:min(88%, 360px);
+  max-width:360px;
+  height:46px;
+  margin:8px auto 6px;
+  padding:0 18px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  background:linear-gradient(90deg, #19b8d2, #6048b8);
+  color:#ffffff;
+  font-size:16px;
+  font-weight:800;
+  box-shadow:0 8px 20px rgba(43,84,190,0.22);
+}
+
+.bonusSpinButton:hover:not(:disabled){
+  filter:brightness(1.08);
+  transform:translateY(-2px);
+}
+
+.bonusSpinButton:disabled{
+  opacity:0.55;
+  cursor:not-allowed;
+  transform:none;
+}
+
+.spinButtonIcon{
+  font-size:16px;
+}
+
+.bonusResultCard{
+  width:min(100%, 360px);
+  min-height:62px;
+  margin:8px auto 0;
+  padding:10px 14px;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  text-align:center;
+  background:linear-gradient(135deg, rgba(77,53,162,0.46), rgba(34,44,112,0.52));
+  border:1px solid rgba(139,105,255,0.65);
+  box-shadow:
+    0 8px 24px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+  color:#ffffff;
+  font-size:14px;
+  font-weight:900;
+}
+
+.bonusResultDefault{
+  color:rgba(255,255,255,0.85);
+}
+
+.bonusOutcome{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:100%;
+  flex:1;
+}
+
+.bonusOutcomeIcon{
+  font-size:clamp(18px, 5vw, 22px);
+  line-height:1;
+}
+
+.bonusOutcomeTitle{
+  font-size:clamp(14px, 3.8vw, 16px);
+  font-weight:800;
+  color:#ffffff;
+}
+
+.bonusOutcomeText{
+  font-size:clamp(11px, 3vw, 12px);
+  color:rgba(255,255,255,0.7);
+  margin-top:1px;
+}
+
+.bonusOutcomeZero .bonusOutcomeIcon{ filter:grayscale(0.5); }
+.bonusOutcomeTwo .bonusOutcomeIcon{ color:#a259ff; }
+.bonusOutcomeFive .bonusOutcomeIcon{ color:#ffd45a; }
+.bonusOutcomeTen .bonusOutcomeIcon{ color:#ffd700; filter:drop-shadow(0 0 8px rgba(255,215,0,0.6)); }
+
+.bonus-multiplier{
+  font-size:25px;
+  font-weight:900;
+  color:#ffd75e;
+  min-width:50px;
+  text-align:right;
+}
+
+.boostResultText{
+  width:min(100%, 360px);
+  margin:6px auto 0;
+}
+
+.bonusRewardSummary{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:7px;
+  margin-top:8px;
+}
+
+.bonusRewardItem{
+  min-width:0;
+  padding:8px 5px;
+  border-radius:12px;
+  text-align:center;
+  min-height:58px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  background:rgba(255,255,255,0.055);
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+.bonusRewardItem span{
+  display:block;
+  margin-bottom:2px;
+  font-size:clamp(9px, 2.5vw, 11px);
+  color:rgba(255,255,255,0.65);
+}
+
+.bonusRewardItem strong{
+  display:block;
+  font-size:clamp(13px, 3.5vw, 15px);
+  color:#ffffff;
+  white-space:nowrap;
+}
+
+.bonusRewardItem.original{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+.bonusRewardItem.multiplier{
+  border:1px solid rgba(255,204,62,0.35);
+}
+
+.bonusRewardItem.final{
+  background:linear-gradient(135deg, rgba(255,193,45,0.11), rgba(255,150,35,0.08));
+  border:1px solid rgba(255,204,71,0.42);
+}
+
+.bonusRewardItem.final strong{
+  color:#ffd45a;
+  font-weight:900;
+}
+
+.bonusRewardItem.highlight strong{
+  color:#ffe27a;
+}
+
+.action-row{
+  display:grid;
+  grid-template-columns:1.6fr 0.75fr 0.75fr;
+  gap:8px;
+  margin-top:12px;
+}
+
+.action-row .primary{
+  height:48px;
+  border-radius:14px;
+  font-size:15px;
+  font-weight:900;
+  background:linear-gradient(90deg, #16d8df, #855cff);
+  color:#081428;
+  box-shadow:0 8px 20px rgba(70,83,255,0.18);
+}
+
+.action-row .ghost:disabled{
+  background:rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.08);
+  color:rgba(255,255,255,0.45);
+  cursor:default;
+  opacity:1;
+}
+
+.action-row .ghost:not(:disabled){
+  height:48px;
+  border-radius:14px;
+  background:rgba(255,255,255,0.075);
+  border:1px solid rgba(255,255,255,0.11);
+  color:rgba(255,255,255,0.85);
+}
+
+.action-row .ghost:not(:disabled):hover{
+  background:rgba(255,255,255,0.12);
+}
+
+.bonusCelebrationParticle{
+  position:absolute;
+  top:50%;
+  left:50%;
+  z-index:60;
+  pointer-events:none;
+  animation:
+    bonusParticleBurst
+    1.35s
+    cubic-bezier(0.1,0.7,0.2,1)
+    var(--particle-delay)
+    forwards;
+}
+
+@keyframes bonusParticleBurst{
+  0%{
+    opacity:1;
+    transform:
+      translate(-50%, -50%)
+      translate(0, 0)
+      rotate(0deg)
+      scale(0.5);
+  }
+  70%{
+    opacity:1;
+  }
+  100%{
+    opacity:0;
+    transform:
+      translate(-50%, -50%)
+      translate(
+        var(--particle-x),
+        var(--particle-y)
+      )
+      rotate(var(--particle-rotate))
+      scale(1.25);
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .wheelBulb,
+  .bonusCelebrationParticle{
+    animation-duration:0.01ms !important;
+    animation-iteration-count:1 !important;
+  }
+}
+
+@media (max-width: 600px){
+  .modalCard{
+    padding:12px;
+  }
+
+  .modalTitle{
+    font-size:19px;
+  }
+
+  .result-summary{
+    padding:10px 12px;
+  }
+
+  .result-summary-amount{
+    font-size:22px;
+  }
+
+  .bonusWheelPanel{
+    padding:8px;
+  }
+
+  .bonusWheelHeader{
+    margin-bottom:4px;
+  }
+
+  .bonusWheelIcon{
+    width:28px;
+    height:28px;
+    font-size:16px;
+  }
+
+  .bonusWheelTitle{
+    font-size:16px;
+  }
+
+  .bonusWheelSubtitle{
+    font-size:11px;
+  }
+
+  .wheelOuterFrame{
+    width:min(240px, 70vw);
+    height:min(240px, 70vw);
+  }
+
+  .wheelCenter{
+    min-width:50px;
+    min-height:50px;
+  }
+
+  .wheelCenterIcon{
+    font-size:14px;
+  }
+
+  .wheelCenterText{
+    font-size:9px;
+  }
+
+  .wheelSegmentLabel{
+    width:54px;
+    min-height:44px;
+  }
+
+  .wheelSegmentLabel .segmentIcon{
+    font-size:14px;
+  }
+
+  .wheelSegmentLabel strong{
+    font-size:12px;
+  }
+
+  .wheelPointerEnhanced{
+    top:-10px;
+    width:26px;
+    height:40px;
+  }
+
+  .wheelPointerEnhanced::before{
+    width:16px;
+    height:16px;
+  }
+
+  .wheelPointerEnhanced::after{
+    top:13px;
+    border-left:8px solid transparent;
+    border-right:8px solid transparent;
+    border-top:20px solid #ffe16d;
+  }
+
+  .bonusSpinButton{
+    height:44px;
+    font-size:15px;
+  }
+
+  .bonusResultCard{
+    min-height:58px;
+    margin-top:6px;
+    padding:8px 12px;
+    font-size:13px;
+  }
+
+  .bonusOutcomeIcon{
+    font-size:18px;
+  }
+
+  .bonusOutcomeTitle{
+    font-size:13px;
+  }
+
+  .bonusOutcomeText{
+    font-size:10px;
+  }
+
+  .bonus-multiplier{
+    font-size:22px;
+  }
+
+  .bonusRewardItem{
+    min-height:55px;
+    padding:7px 4px;
+  }
+
+  .bonusRewardItem span{
+    font-size:9px;
+  }
+
+  .bonusRewardItem strong{
+    font-size:11px;
+  }
+
+  .action-row{
+    grid-template-columns:1.45fr 0.8fr 0.8fr;
+  }
+
+  .action-row .primary,
+  .action-row .ghost:not(:disabled){
+    height:46px;
+    font-size:14px;
+  }
+}
+
+@media (max-width: 480px){
+  .modalCard{
+    padding:10px;
+  }
+
+  .modalTitle{
+    font-size:18px;
+  }
+
+  .result-summary{
+    padding:10px 10px;
+  }
+
+  .result-summary-amount{
+    font-size:20px;
+  }
+
+  .bonusWheelPanel{
+    padding:6px;
+  }
+
+  .bonusWheelHeader{
+    margin-bottom:3px;
+    gap:2px;
+  }
+
+  .bonusWheelIcon{
+    width:26px;
+    height:26px;
+    font-size:14px;
+  }
+
+  .bonusWheelTitle{
+    font-size:15px;
+  }
+
+  .bonusWheelSubtitle{
+    font-size:10px;
+  }
+
+  .wheelOuterFrame{
+    width:220px;
+    height:220px;
+  }
+
+  .wheelCenter{
+    min-width:48px;
+    min-height:48px;
+  }
+
+  .wheelCenterIcon{
+    font-size:13px;
+  }
+
+  .wheelCenterText{
+    font-size:8px;
+  }
+
+  .wheelSegmentLabel{
+    width:50px;
+    min-height:40px;
+  }
+
+  .wheelSegmentLabel .segmentIcon{
+    font-size:13px;
+  }
+
+  .wheelSegmentLabel strong{
+    font-size:11px;
+  }
+
+  .wheelPointerEnhanced{
+    top:-8px;
+    width:24px;
+    height:36px;
+  }
+
+  .wheelPointerEnhanced::before{
+    width:14px;
+    height:14px;
+  }
+
+  .wheelPointerEnhanced::after{
+    top:12px;
+    border-left:7px solid transparent;
+    border-right:7px solid transparent;
+    border-top:18px solid #ffe16d;
+  }
+
+  .bonusSpinButton{
+    height:42px;
+    font-size:14px;
+  }
+
+  .bonusResultCard{
+    min-height:54px;
+    margin-top:6px;
+    padding:8px 10px;
+    font-size:12px;
+  }
+
+  .bonusOutcomeIcon{
+    font-size:16px;
+  }
+
+  .bonusOutcomeTitle{
+    font-size:12px;
+  }
+
+  .bonusOutcomeText{
+    font-size:9px;
+  }
+
+  .bonus-multiplier{
+    font-size:20px;
+  }
+
+  .bonusRewardItem{
+    min-height:52px;
+    padding:6px 4px;
+  }
+
+  .bonusRewardItem span{
+    font-size:8px;
+  }
+
+  .bonusRewardItem strong{
+    font-size:10px;
+  }
+
+  .action-row{
+    grid-template-columns:1.3fr 0.85fr 0.85fr;
+    gap:6px;
+  }
+
+  .action-row .primary,
+  .action-row .ghost:not(:disabled){
+    height:44px;
+    font-size:13px;
+  }
+}
+
+@media (max-height: 720px){
+  .modalCard{
+    padding:10px 12px;
+  }
+
+  .result-summary{
+    padding:10px 12px;
+    margin-bottom:8px;
+  }
+
+  .result-summary-amount{
+    font-size:22px;
+    margin-bottom:6px;
+  }
+
+  .wheelOuterFrame{
+    width:min(220px, 68vw);
+    height:min(220px, 68vw);
+  }
+
+  .bonusWheelHeader{
+    margin-bottom:3px;
+  }
+
+  .bonusSpinButton{
+    height:42px;
+    margin-top:6px;
+  }
+
+  .bonusResultCard{
+    min-height:54px;
+    margin-top:6px;
+  }
+
+  .bonusRewardItem{
+    min-height:52px;
+    padding:6px 4px;
+  }
+
+  .action-row{
+    margin-top:10px;
+  }
+
+  .action-row .primary,
+  .action-row .ghost:not(:disabled){
+    height:44px;
+  }
+}
 
 .modalTitle{
+  display:flex;
+  align-items:center;
+  gap:8px;
   font-weight:1000;
-  font-size:18px;
-  margin:0 0 10px;
+  font-size:clamp(19px, 5vw, 21px);
+  margin:0 0 8px;
+  padding-bottom:8px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
 }
 
 .modalText{
   margin:0;
   white-space:pre-line;
-  line-height:1.45;
+  line-height:1.4;
   opacity:0.95;
+}
+
+.result-summary{
+  padding:12px 14px;
+  border-radius:14px;
+  background:rgba(255,255,255,0.035);
+  border:1px solid rgba(255,255,255,0.07);
+  margin-bottom:10px;
+}
+
+.result-summary-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-size:13px;
+  color:rgba(255,255,255,0.6);
+  margin-bottom:8px;
+}
+
+.result-summary-reward{
+  font-size:13px;
+  color:rgba(255,255,255,0.72);
+  margin-bottom:4px;
+}
+
+.result-summary-amount{
+  font-size:25px;
+  font-weight:800;
+  color:#ffd45a;
+  margin-bottom:8px;
+}
+
+.result-summary-prompt{
+  font-size:13px;
+  color:rgba(255,255,255,0.85);
 }
 </style>
 </head>
@@ -550,14 +1500,29 @@ button:disabled{
    <div class="topbar">
      <div class="brand">選卡刮刮樂</div>
      <div class="pill" title="本地資料（localStorage）">
+       <span>🪙 <span id="coinsText">0</span></span>
        <span>⭐ <span id="starsText">0</span></span>
-       <span>💎 <span id="coinsText">0</span></span>
+     </div>
+   </div>
+
+   <div class="panel" style="margin-bottom:12px;">
+     <div class="panelTitle">玩家狀態</div>
+     <div class="row" style="font-size:13px; font-weight:800;">
+       <span>玩家：<span id="playerName">未登入</span></span>
+     </div>
+     <div class="row" style="font-size:13px; font-weight:800; margin-top:6px;">
+       <span>🪙 金幣：<span id="coinsText2">0</span></span>
+       <span>⭐ 星星：<span id="starsText2">0</span></span>
+     </div>
+     <div class="row" style="font-size:13px; font-weight:800; margin-top:6px;">
+       <span>刮刮樂：<span id="scratchDailyCount">0</span> / <span id="scratchDailyLimit">∞</span></span>
+       <span>幸運轉盤：<span id="wheelDailyCount">0</span> / <span id="wheelDailyLimit">∞</span></span>
      </div>
    </div>
  
    <div class="panel" id="exchangePanel">
-     <div class="panelTitle">先換寶石才能玩</div>
-     <div class="mini" style="margin-bottom:10px;">使用星星兌換寶石後，就能選卡開始刮刮樂。</div>
+     <div class="panelTitle">先換金幣才能玩</div>
+     <div class="mini" style="margin-bottom:10px;">使用星星兌換金幣後，就能選卡開始刮刮樂。</div>
      <div class="grid2">
        <div>
          <div class="mini" style="margin:0 0 6px; font-weight:900;">兌換星星數</div>
@@ -569,7 +1534,7 @@ button:disabled{
        </div>
      </div>
      <button class="primary" id="exchangeBtn" style="margin-top:12px;">兌換</button>
-     <div class="mini" style="margin-top:8px;">每次遊玩將消耗 <b id="playCostText">50</b> 💎</div>
+     <div class="mini" style="margin-top:8px;">每次遊玩將消耗 <b id="playCostText">50</b> 🪙</div>
    </div>
  
    <div id="selectView">
@@ -582,7 +1547,7 @@ button:disabled{
        </div>
        <div class="mini" id="restockText" style="margin-top:8px; font-weight:900;"></div>
        <div class="row" id="restockPayRow" style="margin-top:8px; display:none; align-items:center; gap:10px;">
-         <button class="primary" id="restockNowBtn" style="width:220px; margin:0;">立即補貨（2000 💎）</button>
+         <button class="primary" id="restockNowBtn" style="width:220px; margin:0;">立即補貨（2000 🪙）</button>
          <div class="mini" id="restockQuotaText" style="margin:0; font-weight:900;"></div>
        </div>
        <div class="row" style="margin-top:10px;">
@@ -594,11 +1559,11 @@ button:disabled{
          </div>
          <div style="width:140px;">
            <div class="mini" style="margin:0 0 6px; font-weight:900;">每次消耗</div>
-           <div class="input" style="display:flex;align-items:center;justify-content:center;">💎 <span id="playCostText2">50</span></div>
+           <div class="input" style="display:flex;align-items:center;justify-content:center;">🪙 <span id="playCostText2">50</span></div>
          </div>
        </div>
        <div class="cardGrid" id="cardGrid"></div>
-       <div class="tip">提示：點選任一張卡後會立即扣寶石並進入刮刮樂。刮開達門檻會自動揭曉。</div>
+       <div class="tip">提示：點選任一張卡後會立即扣金幣並進入刮刮樂。刮開達門檻會自動揭曉。</div>
      </div>
    </div>
  
@@ -616,41 +1581,89 @@ button:disabled{
        <div class="modalTitle" id="modalTitle">🎉 結果</div>
        <p class="modalText" id="modalText"></p>
        <div class="boostWrap" id="boostWrap">
-         <div class="wheelArea">
-           <div class="mini" style="font-weight:1000; text-align:center;">加碼輪盤：可能歸零 / 2 倍 / 5 倍 / 10 倍</div>
-           <div class="wheelShell">
-             <div class="wheelPointer"></div>
-             <div class="wheel" id="boostWheel"></div>
-             <div class="wheelLabels" aria-hidden="true">
-               <span style="transform: rotate(45deg) translateY(-92px);">0x</span>
-               <span style="transform: rotate(135deg) translateY(-92px);">2x</span>
-               <span style="transform: rotate(225deg) translateY(-92px);">5x</span>
-               <span style="transform: rotate(315deg) translateY(-92px);">10x</span>
-             </div>
-             <div class="wheelCenter" id="wheelCenter">加碼</div>
-           </div>
-           <button class="primary" id="spinBtn">轉輪盤</button>
-           <div class="mini" id="boostResultText" style="text-align:center; font-weight:900;"></div>
-         </div>
-       </div>
-       <div class="row" style="margin-top:12px;">
+        <div class="bonusWheelPanel">
+          <div class="bonusWheelHeader">
+            <div class="bonusWheelIcon">🎡</div>
+            <div>
+              <div class="bonusWheelTitle">幸運加碼輪盤</div>
+              <div class="bonusWheelSubtitle">轉動一次，獎勵最高放大 10 倍</div>
+            </div>
+          </div>
+
+          <div class="wheelStage" id="wheelStage">
+            <div class="wheelGlow"></div>
+
+            <div class="wheelOuterFrame">
+              <div class="wheelBulbs" id="wheelBulbs"></div>
+
+              <div
+                class="wheelPointerEnhanced"
+                id="wheelPointerEnhanced"
+                aria-hidden="true"
+              ></div>
+
+              <div class="wheelDisc" id="boostWheel">
+                <div class="wheelSegmentLabel label0">
+                  <span class="segmentIcon">💨</span>
+                  <strong>0 倍</strong>
+                </div>
+
+                <div class="wheelSegmentLabel label2">
+                  <span class="segmentIcon">✨</span>
+                  <strong>2 倍</strong>
+                </div>
+
+                <div class="wheelSegmentLabel label5">
+                  <span class="segmentIcon">💎</span>
+                  <strong>5 倍</strong>
+                </div>
+
+                <div class="wheelSegmentLabel label10">
+                  <span class="segmentIcon">👑</span>
+                  <strong>10 倍</strong>
+                </div>
+              </div>
+
+              <div class="wheelCenter" id="wheelCenter">
+                <span class="wheelCenterIcon">✦</span>
+                <span class="wheelCenterText">LUCKY</span>
+              </div>
+            </div>
+          </div>
+
+          <button
+            class="primary bonusSpinButton"
+            id="spinBtn"
+            type="button"
+          >
+            <span class="spinButtonIcon">🎯</span>
+            <span class="spinButtonText">開始轉動</span>
+          </button>
+
+          <div
+            class="bonusResultCard"
+            id="bonusResultCard"
+            aria-live="polite"
+          >
+            <div class="bonusResultDefault">
+              轉動輪盤，獎勵可能放大至 10 倍
+            </div>
+          </div>
+
+          <div
+            class="boostResultText"
+            id="boostResultText"
+            aria-live="assertive"
+          ></div>
+        </div>
+      </div>
+       <div class="action-row">
          <button class="primary" id="claimBtn">領取獎勵</button>
-         <button class="ghost" id="boostBtn" style="width:140px;">加碼</button>
-         <button class="ghost" id="closeModalBtn" style="width:140px;">關閉</button>
+         <button class="ghost" id="boostBtn">加碼</button>
+         <button class="ghost" id="closeModalBtn">關閉</button>
        </div>
      </div>
    </div>
-
-  <div class="modal" id="chargeModal" role="dialog" aria-modal="true" aria-label="扣款">
-    <div class="modalCard">
-      <div class="modalTitle" id="chargeTitle">✅ 扣款成功</div>
-      <p class="modalText" id="chargeText"></p>
-      <div class="row" style="margin-top:12px;">
-        <button class="primary" id="chargeOkBtn">開始刮</button>
-        <button class="ghost" id="chargeCloseBtn" style="width:140px;">取消</button>
-      </div>
-    </div>
-  </div>
 
   <div class="modal" id="summaryModal" role="dialog" aria-modal="true" aria-label="中獎清單">
     <div class="modalCard">
@@ -667,7 +1680,10 @@ button:disabled{
  <script>
  const STORAGE_STARS_KEY = 'totalStars';
  const STORAGE_COINS_KEY = 'goldCoins';
- 
+ const STORAGE_PLAYER_NAME_KEY = 'playerName';
+ const STORAGE_SCRATCH_DAILY_KEY = 'scratchCard_daily_v1';
+ const STORAGE_WHEEL_DAILY_KEY = 'scratchCard_wheelDaily_v1';
+
  const EXCHANGE_RATE = 10;
  const BRUSH_RADIUS = 18;
  const PAGE1_CARD_IMAGE_URL = 'https://i.pinimg.com/736x/41/0a/3c/410a3c7d383e9d63e5e972a541238fc8.jpg';
@@ -680,6 +1696,9 @@ button:disabled{
    2: 2000,
    3: 5000
  };
+
+ const SCRATCH_DAILY_LIMIT = 999;
+ const WHEEL_DAILY_LIMIT = 999;
 
  const PRIZE_TABLE = {
    1: { first: 10000, second: 5000, third: 1500 },
@@ -715,6 +1734,13 @@ button:disabled{
  
  const starsText = document.getElementById('starsText');
  const coinsText = document.getElementById('coinsText');
+ const playerName = document.getElementById('playerName');
+ const coinsText2 = document.getElementById('coinsText2');
+ const starsText2 = document.getElementById('starsText2');
+ const scratchDailyCount = document.getElementById('scratchDailyCount');
+ const scratchDailyLimit = document.getElementById('scratchDailyLimit');
+ const wheelDailyCount = document.getElementById('wheelDailyCount');
+ const wheelDailyLimit = document.getElementById('wheelDailyLimit');
  const exchangePanel = document.getElementById('exchangePanel');
  const exchangeStarsInput = document.getElementById('exchangeStars');
  const exchangeBtn = document.getElementById('exchangeBtn');
@@ -743,13 +1769,10 @@ button:disabled{
  const boostResultText = document.getElementById('boostResultText');
  const closeModalBtn = document.getElementById('closeModalBtn');
 
- const chargeModal = document.getElementById('chargeModal');
- const chargeTitle = document.getElementById('chargeTitle');
- const chargeText = document.getElementById('chargeText');
- const chargeOkBtn = document.getElementById('chargeOkBtn');
- const chargeCloseBtn = document.getElementById('chargeCloseBtn');
- let pendingStartScratch = null;
- let pendingChargeCost = 0;
+ const wheelStage = document.getElementById('wheelStage');
+ const wheelBulbs = document.getElementById('wheelBulbs');
+ const wheelPointerEnhanced = document.getElementById('wheelPointerEnhanced');
+ const bonusResultCard = document.getElementById('bonusResultCard');
 
  const summaryModal = document.getElementById('summaryModal');
  const summaryTitle = document.getElementById('summaryTitle');
@@ -789,12 +1812,100 @@ button:disabled{
  function getCoins() { return readInt(STORAGE_COINS_KEY, 0); }
  function setStars(v) { writeInt(STORAGE_STARS_KEY, v); }
  function setCoins(v) { writeInt(STORAGE_COINS_KEY, v); }
- 
+
+ function getPlayerName() {
+   try {
+     return localStorage.getItem(STORAGE_PLAYER_NAME_KEY) || '未登入';
+   } catch (e) {
+     return '未登入';
+   }
+ }
+
+ function getDailyCount(key) {
+   try {
+     const raw = localStorage.getItem(key);
+     if (!raw) return 0;
+     const parsed = JSON.parse(raw);
+     if (parsed.date === todayKey()) {
+       return Number(parsed.count || 0);
+     }
+     return 0;
+   } catch (e) {
+     return 0;
+   }
+ }
+
+ function incrementDailyCount(key) {
+   try {
+     const raw = localStorage.getItem(key);
+     let data = raw ? JSON.parse(raw) : null;
+     if (!data || data.date !== todayKey()) {
+       data = { date: todayKey(), count: 0 };
+     }
+     data.count = (Number(data.count) || 0) + 1;
+     localStorage.setItem(key, JSON.stringify(data));
+     return data.count;
+   } catch (e) {
+     return 0;
+   }
+ }
+
+ function formatNumber(value) {
+   const number = Number(value);
+   if (!Number.isFinite(number)) return '0';
+   return number.toLocaleString('zh-TW');
+ }
+
+ function createWheelBulbs() {
+  if (!wheelBulbs) return;
+  wheelBulbs.innerHTML = '';
+  const bulbCount = 20;
+  const bulbColors = ['bulb-gold', 'bulb-cyan', 'bulb-purple', 'bulb-white'];
+  for (let index = 0; index < bulbCount; index++) {
+    const bulb = document.createElement('span');
+    const angle = (360 / bulbCount) * index;
+    bulb.className = 'wheelBulb ' + bulbColors[index % bulbColors.length];
+    bulb.style.setProperty('--bulb-angle', `${angle}deg`);
+    bulb.style.setProperty('--bulb-delay', `${index * 0.06}s`);
+    wheelBulbs.appendChild(bulb);
+  }
+}
+
+ function launchBonusCelebration(multiplier) {
+  if (!wheelStage) return;
+  const particleCount = multiplier === 10 ? 36 : 18;
+  const particles = multiplier === 10 ? ['👑', '⭐', '✨', '💎'] : ['⭐', '✨', '◆'];
+  for (let index = 0; index < particleCount; index++) {
+    const particle = document.createElement('span');
+    particle.className = 'bonusCelebrationParticle';
+    particle.textContent = particles[index % particles.length];
+    particle.style.setProperty('--particle-x', `${Math.random() * 200 - 100}px`);
+    particle.style.setProperty('--particle-y', `${Math.random() * -150 - 60}px`);
+    particle.style.setProperty('--particle-rotate', `${Math.random() * 720 - 360}deg`);
+    particle.style.setProperty('--particle-delay', `${Math.random() * 0.18}s`);
+    wheelStage.appendChild(particle);
+    particle.addEventListener('animationend', () => particle.remove(), { once: true });
+  }
+}
+
  function syncEconomyUI() {
-   starsText.textContent = String(getStars());
-   coinsText.textContent = String(getCoins());
- 
-   const hasCoins = getCoins() > 0;
+   const stars = getStars();
+   const coins = getCoins();
+   const name = getPlayerName();
+   const scratchCount = getDailyCount(STORAGE_SCRATCH_DAILY_KEY);
+   const wheelCount = getDailyCount(STORAGE_WHEEL_DAILY_KEY);
+
+   starsText.textContent = formatNumber(stars);
+   coinsText.textContent = formatNumber(coins);
+   playerName.textContent = name;
+   coinsText2.textContent = formatNumber(coins);
+   starsText2.textContent = formatNumber(stars);
+   scratchDailyCount.textContent = formatNumber(scratchCount);
+   scratchDailyLimit.textContent = formatNumber(SCRATCH_DAILY_LIMIT);
+   wheelDailyCount.textContent = formatNumber(wheelCount);
+   wheelDailyLimit.textContent = formatNumber(WHEEL_DAILY_LIMIT);
+
+   const hasCoins = coins > 0;
    exchangePanel.style.display = hasCoins ? 'none' : 'block';
  }
 
@@ -993,8 +2104,8 @@ button:disabled{
 
  function syncCostUI(page) {
    const cost = getPlayCostForPage(page);
-   playCostText.textContent = String(cost);
-   playCostText2.textContent = String(cost);
+   playCostText.textContent = formatNumber(cost);
+   playCostText2.textContent = formatNumber(cost);
  }
  
  function ResultBoard(labels) {
@@ -1105,7 +2216,7 @@ button:disabled{
          coins,
          tier,
          stars: 0,
-         message: win ? ('你對中幸運號碼 ' + lucky + '（命中 ' + hitCount + ' 次）！獲得 💎 ' + coins) : ('沒有對中幸運號碼 ' + lucky + '，未中獎。')
+         message: win ? ('你對中幸運號碼 ' + lucky + '（命中 ' + hitCount + ' 次）！獲得 🪙 ' + coins) : ('沒有對中幸運號碼 ' + lucky + '，未中獎。')
        };
      }
    };
@@ -1329,6 +2440,11 @@ button:disabled{
  let baseCoinsBeforeBoost = 0;
  let boostMultiplier = 1;
  let wheelRotation = 0;
+
+ let isScratchStarting = false;
+ let isScratchActive = false;
+ let scratchCostDeducted = false;
+ let scratchRewardGranted = false;
  
  function renderCards(page) {
    activePage = page;
@@ -1652,7 +2768,7 @@ button:disabled{
        const enough = getCoins() >= PAID_RESTOCK_COST;
        restockNowBtn.disabled = !(left > 0 && enough);
        if (!enough) {
-         restockQuotaText.textContent += '（寶石不足）';
+         restockQuotaText.textContent += '（金幣不足）';
        }
      }
    }
@@ -1665,20 +2781,42 @@ button:disabled{
  }
  
  function onPickCard(page, index, displayNumber, positionIndex) {
+   if (isScratchStarting || isScratchActive) {
+     return;
+   }
+
    syncEconomyUI();
    const coins = getCoins();
    const cost = getPlayCostForPage(page);
+   const scratchCount = getDailyCount(STORAGE_SCRATCH_DAILY_KEY);
+
+   if (scratchCount >= SCRATCH_DAILY_LIMIT) {
+     alert('今日刮刮樂次數已用完！\n\n明日再來挑戰吧。');
+     return;
+   }
+
    if (coins < cost) {
-     alert('❌ 寶石不足！需要至少 ' + cost + ' 寶石才能刮。\n\n目前寶石：' + coins + '\n請先用星星兌換寶石。');
+     alert('金幣不足！本次需要 ' + formatNumber(cost) + ' 金幣，目前只有 ' + formatNumber(coins) + ' 金幣。\n\n請先用星星兌換金幣。');
      exchangePanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
      return;
    }
 
-   setCoins(coins - cost);
-   syncEconomyUI();
-   pendingChargeCost = cost;
+   const confirmed = confirm(
+     '本次刮刮樂需要 ' + formatNumber(cost) + ' 金幣，確定要開始嗎？'
+   );
 
-   pendingStartScratch = () => {
+   if (!confirmed) {
+     return;
+   }
+
+   isScratchStarting = true;
+
+   try {
+     setCoins(coins - cost);
+     incrementDailyCount(STORAGE_SCRATCH_DAILY_KEY);
+     syncEconomyUI();
+     scratchCostDeducted = true;
+
      const beforeLabels = getLabelsForPage(page);
      const forcedTier = getPrizeTierForNumber(page, displayNumber, beforeLabels);
 
@@ -1688,13 +2826,20 @@ button:disabled{
      revealed = false;
      claimed = false;
      claimBtn.disabled = true;
+     isScratchActive = true;
 
      openScratchView();
-   };
+   } catch (e) {
+     isScratchStarting = false;
+     isScratchActive = false;
+     scratchCostDeducted = false;
+     setCoins(coins);
+     syncEconomyUI();
+     alert('發生錯誤，金幣已退還。');
+     return;
+   }
 
-   chargeTitle.textContent = '✅ 扣款成功';
-   chargeText.textContent = '扣款 ' + cost + ' 寶石成功\n\n祝你中大獎！';
-   chargeModal.classList.add('show');
+   isScratchStarting = false;
  }
 
  function closeChargeModal(refund) {
@@ -2018,12 +3163,19 @@ button:disabled{
    boostMultiplier = 1;
    boostUsed = false;
    boostSpinning = false;
-   boostResultText.textContent = '';
+   boostResultText.innerHTML = '';
    boostWrap.classList.remove('show');
    spinBtn.disabled = false;
    boostBtn.disabled = false;
    boostBtn.textContent = '加碼';
    if (boostWheel) boostWheel.style.transform = 'rotate(0deg)';
+
+   const spinButtonText = spinBtn.querySelector('.spinButtonText');
+   if (spinButtonText) spinButtonText.textContent = '開始轉動';
+
+   if (bonusResultCard) {
+     bonusResultCard.innerHTML = '<div class="bonusResultDefault">轉動輪盤，獎勵可能放大至 10 倍</div>';
+   }
 
    if (coins > 0) {
      boostBtn.style.display = '';
@@ -2112,6 +3264,12 @@ button:disabled{
      syncCostUI(page);
      backBtn.disabled = false;
      openSelectView();
+     
+     isScratchActive = false;
+     isScratchStarting = false;
+     scratchCostDeducted = false;
+     scratchRewardGranted = false;
+     
      if (isPageAllScratched(page)) {
        const mins = 10 + Math.floor(Math.random() * 11);
        setRestockEnd(page, Date.now() + mins * 60 * 1000);
@@ -2206,21 +3364,6 @@ button:disabled{
    if (revealed) finalizeCardAndReturn();
  });
 
- chargeOkBtn.addEventListener('click', () => {
-   try { chargeModal.classList.remove('show'); } catch (e) {}
-   const fn = pendingStartScratch;
-   pendingStartScratch = null;
-   pendingChargeCost = 0;
-   if (typeof fn === 'function') fn();
- });
-
- chargeCloseBtn.addEventListener('click', () => {
-   closeChargeModal(true);
- });
-
- chargeModal.addEventListener('click', (e) => {
-   if (e.target === chargeModal) closeChargeModal(true);
- });
  
  claimBtn.addEventListener('click', () => {
    if (!revealed || claimed) return;
@@ -2272,7 +3415,7 @@ button:disabled{
 
      const coins = getCoins();
      if (coins < PAID_RESTOCK_COST) {
-       showToast('寶石不足，需 ' + PAID_RESTOCK_COST + ' 🪙');
+       showToast('金幣不足，需 ' + PAID_RESTOCK_COST + ' 🪙');
        updateRestockUI();
        return;
      }
@@ -2291,53 +3434,97 @@ button:disabled{
  }
 
  boostBtn.addEventListener('click', () => {
-   if (!revealed) return;
-   const s = activeCard && activeCard.settle ? activeCard.settle : null;
-   const coins = Number(s && s.coins ? s.coins : 0);
-   if (coins <= 0) return;
-   boostWrap.classList.toggle('show');
- });
+  if (!revealed) return;
+  const s = activeCard && activeCard.settle ? activeCard.settle : null;
+  const coins = Number(s && s.coins ? s.coins : 0);
+  if (coins <= 0) return;
+  boostWrap.classList.toggle('show');
+  if (bonusResultCard) {
+    bonusResultCard.innerHTML = '<div class="bonusResultDefault">轉動輪盤，獎勵可能放大至 10 倍</div>';
+  }
+  const spinButtonText = spinBtn.querySelector('.spinButtonText');
+  if (spinButtonText) spinButtonText.textContent = '開始轉動';
+  spinBtn.disabled = false;
+  createWheelBulbs();
+});
 
  spinBtn.addEventListener('click', () => {
-   if (!revealed) return;
-   if (boostUsed || boostSpinning) return;
-   const s = activeCard && activeCard.settle ? activeCard.settle : null;
-   const coins = Number(s && s.coins ? s.coins : 0);
-   if (coins <= 0) return;
+  if (!revealed) return;
+  if (boostUsed || boostSpinning) return;
+  const s = activeCard && activeCard.settle ? activeCard.settle : null;
+  const coins = Number(s && s.coins ? s.coins : 0);
+  if (coins <= 0) return;
 
-   boostSpinning = true;
-   spinBtn.disabled = true;
-   claimBtn.disabled = true;
+  boostSpinning = true;
+  spinBtn.disabled = true;
+  claimBtn.disabled = true;
 
-   const opts = [0, 2, 5, 10];
-   const idx = Math.floor(Math.random() * opts.length);
-   const mult = opts[idx];
+  const spinButtonText = spinBtn.querySelector('.spinButtonText');
+  if (spinButtonText) spinButtonText.textContent = '✨ 轉動中...';
 
-   const segment = 360 / opts.length;
-   const targetAngle = (idx * segment) + (segment / 2);
-   const spins = 6;
-   wheelRotation = wheelRotation + spins * 360 + (360 - targetAngle);
-   if (boostWheel) boostWheel.style.transform = 'rotate(' + wheelRotation + 'deg)';
+  if (wheelStage) wheelStage.classList.add('is-spinning');
+  if (wheelPointerEnhanced) wheelPointerEnhanced.classList.add('is-ticking');
+  if (bonusResultCard) {
+    bonusResultCard.innerHTML = '<div class="bonusResultDefault">✨ 幸運正在降臨……</div>';
+  }
 
-   setTimeout(() => {
-     boostMultiplier = mult;
-     boostUsed = true;
-     boostSpinning = false;
+  const opts = [0, 2, 5, 10];
+  const idx = Math.floor(Math.random() * opts.length);
+  const mult = opts[idx];
 
-     const finalCoins = Math.max(0, Math.floor(baseCoinsBeforeBoost * boostMultiplier));
-     if (activeCard && activeCard.settle) {
-       activeCard.settle.coins = finalCoins;
-     }
+  const segment = 360 / opts.length;
+  const targetAngle = (idx * segment) + (segment / 2) - 45;
+  const spins = 6;
+  wheelRotation = wheelRotation + spins * 360 + (360 - targetAngle);
+  if (boostWheel) boostWheel.style.transform = 'rotate(' + wheelRotation + 'deg)';
 
-     boostResultText.textContent = (mult === 0)
-       ? ('加碼結果：歸零（🪙 0）')
-       : ('加碼結果：' + mult + ' 倍！目前可領取 🪙 ' + finalCoins);
+  setTimeout(() => {
+    boostMultiplier = mult;
+    boostUsed = true;
+    boostSpinning = false;
 
-     claimBtn.disabled = false;
-     boostBtn.disabled = true;
-     boostBtn.textContent = '已加碼';
-   }, 2700);
- });
+    if (wheelStage) wheelStage.classList.remove('is-spinning');
+    if (wheelPointerEnhanced) {
+      wheelPointerEnhanced.classList.remove('is-ticking');
+      wheelPointerEnhanced.classList.add('is-hit');
+      setTimeout(() => wheelPointerEnhanced.classList.remove('is-hit'), 550);
+    }
+
+    if (wheelStage) wheelStage.classList.add('is-winning');
+    setTimeout(() => {
+      if (wheelStage) wheelStage.classList.remove('is-winning');
+    }, 1600);
+
+    launchBonusCelebration(mult);
+
+    const finalCoins = Math.max(0, Math.floor(baseCoinsBeforeBoost * boostMultiplier));
+    if (activeCard && activeCard.settle) {
+      activeCard.settle.coins = finalCoins;
+    }
+
+    if (bonusResultCard) {
+      const outcomeClass = 'bonusOutcome bonusOutcome' + mult;
+      const icon = mult === 0 ? '💨' : (mult === 2 ? '✨' : (mult === 5 ? '💎' : '👑'));
+      const title = mult === 0 ? '沒有加碼' : (mult + ' 倍加碼');
+      const text = mult === 0 ? '獎勵歸零' : ('獎勵放大 ' + mult + ' 倍');
+      bonusResultCard.innerHTML = '<div class="' + outcomeClass + '"><span class="bonusOutcomeIcon">' + icon + '</span><div><div class="bonusOutcomeTitle">' + title + '</div><div class="bonusOutcomeText">' + text + '</div></div></div>';
+    }
+
+    const summaryHtml = '<div class="bonusRewardSummary">' +
+      '<div class="bonusRewardItem"><span>原始獎勵</span><strong>🪙 ' + baseCoinsBeforeBoost + '</strong></div>' +
+      '<div class="bonusRewardItem ' + (mult > 0 ? 'highlight' : '') + '"><span>加碼倍數</span><strong>' + mult + 'x</strong></div>' +
+      '<div class="bonusRewardItem ' + (mult > 0 ? 'highlight' : '') + '"><span>最終獎勵</span><strong>🪙 ' + finalCoins + '</strong></div>' +
+      '</div>';
+    boostResultText.innerHTML = summaryHtml;
+
+    if (spinButtonText) spinButtonText.textContent = '轉動完成';
+
+    claimBtn.disabled = false;
+    boostBtn.disabled = true;
+    boostBtn.textContent = '已加碼';
+  }, 2700);
+});
+
  
  window.addEventListener('resize', () => {
    if (!activeCard) return;
@@ -2367,5 +3554,3 @@ button:disabled{
  </script>
 </body>
 </html>
-
-

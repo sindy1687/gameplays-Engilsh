@@ -1,9 +1,21 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
 <meta charset="UTF-8" />
 <title>填空挑戰 - 英打小英雄</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script type="application/json" id="atlasStageMeta">
+{
+  "type": "greek",
+  "id": "rhea",
+  "name": "瑞亞",
+  "englishName": "Rhea",
+  "order": 21,
+  "description": "泰坦女神",
+  "questionCount": 40
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
 <style>
   :root{--gold:#ffd700;--cyan:#00ffff;--panel:rgba(30,30,40,.97);--glass:rgba(30,30,40,.92)}
@@ -126,6 +138,7 @@
   <script src="js/userData.js"></script>
   <script src="js/characterDialogue.js"></script>
   <script src="js/gameDialogue.js"></script>
+  <script src="js/apiConfig.js"></script>
   <script src="js/greekScoreUpload.js"></script>
 
 <script>
@@ -371,12 +384,18 @@ function loadTotalStars(){
   return parseInt(localStorage.getItem('totalStars')||'0',10);
 }
 function addStarsToTotal(n){
+  if(typeof StarSystem!=='undefined' && typeof StarSystem.addTotalStars==='function'){ StarSystem.addTotalStars(n, '瑞亞遊戲獎勵'); updateStarsDisplay(); return; }
   if(typeof StarRewardSystem!=='undefined' && typeof StarRewardSystem.addStars==='function'){ StarRewardSystem.addStars(n); updateStarsDisplay(); return; }
   if(typeof LinkageSystem!=='undefined' && LinkageSystem?.stars?.add){ LinkageSystem.stars.add(n); updateStarsDisplay(); return; }
-  localStorage.setItem('totalStars', String(loadTotalStars()+n));
+  window.StarSystem.setTotalStars(String(loadTotalStars()+n));
   updateStarsDisplay();
 }
-function updateStarsDisplay(){ $('#totalStarsCount').textContent = loadTotalStars(); }
+function updateStarsDisplay(){
+  const el = document.getElementById('totalStarsCount');
+  if (el) {
+    el.textContent = loadTotalStars();
+  }
+}
 function resetProgress(){ localStorage.removeItem('fillIndex'); location.reload(); }
 
 /* ===================== 背景音樂 ===================== */

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
+  <script src="js/stars.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>⭐ 星星排行榜</title>
@@ -13,37 +14,34 @@
 
         body {
             font-family: 'Microsoft JhengHei', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #e8f4f8 0%, #f3e8ff 50%, #fff5e6 100%);
             min-height: 100vh;
             color: #333;
         }
 
         .container {
-            max-width: 1000px;
+            width: min(94%, 960px);
             margin: 0 auto;
-            padding: 20px;
+            padding: 24px 16px 48px;
         }
 
         .header {
             text-align: center;
             margin-bottom: 30px;
-            color: white;
+            color: #333;
         }
 
         .header h1 {
-            font-size: 3.5rem;
+            font-size: 32px;
+            font-weight: 800;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #333;
         }
 
         .header p {
-            font-size: 1.3rem;
-            opacity: 0.9;
-            color: #FFD700;
+            font-size: 1rem;
+            opacity: 0.8;
+            color: #666;
         }
 
         .stats-cards {
@@ -54,48 +52,43 @@
         }
 
         .stat-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
             padding: 20px;
             text-align: center;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 215, 0, 0.3);
+            border: 1px solid rgba(0, 0, 0, 0.08);
         }
 
         .stat-value {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #FFD700;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #333;
             margin-bottom: 5px;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .stat-label {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: #666;
-            font-weight: bold;
+            font-weight: 600;
         }
 
         .leaderboard-section {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
             padding: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
             backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 215, 0, 0.3);
+            border: 1px solid rgba(0, 0, 0, 0.08);
         }
 
         .section-title {
-            font-size: 2.5rem;
-            font-weight: bold;
+            font-size: 28px;
+            font-weight: 700;
             color: #333;
             margin-bottom: 30px;
             text-align: center;
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .leaderboard-content {
@@ -103,151 +96,163 @@
         }
 
         .leaderboard-item {
-            display: flex;
+            display: grid;
+            grid-template-columns: 70px minmax(0, 1fr) 140px;
             align-items: center;
-            padding: 20px;
-            margin-bottom: 15px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 15px;
-            border-left: 6px solid #FFD700;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            gap: 12px;
+            padding: 12px 18px;
+            margin-bottom: 10px;
+            min-height: 64px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
 
         .leaderboard-item:hover {
-            transform: translateX(8px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            border-left-color: #FFA500;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
 
         .leaderboard-item.current-user {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            color: white;
-            border-left-color: #FF6B6B;
+            background: linear-gradient(135deg, #FFF8E1 0%, #FFE0B2 100%);
+            border: 2px solid #FFB74D;
         }
 
         .rank {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #FFD700;
-            min-width: 60px;
-            text-align: center;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #333;
+            min-width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #f5f5f5;
         }
 
         .rank.gold {
-            color: #FFD700;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            background: linear-gradient(135deg, #FFF9C4, #FFD54F);
+            color: #333;
         }
 
         .rank.silver {
-            color: #C0C0C0;
-            text-shadow: 0 0 15px rgba(192, 192, 192, 0.8);
+            background: linear-gradient(135deg, #E0E0E0, #BDBDBD);
+            color: #333;
         }
 
         .rank.bronze {
-            color: #CD7F32;
-            text-shadow: 0 0 15px rgba(205, 127, 50, 0.8);
+            background: linear-gradient(135deg, #D7CCC8, #BCAAA4);
+            color: #333;
         }
 
         .current-user .rank {
+            background: #FFB74D;
             color: white;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
         }
 
         .user-info {
             flex: 1;
-            margin-left: 20px;
+            margin: 0;
         }
 
         .user-name {
-            font-size: 1.3rem;
-            font-weight: bold;
+            font-size: 1rem;
+            font-weight: 700;
             color: #333;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .current-user .user-name {
-            color: white;
+            color: #333;
         }
 
         .user-stats {
-            font-size: 1rem;
+            font-size: 0.85rem;
             color: #666;
+            line-height: 1.4;
         }
 
         .current-user .user-stats {
-            color: rgba(255, 255, 255, 0.9);
+            color: #666;
         }
 
         .stars {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #FFD700;
-            margin-left: 20px;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            font-size: 1rem;
+            font-weight: 800;
+            color: #333;
+            text-align: right;
         }
 
         .current-user .stars {
-            color: white;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            color: #333;
         }
 
         .loading {
             text-align: center;
-            padding: 50px;
+            padding: 40px;
             color: #666;
-            font-size: 1.3rem;
+            font-size: 1rem;
         }
 
         .error {
             text-align: center;
-            padding: 50px;
-            color: #f44336;
-            font-size: 1.3rem;
+            padding: 40px;
+            color: #666;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
         }
 
         .refresh-button {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            color: white;
-            border: none;
+            width: 60px;
+            height: 60px;
+            background: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1.8rem;
-            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
-            transition: all 0.3s ease;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
         }
 
         .refresh-button:hover {
-            transform: scale(1.1) rotate(180deg);
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
         }
 
         .back-button {
             position: fixed;
             top: 30px;
             left: 30px;
-            padding: 15px 30px;
-            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
-            color: white;
-            border: none;
-            border-radius: 25px;
+            height: 38px;
+            padding: 0 14px;
+            background: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 1.1rem;
-            font-weight: bold;
+            font-size: 0.95rem;
+            font-weight: 600;
             text-decoration: none;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .back-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            background: #e8e8e8;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
         }
 
         .add-stars-button {
@@ -280,32 +285,31 @@
         }
 
         .tab-button {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 25px;
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 1.1rem;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            background: linear-gradient(45deg, #6c757d, #5a6268);
-            color: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            background: #f5f5f5;
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
 
         .tab-button.active {
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            color: #333;
-            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
-            transform: translateY(-2px);
+            background: #333;
+            color: white;
+            border-color: #333;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
         }
 
         .tab-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: #e8e8e8;
         }
 
         .tab-button.active:hover {
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+            background: #222;
         }
 
         .modal {
@@ -423,11 +427,10 @@
 
         .crown {
             position: absolute;
-            top: -10px;
-            right: -10px;
-            font-size: 1.5rem;
-            color: #FFD700;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+            top: -8px;
+            right: 12px;
+            font-size: 1.2rem;
+            color: #FFB74D;
         }
 
         .leaderboard-item {
@@ -436,13 +439,13 @@
 
         /* 星星連動系統樣式 */
         .stars-sync-section {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
             padding: 30px;
             margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 215, 0, 0.3);
+            border: 1px solid rgba(0, 0, 0, 0.08);
             position: relative;
             z-index: 1;
             display: block !important;
@@ -458,13 +461,13 @@
         }
 
         .sync-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
             padding: 20px;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border: 2px solid rgba(255, 215, 0, 0.2);
-            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            transition: all 0.2s ease;
             position: relative;
             z-index: 5;
             display: block !important;
@@ -473,33 +476,31 @@
         }
 
         .sync-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            border-color: #FFD700;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
 
         .sync-icon {
-            font-size: 2.5rem;
+            font-size: 2rem;
             margin-bottom: 10px;
         }
 
         .sync-title {
-            font-size: 1.1rem;
-            font-weight: bold;
+            font-size: 1rem;
+            font-weight: 600;
             color: #333;
             margin-bottom: 8px;
         }
 
         .sync-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #FFD700;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #333;
             margin-bottom: 5px;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .sync-desc {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #666;
         }
 
@@ -511,14 +512,14 @@
         }
 
         .sync-btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 25px;
+            padding: 10px 18px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            background: linear-gradient(45deg, #FFD700, #FFA500);
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            background: #f5f5f5;
             color: #333;
             position: relative;
             overflow: hidden;
@@ -526,8 +527,8 @@
         }
 
         .sync-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+            background: #e8e8e8;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .sync-btn:active {
@@ -536,13 +537,13 @@
 
         /* 星星總數顯示樣式 */
         .total-stars-display {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
             padding: 30px;
             margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 215, 0, 0.3);
+            border: 1px solid rgba(0, 0, 0, 0.08);
         }
 
         .total-stars-header {
@@ -551,18 +552,15 @@
         }
 
         .total-stars-header h2 {
-            font-size: 2rem;
+            font-size: 24px;
             color: #333;
             margin-bottom: 8px;
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-weight: 700;
         }
 
         .total-stars-header p {
             color: #666;
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
 
         .total-stars-grid {
@@ -573,25 +571,23 @@
         }
 
         .total-stars-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
             padding: 20px;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border: 2px solid rgba(255, 215, 0, 0.2);
-            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            transition: all 0.2s ease;
         }
 
         .total-stars-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            border-color: #FFD700;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
 
         .total-stars-card.highlight {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            border-color: #FF6B6B;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            background: linear-gradient(135deg, #FFF8E1 0%, #FFE0B2 100%);
+            border-color: #FFB74D;
         }
 
         .total-stars-card.highlight .total-stars-label,
@@ -600,33 +596,32 @@
         }
 
         .total-stars-icon {
-            font-size: 2.5rem;
+            font-size: 2rem;
             margin-bottom: 10px;
         }
 
         .total-stars-label {
-            font-size: 1rem;
-            font-weight: bold;
+            font-size: 0.95rem;
+            font-weight: 600;
             color: #333;
             margin-bottom: 8px;
         }
 
         .total-stars-value {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #FFD700;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #333;
         }
 
         .total-stars-summary {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
             padding: 20px;
             display: flex;
             justify-content: space-around;
             flex-wrap: wrap;
             gap: 20px;
-            border: 2px solid rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(0, 0, 0, 0.08);
         }
 
         .summary-item {
@@ -636,50 +631,75 @@
 
         .summary-label {
             display: block;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #666;
             margin-bottom: 5px;
         }
 
         .summary-value {
             display: block;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #FFD700;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #333;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 600px) {
             .container {
-                padding: 10px;
+                padding: 16px 12px 32px;
             }
 
             .header h1 {
-                font-size: 2.5rem;
+                font-size: 24px;
+            }
+
+            .header p {
+                font-size: 0.9rem;
             }
 
             .stats-cards {
                 grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 16px;
+            }
+
+            .stat-value {
+                font-size: 1.8rem;
             }
 
             .leaderboard-item {
-                flex-direction: column;
-                text-align: center;
-                padding: 15px;
-            }
-
-            .user-info {
-                margin-left: 0;
-                margin-top: 10px;
-            }
-
-            .stars {
-                margin-left: 0;
-                margin-top: 10px;
+                grid-template-columns: 44px minmax(0, 1fr) auto;
+                padding: 10px 12px;
+                min-height: 56px;
+                gap: 8px;
             }
 
             .rank {
-                margin-bottom: 10px;
+                font-size: 1rem;
+                min-width: 32px;
+                height: 32px;
+            }
+
+            .user-name {
+                font-size: 0.9rem;
+            }
+
+            .user-stats {
+                font-size: 0.75rem;
+            }
+
+            .stars {
+                font-size: 0.9rem;
+            }
+
+            .section-title {
+                font-size: 22px;
+            }
+
+            .leaderboard-section {
+                padding: 20px;
             }
 
             /* 手機版音樂按鈕調整 */
@@ -692,6 +712,22 @@
                 width: 45px;
                 height: 45px;
                 font-size: 1rem;
+            }
+
+            .back-button {
+                top: 20px;
+                left: 20px;
+                height: 36px;
+                padding: 0 12px;
+                font-size: 0.85rem;
+            }
+
+            .refresh-button {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
             }
         }
 
@@ -708,87 +744,58 @@
 
         /* 星座排行榜分關卡樣式 */
         .category-section {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
             padding: 25px;
             margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 215, 0, 0.3);
+            border: 1px solid rgba(0, 0, 0, 0.08);
         }
 
         .category-section h3 {
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             color: #333;
             text-align: center;
             margin-bottom: 20px;
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-weight: 700;
             padding: 15px;
-            border-radius: 15px;
-            border: 2px solid rgba(255, 215, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .category-section h3::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
-            animation: shimmer 3s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
+            border-radius: 16px;
+            background: #f5f5f5;
         }
 
         .category-section .leaderboard-item {
-            margin-bottom: 12px;
-            border-left: 6px solid #FFD700;
-            transition: all 0.3s ease;
+            margin-bottom: 10px;
         }
 
         .category-section .leaderboard-item:hover {
-            transform: translateX(8px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            border-left-color: #FFA500;
+            transform: translateY(-2px);
         }
 
         .category-section .leaderboard-item.current-user {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            color: white;
-            border-left-color: #FF6B6B;
+            background: linear-gradient(135deg, #FFF8E1 0%, #FFE0B2 100%);
+            border: 2px solid #FFB74D;
         }
 
         /* 時間顯示樣式 */
         .time-display {
-            color: #FF6B6B;
-            font-weight: bold;
-            text-shadow: 0 0 5px rgba(255, 107, 107, 0.5);
+            color: #666;
+            font-weight: 600;
         }
 
         .current-user .time-display {
-            color: white;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            color: #666;
         }
 
         /* 關卡人數統計樣式 */
         .category-count {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #666;
             font-weight: normal;
             margin-left: 10px;
-            background: rgba(255, 215, 0, 0.2);
+            background: #f5f5f5;
             padding: 4px 8px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
         }
 
         /* 錯誤訊息樣式 */
@@ -805,114 +812,91 @@
 
         /* 排行榜項目改善樣式 */
         .leaderboard-item {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 249, 250, 0.9) 100%);
-            border-radius: 15px;
-            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            padding: 12px 18px;
             margin-bottom: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease;
             position: relative;
             overflow: hidden;
         }
 
         .leaderboard-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.05), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            display: none;
         }
 
         .leaderboard-item:hover::before {
-            opacity: 1;
+            display: none;
         }
 
         /* 排名樣式改善 */
         .rank {
-            font-size: 1.5rem;
-            font-weight: bold;
-            min-width: 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            min-width: 36px;
+            height: 36px;
             text-align: center;
             border-radius: 50%;
-            padding: 8px;
-            margin-right: 15px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .rank.gold {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            color: white;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #FFF9C4, #FFD54F);
+            color: #333;
         }
 
         .rank.silver {
-            background: linear-gradient(135deg, #C0C0C0, #A9A9A9);
-            color: white;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #E0E0E0, #BDBDBD);
+            color: #333;
         }
 
         .rank.bronze {
-            background: linear-gradient(135deg, #CD7F32, #B8860B);
-            color: white;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #D7CCC8, #BCAAA4);
+            color: #333;
         }
 
         /* 皇冠樣式改善 */
         .crown {
             position: absolute;
-            top: -5px;
-            right: 15px;
-            font-size: 1.8rem;
-            animation: crownGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes crownGlow {
-            0% { 
-                filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
-                transform: scale(1);
-            }
-            100% { 
-                filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
-                transform: scale(1.1);
-            }
+            top: -8px;
+            right: 12px;
+            font-size: 1.2rem;
+            color: #FFB74D;
+            animation: none;
         }
 
         /* 用戶資訊樣式改善 */
         .user-info {
             flex: 1;
-            margin: 0 15px;
+            margin: 0;
         }
 
         .user-name {
-            font-size: 1.1rem;
-            font-weight: bold;
+            font-size: 1rem;
+            font-weight: 700;
             color: #333;
-            margin-bottom: 5px;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            margin-bottom: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .user-stats {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #666;
             line-height: 1.4;
         }
 
         /* 星星分數樣式改善 */
         .stars {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #FFD700;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-            min-width: 60px;
-            text-align: center;
-            background: rgba(255, 215, 0, 0.1);
-            padding: 8px 12px;
-            border-radius: 20px;
-            border: 2px solid rgba(255, 215, 0, 0.3);
+            font-size: 1rem;
+            font-weight: 800;
+            color: #333;
+            text-align: right;
         }
 
         /* 載入動畫 */
@@ -920,7 +904,7 @@
             text-align: center;
             padding: 40px 20px;
             color: #666;
-            font-size: 1.2rem;
+            font-size: 1rem;
         }
 
         .loading::after {
@@ -928,9 +912,9 @@
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid #FFD700;
+            border: 3px solid #ddd;
             border-radius: 50%;
-            border-top-color: transparent;
+            border-top-color: #333;
             animation: spin 1s linear infinite;
             margin-left: 10px;
         }
@@ -969,10 +953,10 @@
         <div class="header">
             <h1>⭐ 星星排行榜</h1>
             <p>從星座挑戰獲取的真實排行榜資料！</p>
-            <div id="currentUserDisplay" style="margin-top: 10px; font-size: 1.1rem; color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">
+            <div id="currentUserDisplay" style="margin-top: 10px; font-size: 0.95rem; color: #666;">
                 👤 當前用戶: <span id="currentUserName">未設定</span>
             </div>
-            <div id="dataSourceInfo" style="margin-top: 5px; font-size: 0.9rem; color: #4CAF50; text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);">
+            <div id="dataSourceInfo" style="margin-top: 5px; font-size: 0.85rem; color: #999;">
                 📊 資料來源: 指定 Google Apps Script API
             </div>
         </div>
@@ -1101,12 +1085,12 @@
             </div>
         </div>
     </div>
-
-
+    <script src="js/apiConfig.js"></script>
     <script>
         // ========== 配置和工具函數 ==========
         const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbxoktND9L-KKwSaih5SNzdJWLhRP9dQdI5oHbUNIE3HJhdLjhLIwnL8xFnNtFfGE-rH9A/exec';
-        const QUIZ_API_URL = "https://script.google.com/macros/s/AKfycbyhcoJVk9MVFWqsyee2PeE-vCo3u2p6oyL8HUCaMk0ZeNL0Td9mOBZnMlHNb6mIO5eCHQ/exec";
+        const QUIZ_API_URL = (window.GameAPIConfig && window.GameAPIConfig.quizScoreApi)
+            || "https://script.google.com/macros/s/AKfycbyhcoJVk9MVFWqsyee2PeE-vCo3u2p6oyL8HUCaMk0ZeNL0Td9mOBZnMlHNb6mIO5eCHQ/exec";
         
         // 工具函數
         const Utils = {
@@ -1586,6 +1570,8 @@
         // 載入星座排行榜（簡化邏輯）
         async function loadConstellationLeaderboard() {
             try {
+                if (!QUIZ_API_URL) throw new Error('尚未設定 Google Apps Script Web App URL');
+
                 const formData = new URLSearchParams({ action: 'getQuizLeaderboard' });
                 const data = await Utils.fetchAPI(QUIZ_API_URL, {
                     method: 'POST',
@@ -1599,18 +1585,31 @@
                 if (leaderboard.length > 0) {
                     handleConstellationLeaderboard({ success: true, leaderboard });
                 } else {
-                    loadMockConstellationData();
+                    console.warn('Google Apps Script 回傳 0 筆排行榜資料，嘗試直接讀取 Google 試算表。', data);
+                    if (typeof window.loadConstellationLeaderboardFromSheet === 'function') {
+                        await window.loadConstellationLeaderboardFromSheet();
+                    } else {
+                        handleConstellationLeaderboard({ success: true, leaderboard: [] });
+                    }
                 }
             } catch (error) {
                 console.error('載入星座排行榜失敗:', error);
-                loadMockConstellationData();
+                const content = document.getElementById('constellationLeaderboardContent');
+                if (content) {
+                    content.innerHTML = `
+                        <div style="text-align:center;padding:30px;color:#ff6b6b;">
+                            Google Sheet 排行榜讀取失敗，請確認 Apps Script Web App URL 是否已重新部署。
+                        </div>
+                    `;
+                }
             }
         }
 
         // 處理星座排行榜資料（簡化邏輯）
         function handleConstellationLeaderboard(data) {
             if (data.error || !data.leaderboard || data.leaderboard.length === 0) {
-                loadMockConstellationData();
+                constellationLeaderboardData = {};
+                displayConstellationLeaderboard();
                 return;
             }
             
@@ -1651,7 +1650,8 @@
             });
             
             if (Object.keys(processedData).length === 0) {
-                loadMockConstellationData();
+                constellationLeaderboardData = {};
+                displayConstellationLeaderboard();
                 return;
             }
             
@@ -2802,7 +2802,7 @@
     };
     const idxUser = findCol(["玩家名稱","姓名","名稱","user","name","玩家"]);
     const idxScore = findCol(["分數","score"]);
-    const idxCorrect = findCol(["答對題數","正確數","correct","correctCount","正確"]);
+    const idxCorrect = findCol(["答對數","答對題數","正確數","correct","correctCount","正確"]);
     const idxCat = findCol(["星座","關卡","category","quiz","類別"]);
     const idxTime = findCol(["答題時間","時間","秒","time","duration"]);
     const idxDate = findCol(["時間戳記","日期","date","timestamp"]);
@@ -2877,7 +2877,7 @@
         const find = (names) => SheetUtils.findCol(lc, names);
         idxUser = find(["玩家名稱", "姓名", "名稱", "user", "name", "玩家"]);
         idxScore = find(["分數", "score"]);
-        idxCorrect = find(["答對題數", "正確數", "correct", "correctcount", "正確"]);
+        idxCorrect = find(["答對數", "答對題數", "正確數", "correct", "correctcount", "正確"]);
         idxCat = find(["星座", "關卡", "category", "quiz", "類別"]);
         idxTime = find(["答題時間", "時間", "秒", "time", "duration"]);
         idxDate = find(["時間戳記", "日期", "date", "timestamp"]);

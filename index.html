@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
   <meta charset="UTF-8" />
   <title>英打小英雄 - 首頁</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/shared.css">
   <!-- TODO: css/shared.css file does not exist - commented out -->
   <!-- <link rel="stylesheet" href="css/shared.css"> -->
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -157,25 +159,28 @@
 
     /* 頭像選擇 */
     .avatar-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-      gap: 15px;
-      margin: 16px 0;
-      padding: 15px;
-      background: rgba(10, 20, 40, 0.2);
-      border-radius: 20px;
-      border: 1px solid rgba(0, 255, 255, 0.3);
-      backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: nowrap;
+      width: min(1120px, calc(100% - 28px));
+      margin: 16px auto;
+      padding: 14px 20px;
+      border-radius: 22px;
+      background: rgba(5,15,35,.62);
+      border: 1px solid rgba(0,220,255,.32);
+      backdrop-filter: blur(12px);
     }
 
     .avatar-option {
-      width: 80px;
-      height: 80px;
+      width: 92px;
+      height: 92px;
       border-radius: 50%;
       cursor: pointer;
-      border: 3px solid #00ffff;
+      border: 2px solid #00eaff;
       transition: all 0.2s ease-out;
-      box-shadow: 0 0 20px #00ffff44, 0 0 40px #a259ff22;
+      box-shadow: 0 0 10px rgba(0,230,255,.30);
       background-size: cover;
       background-position: center top;
       background-repeat: no-repeat;
@@ -198,10 +203,9 @@
     }
 
     .avatar-option:hover {
-      transform: scale(1.08);
-      box-shadow: 0 0 30px #00ffff, 0 0 60px #a259ff66;
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 0 10px rgba(0,230,255,.30);
       border-color: #ff6b6b;
-      /* 懸停時放大背景圖片以更好地顯示臉部 */
       background-size: 115% auto;
     }
 
@@ -210,21 +214,25 @@
     }
 
     .avatar-option.selected {
-      border-color: #ffd700;
-      box-shadow: 0 0 30px #ffd700, 0 0 60px #ffd70066;
-      transform: scale(1.1);
+      border: 3px solid #ffd91c;
+      box-shadow: 0 0 0 4px rgba(255,217,28,.12), 0 0 20px rgba(255,217,28,.45);
+      transform: translateY(-4px);
       animation: selectedPulse 2s ease-in-out infinite;
-      /* 選中時也放大背景圖片 */
       background-size: 110% auto;
     }
 
     /* 自訂頭像選項樣式 */
     .custom-avatar-option {
-      background: linear-gradient(135deg, #a259ff 0%, #ff6b6b 100%) !important;
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 4px;
+      background: linear-gradient(145deg, #d84ad8, #c644a6);
+      border: 2px solid #00eaff;
       color: #fff;
       font-weight: 700;
       text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
@@ -309,13 +317,13 @@
     }
 
     .custom-avatar-icon {
-      font-size: 2rem;
-      margin-bottom: 4px;
+      font-size: 1.5rem;
+      margin-bottom: 2px;
       animation: customIconGlow 2s ease-in-out infinite alternate;
     }
 
     .custom-avatar-text {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 600;
       letter-spacing: 1px;
     }
@@ -958,37 +966,11 @@
     }
 
     /* 星星顯示 */
-    #starsDisplay {
+    .global-stars-pill {
       position: fixed;
       top: 15px;
       left: 15px;
-      background: rgba(10, 20, 40, 0.8);
-      padding: 4px 8px;
-      border-radius: 8px;
-      color: #ffd700;
-      font-weight: bold;
-      box-shadow: 0 0 8px #ffd700, 0 0 16px #00ffff;
-      border: 1px solid #00ffff;
-      font-size: 1rem;
-      backdrop-filter: blur(5px);
       z-index: 1000;
-      display: flex !important;
-      align-items: center !important;
-      gap: 3px !important;
-      width: fit-content !important;
-      text-align: center !important;
-      transition: all 0.3s ease !important;
-    }
-
-    #starsDisplay:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 12px #ffd700, 0 0 24px #00ffff;
-    }
-
-    #starsDisplay #totalStarsCount {
-      font-weight: bold;
-      color: #ffd700;
-      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
     }
 
     /* 單字下載中心樣式 */
@@ -1782,23 +1764,56 @@
       }
 
       .avatar-grid {
-        grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-        gap: 8px;
+        display: flex;
+        justify-content: flex-start;
+        gap: 12px;
         margin: 12px 0;
         padding: 12px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+
+      .avatar-grid::-webkit-scrollbar {
+        display: none;
       }
 
       .avatar-option {
-        width: 60px;
-        height: 60px;
+        flex: 0 0 72px;
+        width: 72px;
+        height: 72px;
+      }
+
+      .custom-avatar-option {
+        flex: 0 0 72px;
+        width: 72px;
+        height: 72px;
       }
 
       #characterPreview {
-        width: 200px;
-        height: 280px;
+        width: min(230px, 60vw);
+        max-height: 300px;
         margin: 8px auto;
-        background: rgba(10, 20, 40, 0.2);
+        background: radial-gradient(circle at center, rgba(45,90,180,.16), transparent 70%);
         backdrop-filter: blur(4px);
+      }
+
+      #characterImage {
+        max-height: 300px;
+      }
+
+      .character-name {
+        font-size: 1.2rem;
+      }
+
+      .character-title {
+        font-size: 0.9rem;
+      }
+
+      .character-quote {
+        font-size: 0.9rem;
+        padding: 6px 14px;
+        min-height: 36px;
       }
 
       .nav-buttons {
@@ -1810,13 +1825,7 @@
       .nav-btn {
         padding: 8px 14px;
         font-size: 0.9rem;
-        overflow: visible !important; /* 確保成就按鈕在手機版也能正常顯示泡泡 */
-      }
-
-      #characterSlogan {
-        font-size: 1rem;
-        margin: 8px 0;
-        min-height: 1.2rem;
+        overflow: visible !important;
       }
 
       .main-buttons {
@@ -1840,6 +1849,25 @@
 
       .nav-buttons .nav-btn {
         margin: 4px 0;
+      }
+
+      .main-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-width: 100%;
+      }
+
+      .secondary-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-width: 100%;
+      }
+
+      .secondary-actions .secondary-action-btn:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .dashboard-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-width: 100%;
       }
     }
 
@@ -1874,26 +1902,64 @@
       }
 
       .avatar-grid {
-        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-        gap: 12px;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
         margin: 18px 0;
         padding: 18px;
+        width: min(900px, calc(100% - 28px));
       }
 
       .avatar-option {
-        width: 70px;
-        height: 70px;
+        width: 80px;
+        height: 80px;
+      }
+
+      .custom-avatar-option {
+        width: 80px;
+        height: 80px;
       }
 
       #characterPreview {
-        width: 250px;
-        height: 350px;
+        width: min(280px, 30vw);
+        max-height: 350px;
         margin: 15px auto;
       }
 
-      #characterSlogan {
-        font-size: 1.15rem;
-        margin: 12px 0;
+      #characterImage {
+        max-height: 350px;
+      }
+
+      .character-name {
+        font-size: 1.4rem;
+      }
+
+      .character-title {
+        font-size: 1rem;
+      }
+
+      .character-quote {
+        font-size: 0.95rem;
+      }
+
+      .main-actions {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        max-width: 100%;
+      }
+
+      .secondary-actions {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        max-width: 100%;
+      }
+
+      .secondary-actions .secondary-action-btn:nth-child(4),
+      .secondary-actions .secondary-action-btn:nth-child(5) {
+        grid-column: span 1;
+      }
+
+      .dashboard-cards {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        max-width: 100%;
       }
     }
 
@@ -2022,21 +2088,60 @@
     }
 
     #characterPreview {
-      width: 300px;
-      height: 400px;
+      width: min(300px, 26vw);
+      max-height: 390px;
       margin: 12px auto;
       border-radius: 15px;
       overflow: hidden;
-      background: rgba(10, 20, 40, 0.2);
+      background: radial-gradient(circle at center, rgba(45,90,180,.16), transparent 70%);
       backdrop-filter: blur(1px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 440px;
     }
 
     #characterImage {
       width: 100%;
       height: 100%;
+      max-height: 390px;
       object-fit: contain;
       background: transparent;
       mix-blend-mode: screen;
+      filter: drop-shadow(0 18px 30px rgba(0,0,0,.35)) drop-shadow(0 0 18px rgba(0,220,255,.22));
+    }
+
+    .character-name {
+      margin-top: 8px;
+      font-size: 1.55rem;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 14px rgba(0,220,255,.35);
+    }
+
+    .character-title {
+      margin-top: 4px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffd700;
+      text-shadow: 0 0 10px rgba(255,215,0,.4);
+    }
+
+    .character-quote {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 8px 18px;
+      border-radius: 14px;
+      background: rgba(8,16,35,.55);
+      border: 1px solid rgba(255,215,0,.18);
+      color: #ffd82f;
+      font-size: 1rem;
+      font-weight: 800;
+      margin: 10px 0;
+      text-shadow: 0 0 8px rgba(255,215,0,.3);
     }
 
     .nav-buttons {
@@ -2124,6 +2229,255 @@
       margin: 16px 0;
       overflow: visible !important;
       position: relative;
+    }
+
+    /* 首頁主容器 */
+    .home-main {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    /* 公告區樣式 */
+    .home-announcements {
+      background: linear-gradient(135deg, rgba(10, 20, 40, 0.85), rgba(20, 40, 80, 0.85));
+      border: 2px solid rgba(0, 255, 255, 0.3);
+      border-radius: 18px;
+      margin: 20px 0 24px;
+      padding: 0;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      min-height: 110px;
+    }
+
+    .announcements-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+    }
+
+    .announcements-header h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: #00ffff;
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+      letter-spacing: 1px;
+    }
+
+    .announcements-content {
+      padding: 20px;
+      min-height: 70px;
+    }
+
+    .loading-announcement {
+      text-align: center;
+      color: #00ffff;
+      font-style: italic;
+      font-size: 1rem;
+    }
+
+    /* 區塊標題 */
+    .section-title {
+      margin: 24px 0 12px;
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      color: rgba(255, 255, 255, 0.55);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    /* 主要學習功能區 - 5欄 Grid */
+    .main-actions {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      max-width: 1120px;
+      margin: 24px auto 0;
+    }
+
+    .main-action-btn {
+      min-height: 72px;
+      padding: 14px 12px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 1.05rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #1ed8f1, #7c6cf2 50%, #ed5d9f);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 18px rgba(20, 180, 255, 0.22);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+      font-family: 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
+    }
+
+    .main-action-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(20, 180, 255, 0.35);
+    }
+
+    /* 遊戲與每日功能區 - 5欄 Grid */
+    .secondary-actions {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      max-width: 1080px;
+      margin: 14px auto 0;
+    }
+
+    .secondary-action-btn {
+      min-height: 64px;
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-size: 1rem;
+      font-weight: 850;
+      background: linear-gradient(135deg, #7c6cf2, #ed5d9f);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 18px rgba(20, 180, 255, 0.22);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+      font-family: 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
+    }
+
+    .secondary-action-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(20, 180, 255, 0.35);
+    }
+
+    /* 商城按鈕樣式 */
+    .shop-btn {
+      background: linear-gradient(135deg, #ff8a22, #ffb51f);
+      color: #111827;
+      border: 1px solid rgba(255, 215, 80, .45);
+      box-shadow: 0 8px 20px rgba(255, 145, 20, .22);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+    }
+
+    .shop-btn:hover {
+      transform: translateY(-3px);
+      filter: brightness(1.06);
+      box-shadow: 0 10px 25px rgba(255, 145, 20, .35);
+    }
+
+    /* 資訊卡區 - 5欄 Grid */
+    .dashboard-cards {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      max-width: 1050px;
+      margin: 28px auto 0;
+    }
+
+    .dashboard-card {
+      min-height: 112px;
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(124, 108, 242, 0.8), rgba(237, 93, 159, 0.8));
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 18px rgba(20, 180, 255, 0.22);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+      font-family: 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(20, 180, 255, 0.35);
+    }
+
+    /* GM 卡片 - 深色玻璃卡 */
+    .dashboard-card.gm-card {
+      background: rgba(25, 35, 60, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+    }
+
+    .dashboard-card.gm-card:hover {
+      background: rgba(35, 45, 70, 0.82);
+    }
+
+
+
+    /* 響應式斷點 */
+    @media (max-width: 1024px) {
+      .main-actions {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .secondary-actions {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .dashboard-cards {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-actions {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .secondary-actions {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .dashboard-cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .home-announcements {
+        min-height: auto;
+      }
+
+      .announcements-header {
+        flex-wrap: nowrap;
+        padding: 12px 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main-actions {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .secondary-actions {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .dashboard-cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .main-action-btn,
+      .secondary-action-btn,
+      .dashboard-card {
+        font-size: 0.9rem;
+        padding: 10px 8px;
+      }
     }
 
     /* 角色標語 */
@@ -2903,74 +3257,324 @@
         text-align: left;
       }
     }
+
+    /* ========================================
+       新的 App 圖示選單樣式
+       ======================================== */
+    
+    /* 選單區塊容器 */
+    .menu-section {
+      max-width: 1050px;
+      margin: 0 auto 32px;
+    }
+
+    /* 區塊標題 */
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 22px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 17px;
+      font-weight: 700;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
+    }
+
+    .section-title::before,
+    .section-title::after {
+      content: "";
+      width: 130px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(100, 180, 255, 0.7), transparent);
+    }
+
+    /* 選單 Grid 排版 */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(90px, 130px));
+      justify-content: center;
+      gap: 28px 70px;
+    }
+
+    /* 選單項目容器 */
+    .menu-item {
+      width: 130px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      text-decoration: none;
+      background: transparent;
+      border: 0;
+      color: white;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    /* 方形圖示按鈕 */
+    .menu-icon {
+      width: 94px;
+      height: 94px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 22px;
+      font-size: 38px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 玻璃高光效果 */
+    .menu-icon::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 45%;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.20), rgba(255, 255, 255, 0));
+      pointer-events: none;
+    }
+
+    /* Hover 效果 */
+    .menu-item:hover .menu-icon {
+      transform: translateY(-5px) scale(1.06);
+      box-shadow: 0 13px 26px rgba(0, 0, 0, 0.38), 0 0 22px rgba(120, 170, 255, 0.22);
+      filter: brightness(1.08);
+    }
+
+    /* 按下效果 */
+    .menu-item:active .menu-icon {
+      transform: translateY(-1px) scale(0.96);
+    }
+
+    /* 標籤文字 */
+    .menu-label {
+      margin-top: 10px;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.75);
+      white-space: nowrap;
+    }
+
+    /* 副標籤文字 (如收藏數量) */
+    .menu-subtext {
+      margin-top: 4px;
+      color: rgba(255, 255, 255, 0.80);
+      font-size: 12px;
+      line-height: 1.4;
+      text-align: center;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+    }
+
+    /* 不同功能的顏色樣式 */
+    .icon-adventure {
+      background: linear-gradient(145deg, #5865f2, #4032c9);
+    }
+
+    .icon-vocabulary {
+      background: linear-gradient(145deg, #31c8f2, #4879e8);
+    }
+
+    .icon-grammar {
+      background: linear-gradient(145deg, #9980e8, #6751c7);
+    }
+
+    .icon-article {
+      background: linear-gradient(145deg, #ff7588, #e54368);
+    }
+
+    .icon-chat {
+      background: linear-gradient(145deg, #67a9ff, #4d63d8);
+    }
+
+    .icon-gacha {
+      background: linear-gradient(145deg, #ef72a5, #ce447f);
+    }
+
+    .icon-shop {
+      background: linear-gradient(145deg, #ffb32f, #f07c17);
+    }
+
+    .icon-inventory {
+      background: linear-gradient(145deg, #8b5cf6, #6d28d9);
+    }
+
+    .icon-checkin {
+      background: linear-gradient(145deg, #ffd34e, #ffad18);
+    }
+
+    .icon-download {
+      background: linear-gradient(145deg, #50d690, #139e80);
+    }
+
+    .icon-game {
+      background: linear-gradient(145deg, #bc5fea, #7438ca);
+    }
+
+    .icon-card {
+      background: linear-gradient(145deg, #6667e8, #413cb7);
+    }
+
+    .icon-album {
+      background: linear-gradient(145deg, #54c8ee, #7373e7);
+    }
+
+    .icon-achievement {
+      background: linear-gradient(145deg, #bc67e8, #7231ca);
+    }
+
+    .icon-ranking {
+      background: linear-gradient(145deg, #ffd742, #bc7500);
+    }
+
+    .icon-gm {
+      background: linear-gradient(145deg, #56606f, #242a35);
+    }
+
+    /* 鎖定狀態 */
+    .menu-item.locked .menu-icon {
+      filter: grayscale(0.8) brightness(0.55);
+      opacity: 0.65;
+    }
+
+    /* 鎖定徽章 */
+    .menu-icon .lock-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.65);
+      font-size: 12px;
+    }
+
+    /* RWD - 平板 */
+    @media (max-width: 900px) {
+      .menu-grid {
+        grid-template-columns: repeat(4, minmax(80px, 110px));
+        gap: 24px 34px;
+      }
+
+      .menu-item {
+        width: 110px;
+      }
+
+      .menu-icon {
+        width: 88px;
+        height: 88px;
+        font-size: 35px;
+        border-radius: 20px;
+      }
+
+      .menu-label {
+        font-size: 15px;
+      }
+    }
+
+    /* RWD - 手機 */
+    @media (max-width: 650px) {
+      .menu-grid {
+        grid-template-columns: repeat(3, minmax(75px, 100px));
+        gap: 22px 18px;
+      }
+
+      .menu-item {
+        width: 100px;
+      }
+
+      .menu-icon {
+        width: 78px;
+        height: 78px;
+        border-radius: 19px;
+        font-size: 31px;
+      }
+
+      .menu-label {
+        font-size: 14px;
+      }
+
+      .menu-subtext {
+        font-size: 11px;
+      }
+
+      .section-title {
+        font-size: 15px;
+      }
+
+      .section-title::before,
+      .section-title::after {
+        width: 80px;
+      }
+    }
   </style>
 </head>
 <body>
   <!-- 星星顯示 -->
-  <div id="starsDisplay">
-    ⭐<span id="totalStarsCount">0</span>
+  <div class="global-stars-pill" data-global-stars>
+    <span class="global-star-icon">⭐</span>
+    <span class="global-stars-value" data-global-stars-value>0</span>
   </div>
 
   <!-- 主區域 -->
-  <div id="container">
-    <h1>🌌 星際英打冒險</h1>
-    <p class="subtitle">開始你的打字英雄之旅！</p>
+  <div class="home-main">
+    <div id="container">
+      <h1>🌌 星際英打冒險</h1>
+      <p class="subtitle">開始你的打字英雄之旅！</p>
 
-    <!-- 使用者名稱輸入 -->
-    <div class="input-group">
-      <input type="text" id="playerName" placeholder="請輸入您的名字" maxlength="10">
-      <button id="editNameBtn" class="edit-name-btn" onclick="toggleNameEdit()" style="display: none;">✏️ 編輯</button>
-    </div>
-
-    <!-- 角色預覽 -->
-    <div id="characterPreview">
-      <img id="characterImage" src="img/avatars/avatar_astro1.png" alt="角色預覽">
-    </div>
-
-    <!-- 角色標語 -->
-    <div id="characterSlogan" style="
-      font-size: 1.2rem;
-      color: #ffd700;
-      margin: 10px 0;
-      text-shadow: 0 0 12px #ffd700, 0 0 24px #ff6b6b;
-      font-weight: 600;
-      letter-spacing: 1px;
-      min-height: 1.5rem;
-      font-style: italic;
-      transition: all 0.2s ease-out;
-      opacity: 1;
-      transform: translateY(0);
-    ">🌟 勇敢的星際戰士，準備好迎接挑戰了嗎？</div>
-
-    <!-- 頭像選擇 -->
-    <div class="avatar-grid">
-      <div class="avatar-option selected" style="background-image: url('img/avatars/avatar_TL.png');" onclick="selectAvatar(this, 'img/avatars/avatar_TL.png', '🌟 勇敢的星際戰士，準備好迎接挑戰了嗎？', {rate: 0.9, pitch: 1.0, volume: 0.9, characterType: 'warrior'})"></div>
-      <div class="avatar-option" style="background-image: url('img/avatars/avatar_TR.png');" onclick="selectAvatar(this, 'img/avatars/avatar_TR.png', '⚡ 閃電般的速度，無人能敵！', {rate: 1.1, pitch: 1.2, volume: 0.9, characterType: 'speedster'})"></div>
-      <div class="avatar-option" style="background-image: url('img/avatars/avatar_BL.png');" onclick="selectAvatar(this, 'img/avatars/avatar_BL.png', '🛡️ 堅不可摧的防禦，守護你的夢想！', {rate: 0.8, pitch: 0.9, volume: 0.95, characterType: 'defender'})"></div>
-      <div class="avatar-option" style="background-image: url('img/avatars/avatar_BR.png');" onclick="selectAvatar(this, 'img/avatars/avatar_BR.png', '🎯 精準的瞄準，百發百中！', {rate: 0.95, pitch: 1.1, volume: 0.9, characterType: 'sharpshooter'})"></div>
-      <div class="avatar-option" style="background-image: url('img/avatars/avatar_spacekid.png');" onclick="selectAvatar(this, 'img/avatars/avatar_spacekid.png', '🌈 純真的心靈，創造奇蹟的力量！', {rate: 1.0, pitch: 1.3, volume: 0.85, characterType: 'magician'})"></div>
-      <div class="avatar-option" style="background-image: url('img/avatars/avatar_astro1.png');" onclick="selectAvatar(this, 'img/avatars/avatar_astro1.png', '🚀 探索未知的宇宙，發現無限可能！', {rate: 0.85, pitch: 1.05, volume: 0.9, characterType: 'explorer'})"></div>
-      <div class="avatar-option" style="background-image: url('img/avatars/vDS8zQP9HdvxX0g (1).png');" onclick="selectAvatar(this, 'img/avatars/vDS8zQP9HdvxX0g (1).png', '🌸 溫柔的櫻花精靈，散播美好與希望！', {rate: 0.85, pitch: 1.05, volume: 0.9, characterType: 'fairy'})"></div>
-      <div class="avatar-option custom-avatar-option" onclick="selectCustomAvatar(this)">
-        <div class="custom-avatar-icon">🎨</div>
-        <div class="custom-avatar-text">自訂</div>
+      <!-- 使用者名稱輸入 -->
+      <div class="input-group">
+        <input type="text" id="playerName" placeholder="請輸入您的名字" maxlength="10">
+        <button id="editNameBtn" class="edit-name-btn" onclick="toggleNameEdit()" style="display: none;">✏️ 編輯</button>
       </div>
-    </div>
 
-    <!-- 公告顯示區域 -->
-    <div id="homeAnnouncements" class="home-announcements">
-      <div class="announcements-header">
-        <h3>📣 最新公告</h3>
+      <!-- 角色預覽 -->
+      <div id="characterPreview">
+        <img id="characterImage" src="img/avatars/avatar_astro1.png" alt="角色預覽">
+        <div id="characterTitle" class="character-title"><span id="characterIcon">⚡</span> <span id="characterTitleText">閃電少年</span></div>
+      </div>
+
+      <!-- 角色標語 -->
+      <div id="characterSlogan" class="character-quote">🌟 勇敢的星際戰士，準備好迎接挑戰了嗎？</div>
+
+      <!-- 頭像選擇 -->
+      <div class="avatar-grid">
+        <div class="avatar-option selected" style="background-image: url('img/avatars/avatar_TL.png');" onclick="selectAvatar(this, 'img/avatars/avatar_TL.png', '🌟 勇敢的星際戰士，準備好迎接挑戰了嗎？', {rate: 0.9, pitch: 1.0, volume: 0.9, characterType: 'warrior'})"></div>
+        <div class="avatar-option" style="background-image: url('img/avatars/avatar_TR.png');" onclick="selectAvatar(this, 'img/avatars/avatar_TR.png', '⚡ 閃電般的速度，無人能敵！', {rate: 1.1, pitch: 1.2, volume: 0.9, characterType: 'speedster'})"></div>
+        <div class="avatar-option" style="background-image: url('img/avatars/avatar_BL.png');" onclick="selectAvatar(this, 'img/avatars/avatar_BL.png', '🛡️ 堅不可摧的防禦，守護你的夢想！', {rate: 0.8, pitch: 0.9, volume: 0.95, characterType: 'defender'})"></div>
+        <div class="avatar-option" style="background-image: url('img/avatars/avatar_BR.png');" onclick="selectAvatar(this, 'img/avatars/avatar_BR.png', '🎯 精準的瞄準，百發百中！', {rate: 0.95, pitch: 1.1, volume: 0.9, characterType: 'sharpshooter'})"></div>
+        <div class="avatar-option" style="background-image: url('img/avatars/avatar_spacekid.png');" onclick="selectAvatar(this, 'img/avatars/avatar_spacekid.png', '🌈 純真的心靈，創造奇蹟的力量！', {rate: 1.0, pitch: 1.3, volume: 0.85, characterType: 'magician'})"></div>
+        <div class="avatar-option" style="background-image: url('img/avatars/avatar_astro1.png');" onclick="selectAvatar(this, 'img/avatars/avatar_astro1.png', '🚀 探索未知的宇宙，發現無限可能！', {rate: 0.85, pitch: 1.05, volume: 0.9, characterType: 'explorer'})"></div>
+        <div class="avatar-option" style="background-image: url('img/avatars/vDS8zQP9HdvxX0g (1).png');" onclick="selectAvatar(this, 'img/avatars/vDS8zQP9HdvxX0g (1).png', '🌸 溫柔的櫻花精靈，散播美好與希望！', {rate: 0.85, pitch: 1.05, volume: 0.9, characterType: 'fairy'})"></div>
+        <div class="avatar-option custom-avatar-option" onclick="selectCustomAvatar(this)">
+          <div class="custom-avatar-icon">🎨</div>
+          <div class="custom-avatar-text">自訂</div>
+        </div>
+      </div>
+
+      <!-- 公告顯示區域 -->
+      <div id="homeAnnouncements" class="home-announcements">
+        <div class="announcements-header">
+          <h3>📣 最新公告</h3>
                   <div style="display: flex; gap: 10px; align-items: center;">
             <button class="view-all-btn" onclick="location.href='announcements.html'">查看全部</button>
           </div>
-      </div>
-      <div id="announcementsContent" class="announcements-content">
-        <div class="loading-announcement">載入中...</div>
+        </div>
+        <div id="announcementsContent" class="announcements-content">
+          <div class="loading-announcement">載入中...</div>
+        </div>
       </div>
     </div>
-
-
 
     <!-- 自訂設定彈窗 -->
     <div id="customModal" class="modal-overlay">
@@ -3033,29 +3637,87 @@
       </div>
     </div>
 
-    <!-- 主按鈕區域 -->
-    <div class="main-buttons">
-      <button class="btn" onclick="location.href='atlas.html'">🚀 開始冒險</button>
-      <button class="btn" onclick="location.href='book.html'">📚 單字本</button>
-      <button class="btn" onclick="location.href='grammar_tower_select.html'">🏛️ 文法塔</button>
-      <button class="btn" onclick="location.href='article_practice.html'">📝 文章練習</button>
-      <button class="btn" onclick="location.href='firebase_chat_enhanced.html'">💬 聊天室</button>
-      <button class="btn" onclick="location.href='chat_room.html'" style="background: linear-gradient(135deg, #ff6b6b 0%, #a259ff 100%);">🎲 抽卡聊天室</button>
-      <button class="btn" onclick="location.href='shop.html'">🛒 商城</button>
-      <button class="btn" onclick="location.href='dailyCheckCenter.html'" style="background: linear-gradient(135deg, #ffd700 0%, #ff6b9d 100%);">📅 每日簽到</button>
-      <button class="btn" onclick="window.open('vocabulary_download.html', '_blank')" style="background: linear-gradient(135deg, #00ff88 0%, #00bfff 100%);">📥 單字下載</button>
-      <button class="btn" onclick="location.href='game_center_simple.html'" style="background: linear-gradient(135deg, #ff6b6b 0%, #a259ff 100%);">🎮 遊戲中心</button>
+    <!-- 學習中心 -->
+    <section class="menu-section">
+      <div class="section-title">學習中心</div>
+      <div class="menu-grid">
+        <button class="menu-item" onclick="location.href='atlas.html'">
+          <div class="menu-icon icon-adventure">🚀</div>
+          <div class="menu-label">開始冒險</div>
+        </button>
+        <button class="menu-item" onclick="location.href='book.html'">
+          <div class="menu-icon icon-vocabulary">📚</div>
+          <div class="menu-label">單字本</div>
+        </button>
 
+        <button class="menu-item" onclick="location.href='article_practice.html'">
+          <div class="menu-icon icon-article">📝</div>
+          <div class="menu-label">文章練習</div>
+        </button>
+        <button class="menu-item" onclick="location.href='firebase_chat_enhanced.html'">
+          <div class="menu-icon icon-chat">💬</div>
+          <div class="menu-label">聊天室</div>
+        </button>
+        <a href="vocabulary_download.html" class="menu-item">
+          <div class="menu-icon icon-download">📥</div>
+          <div class="menu-label">單字下載</div>
+        </a>
+      </div>
+    </section>
 
-    </div>
+    <!-- 遊戲與活動 -->
+    <section class="menu-section">
+      <div class="section-title">遊戲與活動</div>
+      <div class="menu-grid">
+        <button class="menu-item" onclick="location.href='chat_room.html'">
+          <div class="menu-icon icon-gacha">🎲</div>
+          <div class="menu-label">抽卡聊天室</div>
+        </button>
+        <a href="shop.html" class="menu-item">
+          <div class="menu-icon icon-shop">🛒</div>
+          <div class="menu-label">商城</div>
+        </a>
+        <a href="inventory.html" class="menu-item">
+          <div class="menu-icon icon-inventory">🎒</div>
+          <div class="menu-label">我的背包</div>
+        </a>
+        <button class="menu-item" onclick="location.href='dailyCheckCenter.html'">
+          <div class="menu-icon icon-checkin">📅</div>
+          <div class="menu-label">每日簽到</div>
+        </button>
+        <button class="menu-item" onclick="location.href='game_center_simple.html'">
+          <div class="menu-icon icon-game">🎮</div>
+          <div class="menu-label">遊戲中心</div>
+        </button>
+      </div>
+    </section>
 
-    <div class="nav-buttons">
-      <button class="nav-btn" id="cardsBtn" onclick="location.href='cards.html'">🏷️ 卡片上架系統</button>
-      <button class="nav-btn" id="cardCollectionBtn" onclick="location.href='cardCollection.html'" style="background: linear-gradient(135deg, #18f5ff 0%, #a259ff 100%);">📖 卡片收藏冊</button>
-      <button class="nav-btn" id="achievementBtn" onclick="location.href='achievement.html'">🏆 成就勳章</button>
-      <button class="nav-btn" onclick="location.href='stars_leaderboard.html'" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);">⭐ 星星排行榜</button>
-      <a href="gm.html" class="gm-entry-link">GM 管理</a>
-    </div>
+    <!-- 我的紀錄 -->
+    <section class="menu-section">
+      <div class="section-title">我的紀錄</div>
+      <div class="menu-grid">
+        <button class="menu-item" onclick="location.href='cards.html'">
+          <div class="menu-icon icon-card">🏷️</div>
+          <div class="menu-label">卡片上架</div>
+        </button>
+        <button class="menu-item" onclick="location.href='cardCollection.html'">
+          <div class="menu-icon icon-album">📖</div>
+          <div class="menu-label">卡片收藏冊</div>
+        </button>
+        <button class="menu-item" onclick="location.href='achievement.html'">
+          <div class="menu-icon icon-achievement">🏆</div>
+          <div class="menu-label">成就勳章</div>
+        </button>
+        <button class="menu-item" onclick="location.href='stars_leaderboard.html'">
+          <div class="menu-icon icon-ranking">⭐</div>
+          <div class="menu-label">星星排行</div>
+        </button>
+        <a href="gm.html" class="menu-item">
+          <div class="menu-icon icon-gm">⚙️</div>
+          <div class="menu-label">GM 管理</div>
+        </a>
+      </div>
+    </section>
 
     <!-- 資料存檔與還原 -->
     <section class="home-save-section">
@@ -3154,6 +3816,7 @@
       <span class="material-icons">music_note</span>
     </button>
   </div>
+  </div>
 
   <!-- 音效元素 -->
   <audio id="typingSound" preload="auto">
@@ -3195,14 +3858,56 @@
   </div>
 
   <script src="js/userData.js"></script>
+  <script src="js/starManager.js"></script>
   <script src="js/sound.js"></script>
+  <script src="js/achievementProgress.js"></script>
   <script src="js/achievementSystem.js"></script>
   <script src="js/characterDialogue.js"></script>
   <script src="js/cards.js"></script>
+  <script src="js/cardVideoManager.js"></script>
   <script src="js/local-backup.js"></script>
   <script src="js/google-drive-backup.js"></script>
   <script>
     console.log('=== JavaScript開始執行 ===');
+    
+    // 角色設定資料
+    const characterConfig = {
+      warrior: {
+        icon: '🛡️',
+        title: '勇敢戰士',
+        description: '堅不可摧的防禦，守護你的夢想！'
+      },
+      speedster: {
+        icon: '⚡',
+        title: '閃電少年',
+        description: '閃電般的速度，無人能敵！'
+      },
+      defender: {
+        icon: '🛡️',
+        title: '守護者',
+        description: '堅不可摧的防禦，守護你的夢想！'
+      },
+      sharpshooter: {
+        icon: '🎯',
+        title: '神射手',
+        description: '精準的瞄準，百發百中！'
+      },
+      magician: {
+        icon: '✨',
+        title: '星光魔法師',
+        description: '純真的心靈，創造奇蹟的力量！'
+      },
+      explorer: {
+        icon: '🚀',
+        title: '星際探險家',
+        description: '探索未知的宇宙，發現無限可能！'
+      },
+      fairy: {
+        icon: '🌸',
+        title: '櫻花精靈',
+        description: '溫柔的櫻花精靈，散播美好與希望！'
+      }
+    };
     
     // 成就系統數據（與achievement.html保持一致）
     const achievements = [
@@ -3410,6 +4115,16 @@
       
       // 更新角色預覽圖片
       document.getElementById('characterImage').src = imagePath;
+      
+      // 更新角色稱號和圖示
+      const characterType = voiceSettings.characterType || 'warrior';
+      const characterData = characterConfig[characterType] || characterConfig.warrior;
+      
+      const characterIconEl = document.getElementById('characterIcon');
+      const characterTitleTextEl = document.getElementById('characterTitleText');
+      
+      if (characterIconEl) characterIconEl.textContent = characterData.icon;
+      if (characterTitleTextEl) characterTitleTextEl.textContent = characterData.title;
       
       // 更新角色標語（帶動畫效果）
       const sloganElement = document.getElementById('characterSlogan');
@@ -3787,6 +4502,16 @@
           document.getElementById('characterImage').src = customData.avatarDataUrl;
           document.getElementById('characterSlogan').textContent = customData.slogan;
           
+          // 更新角色稱號和圖示
+          const characterType = customData.characterType || 'warrior';
+          const characterData = characterConfig[characterType] || characterConfig.warrior;
+          
+          const characterIconEl = document.getElementById('characterIcon');
+          const characterTitleTextEl = document.getElementById('characterTitleText');
+          
+          if (characterIconEl) characterIconEl.textContent = characterData.icon;
+          if (characterTitleTextEl) characterTitleTextEl.textContent = characterData.title;
+          
           if (window.CharacterDialogue) {
             window.CharacterDialogue.currentCharacter = customData.characterType;
           }
@@ -3846,6 +4571,17 @@
               if (savedVoiceSettings) {
                 try {
                   const voiceSettings = JSON.parse(savedVoiceSettings);
+                  
+                  // 更新角色稱號和圖示
+                  const characterType = voiceSettings.characterType || 'warrior';
+                  const characterData = characterConfig[characterType] || characterConfig.warrior;
+                  
+                  const characterIconEl = document.getElementById('characterIcon');
+                  const characterTitleTextEl = document.getElementById('characterTitleText');
+                  
+                  if (characterIconEl) characterIconEl.textContent = characterData.icon;
+                  if (characterTitleTextEl) characterTitleTextEl.textContent = characterData.title;
+                  
                   // 可以選擇是否在載入時播放語音
                   // speakSlogan(savedSlogan, voiceSettings);
                   
@@ -4404,7 +5140,7 @@
               vocabularyFiles: [
                 {
                   id: 'basic400',
-                  title: '🌟 宇宙入門單字集',
+                  title: '🌟 單字400',
                   subtitle: '400個基礎英文單字 - 探索英語的起點',
                   icon: '⭐',
                   iconClass: 'basic-icon',
@@ -4496,7 +5232,7 @@
               }
               
               const newStars = currentStars - unlockCost;
-              localStorage.setItem('totalStars', newStars);
+              window.StarSystem.setTotalStars(newStars);
               this.totalStars = newStars;
               this.updateStarsDisplay();
               
@@ -4764,23 +5500,23 @@
                   <button class="game-button">開始動物卡牌</button>
                 </div>
 
-                <!-- 卡牌對戰 -->
-                <div class="game-card" @click="openGame('stage_select.html')">
-                  <div class="game-icon">⚔️</div>
-                  <div class="game-title">卡牌對戰系統</div>
-                  <div class="game-subtitle">史詩級卡牌戰鬥</div>
+                <!-- 瘋狂巴士停車 -->
+                <div class="game-card" @click="openGame('https://plix.gg/zh-tw/games/crazy-bus-car-jam-parking')">
+                  <div class="game-icon">🚌</div>
+                  <div class="game-title">Crazy Bus Car Jam Parking</div>
+                  <div class="game-subtitle">瘋狂巴士停車</div>
                   <div class="game-description">
-                    完整的卡牌對戰系統，包含攻擊、防禦、特殊技能等多種戰鬥機制。
-                    收集強大卡牌，組建你的牌組，在激烈的對戰中證明你的實力！
+                    在擁擠的停車場中，將巴士和汽車移動到正確的位置，解開停車謎題。
+                    挑戰多種關卡設計，運用策略性思維解謎！
                   </div>
                   <div class="game-features">
-                    <div class="feature-item">完整戰鬥系統</div>
-                    <div class="feature-item">多種卡牌類型</div>
-                    <div class="feature-item">特殊技能效果</div>
-                    <div class="feature-item">動態戰鬥動畫</div>
-                    <div class="feature-item">牌組管理系統</div>
+                    <div class="feature-item">停車謎題挑戰</div>
+                    <div class="feature-item">多種關卡設計</div>
+                    <div class="feature-item">策略性解謎</div>
+                    <div class="feature-item">外部網站遊戲</div>
+                    <div class="feature-item">新分頁開啟</div>
                   </div>
-                  <button class="game-button">開始卡牌對戰</button>
+                  <button class="game-button">開始停車挑戰</button>
                 </div>
 
                 <!-- Tetris 遊戲 -->
@@ -4945,8 +5681,8 @@
               setTimeout(() => {
                 const gameNames = {
                   'advanced-animal-card-game.html': '動物卡牌相克',
-                  'battle_system.html': '卡牌對戰系統',
-                  'stage_select.html': '卡牌關卡頁'
+                  'https://plix.gg/zh-tw/games/crazy-bus-car-jam-parking': 'Crazy Bus Car Jam Parking',
+                  'orb_stage_select.html': '卡牌關卡頁'
                 };
                 const gameName = gameNames[gamePath] || '遊戲';
                 this.simulateGameCompletion(gameName);
@@ -5029,7 +5765,7 @@
               localStorage.setItem('gameProgress', JSON.stringify(progress));
             },
             savePlayerData() {
-              localStorage.setItem('totalStars', this.totalStars.toString());
+              window.StarSystem.setTotalStars(this.totalStars.toString());
               const playerData = {
                 level: this.playerLevel,
                 totalStarsEarned: this.totalStarsEarned,
@@ -5290,6 +6026,11 @@
           
           // 標記為永久鎖定
           localStorage.setItem('nameLocked', 'true');
+          
+          // 同步排行榜
+          if (typeof StarManager !== 'undefined' && StarManager.syncLeaderboard) {
+            StarManager.syncLeaderboard();
+          }
         }
       }
     }
@@ -5379,7 +6120,7 @@
   </script>
   <!-- Configure Cloud Sync endpoint (Google Apps Script Web App URL) -->
   <script>
-    window.GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzbpDvWYR6SD1We5BQwm7Boo-wU1nLseHEYR19P7XX8PxZ9jl9C2yy3HMccpIEoH0lLAw/exec';
+    window.GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzx6eM_OyYsJgCGM942WT0U1q7g4vpcUg1IslWC_luRkzJExPRWSeyh11GUd4ESuFx62Q/exec';
   </script>
   <script src="js/cloudSync.js"></script>
   <script>
@@ -5470,7 +6211,7 @@
         if (cardCollectionBtn) {
           const missingCards = totalCards - collectedCards;
           const rewardBadge = claimableRewards > 0 ? `<span class="reward-badge">🎁</span>` : '';
-          cardCollectionBtn.innerHTML = `📖 卡片收藏冊${rewardBadge}<br><small>${completionRate}% 已完成</small><br><small>${collectedCards} / ${totalCards} 張</small>`;
+          cardCollectionBtn.innerHTML = `📖 卡片收藏冊${rewardBadge}`;
         }
 
         console.log('📖 卡片收藏冊進度更新:', {
@@ -5496,6 +6237,20 @@
     window.addEventListener('storage', function(event) {
       if (event.key === 'ownedCards' || event.key === 'typingGamePlayerData') {
         updateCardCollectionProgress();
+      }
+      // 監聽玩家名稱變化
+      if (event.key === 'playerName' || event.key === 'currentUser') {
+        const newName = localStorage.getItem('playerName') || localStorage.getItem('currentUser');
+        if (newName && typeof LinkageSystem !== 'undefined' && LinkageSystem.player) {
+          LinkageSystem.player.setName(newName);
+        }
+      }
+    });
+    
+    // 監聽自訂玩家名稱變更事件
+    window.addEventListener('playerNameChanged', function(e) {
+      if (e.detail && e.detail.newName && typeof LinkageSystem !== 'undefined' && LinkageSystem.player) {
+        LinkageSystem.player.setName(e.detail.newName);
       }
     });
   </script>

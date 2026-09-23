@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script src="js/stars.js"></script>
   <meta charset="UTF-8" />
   <title>星際英打冒險 − 單字配對遊戲</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
@@ -156,6 +157,7 @@
 
   <script src="js/sound.js"></script>
   <script src="js/starRewardSystem.js"></script>
+  <script src="js/achievementProgress.js"></script>
   <script src="js/achievementSystem.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -394,7 +396,7 @@
       });
 
       function saveStars() {
-        localStorage.setItem('totalStars', totalStars);
+        window.StarSystem.setTotalStars(totalStars);
       }
 
       // 卡片點擊處理
