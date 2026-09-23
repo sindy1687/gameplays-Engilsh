@@ -110,14 +110,14 @@ const GM_STORAGE_KEYS = {
 
   // 星星
   stars: 'totalStars',
-
-  // 關卡
-  grammarGameData: 'grammarGameData',
-  grammarTotalProgress: 'grammar_total_progress',
+  levelBestStars: 'levelBestStars',
 
   // 星座圖鑑
   unlocked: 'unlocked',
   passedAtlas: 'passed_atlas',
+
+  // 星星里程碑
+  starMilestones: 'starMilestones',
 
   // 希臘神祇
   greekGods: 'unlockedGreek',
@@ -152,32 +152,6 @@ const GM_STORAGE_KEYS = {
   lastUpdatedAt: 'gmLastUpdatedAt'
 };
 
-// 關卡名稱對照表（和 grammar_tower_select.html 一致）
-const GM_LEVEL_NAMES = {
-  '1': '第一關：喚醒樹木守護者',
-  '2': '第二關：挑戰黑暗迷霧',
-  '3': '第三關：征服星辰之塔',
-  '4': '第四關：探索時空隧道',
-  '5': '第五關：破解魔法陣',
-  '6': '第六關：守護水晶神殿',
-  '7': '第七關：召喚風暴精靈',
-  '8': '第八關：穿越暗影森林',
-  '9': '第九關：喚醒龍之傳說',
-  '10': '第十關：掌控元素之力',
-  '11': '第十一關：解封禁忌咒語',
-  '12': '第十二關：征服星際戰艦',
-  '13': '第十三關：開啟次元之門',
-  '14': '第十四關：編織時空織錦',
-  '15': '第十五關：掌握命運之輪',
-  '16': '第十六關：成為文法之王',
-  '17': '第十七關：破解時間密碼',
-  '18': '第十八關：時空交錯挑戰',
-  '19': '第十九關：預見未來之光',
-  '20': '第二十關：否定未來陰霾',
-  '21': '第二十一關：探問未來奧秘',
-  '22': '第二十二關：比較級之力'
-};
-
 // 星座圖鑑分類（和 atlas.html 一致）
 const GM_ATLAS_CATEGORIES = [
   "aries", "taurus", "gemini", "cancer", "leo", "virgo", "libra", "scorpio",
@@ -209,31 +183,12 @@ const GM_ATLAS_NAMES = {
   "vela": "船帆座 Vela"
 };
 
-// 希臘神祇清單（和 atlas.html 一致）
-const GM_GREEK_GODS = [
-  { id: 'zeus', name: '宙斯', english: 'Zeus' },
-  { id: 'hera', name: '赫拉', english: 'Hera' },
-  { id: 'poseidon', name: '波塞頓', english: 'Poseidon' },
-  { id: 'demeter', name: '得墨忒耳', english: 'Demeter' },
-  { id: 'athena', name: '雅典娜', english: 'Athena' },
-  { id: 'apollo', name: '阿波羅', english: 'Apollo' },
-  { id: 'artemis', name: '阿爾忒彌斯', english: 'Artemis' },
-  { id: 'ares', name: '阿瑞斯', english: 'Ares' },
-  { id: 'aphrodite', name: '阿芙蘿黛蒂', english: 'Aphrodite' },
-  { id: 'hephaestus', name: '赫菲斯托斯', english: 'Hephaestus' },
-  { id: 'hermes', name: '赫耳墨斯', english: 'Hermes' },
-  { id: 'hestia', name: '赫斯提亞', english: 'Hestia' },
-  { id: 'dionysus', name: '狄俄尼索斯', english: 'Dionysus' },
-  { id: 'hades', name: '哈迪斯', english: 'Hades' },
-  { id: 'persephone', name: '珀爾塞福涅', english: 'Persephone' },
-  { id: 'eros', name: '厄洛斯', english: 'Eros' },
-  { id: 'nike', name: '尼刻', english: 'Nike' },
-  { id: 'gaia', name: '蓋婭', english: 'Gaia' },
-  { id: 'atlas', name: '阿特拉斯', english: 'Atlas' },
-  { id: 'cronus', name: '克洛諾斯', english: 'Cronus' },
-  { id: 'rhea', name: '瑞亞', english: 'Rhea' },
-  { id: 'prometheus', name: '普羅米修斯', english: 'Prometheus' }
-];
+// 希臘神祇清單（從 AtlasStageRegistry 讀取）
+const GM_GREEK_GODS = window.AtlasStageRegistry ? window.AtlasStageRegistry.greek.map(stage => ({
+  id: stage.id,
+  name: stage.name,
+  english: stage.englishName
+})) : [];
 
 // 全域變數
 let gmCurrentTab = 'levels';
@@ -276,12 +231,6 @@ function initGMPage() {
 
   // 使用者管理按鈕
   document.getElementById('gmSavePlayerNameBtn')?.addEventListener('click', saveGMPlayerName);
-
-  // 關卡管理按鈕
-  document.getElementById('gmUnlockAllLevelsBtn')?.addEventListener('click', unlockAllGMLevels);
-  document.getElementById('gmLockAllLevelsBtn')?.addEventListener('click', lockAllGMLevels);
-  document.getElementById('gmCompleteAllLevelsBtn')?.addEventListener('click', completeAllGMLevels);
-  document.getElementById('gmClearAllLevelsBtn')?.addEventListener('click', clearAllGMLevels);
 
   // 卡片管理按鈕
   document.getElementById('gmUnlockAllCardsBtn')?.addEventListener('click', unlockAllGMCards);
@@ -335,6 +284,27 @@ function initGMPage() {
   // 操作紀錄
   document.getElementById('gmClearLogsBtn')?.addEventListener('click', clearGMLogs);
 
+  // 特殊圖鑑關卡管理
+  document.getElementById('gmStageCompleteAllBtn')?.addEventListener('click', () => setAllStagesCompletion(true));
+  document.getElementById('gmStageClearAllBtn')?.addEventListener('click', () => setAllStagesCompletion(false));
+
+  // 星星里程碑管理按鈕
+  document.getElementById('gmRefreshMilestonesBtn')?.addEventListener('click', refreshGMMilestones);
+  document.getElementById('gmResetMilestonesBtn')?.addEventListener('click', resetGMMilestones);
+
+  // 系列分頁切換
+  document.querySelectorAll('.gm-stage-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const series = tab.dataset.series;
+      if (series) {
+        gmStageCurrentSeries = series;
+        document.querySelectorAll('.gm-stage-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        renderGMStageList();
+      }
+    });
+  });
+
   // 事件代理：星座圖鑑操作
   document.addEventListener('click', (event) => {
     const unlockBtn = event.target.closest('[data-gm-unlock-zodiac]');
@@ -358,6 +328,27 @@ function initGMPage() {
     const lockGodBtn = event.target.closest('[data-gm-lock-god]');
     if (lockGodBtn) {
       lockGMGreekGod(lockGodBtn.dataset.gmLockGod);
+      return;
+    }
+
+    // 特殊圖鑑關卡切換
+    const toggleStageBtn = event.target.closest('[data-gm-toggle-stage]');
+    if (toggleStageBtn) {
+      toggleGMStageCompletion(toggleStageBtn.dataset.gmToggleStage);
+      return;
+    }
+
+    // 星座圖鑑通關切換
+    const completeZodiacBtn = event.target.closest('[data-gm-complete-zodiac]');
+    if (completeZodiacBtn) {
+      toggleZodiacCompletion(completeZodiacBtn.dataset.gmCompleteZodiac);
+      return;
+    }
+
+    // 希臘神祇通關切換
+    const completeGodBtn = event.target.closest('[data-gm-complete-god]');
+    if (completeGodBtn) {
+      toggleGreekGodCompletion(completeGodBtn.dataset.gmCompleteGod);
       return;
     }
   });
@@ -427,12 +418,18 @@ function switchGMTab(tabName) {
     renderGMZodiac();
   } else if (tabName === 'gods') {
     renderGMGreekGods();
+  } else if (tabName === 'stage-manager') {
+    renderGMStageList();
+  } else if (tabName === 'milestones') {
+    renderGMMilestones();
   } else if (tabName === 'cards') {
     renderGMCards();
   } else if (tabName === 'market') {
     renderGMMarket();
   } else if (tabName === 'gacha') {
     renderGMGacha();
+  } else if (tabName === 'tasks') {
+    // 每日任務功能尚未實作
   } else if (tabName === 'settings') {
     renderGMSettings();
   } else if (tabName === 'backup') {
@@ -441,6 +438,8 @@ function switchGMTab(tabName) {
     renderGMStorageInspector();
   } else if (tabName === 'logs') {
     renderGMLogs();
+  } else {
+    console.warn('[GM] 未知的分頁:', tabName);
   }
 }
 
@@ -797,151 +796,6 @@ function resetGMStars() {
   notifyGameDataChanged();
 }
 
-/**
- * 取得關卡資料
- */
-function getGMLevelsData() {
-  const grammarData = JSON.parse(localStorage.getItem(GM_STORAGE_KEYS.grammarGameData) || '{}');
-  const totalProgress = JSON.parse(localStorage.getItem(GM_STORAGE_KEYS.grammarTotalProgress) || '{}');
-
-  // 生成關卡列表（依照 grammar_tower_select.html 的關卡數量）
-  const levels = [];
-  for (let i = 1; i <= 22; i++) {
-    const levelId = String(i);
-    const levelData = grammarData[levelId] || {};
-    const progressData = totalProgress[levelId] || {};
-
-    levels.push({
-      id: levelId,
-      name: GM_LEVEL_NAMES[levelId] || `第 ${i} 關`,
-      subtitle: levelData.subtitle || '未設定',
-      unlocked: levelData.unlocked || false,
-      completed: levelData.completed || false,
-      stars: progressData.stars || 0
-    });
-  }
-
-  return levels;
-}
-
-/**
- * 解鎖關卡
- */
-function unlockGMLevel(levelId) {
-  const grammarData = JSON.parse(localStorage.getItem(GM_STORAGE_KEYS.grammarGameData) || '{}');
-  
-  if (!grammarData[levelId]) {
-    grammarData[levelId] = {};
-  }
-  
-  grammarData[levelId].unlocked = true;
-  localStorage.setItem(GM_STORAGE_KEYS.grammarGameData, JSON.stringify(grammarData));
-
-  addGMLog({
-    action: '解鎖關卡',
-    targetType: 'level',
-    targetId: levelId,
-    targetName: GM_LEVEL_NAMES[levelId] || `第 ${levelId} 關`
-  });
-
-  showGMStatus('關卡已解鎖。', 'success');
-  renderGMLevels();
-  notifyGameDataChanged();
-}
-
-/**
- * 鎖定關卡
- */
-function lockGMLevel(levelId) {
-  if (levelId === '1') {
-    if (!confirm('第 1 關是起始關卡，確定要鎖定嗎？')) {
-      return;
-    }
-  }
-
-  const grammarData = JSON.parse(localStorage.getItem(GM_STORAGE_KEYS.grammarGameData) || '{}');
-  
-  if (grammarData[levelId]) {
-    grammarData[levelId].unlocked = false;
-    localStorage.setItem(GM_STORAGE_KEYS.grammarGameData, JSON.stringify(grammarData));
-  }
-
-  addGMLog({
-    action: '鎖定關卡',
-    targetType: 'level',
-    targetId: levelId,
-    targetName: GM_LEVEL_NAMES[levelId] || `第 ${levelId} 關`
-  });
-
-  showGMStatus('關卡已鎖定。', 'success');
-  renderGMLevels();
-  notifyGameDataChanged();
-}
-
-/**
- * 設為已通關
- */
-function completeGMLevel(levelId) {
-  const grammarData = JSON.parse(localStorage.getItem(GM_STORAGE_KEYS.grammarGameData) || '{}');
-  const totalProgress = JSON.parse(localStorage.getItem(GM_STORAGE_KEYS.grammarTotalProgress) || '{}');
-  
-  if (!grammarData[levelId]) {
-    grammarData[levelId] = {};
-  }
-  
-  grammarData[levelId].unlocked = true;
-  grammarData[levelId].completed = true;
-
-  if (!totalProgress[levelId]) {
-    totalProgress[levelId] = {};
-  }
-  
-  totalProgress[levelId].stars = 3;
-
-  localStorage.setItem(GM_STORAGE_KEYS.grammarGameData, JSON.stringify(grammarData));
-  localStorage.setItem(GM_STORAGE_KEYS.grammarTotalProgress, JSON.stringify(totalProgress));
-
-  addGMLog({
-    action: '設為已通關',
-    targetType: 'level',
-    targetId: levelId,
-    targetName: GM_LEVEL_NAMES[levelId] || `第 ${levelId} 關`
-  });
-
-  showGMStatus('關卡已設為已通關。', 'success');
-  renderGMLevels();
-  notifyGameDataChanged();
-}
-
-/**
- * 清除通關紀錄
- */
-function clearGMLevel(levelId) {
-  const grammarData = JSON.parse(localStorage.getItem(GM_STORAGE_KEYS.grammarGameData) || '{}');
-  const totalProgress = JSON.parse(localStorage.getItem(GM_STORAGE_KEYS.grammarTotalProgress) || '{}');
-  
-  if (grammarData[levelId]) {
-    grammarData[levelId].completed = false;
-  }
-
-  if (totalProgress[levelId]) {
-    totalProgress[levelId].stars = 0;
-  }
-
-  localStorage.setItem(GM_STORAGE_KEYS.grammarGameData, JSON.stringify(grammarData));
-  localStorage.setItem(GM_STORAGE_KEYS.grammarTotalProgress, JSON.stringify(totalProgress));
-
-  addGMLog({
-    action: '清除通關紀錄',
-    targetType: 'level',
-    targetId: levelId,
-    targetName: GM_LEVEL_NAMES[levelId] || `第 ${levelId} 關`
-  });
-
-  showGMStatus('通關紀錄已清除。', 'success');
-  renderGMLevels();
-  notifyGameDataChanged();
-}
 
 /**
  * 取得卡片持有資料
@@ -1310,6 +1164,15 @@ function renderGMSummary() {
   const unlockedGodIds = getUnlockedGreekGodIds();
   const totalGods = GM_GREEK_GODS.length;
 
+  // Get Greek gods cleared count from passed_flipcard
+  let clearedGodsCount = 0;
+  try {
+    const passedFlipcard = JSON.parse(localStorage.getItem('passed_flipcard') || '[]');
+    clearedGodsCount = passedFlipcard.length;
+  } catch (e) {
+    clearedGodsCount = 0;
+  }
+
   const localStorageCount = localStorage.length;
   const sessionStorageCount = sessionStorage.length;
 
@@ -1323,6 +1186,12 @@ function renderGMSummary() {
   document.getElementById('gmSummaryOwnedCards').textContent = ownedCardsCount;
   document.getElementById('gmSummaryUnlockedZodiac').textContent = `${unlockedZodiacIds.length} / ${totalZodiac}`;
   document.getElementById('gmSummaryUnlockedGods').textContent = `${unlockedGodIds.length} / ${totalGods}`;
+  
+  // Add cleared gods count display if element exists
+  const clearedGodsEl = document.getElementById('gmSummaryClearedGods');
+  if (clearedGodsEl) {
+    clearedGodsEl.textContent = `${clearedGodsCount} / ${totalGods}`;
+  }
 
   const detailsEl = document.getElementById('gmSummaryDetails');
   if (detailsEl) {
@@ -1408,139 +1277,6 @@ function saveGMPlayerName() {
   showGMStatus('使用者名稱已儲存。', 'success');
 }
 
-/**
- * 解鎖全部關卡
- */
-function unlockAllGMLevels() {
-  const grammarData = JSON.parse(localStorage.getItem(GM_STORAGE_KEYS.grammarGameData) || '{}');
-
-  for (let i = 1; i <= 22; i++) {
-    const levelId = String(i);
-    if (!grammarData[levelId]) {
-      grammarData[levelId] = {};
-    }
-    grammarData[levelId].unlocked = true;
-  }
-
-  localStorage.setItem(GM_STORAGE_KEYS.grammarGameData, JSON.stringify(grammarData));
-
-  addGMLog({
-    action: '解鎖全部關卡',
-    targetType: 'level',
-    targetId: 'all',
-    amount: 22,
-    createdAt: new Date().toISOString()
-  });
-
-  refreshGMPage();
-  notifyGameDataChanged();
-  showGMStatus('已解鎖全部關卡。', 'success');
-}
-
-/**
- * 鎖定全部關卡
- */
-function lockAllGMLevels() {
-  if (!confirm('確定要鎖定全部關卡嗎？')) {
-    return;
-  }
-
-  const grammarData = JSON.parse(localStorage.getItem(GM_STORAGE_KEYS.grammarGameData) || '{}');
-
-  for (let i = 1; i <= 22; i++) {
-    const levelId = String(i);
-    if (grammarData[levelId]) {
-      grammarData[levelId].unlocked = false;
-    }
-  }
-
-  localStorage.setItem(GM_STORAGE_KEYS.grammarGameData, JSON.stringify(grammarData));
-
-  addGMLog({
-    action: '鎖定全部關卡',
-    targetType: 'level',
-    targetId: 'all',
-    createdAt: new Date().toISOString()
-  });
-
-  refreshGMPage();
-  notifyGameDataChanged();
-  showGMStatus('已鎖定全部關卡。', 'success');
-}
-
-/**
- * 全部設為已通關
- */
-function completeAllGMLevels() {
-  const grammarData = JSON.parse(localStorage.getItem(GM_STORAGE_KEYS.grammarGameData) || '{}');
-  const totalProgress = JSON.parse(localStorage.getItem(GM_STORAGE_KEYS.grammarTotalProgress) || '{}');
-
-  for (let i = 1; i <= 22; i++) {
-    const levelId = String(i);
-    if (!grammarData[levelId]) {
-      grammarData[levelId] = {};
-    }
-    grammarData[levelId].unlocked = true;
-    grammarData[levelId].completed = true;
-
-    if (!totalProgress[levelId]) {
-      totalProgress[levelId] = {};
-    }
-    totalProgress[levelId].stars = 3;
-  }
-
-  localStorage.setItem(GM_STORAGE_KEYS.grammarGameData, JSON.stringify(grammarData));
-  localStorage.setItem(GM_STORAGE_KEYS.grammarTotalProgress, JSON.stringify(totalProgress));
-
-  addGMLog({
-    action: '全部設為已通關',
-    targetType: 'level',
-    targetId: 'all',
-    amount: 22,
-    createdAt: new Date().toISOString()
-  });
-
-  refreshGMPage();
-  notifyGameDataChanged();
-  showGMStatus('已全部設為已通關。', 'success');
-}
-
-/**
- * 清除全部通關
- */
-function clearAllGMLevels() {
-  if (!confirm('確定要清除全部通關紀錄嗎？')) {
-    return;
-  }
-
-  const grammarData = JSON.parse(localStorage.getItem(GM_STORAGE_KEYS.grammarGameData) || '{}');
-  const totalProgress = JSON.parse(localStorage.getItem(GM_STORAGE_KEYS.grammarTotalProgress) || '{}');
-
-  for (let i = 1; i <= 22; i++) {
-    const levelId = String(i);
-    if (grammarData[levelId]) {
-      grammarData[levelId].completed = false;
-    }
-
-    if (totalProgress[levelId]) {
-      totalProgress[levelId].stars = 0;
-    }
-  }
-
-  localStorage.setItem(GM_STORAGE_KEYS.grammarGameData, JSON.stringify(grammarData));
-  localStorage.setItem(GM_STORAGE_KEYS.grammarTotalProgress, JSON.stringify(totalProgress));
-
-  addGMLog({
-    action: '清除全部通關',
-    targetType: 'level',
-    targetId: 'all',
-    createdAt: new Date().toISOString()
-  });
-
-  refreshGMPage();
-  notifyGameDataChanged();
-  showGMStatus('已清除全部通關紀錄。', 'success');
-}
 
 /**
  * 清除商城資料
@@ -1669,7 +1405,7 @@ function renderGMSeries() {
   allSeries.forEach(seriesName => {
     const option = document.createElement('option');
     option.value = seriesName;
-    option.textContent = seriesName + ' (' + (ticketsData.series[seriesName] || 0) + ' 張)';
+    option.textContent = seriesName;
     seriesSelect.appendChild(option);
   });
 
@@ -2107,22 +1843,32 @@ function saveUnlockedGreekGodIds(ids) {
 }
 
 /**
- * 檢查希臘神祇是否已解鎖
+ * 檢查希臘神祇是否已解鎖 (使用新的 stage progress 系統)
  */
 function isGMGreekGodUnlocked(godId) {
+  // 優先使用新的 stage progress 系統
+  if (typeof isStageUnlocked === 'function') {
+    return isStageUnlocked('greek', godId);
+  }
+  // 備用方案：使用舊系統
   return getUnlockedGreekGodIds().map(String).includes(String(godId));
 }
 
 /**
- * 解鎖希臘神祇
+ * 解鎖希臘神祇 (使用新的 stage progress 系統)
  */
 function unlockGMGreekGod(godId) {
-  const ids = getUnlockedGreekGodIds();
-  if (!ids.map(String).includes(String(godId))) {
-    ids.push(godId);
+  // 優先使用新的 stage progress 系統
+  if (typeof setStageUnlocked === 'function') {
+    setStageUnlocked('greek', godId, true);
+  } else {
+    // 備用方案：使用舊系統
+    const ids = getUnlockedGreekGodIds();
+    if (!ids.map(String).includes(String(godId))) {
+      ids.push(godId);
+    }
+    saveUnlockedGreekGodIds(ids);
   }
-
-  saveUnlockedGreekGodIds(ids);
 
   const name = getGMGreekGodNameById(godId);
 
@@ -2140,13 +1886,18 @@ function unlockGMGreekGod(godId) {
 }
 
 /**
- * 鎖定希臘神祇
+ * 鎖定希臘神祇 (使用新的 stage progress 系統)
  */
 function lockGMGreekGod(godId) {
-  const ids = getUnlockedGreekGodIds()
-    .filter((id) => String(id) !== String(godId));
-
-  saveUnlockedGreekGodIds(ids);
+  // 優先使用新的 stage progress 系統
+  if (typeof setStageUnlocked === 'function') {
+    setStageUnlocked('greek', godId, false);
+  } else {
+    // 備用方案：使用舊系統
+    const ids = getUnlockedGreekGodIds()
+      .filter((id) => String(id) !== String(godId));
+    saveUnlockedGreekGodIds(ids);
+  }
 
   const name = getGMGreekGodNameById(godId);
 
@@ -2167,7 +1918,7 @@ function lockGMGreekGod(godId) {
  * 解鎖全部希臘神祇
  */
 function unlockAllGMGreekGods() {
-  const ids = GM_GREEK_GODS.map(god => god.name);
+  const ids = GM_GREEK_GODS.map(god => god.id);
 
   saveUnlockedGreekGodIds(ids);
 
@@ -2218,6 +1969,95 @@ function getGMGreekGodNameById(godId) {
   const english = god.english || '';
 
   return english ? `${name} ${english}` : name;
+}
+
+/**
+ * 取得希臘神祇通關狀態 (使用新的 stage progress 系統)
+ */
+function getGreekGodCompletionStatus(godId) {
+  // 優先使用新的 stage progress 系統
+  if (typeof isStageCleared === 'function') {
+    return isStageCleared('greek', godId);
+  }
+  
+  // 備用方案：使用舊系統
+  try {
+    const passedFlipcard = JSON.parse(localStorage.getItem('passed_flipcard') || '[]');
+    return passedFlipcard.includes(godId);
+  } catch (error) {
+    console.error('讀取希臘神祇通關狀態失敗:', error);
+  }
+
+  return false;
+}
+
+/**
+ * 設定希臘神祇通關狀態 (使用新的 stage progress 系統)
+ */
+function setGreekGodCompletionStatus(godId, completed) {
+  // 優先使用新的 stage progress 系統
+  if (typeof setStageCleared === 'function') {
+    setStageCleared('greek', godId, completed);
+    return true;
+  }
+  
+  // 備用方案：使用舊系統
+  try {
+    const passedFlipcard = JSON.parse(localStorage.getItem('passed_flipcard') || '[]');
+    const index = passedFlipcard.indexOf(godId);
+
+    if (completed && index === -1) {
+      passedFlipcard.push(godId);
+    } else if (!completed && index !== -1) {
+      passedFlipcard.splice(index, 1);
+    }
+
+    localStorage.setItem('passed_flipcard', JSON.stringify(passedFlipcard));
+    return true;
+  } catch (error) {
+    console.error('設定希臘神祇通關狀態失敗:', error);
+    showGMStatus('設定通關狀態失敗', 'error');
+    return false;
+  }
+}
+
+/**
+ * 切換希臘神祇通關狀態
+ */
+function toggleGreekGodCompletion(godId) {
+  const currentStatus = getGreekGodCompletionStatus(godId);
+  const newStatus = !currentStatus;
+  const name = getGMGreekGodNameById(godId);
+  const actionText = newStatus ? '設為已通關' : '設為未通關';
+
+  const confirmed = confirm(
+    `確定要${actionText}嗎？\n\n` +
+    `希臘神祇：${name}\n` +
+    `ID：${godId}\n\n` +
+    `此操作將直接修改玩家資料。`
+  );
+
+  if (!confirmed) return;
+
+  const success = setGreekGodCompletionStatus(godId, newStatus);
+
+  if (success) {
+    addGMLog({
+      action: actionText,
+      targetType: 'greekGod',
+      targetId: godId,
+      targetName: name,
+      beforeValue: currentStatus,
+      afterValue: newStatus,
+      createdAt: new Date().toISOString()
+    });
+
+    showGMStatus(`${name} 已${actionText}`, 'success');
+    renderGMGreekGods();
+    notifyGameDataChanged();
+  } else {
+    showGMStatus('設定失敗', 'error');
+  }
 }
 
 /**
@@ -2277,6 +2117,7 @@ function renderGMGreekGods() {
     const name = god.name || '未命名神祇';
     const english = god.english || '';
     const unlocked = isGMGreekGodUnlocked(name);
+    const completed = getGreekGodCompletionStatus(name);
 
     return `
       <div class="gm-row gm-god-row" data-god-id="${escapeHTML(id)}">
@@ -2289,7 +2130,10 @@ function renderGMGreekGods() {
             </div>
 
             <div class="gm-row-meta">
-              狀態：${unlocked ? '已解鎖' : '未解鎖'}
+              解鎖狀態：${unlocked ? '已解鎖' : '未解鎖'}
+            </div>
+            <div class="gm-row-meta">
+              通關狀態：${completed ? '✅ 已通關' : '🔒 未通關'}
             </div>
           </div>
         </div>
@@ -2301,6 +2145,9 @@ function renderGMGreekGods() {
 
           <button type="button" class="danger" data-gm-lock-god="${escapeHTML(name)}">
             鎖定神祇
+          </button>
+          <button type="button" data-gm-complete-god="${escapeHTML(name)}">
+            ${completed ? '設為未通關' : '設為已通關'}
           </button>
         </div>
       </div>
@@ -2438,6 +2285,118 @@ function renderGMStars() {
 }
 
 /**
+ * 計算星座關卡總星數
+ */
+function getConstellationTotalStars() {
+  let totalStars = 0;
+  
+  try {
+    // 使用與星座卡片相同的資料來源：StarSystem.getLevelBestStars()
+    if (typeof StarSystem !== 'undefined' && typeof StarSystem.getLevelBestStars === 'function') {
+      // 星座關卡 ID 清單（與卡片渲染使用相同的陣列）
+      const constellationLevels = ["aries","taurus","gemini","cancer","leo","virgo","libra","scorpio",
+        "sagittarius","capricorn","aquarius","pisces","andromeda","cygnus","orion","pegasus",
+        "cassiopeia","scorpius","phoenix","vela"];
+      
+      // 加總所有星座關卡的星數
+      constellationLevels.forEach(levelId => {
+        const stars = StarSystem.getLevelBestStars(levelId);
+        totalStars += Math.max(0, Number(stars) || 0);
+      });
+    }
+  } catch (error) {
+    console.warn('[GM] 計算星座關卡星數失敗', error);
+  }
+  
+  return totalStars;
+}
+
+/**
+ * 渲染星星里程碑管理
+ */
+function renderGMMilestones() {
+  const constellationTotalStars = getConstellationTotalStars();
+  const playerStars = getSafeStars();
+  const unlockedMilestones = JSON.parse(localStorage.getItem(GM_STORAGE_KEYS.starMilestones) || '[]');
+  
+  // 更新總星數顯示
+  const totalStarsEl = document.getElementById('gmConstellationTotalStars');
+  if (totalStarsEl) totalStarsEl.textContent = `${constellationTotalStars} ⭐`;
+  
+  const playerStarsEl = document.getElementById('gmPlayerRewardStars');
+  if (playerStarsEl) playerStarsEl.textContent = `${playerStars} ⭐`;
+  
+  // 里程碑定義（與 atlas.html 相同）
+  const milestones = [
+    { id: 'milestone_10', stars: 10, name: '初露鋒芒', icon: '🌟', reward: '50 ⭐' },
+    { id: 'milestone_20', stars: 20, name: '小有成就', icon: '⭐', reward: '50 ⭐' },
+    { id: 'milestone_30', stars: 30, name: '星途漫漫', icon: '🌠', reward: '50 ⭐' },
+    { id: 'milestone_40', stars: 40, name: '星光璀璨', icon: '✨', reward: '50 ⭐' },
+    { id: 'milestone_50', stars: 50, name: '星河浩瀚', icon: '🌌', reward: '50 ⭐' },
+    { id: 'milestone_60', stars: 60, name: '神之領域', icon: '🏛️', reward: '50 ⭐' },
+    { id: 'milestone_70', stars: 70, name: '神話傳說', icon: '📜', reward: '50 ⭐' },
+    { id: 'milestone_80', stars: 80, name: '星辰大海', icon: '🌊', reward: '50 ⭐' },
+    { id: 'milestone_90', stars: 90, name: '宇宙無垠', icon: '🌌', reward: '50 ⭐' },
+    { id: 'milestone_100', stars: 100, name: '星際穿越', icon: '🚀', reward: '50 ⭐' }
+  ];
+  
+  // 渲染里程碑列表
+  const milestoneListEl = document.getElementById('gmMilestoneList');
+  if (milestoneListEl) {
+    milestoneListEl.innerHTML = milestones.map(milestone => {
+      const isClaimed = unlockedMilestones.includes(milestone.id);
+      const isAchieved = constellationTotalStars >= milestone.stars;
+      const diff = Math.max(milestone.stars - constellationTotalStars, 0);
+      
+      return `
+        <div class="gm-row ${isAchieved ? 'gm-row-success' : 'gm-row-locked'}">
+          <div class="gm-row-info">
+            <div class="gm-row-title">${milestone.icon} ${milestone.name}</div>
+            <div class="gm-row-desc">需要：${milestone.stars} ⭐ | 獎勵：${milestone.reward}</div>
+          </div>
+          <div class="gm-row-status">
+            ${isClaimed ? '<span class="gm-status-success">✓ 已領取</span>' : 
+              (isAchieved ? '<span class="gm-status-warning">✓ 已達成</span>' : 
+              `<span class="gm-status-locked">還差 ${diff} ⭐</span>`)}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+/**
+ * 重新計算里程碑
+ */
+function refreshGMMilestones() {
+  renderGMMilestones();
+  showGMStatus('里程碑已重新計算', 'success');
+}
+
+/**
+ * 重置所有里程碑
+ */
+function resetGMMilestones() {
+  if (!confirm('確定要重置所有里程碑嗎？此操作會清除已領取紀錄。')) {
+    return;
+  }
+  
+  localStorage.setItem(GM_STORAGE_KEYS.starMilestones, JSON.stringify([]));
+  renderGMMilestones();
+  
+  addGMLog({
+    action: '重置里程碑',
+    targetType: 'milestones',
+    targetId: 'all',
+    amount: 0,
+    beforeValue: '已領取紀錄已清除',
+    afterValue: '所有里程碑重置'
+  });
+  
+  showGMStatus('所有里程碑已重置', 'success');
+}
+
+/**
  * 取得已解鎖星座圖鑑 ID
  */
 function getUnlockedZodiacIds() {
@@ -2463,22 +2422,32 @@ function saveUnlockedZodiacIds(ids) {
 }
 
 /**
- * 檢查星座圖鑑是否已解鎖
+ * 檢查星座圖鑑是否已解鎖 (使用新的 stage progress 系統)
  */
 function isGMZodiacUnlocked(zodiacId) {
+  // 優先使用新的 stage progress 系統
+  if (typeof isStageUnlocked === 'function') {
+    return isStageUnlocked('zodiac', zodiacId);
+  }
+  // 備用方案：使用舊系統
   return getUnlockedZodiacIds().map(String).includes(String(zodiacId));
 }
 
 /**
- * 解鎖星座圖鑑
+ * 解鎖星座圖鑑 (使用新的 stage progress 系統)
  */
 function unlockGMZodiac(zodiacId) {
-  const ids = getUnlockedZodiacIds();
-  if (!ids.map(String).includes(String(zodiacId))) {
-    ids.push(zodiacId);
+  // 優先使用新的 stage progress 系統
+  if (typeof setStageUnlocked === 'function') {
+    setStageUnlocked('zodiac', zodiacId, true);
+  } else {
+    // 備用方案：使用舊系統
+    const ids = getUnlockedZodiacIds();
+    if (!ids.map(String).includes(String(zodiacId))) {
+      ids.push(zodiacId);
+    }
+    saveUnlockedZodiacIds(ids);
   }
-
-  saveUnlockedZodiacIds(ids);
 
   const name = GM_ATLAS_NAMES[zodiacId] || zodiacId;
 
@@ -2496,13 +2465,18 @@ function unlockGMZodiac(zodiacId) {
 }
 
 /**
- * 鎖定星座圖鑑
+ * 鎖定星座圖鑑 (使用新的 stage progress 系統)
  */
 function lockGMZodiac(zodiacId) {
-  const ids = getUnlockedZodiacIds()
-    .filter((id) => String(id) !== String(zodiacId));
-
-  saveUnlockedZodiacIds(ids);
+  // 優先使用新的 stage progress 系統
+  if (typeof setStageUnlocked === 'function') {
+    setStageUnlocked('zodiac', zodiacId, false);
+  } else {
+    // 備用方案：使用舊系統
+    const ids = getUnlockedZodiacIds()
+      .filter((id) => String(id) !== String(zodiacId));
+    saveUnlockedZodiacIds(ids);
+  }
 
   const name = GM_ATLAS_NAMES[zodiacId] || zodiacId;
 
@@ -2563,6 +2537,113 @@ function lockAllGMZodiac() {
 }
 
 /**
+ * 取得星座圖鑑通關狀態
+ */
+function getZodiacCompletionStatus(zodiacId) {
+  // 優先使用新的 stage progress 系統
+  if (typeof isStageCleared === 'function') {
+    return isStageCleared('zodiac', zodiacId);
+  }
+  
+  // 備用方案：使用舊系統
+  const username = getCurrentUser();
+  if (!username) return false;
+
+  try {
+    const userData = loadUserData(username);
+    if (!userData) return false;
+
+    // 從 passed_atlas 取得通關狀態
+    const passedAtlas = userData.passed_atlas || [];
+    return passedAtlas.includes(zodiacId);
+  } catch (error) {
+    console.error('讀取星座通關狀態失敗:', error);
+  }
+
+  return false;
+}
+
+/**
+ * 設定星座圖鑑通關狀態
+ */
+function setZodiacCompletionStatus(zodiacId, completed) {
+  // 優先使用新的 stage progress 系統
+  if (typeof setStageCleared === 'function') {
+    setStageCleared('zodiac', zodiacId, completed);
+    return true;
+  }
+  
+  // 備用方案：使用舊系統
+  const username = getCurrentUser();
+  if (!username) {
+    showGMStatus('請先選擇玩家', 'error');
+    return false;
+  }
+
+  try {
+    updateCurrentUserData((userData) => {
+      if (!userData.passed_atlas) {
+        userData.passed_atlas = [];
+      }
+
+      const passedAtlas = userData.passed_atlas;
+      const index = passedAtlas.indexOf(zodiacId);
+
+      if (completed && index === -1) {
+        passedAtlas.push(zodiacId);
+      } else if (!completed && index !== -1) {
+        passedAtlas.splice(index, 1);
+      }
+    });
+
+    return true;
+  } catch (error) {
+    console.error('設定星座通關狀態失敗:', error);
+    showGMStatus('設定通關狀態失敗', 'error');
+    return false;
+  }
+}
+
+/**
+ * 切換星座圖鑑通關狀態
+ */
+function toggleZodiacCompletion(zodiacId) {
+  const currentStatus = getZodiacCompletionStatus(zodiacId);
+  const newStatus = !currentStatus;
+  const name = GM_ATLAS_NAMES[zodiacId] || zodiacId;
+  const actionText = newStatus ? '設為已通關' : '設為未通關';
+
+  const confirmed = confirm(
+    `確定要${actionText}嗎？\n\n` +
+    `星座圖鑑：${name}\n` +
+    `ID：${zodiacId}\n\n` +
+    `此操作將直接修改玩家資料。`
+  );
+
+  if (!confirmed) return;
+
+  const success = setZodiacCompletionStatus(zodiacId, newStatus);
+
+  if (success) {
+    addGMLog({
+      action: actionText,
+      targetType: 'zodiac',
+      targetId: zodiacId,
+      targetName: name,
+      beforeValue: currentStatus,
+      afterValue: newStatus,
+      createdAt: new Date().toISOString()
+    });
+
+    showGMStatus(`${name} 已${actionText}`, 'success');
+    renderGMZodiac();
+    notifyGameDataChanged();
+  } else {
+    showGMStatus('設定失敗', 'error');
+  }
+}
+
+/**
  * 渲染星座圖鑑管理
  */
 function renderGMZodiac() {
@@ -2583,6 +2664,7 @@ function renderGMZodiac() {
   list.innerHTML = items.map((category) => {
     const name = GM_ATLAS_NAMES[category] || category;
     const unlocked = isGMZodiacUnlocked(category);
+    const completed = getZodiacCompletionStatus(category);
 
     return `
       <div class="gm-row gm-zodiac-row" data-zodiac-id="${escapeHTML(category)}">
@@ -2595,7 +2677,10 @@ function renderGMZodiac() {
             </div>
 
             <div class="gm-row-meta">
-              狀態：${unlocked ? '已解鎖' : '未解鎖'}
+              解鎖狀態：${unlocked ? '已解鎖' : '未解鎖'}
+            </div>
+            <div class="gm-row-meta">
+              通關狀態：${completed ? '✅ 已通關' : '🔒 未通關'}
             </div>
           </div>
         </div>
@@ -2606,6 +2691,9 @@ function renderGMZodiac() {
           </button>
           <button type="button" class="danger" data-gm-lock-zodiac="${escapeHTML(category)}">
             鎖定圖鑑
+          </button>
+          <button type="button" data-gm-complete-zodiac="${escapeHTML(category)}">
+            ${completed ? '設為未通關' : '設為已通關'}
           </button>
         </div>
       </div>
@@ -2677,6 +2765,8 @@ function refreshGMPage() {
     renderGMStorageInspector();
   } else if (gmCurrentTab === 'logs') {
     renderGMLogs();
+  } else if (gmCurrentTab === 'stage-manager') {
+    renderGMStageManager();
   }
 }
 
@@ -2701,6 +2791,394 @@ function showGMStatus(message, type) {
     statusEl.textContent = '';
     statusEl.className = 'gm-status-message';
   }, 3000);
+}
+
+// =================================================================================
+// 特殊圖鑑關卡通關管理 (Special Gallery Stage Completion Management)
+// =================================================================================
+
+let gmStageCurrentSeries = 'zodiac';
+let gmStageProcessing = false;
+
+/**
+ * 取得十二星座關卡資料 (從 constellationGrammar.js)
+ */
+function getZodiacStageData() {
+  // 從 ConstellationGrammarGame 類別取得關卡資料
+  if (typeof ConstellationGrammarGame !== 'undefined') {
+    const game = new ConstellationGrammarGame();
+    return game.levels || [];
+  }
+
+  // 備用：直接從 JS 讀取
+  return [
+    { id: "present_simple", title: "現在式一般動詞", description: "學習一般動詞的現在式用法", icon: "☀️", difficulty: "common" },
+    { id: "past_simple", title: "過去式動詞", description: "學習動詞的過去式變化", icon: "⏰", difficulty: "common" },
+    { id: "be_verbs", title: "Be動詞", description: "學習be動詞的正確使用", icon: "🌟", difficulty: "common" }
+  ];
+}
+
+/**
+ * 取得希臘神祇關卡資料
+ */
+function getGreekGodStageData() {
+  const gods = [
+    { id: "zeus", name: "宙斯 Zeus", icon: "⚡" },
+    { id: "hera", name: "赫拉 Hera", icon: "👑" },
+    { id: "poseidon", name: "波塞冬 Poseidon", icon: "🌊" },
+    { id: "athena", name: "雅典娜 Athena", icon: "🦉" },
+    { id: "apollo", name: "阿波羅 Apollo", icon: "☀️" },
+    { id: "artemis", name: "阿爾忒彌斯 Artemis", icon: "🏹" },
+    { id: "ares", name: "阿瑞斯 Ares", icon: "⚔️" },
+    { id: "aphrodite", name: "阿芙蘿黛蒂 Aphrodite", icon: "💕" },
+    { id: "hephaestus", name: "赫淮斯托斯 Hephaestus", icon: "🔨" },
+    { id: "hermes", name: "赫爾墨斯 Hermes", icon: "🪽" },
+    { id: "hestia", name: "赫斯提亞 Hestia", icon: "🏠" },
+    { id: "dionysus", name: "狄俄尼索斯 Dionysus", icon: "🍇" },
+    { id: "hades", name: "哈迪斯 Hades", icon: "💀" },
+    { id: "persephone", name: "珀耳塞福涅 Persephone", icon: "🌸" },
+    { id: "eros", name: "厄洛斯 Eros", icon: "💘" },
+    { id: "nike", name: "尼刻 Nike", icon: "🏆" },
+    { id: "gaia", name: "蓋亞 Gaia", icon: "🌍" },
+    { id: "chronos", name: "柯羅諾斯 Chronos", icon: "⏳" },
+    { id: "morpheus", name: "摩耳甫斯 Morpheus", icon: "💭" }
+  ];
+
+  return gods;
+}
+
+/**
+ * 取得玩家關卡通關狀態
+ */
+function getPlayerStageCompletion(series, stageId) {
+  if (series === 'zodiac') {
+    const username = getCurrentUser();
+    if (!username) return false;
+
+    try {
+      const userData = loadUserData(username);
+      if (!userData) return false;
+
+      // 十二星座：從 constellationLevels 取得 completed 狀態
+      const levels = userData.constellationLevels || [];
+      const level = levels.find(l => l.id === stageId);
+      return level ? level.completed : false;
+    } catch (error) {
+      console.error('讀取關卡狀態失敗:', error);
+    }
+  } else if (series === 'greek') {
+    // 希臘神祇：從 passed_flipcard 取得通關狀態
+    try {
+      const passedFlipcard = JSON.parse(localStorage.getItem('passed_flipcard') || '[]');
+      return passedFlipcard.includes(stageId);
+    } catch (error) {
+      console.error('讀取希臘神祇通關狀態失敗:', error);
+    }
+  }
+
+  return false;
+}
+
+/**
+ * 設定玩家關卡通關狀態
+ */
+function setPlayerStageCompletion(series, stageId, completed) {
+  if (series === 'zodiac') {
+    const username = getCurrentUser();
+    if (!username) {
+      showGMStatus('請先選擇玩家', 'error');
+      return false;
+    }
+
+    try {
+      updateCurrentUserData((userData) => {
+        // 十二星座：更新 constellationLevels
+        if (!userData.constellationLevels) {
+          userData.constellationLevels = getZodiacStageData();
+        }
+
+        const level = userData.constellationLevels.find(l => l.id === stageId);
+        if (level) {
+          level.completed = completed;
+        }
+      });
+
+      return true;
+    } catch (error) {
+      console.error('設定關卡狀態失敗:', error);
+      showGMStatus('設定關卡狀態失敗', 'error');
+      return false;
+    }
+  } else if (series === 'greek') {
+    // 希臘神祇：更新 passed_flipcard
+    try {
+      const passedFlipcard = JSON.parse(localStorage.getItem('passed_flipcard') || '[]');
+      const index = passedFlipcard.indexOf(stageId);
+
+      if (completed && index === -1) {
+        passedFlipcard.push(stageId);
+      } else if (!completed && index !== -1) {
+        passedFlipcard.splice(index, 1);
+      }
+
+      localStorage.setItem('passed_flipcard', JSON.stringify(passedFlipcard));
+      return true;
+    } catch (error) {
+      console.error('設定希臘神祇通關狀態失敗:', error);
+      showGMStatus('設定通關狀態失敗', 'error');
+      return false;
+    }
+  }
+
+  return false;
+}
+
+/**
+ * 渲染關卡管理頁面
+ */
+function renderGMStageManager() {
+  // 更新玩家資訊
+  const username = getCurrentUser();
+  const playerNameEl = document.getElementById('gmStagePlayerName');
+  const playerIdEl = document.getElementById('gmStagePlayerId');
+  const playerSourceEl = document.getElementById('gmStagePlayerSource');
+
+  if (username) {
+    playerNameEl.textContent = username;
+    playerIdEl.textContent = `ID: ${username}`;
+    playerSourceEl.textContent = '來源: localStorage';
+  } else {
+    playerNameEl.textContent = '未選擇';
+    playerIdEl.textContent = '--';
+    playerSourceEl.textContent = '--';
+  }
+
+  // 渲染關卡列表
+  renderGMStageList();
+}
+
+/**
+ * 渲染關卡列表
+ */
+function renderGMStageList() {
+  const listEl = document.getElementById('gmStageList');
+  if (!listEl) return;
+
+  let stages = [];
+  if (gmStageCurrentSeries === 'zodiac') {
+    stages = getZodiacStageData();
+  } else if (gmStageCurrentSeries === 'greek') {
+    stages = getGreekGodStageData();
+  }
+
+  // 取得通關狀態
+  const stagesWithStatus = stages.map((stage, index) => {
+    const completed = getPlayerStageCompletion(gmStageCurrentSeries, stage.id);
+    return {
+      ...stage,
+      order: index + 1,
+      completed: completed
+    };
+  });
+
+  // 更新統計
+  const total = stagesWithStatus.length;
+  const completedCount = stagesWithStatus.filter(s => s.completed).length;
+  const lockedCount = total - completedCount;
+  const percentage = total > 0 ? Math.round((completedCount / total) * 100) : 0;
+
+  document.getElementById('gmStageTotal').textContent = total;
+  document.getElementById('gmStageCompleted').textContent = completedCount;
+  document.getElementById('gmStageLocked').textContent = lockedCount;
+  document.getElementById('gmStagePercentage').textContent = `${percentage}%`;
+
+  // 渲染列表
+  if (stagesWithStatus.length === 0) {
+    listEl.innerHTML = '<p>找不到關卡資料</p>';
+    return;
+  }
+
+  listEl.innerHTML = stagesWithStatus.map(stage => {
+    const statusClass = stage.completed ? 'completed' : 'locked';
+    const statusText = stage.completed ? '✅ 已通關' : '🔒 未通關';
+    const buttonText = stage.completed ? '設為未通關' : '設為已通關';
+
+    return `
+      <div class="gm-stage-item ${statusClass}" data-stage-id="${escapeHTML(stage.id)}">
+        <div class="gm-stage-header">
+          <div class="gm-stage-icon">${escapeHTML(stage.icon || '📋')}</div>
+          <div class="gm-stage-info">
+            <div class="gm-stage-order">#${stage.order}</div>
+            <div class="gm-stage-name">${escapeHTML(stage.title || stage.name)}</div>
+            <div class="gm-stage-id">ID: ${escapeHTML(stage.id)}</div>
+          </div>
+        </div>
+        <div class="gm-stage-status">${statusText}</div>
+        <div class="gm-stage-actions">
+          <button type="button" class="gm-stage-toggle" data-gm-toggle-stage="${escapeHTML(stage.id)}" ${gmStageProcessing ? 'disabled' : ''}>
+            ${buttonText}
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/**
+ * 切換關卡通關狀態
+ */
+function toggleGMStageCompletion(stageId) {
+  if (gmStageProcessing) {
+    showGMStatus('處理中，請稍候...', 'error');
+    return;
+  }
+
+  const stageData = gmStageCurrentSeries === 'zodiac'
+    ? getZodiacStageData().find(s => s.id === stageId)
+    : getGreekGodStageData().find(s => s.id === stageId);
+
+  if (!stageData) {
+    showGMStatus('找不到關卡資料', 'error');
+    return;
+  }
+
+  const currentStatus = getPlayerStageCompletion(gmStageCurrentSeries, stageId);
+  const newStatus = !currentStatus;
+  const actionText = newStatus ? '設為已通關' : '設為未通關';
+  const stageName = stageData.title || stageData.name;
+
+  // 顯示確認對話框
+  const confirmed = confirm(
+    `確定要${actionText}嗎？\n\n` +
+    `系列：${gmStageCurrentSeries === 'zodiac' ? '十二星座圖鑑' : '希臘神祇圖鑑'}\n` +
+    `關卡：${stageName}\n` +
+    `ID：${stageId}\n\n` +
+    `此操作將直接修改玩家資料。`
+  );
+
+  if (!confirmed) return;
+
+  gmStageProcessing = true;
+
+  // 更新按鈕狀態
+  document.querySelectorAll('.gm-stage-toggle').forEach(btn => {
+    btn.disabled = true;
+  });
+
+  try {
+    const success = setPlayerStageCompletion(gmStageCurrentSeries, stageId, newStatus);
+
+    if (success) {
+      // 記錄操作日誌
+      addGMLog({
+        action: actionText,
+        targetType: 'stage',
+        targetId: stageId,
+        targetName: stageName,
+        series: gmStageCurrentSeries,
+        beforeValue: currentStatus,
+        afterValue: newStatus,
+        createdAt: new Date().toISOString()
+      });
+
+      showGMStatus(`${stageName} 已${actionText}`, 'success');
+      renderGMStageList();
+      notifyGameDataChanged();
+    } else {
+      showGMStatus('設定失敗', 'error');
+    }
+  } catch (error) {
+    console.error('切換關卡狀態失敗:', error);
+    showGMStatus('設定失敗', 'error');
+  } finally {
+    gmStageProcessing = false;
+    document.querySelectorAll('.gm-stage-toggle').forEach(btn => {
+      btn.disabled = false;
+    });
+  }
+}
+
+/**
+ * 批次設定所有關卡
+ */
+function setAllStagesCompletion(completed) {
+  if (gmStageProcessing) {
+    showGMStatus('處理中，請稍候...', 'error');
+    return;
+  }
+
+  const username = getCurrentUser();
+  if (!username) {
+    showGMStatus('請先選擇玩家', 'error');
+    return;
+  }
+
+  const stages = gmStageCurrentSeries === 'zodiac'
+    ? getZodiacStageData()
+    : getGreekGodStageData();
+
+  const actionText = completed ? '全部設為已通關' : '全部設為未通關';
+  const seriesName = gmStageCurrentSeries === 'zodiac' ? '十二星座圖鑑' : '希臘神祇圖鑑';
+
+  // 顯示確認對話框
+  const confirmed = confirm(
+    `確定要${actionText}嗎？\n\n` +
+    `系列：${seriesName}\n` +
+    `關卡數量：${stages.length}\n\n` +
+    `此操作將修改所有關卡的通關狀態。`
+  );
+
+  if (!confirmed) return;
+
+  gmStageProcessing = true;
+
+  // 更新按鈕狀態
+  document.querySelectorAll('.gm-stage-bulk-btn').forEach(btn => {
+    btn.disabled = true;
+  });
+  document.querySelectorAll('.gm-stage-toggle').forEach(btn => {
+    btn.disabled = true;
+  });
+
+  try {
+    let successCount = 0;
+
+    stages.forEach(stage => {
+      const success = setPlayerStageCompletion(gmStageCurrentSeries, stage.id, completed);
+      if (success) successCount++;
+    });
+
+    if (successCount === stages.length) {
+      // 記錄操作日誌
+      addGMLog({
+        action: actionText,
+        targetType: 'stage',
+        targetId: 'all',
+        targetName: seriesName,
+        series: gmStageCurrentSeries,
+        amount: successCount,
+        afterValue: completed,
+        createdAt: new Date().toISOString()
+      });
+
+      showGMStatus(`${seriesName} 已${actionText} (${successCount}/${stages.length})`, 'success');
+      renderGMStageList();
+      notifyGameDataChanged();
+    } else {
+      showGMStatus(`部分設定失敗 (${successCount}/${stages.length})`, 'error');
+    }
+  } catch (error) {
+    console.error('批次設定失敗:', error);
+    showGMStatus('批次設定失敗', 'error');
+  } finally {
+    gmStageProcessing = false;
+    document.querySelectorAll('.gm-stage-bulk-btn').forEach(btn => {
+      btn.disabled = false;
+    });
+    document.querySelectorAll('.gm-stage-toggle').forEach(btn => {
+      btn.disabled = false;
+    });
+  }
 }
 
 /**

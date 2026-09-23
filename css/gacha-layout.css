@@ -1,0 +1,38 @@
+/* Wish settings belong to the draw workspace, rather than a second page hero. */
+.gacha-page .gacha-hero { padding: 22px; border-radius: 20px; }
+.gacha-page .gacha-hero-title { font-size: clamp(26px, 4vw, 38px); }
+.gacha-wish { margin: 0 0 20px; padding: 22px; border: 1px solid #ded3eb; border-radius: 20px; background: #fcfaff; color: #342640; box-shadow: 0 8px 24px #34264012; }
+.gacha-wish-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.gacha-wish h2 { margin: 0; color: #563378; font-size: 20px; text-shadow: none; }
+.gacha-wish-tag { color: #725786; font-size: 12px; background: #eee6f6; border-radius: 20px; padding: 5px 10px; }
+.gacha-wish p { margin: 8px 0 16px; color: #71647b; line-height: 1.6; font-size: 14px; }
+.gacha-wish-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto; align-items: end; gap: 12px; }
+.gacha-wish label { display: grid; gap: 7px; min-width: 0; font-size: 13px; font-weight: 700; }
+.gacha-wish input, .gacha-wish select { width: 100%; min-width: 0; height: 46px; margin: 0; padding: 10px 12px; border: 1px solid #cfc2db; border-radius: 10px; background: #fff; color: #342640; font: inherit; box-sizing: border-box; }
+.gacha-wish button { min-height: 46px; padding: 10px 18px; border: 0; border-radius: 10px; background: #7750a1; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: none; }
+.gacha-wish button:disabled { opacity: .5; cursor: not-allowed; }
+.gacha-wish :is(input, select, button, summary):focus-visible { outline: 3px solid #a77dc7; outline-offset: 3px; }
+.gacha-wish-status { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; padding-top: 14px; border-top: 1px solid #e4dcec; font-size: 14px; line-height: 1.6; }
+.gacha-wish-status span { overflow-wrap: anywhere; }
+.gacha-wish-status button { flex-shrink: 0; color: #70517e; background: #eee6f6; }
+.gacha-wish details { margin-top: 14px; font-size: 13px; color: #71647b; }
+.gacha-wish summary { cursor: pointer; }
+.gacha-wish details p { margin-bottom: 0; font-size: 13px; }
+.gacha-wish.is-series { background: #f4f1f6; }
+.gacha-page .gacha-layout { grid-template-columns: minmax(260px, 320px) minmax(0, 1fr); }
+.gacha-page .gacha-action-area { display: grid; gap: 10px; }
+.gacha-draw-button:disabled { cursor: not-allowed; opacity: .5; transform: none; }
+@media (max-width: 800px) {
+  .gacha-wish-fields { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .gacha-wish-fields > button { grid-column: 1 / -1; }
+  .gacha-page .gacha-layout { grid-template-columns: minmax(0, 1fr); }
+  .gacha-page .gacha-action-area { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 480px) {
+  .gacha-wish { padding: 16px; border-radius: 16px; }
+  .gacha-wish-fields { grid-template-columns: minmax(0, 1fr); }
+  .gacha-wish-status { align-items: flex-start; flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gacha-page *, .gacha-page *::before, .gacha-page *::after { animation: none !important; transition: none !important; }
+}

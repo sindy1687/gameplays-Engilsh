@@ -1,8 +1,11 @@
 (function () {
-  const DEFAULT_SCRIPT_URL = localStorage.getItem('googleSheetApiUrl') || window.GOOGLE_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbzx6eM_OyYsJgCGM942WT0U1q7g4vpcUg1IslWC_luRkzJExPRWSeyh11GUd4ESuFx62Q/exec';
+  'use strict';
+
+  // 取得目前頁面設定的 Apps Script Web App URL
+  const DEFAULT_SCRIPT_URL = localStorage.getItem('googleSheetApiUrl') || window.GOOGLE_SCRIPT_URL || window.GAS_WEB_APP_URL || '';
 
   function getScriptUrl() {
-    return (localStorage.getItem('googleSheetApiUrl') || window.GOOGLE_SCRIPT_URL || DEFAULT_SCRIPT_URL || '').trim();
+    return (localStorage.getItem('googleSheetApiUrl') || window.GOOGLE_SCRIPT_URL || window.GAS_WEB_APP_URL || DEFAULT_SCRIPT_URL || '').trim();
   }
 
   function setScriptUrl(url) {
@@ -44,306 +47,323 @@
   function saveLocalPlayerStars(stars) {
     const normalized = Number.isFinite(Number(stars)) && Number(stars) >= 0 ? Math.floor(Number(stars)) : 0;
     localStorage.setItem('playerStars', String(normalized));
-    localStorage.setItem('totalStars', String(normalized));
     return normalized;
   }
 
-  function getOwnedCardsMap() {
-    try {
-      return JSON.parse(localStorage.getItem('ownedCards') || '{}') || {};
-    } catch (error) {
-      return {};
-    }
-  }
-
-  function saveOwnedCardsMap(cards) {
-    localStorage.setItem('ownedCards', JSON.stringify(cards || {}));
-  }
-
   function addCardToLocalCollection(cardId) {
-    const owned = getOwnedCardsMap();
-    owned[cardId] = true;
-    saveOwnedCardsMap(owned);
-    return owned;
-  }
-
-  function removeCardFromLocalCollection(cardId) {
-    const owned = getOwnedCardsMap();
-    delete owned[cardId];
-    saveOwnedCardsMap(owned);
-    return owned;
-  }
-
-  function getListedCardsMap() {
+    if (!cardId) return;
     try {
-      return JSON.parse(localStorage.getItem('tradeListedCards') || '{}') || {};
+      const owned = JSON.parse(localStorage.getItem('ownedCards') || '{}');
+      owned[cardId] = (Number(owned[cardId]) || 0) + 1;
+      localStorage.setItem('ownedCards', JSON.stringify(owned));
+    } catch (error) {
+      console.warn('[GoogleSheetApi] addCardToLocalCollection 失敗:', error);
+    }
+  }
+
+  const LISTED_CARDS_KEY = 'listedCards';
+
+  function getListedCards() {
+    try {
+      return JSON.parse(localStorage.getItem(LISTED_CARDS_KEY) || '{}');
     } catch (error) {
       return {};
     }
   }
 
-  function saveListedCardsMap(cards) {
-    localStorage.setItem('tradeListedCards', JSON.stringify(cards || {}));
-  }
-
-  function markCardAsListed(cardId, tradeId) {
-    const listed = getListedCardsMap();
-    listed[cardId] = {
-      tradeId: tradeId || '',
-      listedAt: new Date().toISOString()
-    };
-    saveListedCardsMap(listed);
-    return listed;
-  }
-
-  function unmarkCardAsListed(cardId) {
-    const listed = getListedCardsMap();
-    delete listed[cardId];
-    saveListedCardsMap(listed);
-    return listed;
-  }
-
-  function isCardListed(cardId) {
-    const listed = getListedCardsMap();
-    return Boolean(cardId && listed[cardId]);
-  }
-
-  function getCardMeta(cardId) {
-    const allCards = Array.isArray(window.allCards) ? window.allCards : [];
-    const card = allCards.find(item => item.word === cardId || item.id === cardId || item.cardId === cardId);
-    if (!card) return null;
-
-    return {
-      cardId: card.word || card.id || card.cardId || cardId,
-      cardName: card.zh || card.name || card.cardName || card.title || cardId,
-      rarity: card.rarity === '超稀有' ? 'SSR' : card.rarity === '稀有' ? 'R' : card.rarity === '普通' ? 'A' : (card.rarity || ''),
-      imageUrl: card.image || ''
-    };
-  }
-
-  function buildPlayerCardPayload(cardIds) {
-    const ids = Array.isArray(cardIds) ? cardIds : Object.keys(getOwnedCardsMap());
-    return ids.map(cardId => {
-      const meta = getCardMeta(cardId) || {
-        cardId,
-        cardName: cardId,
-        rarity: '',
-        imageUrl: ''
-      };
-
-      return {
-        id: `${getOrCreatePlayerId()}_${meta.cardId}`,
-        playerId: getOrCreatePlayerId(),
-        cardId: meta.cardId,
-        cardName: meta.cardName,
-        rarity: meta.rarity,
-        imageUrl: meta.imageUrl,
-        quantity: 1,
-        locked: false
-      };
-    });
-  }
-
-  async function sheetGet(action, params = {}) {
-    const scriptUrl = ensureScriptUrl();
-    const url = new URL(scriptUrl);
-    url.searchParams.set('action', action);
-
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
-        url.searchParams.set(key, String(value));
-      }
-    });
-
-    const response = await fetch(url.toString(), {
-      method: 'GET',
-      mode: 'cors'
-    });
-
-    const rawText = await response.text();
-    let json;
-
+  function markCardAsListed(cardWord, tradeId) {
+    if (!cardWord) return;
     try {
-      json = JSON.parse(rawText);
+      const listed = getListedCards();
+      listed[cardWord] = { tradeId: tradeId || true, listedAt: Date.now() };
+      localStorage.setItem(LISTED_CARDS_KEY, JSON.stringify(listed));
     } catch (error) {
-      throw new Error(`Google Sheet 回傳格式錯誤：${rawText.slice(0, 120) || '空白回應'}`);
+      console.warn('[GoogleSheetApi] markCardAsListed 失敗:', error);
     }
+  }
+
+  function unmarkCardAsListed(cardWord) {
+    if (!cardWord) return;
+    try {
+      const listed = getListedCards();
+      delete listed[cardWord];
+      localStorage.setItem(LISTED_CARDS_KEY, JSON.stringify(listed));
+    } catch (error) {
+      console.warn('[GoogleSheetApi] unmarkCardAsListed 失敗:', error);
+    }
+  }
+
+  function isCardListed(cardWord) {
+    if (!cardWord) return false;
+    const listed = getListedCards();
+    return listed[cardWord] !== undefined;
+  }
+
+  // 取得原生 fetch，避免被其他 wrapper（例如 Live Server 注入的 main.js）攔截
+  const nativeFetch = (typeof window !== 'undefined' && window.fetch)
+    ? window.fetch.bind(window)
+    : (typeof globalThis !== 'undefined' && globalThis.fetch)
+      ? globalThis.fetch.bind(globalThis)
+      : undefined;
+
+  if (!nativeFetch) {
+    throw new Error('瀏覽器不支援 fetch');
+  }
+
+  // 通用 GET 請求（使用原生 fetch，避免任何 wrapper 加入自訂 header）
+  async function sheetGet(action, params) {
+    const url = ensureScriptUrl();
+    const query = new URLSearchParams();
+    query.append('action', action);
+    if (params) {
+      Object.keys(params).forEach(key => {
+        const value = params[key];
+        if (value !== undefined && value !== null) {
+          query.append(key, value);
+        }
+      });
+    }
+    const fullUrl = url + (url.indexOf('?') >= 0 ? '&' : '?') + query.toString();
+    console.log('[sheetGet] action:', action, 'URL:', fullUrl);
+
+    const response = await nativeFetch(fullUrl);
 
     if (!response.ok) {
-      throw new Error(json.message || `讀取失敗 (${response.status})`);
+      throw new Error('HTTP ' + response.status);
     }
 
-    if (json && json.success === false) {
-      throw new Error(json.message || 'Google Sheet 讀取失敗');
-    }
-
-    return json;
+    const data = await response.json();
+    console.log('[sheetGet] response:', data);
+    return data;
   }
 
-  async function sheetPost(action, data = {}) {
-    const scriptUrl = ensureScriptUrl();
-    const response = await fetch(scriptUrl, {
+  // 通用 POST 請求（text/plain 避免 preflight，無自訂 header）
+  async function sheetPost(action, payload) {
+    const url = ensureScriptUrl();
+    const body = Object.assign({}, payload || {}, { action: action });
+    console.log('[sheetPost] action:', action, 'payload:', body);
+
+    const response = await nativeFetch(url, {
       method: 'POST',
-      mode: 'cors',
-      body: JSON.stringify({
-        action,
-        ...data
-      })
+      body: JSON.stringify(body)
     });
-
-    const rawText = await response.text();
-    let json;
-
-    try {
-      json = JSON.parse(rawText);
-    } catch (error) {
-      throw new Error(`Google Sheet 回傳格式錯誤：${rawText.slice(0, 120) || '空白回應'}`);
-    }
 
     if (!response.ok) {
-      throw new Error(json.message || `請求失敗 (${response.status})`);
+      throw new Error('HTTP ' + response.status);
     }
 
-    if (json && json.success === false) {
-      throw new Error(json.message || 'Google Sheet 寫入失敗');
-    }
-
-    return json;
+    const data = await response.json();
+    console.log('[sheetPost] response:', data);
+    return data;
   }
 
+  // CORS 最小測試函式
+  async function testGoogleSheetCors() {
+    const url = ensureScriptUrl() + '?action=getMarketListings';
+    console.log('[CORS TEST] URL:', url);
+
+    try {
+      const response = await nativeFetch(url);
+      console.log('[CORS TEST] status:', response.status);
+      const text = await response.text();
+      console.log('[CORS TEST] body:', text);
+      return { status: response.status, body: text };
+    } catch (error) {
+      console.error('[CORS TEST] 失敗:', error);
+      return { error: error.message || error };
+    }
+  }
+
+  // 玩家資料 - 本地優先，避免無網路時無法運作
   async function ensurePlayerProfile() {
-    return sheetPost('upsertPlayer', {
-      playerId: getOrCreatePlayerId(),
-      playerName: getCurrentPlayerName(),
-      initialStars: getLocalPlayerStars()
-    });
+    const playerId = getOrCreatePlayerId();
+    const playerName = getCurrentPlayerName();
+    const localStars = getLocalPlayerStars();
+    try {
+      await sheetPost('upsertPlayer', {
+        playerId: playerId,
+        playerName: playerName,
+        initialStars: localStars
+      });
+    } catch (error) {
+      console.warn('[GoogleSheetApi] ensurePlayerProfile 同步失敗，使用本地資料:', error);
+    }
+    return { playerId, playerName, stars: localStars };
+  }
+
+  async function syncPlayerName(playerName) {
+    if (!playerName) return;
+    const playerId = getOrCreatePlayerId();
+    localStorage.setItem('playerName', playerName.trim());
+    try {
+      return await sheetPost('syncPlayerName', {
+        playerId: playerId,
+        playerName: playerName.trim()
+      });
+    } catch (error) {
+      console.warn('[GoogleSheetApi] syncPlayerName 失敗:', error);
+      return { success: true, playerId, playerName };
+    }
+  }
+
+  async function syncPlayerCards(cardWords) {
+    const playerId = getOrCreatePlayerId();
+    try {
+      return await sheetPost('syncPlayerCards', {
+        playerId: playerId,
+        cards: Array.isArray(cardWords) ? JSON.stringify(cardWords) : cardWords
+      });
+    } catch (error) {
+      console.warn('[GoogleSheetApi] syncPlayerCards 失敗:', error);
+      return { success: true, playerId, message: '卡片已同步（本地）' };
+    }
   }
 
   async function getPlayerBalance() {
-    return sheetGet('getPlayerBalance', {
-      playerId: getOrCreatePlayerId(),
-      playerName: getCurrentPlayerName()
-    });
+    const playerId = getOrCreatePlayerId();
+    try {
+      const result = await sheetGet('getPlayerBalance', { playerId });
+      if (typeof result.stars === 'number') {
+        saveLocalPlayerStars(result.stars);
+      }
+      return result;
+    } catch (error) {
+      console.warn('[GoogleSheetApi] getPlayerBalance 失敗，使用本地資料:', error);
+      return { success: true, playerId, stars: getLocalPlayerStars() };
+    }
   }
 
-  async function syncPlayerCards(cardIds) {
-    const payload = buildPlayerCardPayload(cardIds);
-    return sheetPost('syncPlayerCards', {
-      playerId: getOrCreatePlayerId(),
-      playerName: getCurrentPlayerName(),
-      cards: payload
-    });
-  }
-
-  async function listMyCards() {
-    return sheetGet('listMyCards', { playerId: getOrCreatePlayerId() });
-  }
-
-  async function getMarketCards() {
-    return sheetGet('getMarketCards');
-  }
-
-  async function getMyOrders() {
-    return sheetGet('getMyOrders', { playerId: getOrCreatePlayerId() });
-  }
-
-  async function getSellerOrders() {
-    return sheetGet('getSellerOrders', { playerId: getOrCreatePlayerId() });
-  }
+  // ===== 交易市場 API =====
 
   async function sellCard(card, price) {
-    const meta = card?.cardId ? card : getCardMeta(card?.word || card?.cardId || card);
-    if (!meta || !meta.cardId) {
-      throw new Error('找不到卡片資料');
-    }
+    if (!card) throw new Error('缺少卡片資料');
+    const playerId = getOrCreatePlayerId();
+    const playerName = getCurrentPlayerName();
 
-    return sheetPost('sellCard', {
-      playerId: getOrCreatePlayerId(),
-      playerName: getCurrentPlayerName(),
-      cardId: meta.cardId,
-      cardName: meta.cardName,
-      rarity: meta.rarity,
-      imageUrl: meta.imageUrl,
-      price: Number(price)
+    return await sheetPost('createTradeListing', {
+      sellerId: playerId,
+      sellerName: playerName,
+      playerId: playerId,
+      playerName: playerName,
+      cardId: String(card.word || card.id || ''),
+      cardName: String(card.zh || card.word || ''),
+      cardImage: String(card.image || ''),
+      imageUrl: String(card.image || ''),
+      rarity: String(card.rarity || ''),
+      price: Number(price) || 0,
+      quantity: 1
     });
   }
 
-  async function cancelTrade(tradeId) {
-    return sheetPost('cancelTrade', {
-      tradeId,
-      playerId: getOrCreatePlayerId(),
-      playerName: getCurrentPlayerName()
-    });
+  async function getMarketListings() {
+    const result = await sheetGet('getMarketListings', {});
+    console.log('[交易市場] API RAW (getMarketListings):', result);
+    return result;
   }
 
-  async function buyCard(tradeId) {
-    return sheetPost('buyCard', {
-      tradeId,
-      buyerId: getOrCreatePlayerId(),
-      buyerName: getCurrentPlayerName(),
-      initialStars: getLocalPlayerStars()
-    });
+  async function getMyListings(playerId) {
+    const id = String(playerId || getOrCreatePlayerId()).trim();
+    const result = await sheetGet('getMyListings', { playerId: id });
+    console.log('[交易市場] API RAW (getMyListings):', result);
+    return result;
   }
 
   async function getSellerClaimableTrades(sellerId) {
-    return sheetGet('getSellerClaimableTrades', { sellerId });
+    const id = String(sellerId || getOrCreatePlayerId()).trim();
+    return await sheetGet('getSellerClaimableTrades', { sellerId: id });
   }
 
   async function claimSoldCardStars(tradeId) {
-    return sheetPost('claimSoldCardStars', {
-      tradeId,
-      sellerId: getOrCreatePlayerId(),
-      sellerName: getCurrentPlayerName()
+    const sellerId = getOrCreatePlayerId();
+    const sellerName = getCurrentPlayerName();
+    return await sheetPost('claimTradeRevenue', {
+      tradeId: String(tradeId || ''),
+      sellerId: sellerId,
+      sellerName: sellerName
     });
   }
 
   async function claimAllSoldCardStars() {
-    return sheetPost('claimAllSoldCardStars', {
-      sellerId: getOrCreatePlayerId(),
-      sellerName: getCurrentPlayerName()
+    const sellerId = getOrCreatePlayerId();
+    const sellerName = getCurrentPlayerName();
+    return await sheetPost('claimAllTradeRevenue', {
+      sellerId: sellerId,
+      sellerName: sellerName
     });
   }
 
-  async function syncPlayerName(newName) {
-    return sheetPost('syncPlayerName', {
-      playerId: getOrCreatePlayerId(),
-      playerName: newName
+  async function buyCard(tradeId) {
+    const buyerId = getOrCreatePlayerId();
+    const buyerName = getCurrentPlayerName();
+    const localStars = getLocalPlayerStars();
+    return await sheetPost('buyTradeListing', {
+      tradeId: String(tradeId || ''),
+      buyerId: buyerId,
+      buyerName: buyerName,
+      initialStars: localStars
     });
   }
 
-  window.GoogleSheetTradeApi = {
+  async function cancelTrade(tradeId) {
+    const playerId = getOrCreatePlayerId();
+    const playerName = getCurrentPlayerName();
+    return await sheetPost('cancelTradeListing', {
+      tradeId: String(tradeId || ''),
+      playerId: playerId,
+      playerName: playerName
+    });
+  }
+
+  // ===== 公開 API =====
+
+  // 提供 shop.html / cards.html 慣用的方法名稱與別名
+  const GoogleSheetTradeApi = {
     getScriptUrl,
     setScriptUrl,
     getCurrentPlayerName,
     getOrCreatePlayerId,
     getLocalPlayerStars,
     saveLocalPlayerStars,
-    getOwnedCardsMap,
-    saveOwnedCardsMap,
     addCardToLocalCollection,
-    removeCardFromLocalCollection,
-    getListedCardsMap,
-    saveListedCardsMap,
     markCardAsListed,
     unmarkCardAsListed,
     isCardListed,
-    getCardMeta,
-    buildPlayerCardPayload,
-    sheetGet,
-    sheetPost,
     ensurePlayerProfile,
-    getPlayerBalance,
+    syncPlayerName,
     syncPlayerCards,
-    listMyCards,
-    getMarketCards,
-    getMyOrders,
-    getSellerOrders,
+    getPlayerBalance,
+
+    // 交易市場 - 統一正式名稱
+    createTradeListing: sellCard,
+    buyTradeListing: buyCard,
+    cancelTradeListing: cancelTrade,
+    claimTradeRevenue: claimSoldCardStars,
+    claimAllTradeRevenue: claimAllSoldCardStars,
+
+    // 交易市場 - 舊名稱（向後相容）
     sellCard,
-    cancelTrade,
     buyCard,
+    cancelTrade,
+
+    // 讀取
+    getMarketListings,
+    getMyListings,
     getSellerClaimableTrades,
     claimSoldCardStars,
     claimAllSoldCardStars,
-    syncPlayerName
+
+    // 相容 shop.html 舊方法名稱
+    getMarketCards: getMarketListings,
+    getMyOrders: getMyListings,
+    getSellerOrders: getMyListings,
+
+    // 原始工具（進階使用）
+    sheetGet,
+    sheetPost,
+    testGoogleSheetCors
   };
+
+  // 同時提供 GoogleSheetApi 名稱向後相容
+  window.GoogleSheetTradeApi = GoogleSheetTradeApi;
+  window.GoogleSheetApi = GoogleSheetTradeApi;
 })();

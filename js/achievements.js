@@ -80,6 +80,7 @@ zodiacCategories.forEach(category => {
 });
 
 // 取得玩家已擁有卡片、碎片等資料
+if (window.AchievementProgress) AchievementProgress.extend(achievements);
 function getOwnedCards() {
   return JSON.parse(localStorage.getItem('ownedCards') || '{}');
 }
@@ -109,6 +110,10 @@ function getAllClaimedAchievements() {
 
 // 判斷成就是否已解鎖
 function checkAchievementUnlocked(ach) {
+  if (window.AchievementProgress) {
+    const shared = AchievementProgress.progress(ach);
+    if (shared !== null) return shared >= ach.requirement;
+  }
   const ownedCards = getOwnedCards();
   const shards = getShards();
   switch (ach.type) {

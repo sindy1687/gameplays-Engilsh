@@ -3,6 +3,225 @@
  * 負責自動儲存所有遊戲資料，包括星星、關卡進度、成就等
  */
 
+// =========================================
+// 備份瘦身與安全寫入 Helper 函式
+// =========================================
+
+const excludedStorageKeyPatterns = [
+  /^gameBackup_/,
+  /^unifiedGameBackup$/,
+  /^emergencyBackup_/,
+  /card/i,
+  /image/i,
+  /video/i,
+  /asset/i,
+  /base64/i
+];
+
+function shouldExcludeFromBackup(key) {
+  return excludedStorageKeyPatterns.some(pattern => pattern.test(key));
+}
+
+function createLightweightBackupData(rawData) {
+  const backup = safeCloneBackupData(rawData || {});
+
+  removeHeavyBackupFields(backup);
+  shrinkOwnedCards(backup);
+  shrinkInventoryItems(backup);
+
+  return backup;
+}
+
+function safeCloneBackupData(data) {
+  try {
+    if (typeof structuredClone === 'function') {
+      return structuredClone(data);
+    }
+  } catch (error) {
+    console.warn('structuredClone 備份資料失敗，改用 JSON clone', error);
+  }
+
+  try {
+    return JSON.parse(JSON.stringify(data || {}));
+  } catch (error) {
+    console.warn('備份資料 clone 失敗，改用空物件', error);
+    return {};
+  }
+}
+
+function removeHeavyBackupFields(target) {
+  if (!target || typeof target !== 'object') return;
+
+  const heavyKeys = [
+    'cards',
+    'cardDatabase',
+    'cardList',
+    'allCards',
+    'gachaCards',
+    'cardPools',
+    'seriesCards',
+    'collectionCards',
+    'cardDefinitions',
+    'cardMasterData',
+    'cardData',
+    'images',
+    'cardImages',
+    'backgroundImages',
+    'videos',
+    'media',
+    'assets',
+    'base64',
+    'imageData',
+    'thumbnail',
+    'preview',
+    'iconData'
+  ];
+
+  for (const key of heavyKeys) {
+    if (Object.prototype.hasOwnProperty.call(target, key)) {
+      delete target[key];
+    }
+  }
+
+  for (const key of Object.keys(target)) {
+    const value = target[key];
+
+    if (!value || typeof value !== 'object') continue;
+
+    const lowerKey = key.toLowerCase();
+
+    if (
+      lowerKey.includes('image') ||
+      lowerKey.includes('video') ||
+      lowerKey.includes('asset') ||
+      lowerKey.includes('base64')
+    ) {
+      delete target[key];
+      continue;
+    }
+
+    if (typeof value === 'string' && value.length > 5000) {
+      delete target[key];
+      continue;
+    }
+
+    removeHeavyBackupFields(value);
+  }
+}
+
+function shrinkOwnedCards(target) {
+  if (!target || typeof target !== 'object') return;
+
+  const ownedCardKeys = [
+    'playerCards',
+    'ownedCards',
+    'collection',
+    'cardCollection',
+    'collectedCards'
+  ];
+
+  for (const key of ownedCardKeys) {
+    if (!Array.isArray(target[key])) continue;
+
+    target[key] = target[key].map(card => {
+      if (typeof card === 'string') {
+        return { id: card, count: 1 };
+      }
+
+      return {
+        id: card.id || card.cardId || card.name,
+        count: Number(card.count || card.quantity || card.amount || 1),
+        obtainedAt: card.obtainedAt || card.createdAt || null
+      };
+    }).filter(card => card.id);
+  }
+}
+
+function shrinkInventoryItems(target) {
+  if (!target || typeof target !== 'object') return;
+
+  const inventoryKeys = [
+    'inventory',
+    'inventoryItems',
+    'items',
+    'bagItems',
+    'backpack'
+  ];
+
+  for (const key of inventoryKeys) {
+    if (!Array.isArray(target[key])) continue;
+
+    target[key] = target[key].map(item => ({
+      id: item.id || item.itemId || item.name,
+      type: item.type || item.category || null,
+      count: Number(item.count || item.quantity || item.amount || 1)
+    })).filter(item => item.id);
+  }
+}
+
+function safeSetBackupStorage(key, value) {
+  try {
+    localStorage.setItem(key, value);
+    return true;
+  } catch (error) {
+    if (!isStorageQuotaError(error)) {
+      console.warn(`localStorage 寫入失敗：${key}`, error);
+      return false;
+    }
+
+    console.warn(`localStorage 容量不足，開始清理舊備份：${key}`, error);
+    cleanupOldGameBackups(1);
+
+    try {
+      localStorage.setItem(key, value);
+      return true;
+    } catch (retryError) {
+      console.warn(`清理後仍無法寫入 localStorage：${key}`, retryError);
+      return false;
+    }
+  }
+}
+
+function isStorageQuotaError(error) {
+  return error && (
+    error.name === 'QuotaExceededError' ||
+    error.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+    error.code === 22 ||
+    error.code === 1014
+  );
+}
+
+function cleanupOldGameBackups(maxKeep = 2) {
+  const backupKeys = [];
+
+  for (let i = 0; i < localStorage.length; i += 1) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith('gameBackup_')) {
+      backupKeys.push(key);
+    }
+  }
+
+  backupKeys.sort((a, b) => {
+    const timeA = Number(a.replace('gameBackup_', '')) || 0;
+    const timeB = Number(b.replace('gameBackup_', '')) || 0;
+    return timeB - timeA;
+  });
+
+  const keysToRemove = backupKeys.slice(maxKeep);
+
+  for (const key of keysToRemove) {
+    try {
+      localStorage.removeItem(key);
+    } catch (error) {
+      console.warn(`移除舊備份失敗：${key}`, error);
+    }
+  }
+}
+
+// =========================================
+// 統一自動儲存系統 Class
+// =========================================
+
 class UnifiedAutoSaveSystem {
     constructor() {
         this.autoSaveEnabled = localStorage.getItem('unifiedAutoSaveEnabled') !== 'false'; // 預設啟用
@@ -19,7 +238,6 @@ class UnifiedAutoSaveSystem {
             'cardShards',
             'playerName',
             'selectedAvatar',
-            'grammarGameData',
             'fillGamesCompleted',
             'cardGamesCompleted',
             'quizGamesCompleted',
@@ -33,10 +251,6 @@ class UnifiedAutoSaveSystem {
             'musicVolume',
             'achievements_unlocked',
             'loginDays',
-            // 文法關卡進度
-            ...Array.from({length: 22}, (_, i) => `grammar_level_${i + 1}`),
-            'grammar_total_progress',
-            'grammarTowerPlayCount',
             // 連動系統資料
             'recentlyObtainedCards',
             'newCardTimestamps',
@@ -46,7 +260,10 @@ class UnifiedAutoSaveSystem {
             'gems',
             'gem_collection_stats',
             'gem_purchase_history',
-            'gem_system_settings'
+            'gem_system_settings',
+            // 背包系統資料
+            'playerInventory',
+            'inventoryVersion'
         ];
 
         this.init();
@@ -518,6 +735,9 @@ class UnifiedAutoSaveSystem {
                 if (key.startsWith('gameBackup_')) continue;
                 if (key.startsWith('emergencyBackup_')) continue;
 
+                // 排除大型 / 備份 / 媒體 key，但保留必要的遊戲進度 key
+                if (shouldExcludeFromBackup(key) && !this.gameDataKeys.includes(key)) continue;
+
                 const value = localStorage.getItem(key);
                 if (value !== null) {
                     data[key] = value;
@@ -548,13 +768,6 @@ class UnifiedAutoSaveSystem {
             if (typeof window.gemSystem !== 'undefined' && window.gemSystem.gems) {
                 gameData['gems'] = JSON.stringify(window.gemSystem.gems);
                 console.log('💎 已收集寶石庫存資料');
-            } else {
-                // 從 localStorage 備用方案收集
-                const userData = JSON.parse(localStorage.getItem('grammarGameData') || '{}');
-                if (userData.gems) {
-                    gameData['gems'] = JSON.stringify(userData.gems);
-                    console.log('💎 已從備用方案收集寶石庫存資料');
-                }
             }
 
             // 收集寶石統計資料
@@ -630,17 +843,34 @@ class UnifiedAutoSaveSystem {
                 this.showAutoSaveStatus('正在自動儲存...', 'saving');
             }
 
+            // 先對資料瘦身，避免存放大圖 / 完整卡片資料
+            const lightweightData = createLightweightBackupData(data);
+
             const cloudKey = 'unifiedGameBackup';
             const cloudData = {
-                gameData: data,
+                gameData: lightweightData,
                 saveTime: new Date().toISOString(),
                 saveType: isAutoSave ? 'auto' : 'manual',
                 isImmediate: isImmediate || false
             };
 
-            localStorage.setItem(cloudKey, JSON.stringify(cloudData));
+            const backupString = JSON.stringify(cloudData);
+            const saved = safeSetBackupStorage(cloudKey, backupString);
 
-            // 同時保存到備份槽位（最多保留5個備份）
+            if (!saved) {
+                console.warn('unifiedGameBackup 儲存失敗，已略過本次自動備份');
+                if (isAutoSave) {
+                    this.showAutoSaveStatus('自動儲存失敗', 'error');
+                    setTimeout(() => {
+                        this.hideAutoSaveStatus();
+                    }, 3000);
+                } else {
+                    this.showNotification('❌ 儲存失敗：localStorage 容量不足', 'error');
+                }
+                return false;
+            }
+
+            // 同時保存到備份槽位（最多保留2個備份）
             this.saveToBackupSlots(cloudData);
 
             if (isAutoSave) {
@@ -681,11 +911,20 @@ class UnifiedAutoSaveSystem {
      */
     saveToBackupSlots(cloudData) {
         try {
+            // 確保備份資料已瘦身
+            const lightweightCloudData = {
+                ...cloudData,
+                gameData: createLightweightBackupData(cloudData.gameData)
+            };
+
             // 讀取現有備份列表
-            const backupList = JSON.parse(localStorage.getItem('gameBackupSlots') || '[]');
+            let backupList = JSON.parse(localStorage.getItem('gameBackupSlots') || '[]');
+
+            // 清理舊備份，確保新增後最多 2 份
+            cleanupOldGameBackups(1);
 
             // 檢查是否需要新增備份（至少間隔10分鐘）
-            const currentTime = new Date(cloudData.saveTime).getTime();
+            const currentTime = new Date(lightweightCloudData.saveTime).getTime();
             const minInterval = 10 * 60 * 1000; // 10分鐘
 
             // 如果有現有備份，檢查時間間隔
@@ -694,14 +933,14 @@ class UnifiedAutoSaveSystem {
                 const timeDiff = currentTime - lastBackupTime;
 
                 // 如果間隔不足10分鐘，且不是手動儲存，則跳過
-                if (timeDiff < minInterval && cloudData.saveType === 'auto') {
+                if (timeDiff < minInterval && lightweightCloudData.saveType === 'auto') {
                     console.log(`📊 備份間隔不足10分鐘（${Math.round(timeDiff/60000)}分鐘），跳過此次備份`);
                     return;
                 }
             }
 
             // 計算星星數量、卡片數量和寶石數量
-            const gameData = cloudData.gameData;
+            const gameData = lightweightCloudData.gameData;
             const totalStars = parseInt(gameData.totalStars || '0');
             const ownedCards = JSON.parse(gameData.ownedCards || '{}');
             const cardCount = Object.keys(ownedCards).length;
@@ -722,9 +961,9 @@ class UnifiedAutoSaveSystem {
             // 添加新備份
             const newBackup = {
                 id: Date.now(),
-                saveTime: cloudData.saveTime,
-                saveType: cloudData.saveType,
-                dataSize: JSON.stringify(cloudData).length,
+                saveTime: lightweightCloudData.saveTime,
+                saveType: lightweightCloudData.saveType,
+                dataSize: JSON.stringify(lightweightCloudData).length,
                 totalStars: totalStars,
                 cardCount: cardCount,
                 totalGems: totalGems,
@@ -733,17 +972,37 @@ class UnifiedAutoSaveSystem {
 
             backupList.unshift(newBackup);
 
-            // 只保留最新的5個備份
-            while (backupList.length > 5) {
+            // 只保留最新的2個備份
+            while (backupList.length > 2) {
                 const oldest = backupList.pop();
-                localStorage.removeItem(`gameBackup_${oldest.id}`);
+                try {
+                    localStorage.removeItem(`gameBackup_${oldest.id}`);
+                } catch (error) {
+                    console.warn(`移除舊備份失敗：gameBackup_${oldest.id}`, error);
+                }
             }
 
-            // 儲存備份列表
-            localStorage.setItem('gameBackupSlots', JSON.stringify(backupList));
+            const backupListString = JSON.stringify(backupList);
+            const backupListSaved = safeSetBackupStorage('gameBackupSlots', backupListString);
+            if (!backupListSaved) {
+                console.warn('gameBackupSlots 儲存失敗，已略過本次備份');
+                return;
+            }
 
             // 儲存實際備份資料
-            localStorage.setItem(`gameBackup_${newBackup.id}`, JSON.stringify(cloudData));
+            const backupKey = `gameBackup_${newBackup.id}`;
+            const backupString = JSON.stringify(lightweightCloudData);
+            const backupSaved = safeSetBackupStorage(backupKey, backupString);
+
+            if (!backupSaved) {
+                console.warn(`${backupKey} 儲存失敗，從備份列表移除`);
+                backupList.shift();
+                safeSetBackupStorage('gameBackupSlots', JSON.stringify(backupList));
+                return;
+            }
+
+            // 最後再清理一次，確保最多 2 份
+            cleanupOldGameBackups(2);
 
             console.log(`💾 新備份已儲存（ID: ${newBackup.id}），當前共有 ${backupList.length} 個備份`);
 
@@ -1183,63 +1442,79 @@ class UnifiedAutoSaveSystem {
     }
 
     /**
-     * 確保有足夠的備份（如果備份不足5個，會產生歷史備份）
+     * 確保備份數量符合上限（最多保留 2 份）
      */
     ensureFiveBackups() {
         try {
-            const backupList = this.getBackupList();
+            let backupList = this.getBackupList();
 
-            if (backupList.length >= 5) {
-                return; // 已經有足夠的備份
+            // 最多只需要 2 份，不強制補滿
+            if (backupList.length >= 2) {
+                return;
             }
 
+            console.log(`📝 目前有 ${backupList.length} 個備份，最多保留 2 份`);
+
+            // 先清理到只剩 1 份
+            cleanupOldGameBackups(1);
+
+            // 取得當前資料並瘦身
             const currentData = this.collectAllLocalStorageData();
-            const now = new Date();
-            const neededBackups = 5 - backupList.length;
+            const lightweightData = createLightweightBackupData(currentData);
+            const now = Date.now();
 
-            console.log(`📝 目前有 ${backupList.length} 個備份，需要產生 ${neededBackups} 個歷史備份`);
+            const historicalBackup = {
+                gameData: lightweightData,
+                saveTime: new Date(now).toISOString(),
+                saveType: 'auto',
+                isHistorical: true
+            };
 
-            // 產生歷史備份（每個間隔10分鐘）
-            for (let i = 1; i <= neededBackups; i++) {
-                const backupTime = new Date(now.getTime() - (i * 10 * 60 * 1000)); // 往前推10分鐘
+            const gameData = historicalBackup.gameData;
+            const totalStars = parseInt(gameData.totalStars || '0');
+            const ownedCards = JSON.parse(gameData.ownedCards || '{}');
+            const cardCount = Object.keys(ownedCards).length;
 
-                const historicalBackup = {
-                    gameData: currentData,
-                    saveTime: backupTime.toISOString(),
-                    saveType: 'auto',
-                    isHistorical: true
-                };
+            const backupInfo = {
+                id: now,
+                saveTime: historicalBackup.saveTime,
+                saveType: historicalBackup.saveType,
+                dataSize: JSON.stringify(historicalBackup).length,
+                totalStars: totalStars,
+                cardCount: cardCount,
+                isHistorical: true
+            };
 
-                // 不經過 saveToBackupSlots 以避免間隔檢查
-                const gameData = historicalBackup.gameData;
-                const totalStars = parseInt(gameData.totalStars || '0');
-                const ownedCards = JSON.parse(gameData.ownedCards || '{}');
-                const cardCount = Object.keys(ownedCards).length;
+            backupList.unshift(backupInfo);
 
-                const backupInfo = {
-                    id: backupTime.getTime(),
-                    saveTime: historicalBackup.saveTime,
-                    saveType: historicalBackup.saveType,
-                    dataSize: JSON.stringify(historicalBackup).length,
-                    totalStars: totalStars,
-                    cardCount: cardCount,
-                    isHistorical: true
-                };
-
-                backupList.push(backupInfo);
-                localStorage.setItem(`gameBackup_${backupInfo.id}`, JSON.stringify(historicalBackup));
+            // 只保留最新的2個備份
+            while (backupList.length > 2) {
+                const oldest = backupList.pop();
+                try {
+                    localStorage.removeItem(`gameBackup_${oldest.id}`);
+                } catch (error) {
+                    console.warn(`移除舊備份失敗：gameBackup_${oldest.id}`, error);
+                }
             }
 
-            // 按時間排序（最新的在前面）
-            backupList.sort((a, b) => new Date(b.saveTime) - new Date(a.saveTime));
+            const backupListSaved = safeSetBackupStorage('gameBackupSlots', JSON.stringify(backupList));
+            if (!backupListSaved) {
+                console.warn('gameBackupSlots 儲存失敗，已略過本次歷史備份');
+                return;
+            }
 
-            // 只保留5個
-            const finalList = backupList.slice(0, 5);
+            const backupKey = `gameBackup_${backupInfo.id}`;
+            const backupSaved = safeSetBackupStorage(backupKey, JSON.stringify(historicalBackup));
 
-            // 儲存更新後的備份列表
-            localStorage.setItem('gameBackupSlots', JSON.stringify(finalList));
+            if (!backupSaved) {
+                console.warn(`${backupKey} 儲存失敗，已略過本次歷史備份`);
+                return;
+            }
 
-            console.log(`✅ 已確保有 ${finalList.length} 個備份`);
+            // 最後再清理一次，確保最多 2 份
+            cleanupOldGameBackups(2);
+
+            console.log(`✅ 已確保最多 2 個備份，目前共有 ${backupList.length} 個備份`);
 
         } catch (error) {
             console.error('確保備份數量失敗:', error);

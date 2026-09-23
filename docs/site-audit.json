@@ -1,0 +1,1007 @@
+{
+  "checkedPages": 81,
+  "checkedFiles": 197,
+  "errors": [],
+  "warnings": [
+    "add_11_from_basic_to_1000csv.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "add_50_1000words.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "add_50_to_1000csv.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "add_50_to_vocabData.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "add_55_from_missing_to_1000csv.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "add_56_from_400_to_1000csv.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "add_logic_hints.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "add_missing_words.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "add_next_100_to_1000csv.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "add_remaining_800_to_1000csv.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "add_to_vocabData.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "admin_apps_script.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "chat_and_leaderboard_apps_script.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "clean_800csv.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "compare_1000words.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "compare_400_to_1000.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "compare_800_to_1000.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "compare_basic_to_1000.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "compare_provided_to_toeic.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "compare_words.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "count_cards.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "google-apps-script-drive-backup.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "google_sheets_apps_script.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "main.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "merge_csv_files.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "rebuild_800_csv.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "server.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "ssr_questions.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "trim_to_800.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "vocab-bank.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "word_spin_game.css: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "js/achievements.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "js/aphrodite_vocab.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "js/basic_words.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "js/coinSystem.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "js/customWords.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "js/grammarLevels.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "js/grammarTowerVocab.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "js/greekDeitiesQuiz.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "js/myQuizData.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "js/player.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "js/quiz.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "js/sentences.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "js/ssr_questions.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "js/word_spin_game.js: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。",
+    "css/onlineMailbox.css: 未偵測到靜態引用；可能是命令列工具、動態載入或保留資料，不代表可刪除。"
+  ],
+  "pages": [
+    {
+      "file": "achievement.html",
+      "title": "成就徽章 - Typing Hero",
+      "scripts": [
+        "js/stars.js",
+        "js/achievementProgress.js",
+        "js/cards.js",
+        "js/cardVideoManager.js",
+        "js/userData.js"
+      ]
+    },
+    {
+      "file": "admin.html",
+      "title": "admin.html",
+      "scripts": [
+        "js/stars.js",
+        "js/googleSheetApi.js",
+        "admin.js"
+      ]
+    },
+    {
+      "file": "advanced-animal-card-game.html",
+      "title": "進階動物卡牌相克遊戲",
+      "scripts": [
+        "js/stars.js",
+        "https://unpkg.com/vue@3/dist/vue.global.js"
+      ]
+    },
+    {
+      "file": "announcements.html",
+      "title": "📣 最新公告",
+      "scripts": [
+        "js/stars.js"
+      ]
+    },
+    {
+      "file": "aphrodite.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js"
+      ]
+    },
+    {
+      "file": "apollo.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js",
+        "js/greekStageSystem.js"
+      ]
+    },
+    {
+      "file": "ares.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js"
+      ]
+    },
+    {
+      "file": "artemis.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js"
+      ]
+    },
+    {
+      "file": "article_practice.html",
+      "title": "英文文章練習 - Article Practice",
+      "scripts": [
+        "js/stars.js",
+        "js/articleData.js",
+        "js/item_database.js",
+        "js/inventory.js",
+        "js/starRewardSystem.js",
+        "js/sound.js"
+      ]
+    },
+    {
+      "file": "athena.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js",
+        "js/greekStageSystem.js"
+      ]
+    },
+    {
+      "file": "atlas.html",
+      "title": "星座圖鑑 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/achievementProgress.js",
+        "js/achievementSystem.js",
+        "js/utils.js",
+        "js/stageProgress.js",
+        "js/atlasStageRegistry.js",
+        "js/apiConfig.js",
+        "js/soundSystem.js"
+      ]
+    },
+    {
+      "file": "atlas_god.html",
+      "title": "阿特拉斯 Atlas - 填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js"
+      ]
+    },
+    {
+      "file": "autoSaveManager.html",
+      "title": "自動儲存管理器 - 英語學習遊戲",
+      "scripts": [
+        "js/stars.js",
+        "js/userData.js",
+        "js/gemSystem.js",
+        "js/autoSaveSystem.js",
+        "js/cards.js",
+        "js/cardVideoManager.js"
+      ]
+    },
+    {
+      "file": "book.html",
+      "title": "星際英打冒險 − 單字本管理",
+      "scripts": [
+        "js/stars.js",
+        "js/userData.js",
+        "js/sound.js"
+      ]
+    },
+    {
+      "file": "book_edit.html",
+      "title": "星際英打冒險 − 編輯單字本",
+      "scripts": [
+        "js/stars.js",
+        "js/userData.js",
+        "js/sound.js",
+        "js/starRewardSystem.js"
+      ]
+    },
+    {
+      "file": "calendar_checkin.html",
+      "title": "月曆簽到 - 宇宙遠航",
+      "scripts": [
+        "js/stars.js",
+        "js/achievementProgress.js",
+        "js/achievementSystem.js"
+      ]
+    },
+    {
+      "file": "cardCollection.html",
+      "title": "卡片收藏冊",
+      "scripts": [
+        "js/stars.js",
+        "js/cards.js",
+        "js/cardVideoManager.js",
+        "js/userData.js",
+        "js/cardStorage.js",
+        "js/seriesGacha.js"
+      ]
+    },
+    {
+      "file": "cards.html",
+      "title": "卡片倉庫 - Typing Hero",
+      "scripts": [
+        "js/stars.js",
+        "js/sound.js",
+        "js/userData.js",
+        "js/starManager.js",
+        "js/starRewardSystem.js",
+        "js/cardUtils.js",
+        "js/cards.js",
+        "js/cardVideoManager.js",
+        "js/custom_cards.js",
+        "js/localCardTrade.js",
+        "js/sellCardAI.js",
+        "js/googleSheetApi.js",
+        "js/achievementProgress.js",
+        "js/achievementSystem.js"
+      ]
+    },
+    {
+      "file": "card_diagnostic.html",
+      "title": "卡片資料診斷工具",
+      "scripts": [
+        "js/stars.js",
+        "js/userData.js",
+        "js/cardStorage.js"
+      ]
+    },
+    {
+      "file": "card_effect_demo.html",
+      "title": "卡片效果體驗關卡",
+      "scripts": [
+        "js/stars.js",
+        "js/cards.js",
+        "js/cardVideoManager.js"
+      ]
+    },
+    {
+      "file": "card_manager.html",
+      "title": "卡片管理系統 - Typing Hero",
+      "scripts": [
+        "js/stars.js"
+      ]
+    },
+    {
+      "file": "card_manager_advanced.html",
+      "title": "進階卡片管理系統 - Typing Hero",
+      "scripts": [
+        "js/stars.js"
+      ]
+    },
+    {
+      "file": "card_recovery.html",
+      "title": "卡片恢復工具 - Typing Hero",
+      "scripts": [
+        "js/stars.js",
+        "js/sound.js",
+        "js/userData.js",
+        "js/autoSaveSystem.js",
+        "js/starRewardSystem.js",
+        "js/cardUtils.js",
+        "js/cardStorage.js",
+        "js/cards.js",
+        "js/cardVideoManager.js",
+        "js/achievementProgress.js",
+        "js/achievementSystem.js",
+        "js/contextMenuSystem.js",
+        "js/enhancedSaveReminder.js"
+      ]
+    },
+    {
+      "file": "category_video_manager.html",
+      "title": "分類影片管理器",
+      "scripts": [
+        "js/stars.js",
+        "js/cards.js",
+        "js/cardVideoManager.js"
+      ]
+    },
+    {
+      "file": "chat_room.html",
+      "title": "抽卡聊天室",
+      "scripts": [
+        "js/stars.js"
+      ]
+    },
+    {
+      "file": "constellation_grammar.html",
+      "title": "星座語法探險 - Constellation Quest",
+      "scripts": [
+        "js/stars.js",
+        "js/userData.js",
+        "js/stageProgress.js",
+        "js/constellationGrammar.js"
+      ]
+    },
+    {
+      "file": "cronus.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js"
+      ]
+    },
+    {
+      "file": "customCategory.html",
+      "title": "自訂關卡管理 - 英打小英雄",
+      "scripts": [
+        "js/stars.js"
+      ]
+    },
+    {
+      "file": "dailyCheckCenter.html",
+      "title": "每日簽到中心 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/achievementProgress.js",
+        "js/achievementSystem.js"
+      ]
+    },
+    {
+      "file": "data-management.html",
+      "title": "data-management.html",
+      "scripts": [
+        "js/stars.js",
+        "js/local-backup.js"
+      ]
+    },
+    {
+      "file": "debug_cards.html",
+      "title": "卡片調試 - Typing Hero",
+      "scripts": [
+        "js/stars.js",
+        "js/sound.js",
+        "js/userData.js",
+        "js/autoSaveSystem.js",
+        "js/starRewardSystem.js",
+        "js/cardUtils.js",
+        "js/cardStorage.js",
+        "js/cards.js",
+        "js/cardVideoManager.js",
+        "js/achievementProgress.js",
+        "js/achievementSystem.js",
+        "js/contextMenuSystem.js",
+        "js/enhancedSaveReminder.js"
+      ]
+    },
+    {
+      "file": "demeter.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js",
+        "js/greekStageSystem.js"
+      ]
+    },
+    {
+      "file": "dictionary.html",
+      "title": "單字本 - Typing Hero",
+      "scripts": [
+        "js/stars.js"
+      ]
+    },
+    {
+      "file": "dionysus.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js"
+      ]
+    },
+    {
+      "file": "eros.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js"
+      ]
+    },
+    {
+      "file": "feedback_cloud.html",
+      "title": "雲端留言系統",
+      "scripts": [
+        "js/stars.js"
+      ]
+    },
+    {
+      "file": "firebase_chat_enhanced.html",
+      "title": "聊天室",
+      "scripts": [
+        "js/stars.js"
+      ]
+    },
+    {
+      "file": "flipcard_practice.html",
+      "title": "翻牌單字練習",
+      "scripts": [
+        "js/stars.js",
+        "js/sound.js",
+        "js/vocabData.js",
+        "js/stageProgress.js"
+      ]
+    },
+    {
+      "file": "gacha.html",
+      "title": "星辰祈願 - Typing Hero",
+      "scripts": [
+        "js/stars.js",
+        "js/gachaRules.js",
+        "js/item_database.js",
+        "js/inventory.js",
+        "js/cards.js",
+        "js/cardVideoManager.js",
+        "js/userData.js",
+        "js/starRewardSystem.js",
+        "js/autoSaveSystem.js",
+        "js/contextMenuSystem.js",
+        "js/seriesGacha.js",
+        "js/inventoryModal.js"
+      ]
+    },
+    {
+      "file": "gaia.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js"
+      ]
+    },
+    {
+      "file": "game_center_simple.html",
+      "title": "遊戲中心 - 三大遊戲",
+      "scripts": [
+        "js/stars.js",
+        "https://unpkg.com/vue@3/dist/vue.global.js",
+        "js/playerProgress.js"
+      ]
+    },
+    {
+      "file": "game_scenarios.html",
+      "title": "遊戲場景 - Typing Hero",
+      "scripts": [
+        "js/stars.js",
+        "js/sound.js",
+        "js/userData.js",
+        "js/cards.js",
+        "js/cardVideoManager.js"
+      ]
+    },
+    {
+      "file": "gm.html",
+      "title": "GM 管理後台",
+      "scripts": [
+        "js/stars.js",
+        "js/cards.js",
+        "js/cardVideoManager.js",
+        "js/seriesGacha.js",
+        "js/constellationGrammar.js",
+        "js/userData.js",
+        "js/stageProgress.js",
+        "js/atlasStageRegistry.js",
+        "js/gm.js"
+      ]
+    },
+    {
+      "file": "google_sheets_form.html",
+      "title": "信箱系統已移除",
+      "scripts": [
+        "js/stars.js",
+        "js/starRewardSystem.js"
+      ]
+    },
+    {
+      "file": "greek_common.html",
+      "title": "填空挑戰 - 希臘神祇",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/stageProgress.js",
+        "js/starRewardSystem.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js",
+        "js/greekStageSystem.js",
+        "js/greekCommonConfig.js",
+        "js/sound.js",
+        "js/greekSoundManager.js",
+        "js/inventory.js"
+      ]
+    },
+    {
+      "file": "greek_fill_blank.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js",
+        "js/greekStageSystem.js",
+        "js/greekGodsData.js"
+      ]
+    },
+    {
+      "file": "hades.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js"
+      ]
+    },
+    {
+      "file": "hephaestus.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js"
+      ]
+    },
+    {
+      "file": "hera.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js",
+        "js/greekStageSystem.js"
+      ]
+    },
+    {
+      "file": "hermes.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js"
+      ]
+    },
+    {
+      "file": "hestia.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js"
+      ]
+    },
+    {
+      "file": "index.html",
+      "title": "英打小英雄 - 首頁",
+      "scripts": [
+        "js/stars.js",
+        "https://unpkg.com/vue@3/dist/vue.global.js",
+        "js/userData.js",
+        "js/starManager.js",
+        "js/sound.js",
+        "js/achievementProgress.js",
+        "js/achievementSystem.js",
+        "js/characterDialogue.js",
+        "js/cards.js",
+        "js/cardVideoManager.js",
+        "js/local-backup.js",
+        "js/google-drive-backup.js",
+        "js/cloudSync.js"
+      ]
+    },
+    {
+      "file": "inventory.html",
+      "title": "🎒 我的背包 - Typing Hero",
+      "scripts": [
+        "js/stars.js",
+        "js/item_database.js",
+        "js/inventory.js",
+        "js/seriesGacha.js"
+      ]
+    },
+    {
+      "file": "leaderboard_simple_cloud.html",
+      "title": "⭐ Google 表單星星排行榜",
+      "scripts": [
+        "js/stars.js"
+      ]
+    },
+    {
+      "file": "login.html",
+      "title": "星際英打冒險 - Typing Hero",
+      "scripts": [
+        "js/stars.js"
+      ]
+    },
+    {
+      "file": "matching.html",
+      "title": "星際英打冒險 − 單字配對遊戲",
+      "scripts": [
+        "js/stars.js",
+        "js/sound.js",
+        "js/starRewardSystem.js",
+        "js/achievementProgress.js",
+        "js/achievementSystem.js"
+      ]
+    },
+    {
+      "file": "NEWCARDS.HTML",
+      "title": "新卡亮相區｜卡池資訊總攬",
+      "scripts": [
+        "js/stars.js",
+        "https://cdn.jsdelivr.net/npm/chart.js",
+        "js/cards.js",
+        "js/cardVideoManager.js"
+      ]
+    },
+    {
+      "file": "nike.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js"
+      ]
+    },
+    {
+      "file": "orb_battle.html",
+      "title": "轉珠戰鬥",
+      "scripts": [
+        "js/stars.js",
+        "js/cards.js",
+        "js/cardVideoManager.js",
+        "js/cardStorage.js",
+        "js/orb_stages.js",
+        "js/orb_teams.js",
+        "js/orb_skills.js",
+        "js/orb_progress.js",
+        "js/orb_battle_cards.js",
+        "orb_battle.js"
+      ]
+    },
+    {
+      "file": "orb_stage_select.html",
+      "title": "轉珠戰鬥 - 關卡選擇",
+      "scripts": [
+        "js/stars.js",
+        "js/cards.js",
+        "js/cardVideoManager.js",
+        "js/cardStorage.js",
+        "js/orb_stages.js",
+        "js/orb_progress.js",
+        "js/orb_battle_cards.js"
+      ]
+    },
+    {
+      "file": "orb_team_edit.html",
+      "title": "轉珠戰鬥 - 隊伍編輯",
+      "scripts": [
+        "js/stars.js",
+        "js/cards.js",
+        "js/cardVideoManager.js",
+        "js/cardStorage.js",
+        "js/orb_teams.js",
+        "js/orb_battle_cards.js"
+      ]
+    },
+    {
+      "file": "persephone.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js"
+      ]
+    },
+    {
+      "file": "poseidon.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js",
+        "js/greekStageSystem.js"
+      ]
+    },
+    {
+      "file": "prometheus.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/utils.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js"
+      ]
+    },
+    {
+      "file": "puzzle_battle.html",
+      "title": "轉珠冒險 - Puzzle Adventure",
+      "scripts": [
+        "js/stars.js",
+        "js/cards.js",
+        "js/cardVideoManager.js",
+        "js/puzzle_battle.js"
+      ]
+    },
+    {
+      "file": "quiz.html",
+      "title": "英打小英雄 - 星座挑戰",
+      "scripts": [
+        "js/stars.js",
+        "js/playerProgress.js",
+        "js/userData.js",
+        "js/sound.js",
+        "js/starRewardSystem.js",
+        "js/vocabData.js",
+        "js/cards.js",
+        "js/cardVideoManager.js",
+        "js/achievementProgress.js",
+        "js/achievementSystem.js",
+        "js/stageProgress.js",
+        "js/apiConfig.js",
+        "js/inventory.js"
+      ]
+    },
+    {
+      "file": "quiz_game.html",
+      "title": "Cosmic Quiz: Chapter of Choice",
+      "scripts": [
+        "js/stars.js",
+        "js/sound.js",
+        "js/starRewardSystem.js"
+      ]
+    },
+    {
+      "file": "review.html",
+      "title": "單字翻牌複習",
+      "scripts": [
+        "js/stars.js",
+        "js/vocabData.js",
+        "js/sound.js"
+      ]
+    },
+    {
+      "file": "rhea.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js"
+      ]
+    },
+    {
+      "file": "scratch_card.html",
+      "title": "選卡刮刮樂",
+      "scripts": [
+        "js/stars.js"
+      ]
+    },
+    {
+      "file": "shop.html",
+      "title": "🌟 道具商城 - Typing Hero",
+      "scripts": [
+        "js/stars.js",
+        "js/item_database.js",
+        "js/inventory.js",
+        "js/sound.js",
+        "js/userData.js",
+        "js/starManager.js",
+        "js/starRewardSystem.js",
+        "js/cardUtils.js",
+        "js/cards.js",
+        "js/cardVideoManager.js",
+        "js/googleSheetApi.js",
+        "js/achievementProgress.js",
+        "js/achievementSystem.js",
+        "js/seriesGacha.js",
+        "js/inventoryModal.js"
+      ]
+    },
+    {
+      "file": "social_share.html",
+      "title": "社交分享 - Typing Hero",
+      "scripts": [
+        "js/stars.js",
+        "js/sound.js",
+        "js/userData.js",
+        "js/cards.js",
+        "js/cardVideoManager.js"
+      ]
+    },
+    {
+      "file": "spelling.html",
+      "title": "拼字挑戰",
+      "scripts": [
+        "js/stars.js",
+        "js/starRewardSystem.js",
+        "js/sound.js"
+      ]
+    },
+    {
+      "file": "ssr_challenge.html",
+      "title": "SSR卡片挑戰 - Typing Hero",
+      "scripts": [
+        "js/stars.js",
+        "js/sound.js",
+        "js/userData.js",
+        "js/starRewardSystem.js",
+        "js/cardUtils.js",
+        "js/cards.js",
+        "js/cardVideoManager.js"
+      ]
+    },
+    {
+      "file": "stars_leaderboard.html",
+      "title": "⭐ 星星排行榜",
+      "scripts": [
+        "js/stars.js",
+        "js/apiConfig.js"
+      ]
+    },
+    {
+      "file": "time_challenge.html",
+      "title": "星際英打冒險 − 時間挑戰",
+      "scripts": [
+        "js/stars.js",
+        "js/sound.js",
+        "js/starRewardSystem.js"
+      ]
+    },
+    {
+      "file": "tower_defense.html",
+      "title": "神魔之塔 - 卡牌打掛系統",
+      "scripts": [
+        "js/stars.js",
+        "js/cards.js",
+        "js/cardVideoManager.js",
+        "tower_defense.js"
+      ]
+    },
+    {
+      "file": "uno_game.html",
+      "title": "UNO 卡牌大戰",
+      "scripts": [
+        "js/stars.js",
+        "js/userData.js",
+        "uno_game.js"
+      ]
+    },
+    {
+      "file": "vocabulary_download.html",
+      "title": "單字檔案下載中心",
+      "scripts": [
+        "js/stars.js",
+        "https://unpkg.com/vue@3/dist/vue.global.js"
+      ]
+    },
+    {
+      "file": "word_spin_game.html",
+      "title": "🎰 拉霸機遊戲",
+      "scripts": [
+        "js/stars.js"
+      ]
+    },
+    {
+      "file": "zeus.html",
+      "title": "填空挑戰 - 英打小英雄",
+      "scripts": [
+        "js/stars.js",
+        "js/utils.js",
+        "js/bgmController.js",
+        "js/userData.js",
+        "js/characterDialogue.js",
+        "js/gameDialogue.js",
+        "js/apiConfig.js",
+        "js/greekScoreUpload.js",
+        "js/greekStageSystem.js"
+      ]
+    }
+  ]
+}

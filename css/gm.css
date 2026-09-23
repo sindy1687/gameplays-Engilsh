@@ -377,3 +377,309 @@ button.danger,
     border-radius: 12px;
   }
 }
+
+/* Stage Manager Styles */
+.gm-stage-player-info {
+  background: rgba(255, 215, 0, 0.1);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.gm-stage-player-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 8px;
+}
+
+.gm-stage-player-name {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffd700;
+  margin-bottom: 4px;
+}
+
+.gm-stage-player-id {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 2px;
+}
+
+.gm-stage-player-source {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.gm-stage-series-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.gm-stage-tab {
+  flex: 1;
+  min-width: 150px;
+  padding: 14px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.gm-stage-tab:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.gm-stage-tab.active {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #000;
+  border-color: #ffd700;
+  box-shadow: 0 0 16px rgba(255, 215, 0, 0.4);
+}
+
+.gm-stage-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.gm-stage-stat {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+
+.gm-stage-stat-label {
+  display: block;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 8px;
+}
+
+.gm-stage-stat-value {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.gm-stage-stat-value.completed {
+  color: #4ade80;
+}
+
+.gm-stage-stat-value.locked {
+  color: #f87171;
+}
+
+.gm-stage-bulk-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.gm-stage-bulk-btn {
+  flex: 1;
+  min-width: 200px;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.gm-stage-bulk-btn.success {
+  background: linear-gradient(135deg, #4ade80, #22c55e);
+  color: #000;
+}
+
+.gm-stage-bulk-btn.success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 222, 128, 0.4);
+}
+
+.gm-stage-bulk-btn.danger {
+  background: linear-gradient(135deg, #f87171, #ef4444);
+  color: #000;
+}
+
+.gm-stage-bulk-btn.danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(248, 113, 113, 0.4);
+}
+
+.gm-stage-bulk-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.gm-stage-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.gm-stage-item {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.3s ease;
+}
+
+.gm-stage-item:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.gm-stage-item.completed {
+  border-color: #4ade80;
+  background: rgba(74, 222, 128, 0.1);
+}
+
+.gm-stage-item.locked {
+  border-color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+}
+
+.gm-stage-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.gm-stage-icon {
+  font-size: 32px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.gm-stage-info {
+  flex: 1;
+}
+
+.gm-stage-order {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 2px;
+}
+
+.gm-stage-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.gm-stage-id {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: monospace;
+}
+
+.gm-stage-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.gm-stage-item.completed .gm-stage-status {
+  background: rgba(74, 222, 128, 0.2);
+  color: #4ade80;
+}
+
+.gm-stage-item.locked .gm-stage-status {
+  background: rgba(248, 113, 113, 0.2);
+  color: #f87171;
+}
+
+.gm-stage-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.gm-stage-toggle {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.gm-stage-item.completed .gm-stage-toggle {
+  background: rgba(248, 113, 113, 0.2);
+  color: #f87171;
+  border: 1px solid #f87171;
+}
+
+.gm-stage-item.completed .gm-stage-toggle:hover {
+  background: #f87171;
+  color: #000;
+}
+
+.gm-stage-item.locked .gm-stage-toggle {
+  background: rgba(74, 222, 128, 0.2);
+  color: #4ade80;
+  border: 1px solid #4ade80;
+}
+
+.gm-stage-item.locked .gm-stage-toggle:hover {
+  background: #4ade80;
+  color: #000;
+}
+
+.gm-stage-toggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Mobile responsive for stage manager */
+@media (max-width: 768px) {
+  .gm-stage-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gm-stage-list {
+    grid-template-columns: 1fr;
+  }
+
+  .gm-stage-series-tabs {
+    flex-direction: column;
+  }
+
+  .gm-stage-bulk-actions {
+    flex-direction: column;
+  }
+
+  .gm-stage-bulk-btn {
+    min-width: 100%;
+  }
+}

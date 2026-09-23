@@ -1,4 +1,8 @@
 // 遊戲對話整合系統
+// 使用 if 保護，避免此檔案被同一頁面重複載入時
+// 造成 "Identifier 'GameDialogue' has already been declared" 的 SyntaxError
+if (typeof window.GameDialogue === 'undefined') {
+
 const GameDialogue = {
   // 初始化遊戲對話
   init() {
@@ -73,4 +77,6 @@ const GameDialogue = {
 };
 
 // 導出到全局
-window.GameDialogue = GameDialogue; 
+window.GameDialogue = GameDialogue;
+
+} // end guard: typeof window.GameDialogue === 'undefined'

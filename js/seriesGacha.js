@@ -100,6 +100,13 @@ function saveGachaTicketsData(ticketsData) {
  * @returns {number} 抽卡券數量
  */
 function getSeriesTicketCount(seriesName) {
+  // 優先使用背包系統
+  if (typeof getItemCount === 'function') {
+    const itemId = `series_ticket_${seriesName}`;
+    return getItemCount(itemId);
+  }
+  
+  // 備用方案：使用舊的 localStorage
   const ticketsData = getGachaTicketsData();
   return ticketsData.series[seriesName] || 0;
 }
@@ -110,6 +117,15 @@ function getSeriesTicketCount(seriesName) {
  * @param {number} amount 數量
  */
 function addSeriesTicket(seriesName, amount) {
+  // 優先使用背包系統
+  if (typeof addItem === 'function') {
+    const itemId = `series_ticket_${seriesName}`;
+    addItem(itemId, amount);
+    console.log(`增加 ${seriesName} 抽卡券 ${amount} 張（使用背包系統）`);
+    return;
+  }
+  
+  // 備用方案：使用舊的 localStorage
   const ticketsData = getGachaTicketsData();
   
   if (!(seriesName in ticketsData.series)) {
@@ -119,7 +135,7 @@ function addSeriesTicket(seriesName, amount) {
   ticketsData.series[seriesName] += amount;
   saveGachaTicketsData(ticketsData);
   
-  console.log(`增加 ${seriesName} 抽卡券 ${amount} 張，當前：${ticketsData.series[seriesName]}`);
+  console.log(`增加 ${seriesName} 抽卡券 ${amount} 張，當前：${ticketsData.series[seriesName]}（使用舊系統）`);
 }
 
 /**
@@ -129,6 +145,22 @@ function addSeriesTicket(seriesName, amount) {
  * @returns {boolean} 是否成功扣除
  */
 function deductSeriesTicket(seriesName, amount) {
+  // 優先使用背包系統
+  if (typeof removeItem === 'function') {
+    const itemId = `series_ticket_${seriesName}`;
+    const currentCount = getItemCount(itemId);
+    
+    if (currentCount < amount) {
+      console.warn(`${seriesName} 抽卡券不足，需要 ${amount} 張，當前：${currentCount}`);
+      return false;
+    }
+    
+    removeItem(itemId, amount);
+    console.log(`扣除 ${seriesName} 抽卡券 ${amount} 張（使用背包系統）`);
+    return true;
+  }
+  
+  // 備用方案：使用舊的 localStorage
   const ticketsData = getGachaTicketsData();
   
   if (!(seriesName in ticketsData.series)) {
@@ -144,7 +176,7 @@ function deductSeriesTicket(seriesName, amount) {
   ticketsData.series[seriesName] -= amount;
   saveGachaTicketsData(ticketsData);
   
-  console.log(`扣除 ${seriesName} 抽卡券 ${amount} 張，當前：${ticketsData.series[seriesName]}`);
+  console.log(`扣除 ${seriesName} 抽卡券 ${amount} 張，當前：${ticketsData.series[seriesName]}（使用舊系統）`);
   return true;
 }
 

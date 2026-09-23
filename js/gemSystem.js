@@ -200,7 +200,7 @@ class GemSystem {
             } else {
                 // 備用方案：直接保存到localStorage
                 const currentStars = parseInt(localStorage.getItem('totalStars') || '0');
-                localStorage.setItem('totalStars', (currentStars + starsToAdd).toString());
+                window.StarSystem.setTotalStars((currentStars + starsToAdd).toString());
             }
             
             this.showExchangeNotification(gemType, count, starsToAdd);

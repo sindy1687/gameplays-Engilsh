@@ -1,7 +1,15 @@
 // ===== 希臘神祇分數上傳系統 =====
 // 這個腳本可以讓所有希臘神祇頁面使用
+//
+// 使用 if 保護，避免此檔案被同一頁面重複載入時
+// 造成 "Identifier 'GREEK_SCORE_API' has already been declared" 的 SyntaxError
+if (typeof window.greekScoreUploadModuleLoaded === 'undefined') {
+window.greekScoreUploadModuleLoaded = true;
 
-const GREEK_SCORE_API = "https://script.google.com/macros/s/AKfycbzJWy7h__cMAyijHgeUGCEiCKSyysLfNRvzYYYnMH5sjSqfrMNyNZnmSi8hOXvVSo6c/exec";
+// 統一由 js/apiConfig.js 提供 API URL，這裡不再各自硬編一份，
+// 避免全站出現多組不同的 Google Apps Script URL。
+const GREEK_SCORE_API = (window.GameAPIConfig && window.GameAPIConfig.greekScoreApi)
+  || "https://script.google.com/macros/s/AKfycbzJWy7h__cMAyijHgeUGCEiCKSyysLfNRvzYYYnMH5sjSqfrMNyNZnmSi8hOXvVSo6c/exec";
 
 const GREEK_LEADERBOARD_ACTION = 'getGreekLeaderboard';
 
@@ -88,89 +96,105 @@ function renderGreekSettlementList(container, answerLog) {
   container.appendChild(listWrap);
 }
 
-// 希臘神祇名稱對應
+// 希臘神祇名稱對應（從 URL god 參數對應）
 const GREEK_DEITY_NAMES = {
-  'zeus.html': '宙斯',
-  'hera.html': '赫拉',
-  'poseidon.html': '波塞頓',
-  'demeter.html': '得墨忒耳',
-  'athena.html': '雅典娜',
-  'apollo.html': '阿波羅',
-  'artemis.html': '阿爾忒彌斯',
-  'ares.html': '阿瑞斯',
-  'aphrodite.html': '阿芙蘿黛蒂',
-  'hephaestus.html': '赫菲斯托斯',
-  'hermes.html': '赫耳墨斯',
-  'hestia.html': '赫斯提亞',
-  'dionysus.html': '狄俄尼索斯',
-  'hades.html': '哈迪斯',
-  'persephone.html': '珀爾塞福涅',
-  'eros.html': '厄洛斯',
-  'nike.html': '尼刻',
-  'gaia.html': '蓋婭',
-  'atlas_god.html': '阿特拉斯',
-  'cronus.html': '克洛諾斯',
-  'rhea.html': '瑞亞',
-  'prometheus.html': '普羅米修斯'
+  'zeus': '宙斯',
+  'hera': '赫拉',
+  'poseidon': '波塞頓',
+  'demeter': '得墨忒耳',
+  'athena': '雅典娜',
+  'apollo': '阿波羅',
+  'artemis': '阿爾忒彌斯',
+  'ares': '阿瑞斯',
+  'aphrodite': '阿芙蘿黛蒂',
+  'hephaestus': '赫菲斯托斯',
+  'hermes': '赫耳墨斯',
+  'hestia': '赫斯提亞',
+  'dionysus': '狄俄尼索斯',
+  'hades': '哈迪斯',
+  'persephone': '珀爾塞福涅',
+  'eros': '厄洛斯',
+  'nike': '尼刻',
+  'gaia': '蓋婭',
+  'atlas_god': '阿特拉斯',
+  'cronus': '克洛諾斯',
+  'rhea': '瑞亞',
+  'prometheus': '普羅米修斯'
 };
 
 /**
  * 上傳希臘神祇分數到 Google Sheets
- * @param {Object} gameData - 遊戲數據
- * @param {number} gameData.score - 本次獲得的星星數
- * @param {number} gameData.correctCount - 答對題數
- * @param {number} gameData.wrongCount - 答錯題數
- * @param {number} gameData.totalTime - 總遊戲時間（秒）
- * @param {number} gameData.averageTime - 平均答題時間（秒）
- * @param {string} gameData.deityName - 神祇名稱（可選，會自動偵測）
+ * @param {Object} data - 遊戲數據
+ * @param {number} data.score - 本次獲得的星星數
+ * @param {number} data.correctCount - 答對題數
+ * @param {number} data.wrongCount - 答錯題數
+ * @param {number} data.totalTime - 總遊戲時間（秒）
+ * @param {number} data.averageTime - 平均答題時間（秒）
+ * @param {string} data.category - 神祇類別（中文名稱）
+ * @param {Array} data.details - 詳細資料（answerLog）
  */
-async function submitGreekScore(gameData) {
-  // 自動偵測神祇名稱
-  const currentPage = window.location.pathname.split('/').pop();
-  const deityName = gameData.deityName || GREEK_DEITY_NAMES[currentPage] || '未知神祇';
-  
+async function submitGreekScore(data) {
   const playerName = getGreekPlayerName();
-  const score = gameData.score || 0;
-  const correctCount = gameData.correctCount || 0;
-  const wrongCount = gameData.wrongCount || 0;
-  const totalTime = gameData.totalTime || 0;
-  const averageTime = gameData.averageTime || 0;
-  const details = typeof gameData.details === 'string' ? gameData.details : '';
-  const date = new Date().toLocaleDateString('zh-TW');
-  
+  const score = Number(data.score || 0);
+  const correctCount = Number(data.correctCount || 0);
+  const wrongCount = Number(data.wrongCount || 0);
+  const category = String(data.category || '').trim();
+  const totalTime = Number(data.totalTime || 0);
+  const averageTime = Number(data.averageTime || 0);
+  const details = typeof data.details === 'string' ? data.details : JSON.stringify(data.details || []);
+
+  console.log('[Greek Upload] 準備上傳：', {
+    playerName,
+    score,
+    correctCount,
+    wrongCount,
+    category,
+    totalTime,
+    averageTime
+  });
+
+  if (!category) {
+    console.error('[Greek Upload] category 是空白，取消上傳');
+    return { success: false, message: '神祇類別為空白' };
+  }
+
   try {
-    const formData = new URLSearchParams();
-    formData.append('action', 'addGreekScore');
-    formData.append('playerName', playerName);
-    formData.append('score', score.toString());
-    formData.append('correctCount', correctCount.toString());
-    formData.append('wrongCount', wrongCount.toString());
-    formData.append('category', deityName);
-    formData.append('date', date);
-    formData.append('totalTime', totalTime.toString());
-    formData.append('averageTime', averageTime.toString());
-    if (details) {
-      formData.append('details', details);
-    }
-    
-    const response = await fetch(GREEK_SCORE_API, {
+    const params = new URLSearchParams();
+    params.set('action', 'addGreekScore');
+    params.set('playerName', playerName);
+    params.set('score', String(score));
+    params.set('correctCount', String(correctCount));
+    params.set('wrongCount', String(wrongCount));
+    params.set('category', category);
+    params.set('totalTime', String(totalTime));
+    params.set('averageTime', String(averageTime));
+    params.set('details', details);
+
+    console.log('[Greek Upload] request body:', params.toString());
+
+    await fetch(GREEK_SCORE_API, {
       method: 'POST',
-      mode: 'cors',
+      mode: 'no-cors',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
       },
-      body: formData.toString()
+      body: params.toString()
     });
-    
-    if (response.ok) {
-      console.log(`希臘神祇 ${deityName} 分數已成功上傳到 Google Sheets`);
-      return { success: true, message: '分數已上傳到排行榜！' };
-    } else {
-      console.error('上傳分數失敗');
-      return { success: false, message: '分數上傳失敗，請稍後再試' };
-    }
+
+    console.log(`📤 [Greek Upload] 希臘神祇 ${category} 資料已送往 Google Apps Script`);
+    console.log('注意：no-cors 模式無法由瀏覽器確認 Google Sheet 是否實際寫入');
+    return { success: true, message: '資料已送往 Google Apps Script' };
   } catch (error) {
-    console.error('上傳分數時發生錯誤:', error);
+    console.error('❌ [Greek Upload] request 無法送出', {
+      api: GREEK_SCORE_API,
+      playerName,
+      category,
+      score,
+      correctCount,
+      wrongCount,
+      totalTime,
+      error
+    });
     return { success: false, message: '分數上傳失敗，請檢查網路連線' };
   }
 }
@@ -374,8 +398,9 @@ function initGreekEndModalAutoHook() {
     if (handled) return;
     handled = true;
 
-    const currentPage = window.location.pathname.split('/').pop();
-    const deityName = GREEK_DEITY_NAMES[currentPage] || '未知神祇';
+    const urlParams = new URLSearchParams(window.location.search);
+    const godKey = urlParams.get('god') || '';
+    const deityName = GREEK_DEITY_NAMES[godKey] || '未知神祇';
     const playerName = getGreekPlayerName();
 
     const { score, correctCount, wrongCount, totalTime, answerLog } = detectGreekGameStatsFromGlobals();
@@ -432,3 +457,5 @@ if (typeof window !== 'undefined') {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { submitGreekScore, submitGreekScoreSimple, fetchGreekLeaderboard };
 }
+
+} // end guard: typeof window.greekScoreUploadModuleLoaded === 'undefined'

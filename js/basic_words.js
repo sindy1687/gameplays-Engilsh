@@ -168,5 +168,5 @@ const vocabData = {
     { zh: "裙子", en: "skirt" },
     { zh: "鞋子", en: "shoes" },
     { zh: "襪子", en: "socks" },
-     },
+     ]
 };

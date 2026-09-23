@@ -1,0 +1,550 @@
+/**
+ * 希臘神祇關卡共用版面樣式
+ */
+
+/* ===== 主容器 ===== */
+.greek-game-shell {
+  width: min(94%, 720px);
+  margin: 24px auto;
+  padding: 22px;
+  background: linear-gradient(145deg, rgba(11,15,30,.95), rgba(18,18,36,.92));
+  border: 1px solid rgba(255,215,0,.22);
+  border-radius: 22px;
+  box-shadow: 0 16px 42px rgba(0,0,0,.36), 0 0 20px rgba(255,215,0,.05);
+  box-sizing: border-box;
+}
+
+/* ===== HUD 頂部狀態列 ===== */
+.greek-stage-hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+}
+
+.hud-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hud-center {
+  text-align: center;
+  flex: 1;
+}
+
+.hud-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ===== 返回按鈕 ===== */
+.back-btn {
+  background: rgba(255,215,0,.15);
+  border: 1px solid rgba(255,215,0,.4);
+  color: #ffd700;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.back-btn:hover {
+  background: rgba(255,215,0,.25);
+  transform: translateY(-1px);
+}
+
+/* ===== 愛心面板 ===== */
+.heart-panel {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  border-radius: 14px;
+  background: rgba(255,70,90,.07);
+  border: 1px solid rgba(255,90,110,.25);
+  transition: all 0.3s;
+}
+
+.heart-panel.low-life {
+  border-color: rgba(255,80,80,.5);
+  background: rgba(255,80,80,.12);
+}
+
+.heart-panel.critical-life {
+  border-color: rgba(255,60,60,.7);
+  background: rgba(255,60,60,.18);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+#lives {
+  display: flex;
+  gap: 4px;
+  position: static;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+}
+
+.life-lost {
+  animation: heartLost 0.45s ease;
+}
+
+@keyframes heartLost {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.35) rotate(-8deg); }
+  100% { transform: scale(1); }
+}
+
+/* ===== 題目進度 ===== */
+.question-progress {
+  font-size: 0.95rem;
+  color: #c8c2ff;
+  font-weight: 500;
+}
+
+/* ===== 總星星顯示 ===== */
+.total-stars-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.95rem;
+  color: #ffd700;
+  font-weight: 600;
+}
+
+/* ===== 神祇標題區 ===== */
+.god-header {
+  text-align: center;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: rgba(255,255,255,.02);
+  border-radius: 16px;
+}
+
+.god-name-en {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffd700;
+  margin-bottom: 8px;
+  letter-spacing: 2px;
+}
+
+.god-name-zh {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.god-description {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 0.95rem;
+  color: #a8a0ff;
+  font-weight: 400;
+}
+
+/* ===== 關卡狀態列 ===== */
+.stage-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,.03);
+  border-radius: 12px;
+}
+
+.status-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.status-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ===== 題目卡片 ===== */
+.greek-question-card {
+  width: 100%;
+  padding: 24px 22px;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 18px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.question-title {
+  font-size: 0.9rem;
+  color: #a8a0ff;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.question-sentence {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  line-height: 1.5;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+  word-wrap: break-word;
+}
+
+.blank {
+  display: inline-block;
+  min-width: 80px;
+  padding: 0 8px;
+  border-bottom: 2px solid #00eaff;
+  color: #00eaff;
+  background: rgba(0,234,255,.1);
+}
+
+.question-zh {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 1rem;
+  color: #c8c2ff;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+/* ===== 答案輸入框 ===== */
+.answer-input,
+#user-input {
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 16px;
+  border-radius: 13px;
+  background: rgba(5,8,18,.8);
+  border: 1.5px solid rgba(0,234,255,.4);
+  color: #fff;
+  font-size: 1.05rem;
+  box-sizing: border-box;
+  transition: all 0.2s;
+}
+
+.answer-input:focus,
+#user-input:focus {
+  outline: none;
+  border-color: #00eaff;
+  box-shadow: 0 0 12px rgba(0,234,255,.3);
+}
+
+.answer-input:disabled,
+#user-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== 按鈕列 ===== */
+.greek-action-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.action-btn {
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 發音按鈕 - 青藍色 */
+.speak-btn {
+  background: linear-gradient(135deg, #00b4d8, #0077b6);
+  color: #fff;
+}
+
+.speak-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #00c4e8, #0087c6);
+  transform: translateY(-2px);
+}
+
+/* 跳過按鈕 - 灰紫色 */
+.skip-btn {
+  background: linear-gradient(135deg, #6b5b95, #4a4070);
+  color: #fff;
+}
+
+.skip-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #7b6ba5, #5a5080);
+  transform: translateY(-2px);
+}
+
+/* 提交按鈕 - 金色 */
+.submit-btn {
+  background: linear-gradient(135deg, #ffd700, #ffb700);
+  color: #111827;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ffe700, #ffc700);
+  transform: translateY(-2px);
+}
+
+/* 下一題按鈕 */
+.next-btn {
+  background: linear-gradient(135deg, #00c853, #009624);
+  color: #fff;
+}
+
+.next-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #00d863, #00a634);
+  transform: translateY(-2px);
+}
+
+/* ===== 回饋區 ===== */
+.feedback-area {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.02);
+}
+
+.feedback-box {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.feedback-correct {
+  background: rgba(76,175,80,.15);
+  border: 1px solid rgba(76,175,80,.4);
+  color: #81c784;
+}
+
+.feedback-wrong {
+  background: rgba(244,67,54,.15);
+  border: 1px solid rgba(244,67,54,.4);
+  color: #e57373;
+}
+
+.feedback-bonus {
+  color: #ffd700;
+  font-weight: 700;
+}
+
+/* ===== 進度條 ===== */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255,255,255,.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00eaff, #00b4d8);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* ===== 計時器 ===== */
+.timer-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.95rem;
+  color: #c8c2ff;
+  font-weight: 500;
+}
+
+.timer-warning {
+  color: #ff6b6b;
+  animation: timerPulse 1s ease-in-out infinite;
+}
+
+@keyframes timerPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* ===== 結束畫面 ===== */
+.end-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.end-content {
+  background: linear-gradient(145deg, rgba(11,15,30,.98), rgba(18,18,36,.95));
+  border: 2px solid rgba(255,215,0,.3);
+  border-radius: 24px;
+  padding: 40px;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,.5);
+}
+
+.end-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+}
+
+.end-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffd700;
+  margin-bottom: 24px;
+}
+
+.end-stats {
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.end-stats p {
+  margin: 10px 0;
+  font-size: 1rem;
+  color: #c8c2ff;
+}
+
+.end-stats span {
+  color: #fff;
+  font-weight: 600;
+}
+
+.end-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.end-btn {
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.end-btn-primary {
+  background: linear-gradient(135deg, #ffd700, #ffb700);
+  color: #111827;
+}
+
+.end-btn-secondary {
+  background: rgba(255,255,255,.1);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.2);
+}
+
+.end-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* ===== 手機版適配 ===== */
+@media (max-width: 600px) {
+  .greek-game-shell {
+    margin: 12px;
+    padding: 16px;
+  }
+
+  .greek-stage-hud {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .hud-left,
+  .hud-center,
+  .hud-right {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .stage-status {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .status-left,
+  .status-right {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .greek-action-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .submit-btn {
+    grid-column: 1 / -1;
+  }
+
+  .god-name-en {
+    font-size: 1.5rem;
+  }
+
+  .god-name-zh {
+    font-size: 1.1rem;
+  }
+
+  .question-sentence {
+    font-size: 1.2rem;
+  }
+
+  .end-content {
+    padding: 24px;
+  }
+
+  .end-buttons {
+    flex-direction: column;
+  }
+
+  .end-btn {
+    width: 100%;
+  }
+}
+
+/* ===== 防止水平捲動 ===== */
+html, body, .greek-game-shell, .greek-question-card {
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}

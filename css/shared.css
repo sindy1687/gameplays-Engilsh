@@ -1,0 +1,69 @@
+/* css/shared.css - 共用樣式 */
+
+/* 全局星星顯示 */
+.global-stars-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 8px 15px;
+    border-radius: 14px;
+    background: rgba(15, 22, 38, .92);
+    border: 1px solid rgba(255, 215, 60, .30);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .28);
+    color: #ffd83d;
+    font-size: 1.05rem;
+    font-weight: 900;
+    line-height: 1;
+    white-space: nowrap;
+    transition: transform 0.2s ease;
+}
+
+.global-star-icon {
+    font-size: 1.15rem;
+    line-height: 1;
+}
+
+.global-stars-value {
+    color: #ffd83d;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+}
+
+/* 星星更新動畫 */
+.global-stars-pill.star-updated {
+    animation: globalStarPulse .35s ease;
+}
+
+@keyframes globalStarPulse {
+    0% {
+        transform: scale(1);
+    }
+    45% {
+        transform: scale(1.08);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* 手機版 */
+@media (max-width: 600px) {
+    .global-stars-pill {
+        min-height: 38px;
+        padding: 7px 11px;
+        gap: 6px;
+        font-size: .92rem;
+        border-radius: 12px;
+    }
+    
+    .global-star-icon {
+        font-size: 1rem;
+    }
+    
+    .global-stars-value {
+        font-size: .92rem;
+    }
+}

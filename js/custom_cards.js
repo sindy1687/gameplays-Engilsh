@@ -14,7 +14,7 @@ window.customCards = [
     zh: "沙漠陸龜",
     rarity: "普通",
     category: "炎熱生物",
-    image: "img/cards/placeholder.jpg",
+    image: "img/cards/placeholder.svg",
     description: "能耐高溫與乾旱，壽命極長的沙漠爬蟲。"
   },
   {
@@ -23,7 +23,7 @@ window.customCards = [
     zh: "白羚羊",
     rarity: "超稀有",
     category: "炎熱生物",
-    image: "img/cards/placeholder.jpg",
+    image: "img/cards/placeholder.svg",
     description: "極度瀕危，能適應撒哈拉沙漠極端乾旱的羚羊。"
   }
 ]; 

@@ -16,18 +16,18 @@ const PROJECT_STORAGE_KEYS = [
   'bgMusicState',
   'musicVolume',
   'bgmPlaying',
-  'grammarSoundEnabled',
-  'grammarGameData',
   'vocabularyCorrectWords',
   'vocabularyCorrectWordsList',
-  'grammar_total_progress',
   'currentUser',
   'lastDailyReward',
   'checkedDates',
   'loginDays',
   'nameSet',
   'wordSpinGameData',
-  'autoBackupBeforeImport'
+  'autoBackupBeforeImport',
+  // 背包系統
+  'playerInventory',
+  'inventoryVersion'
 ];
 
 /**

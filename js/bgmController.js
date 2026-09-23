@@ -3,11 +3,13 @@
  * 用於所有需要背景音樂的頁面
  */
 
-const BGMController = {
-  audio: null,
-  isPlaying: false,
-  volume: 0.3,
-  defaultSrc: 'sound/午後放鬆時光（純音樂）.mp3',
+// 防止重複宣告
+if (typeof BGMController === 'undefined') {
+  const BGMController = {
+    audio: null,
+    isPlaying: false,
+    volume: 0.3,
+    defaultSrc: 'sound/午後放鬆時光（純音樂）.mp3',
   
   init(src = null, buttonId = 'bgMusicControl') {
     // 創建或獲取音頻元素
@@ -112,4 +114,6 @@ if (document.readyState === 'loading') {
 
 // 導出到全局
 window.BGMController = BGMController;
+
+} // 結束防重複宣告的 if 語句
 

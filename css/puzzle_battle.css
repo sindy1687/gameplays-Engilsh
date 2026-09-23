@@ -1,0 +1,1402 @@
+/* puzzle_battle.css - 轉珠冒險系統樣式 */
+
+:root {
+    --glow-cyan: #00ffff;
+    --glow-magenta: #ff00ff;
+    --glow-yellow: #ffd700;
+    --glow-red: #ff6b6b;
+    --dark-blue: #0a1428;
+    --medium-blue: #1a2a4a;
+    --light-blue: #2a4a8a;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    width: 100%;
+    min-height: 100vh;
+    font-family: 'Orbitron', sans-serif;
+    background: linear-gradient(135deg, #0a1428 0%, #1a2a4a 50%, #0a1428 100%);
+    color: #fff;
+    overflow-x: hidden;
+}
+
+/* 頂部資訊列 */
+.top-status-bar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(10, 20, 40, 0.95);
+    border-bottom: 2px solid rgba(0, 234, 255, 0.3);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.status-left, .status-center, .status-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.status-btn {
+    background: linear-gradient(45deg, #00ffff, #ff00ff);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: #000;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.status-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.4);
+}
+
+.status-title {
+    font-size: 1.3rem;
+    color: var(--glow-cyan);
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+}
+
+.status-label {
+    color: #ccc;
+}
+
+.status-value {
+    color: var(--glow-yellow);
+    font-weight: bold;
+}
+
+/* 主容器 */
+.main-container {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 遊戲畫面 */
+.game-screen {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(0, 234, 255, 0.3);
+    border-radius: 15px;
+    padding: 20px;
+    min-height: 600px;
+}
+
+.screen-title {
+    color: var(--glow-cyan);
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2rem;
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+/* 關卡地圖 */
+.stage-map {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.stage-node {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    font-size: 0.9rem;
+    position: relative;
+}
+
+.stage-node.locked {
+    background: rgba(100, 100, 100, 0.3);
+    border: 2px solid #666;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.stage-node.available {
+    background: rgba(0, 255, 255, 0.2);
+    border: 2px solid var(--glow-cyan);
+    color: var(--glow-cyan);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.stage-node.cleared {
+    background: rgba(0, 255, 0, 0.2);
+    border: 2px solid #00ff00;
+    color: #00ff00;
+}
+
+.stage-node.boss {
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 215, 0, 0.2);
+    border: 3px solid var(--glow-yellow);
+    color: var(--glow-yellow);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* 隊伍編成 */
+.team-section {
+    margin-bottom: 30px;
+}
+
+.team-section h3 {
+    color: var(--glow-cyan);
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.team-slots {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.team-slot {
+    width: 100px;
+    height: 140px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px dashed rgba(0, 234, 255, 0.5);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.team-slot.empty::before {
+    content: "+";
+    font-size: 2rem;
+    color: #666;
+}
+
+.team-slot:hover {
+    border-color: var(--glow-cyan);
+    background: rgba(0, 234, 255, 0.1);
+}
+
+.team-slot.filled {
+    border-style: solid;
+    border-color: var(--glow-cyan);
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 15px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.battle-card {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(0, 234, 255, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.battle-card:hover {
+    border-color: var(--glow-cyan);
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 234, 255, 0.3);
+}
+
+.battle-card.selected {
+    border-color: var(--glow-yellow);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+/* 卡片媒體容器 */
+.card-media-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 統一媒體樣式 */
+.card-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.card-image {
+    object-fit: cover;
+}
+
+.card-video {
+    pointer-events: none;
+    object-fit: cover;
+}
+
+.card-fallback {
+    background: rgba(0, 0, 0, 0.3);
+    color: #666;
+}
+
+.battle-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-element {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 1.2rem;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.team-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.action-btn {
+    background: linear-gradient(45deg, #00ffff, #ff00ff);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    color: #000;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 255, 255, 0.4);
+}
+
+/* 戰鬥畫面 */
+.battle-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+.battle-btn {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.battle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+}
+
+.battle-info {
+    display: flex;
+    gap: 20px;
+    color: #fff;
+    font-size: 1rem;
+}
+
+/* 敵人區 */
+.enemy-area {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+    min-height: 150px;
+    padding: 20px;
+    background: rgba(255, 0, 0, 0.1);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+.enemy-card {
+    width: 120px;
+    height: 150px;
+    background: rgba(255, 0, 0, 0.2);
+    border: 2px solid #ff4444;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    position: relative;
+}
+
+.enemy-hp-bar {
+    width: 100%;
+    height: 8px;
+    background: #333;
+    border-radius: 4px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.enemy-hp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff6b6b, #ff8e8e);
+    transition: width 0.3s ease;
+}
+
+.enemy-attack-cd {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: #ff6b6b;
+}
+
+/* 玩家隊伍區 */
+.player-team {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(0, 255, 0, 0.1);
+    border-radius: 10px;
+    border: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+.player-card {
+    width: 80px;
+    height: 100px;
+    background: rgba(0, 255, 0, 0.2);
+    border: 2px solid #44ff44;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.player-card:hover {
+    transform: scale(1.05);
+}
+
+.player-card.dead {
+    opacity: 0.5;
+    filter: grayscale(1);
+}
+
+.player-card img {
+    width: 100%;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.player-hp-bar {
+    width: 100%;
+    height: 4px;
+    background: #333;
+    border-radius: 2px;
+    margin-top: 3px;
+    overflow: hidden;
+}
+
+.player-hp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #44ff44, #88ff88);
+    transition: width 0.3s ease;
+}
+
+.player-skill-cd {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    color: #ffd700;
+}
+
+/* 轉珠盤面 */
+#puzzle-board-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.combo-display {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--glow-yellow);
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    margin-bottom: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.combo-display.active {
+    opacity: 1;
+}
+
+.puzzle-board {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 5px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    border-radius: 15px;
+    touch-action: none;
+    user-select: none;
+    width: 420px;
+    max-width: 90vw;
+    aspect-ratio: 6/5;
+}
+
+.puzzle-orb {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+.puzzle-orb:hover {
+    transform: scale(1.05);
+}
+
+.puzzle-orb.selected {
+    transform: scale(1.15);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    z-index: 10;
+}
+
+.puzzle-orb.matched {
+    animation: orbMatch 0.3s ease-out forwards;
+}
+
+@keyframes orbMatch {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.3);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+/* 珠子顏色 */
+.puzzle-orb.fire {
+    background: radial-gradient(circle at 30% 30%, #ff6b6b, #c0392b);
+    box-shadow: 0 0 10px rgba(255, 107, 107, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.3);
+    border: 2px solid #e74c3c;
+}
+
+.puzzle-orb.water {
+    background: radial-gradient(circle at 30% 30%, #4ecdc4, #2980b9);
+    box-shadow: 0 0 10px rgba(78, 205, 196, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.3);
+    border: 2px solid #3498db;
+}
+
+.puzzle-orb.wood {
+    background: radial-gradient(circle at 30% 30%, #2ecc71, #27ae60);
+    box-shadow: 0 0 10px rgba(46, 204, 113, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.3);
+    border: 2px solid #27ae60;
+}
+
+.puzzle-orb.light {
+    background: radial-gradient(circle at 30% 30%, #f1c40f, #f39c12);
+    box-shadow: 0 0 10px rgba(241, 196, 15, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.3);
+    border: 2px solid #f1c40f;
+}
+
+.puzzle-orb.dark {
+    background: radial-gradient(circle at 30% 30%, #9b59b6, #8e44ad);
+    box-shadow: 0 0 10px rgba(155, 89, 182, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.3);
+    border: 2px solid #9b59b6;
+}
+
+.puzzle-orb.heart {
+    background: radial-gradient(circle at 30% 30%, #ff69b4, #e91e63);
+    box-shadow: 0 0 10px rgba(255, 105, 180, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.3);
+    border: 2px solid #e91e63;
+}
+
+.puzzle-timer {
+    font-size: 1.5rem;
+    color: var(--glow-cyan);
+    font-weight: bold;
+    margin-top: 10px;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+/* 技能按鈕區 */
+.skill-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.skill-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--glow-cyan);
+    background: rgba(0, 234, 255, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    position: relative;
+}
+
+.skill-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(0, 234, 255, 0.5);
+}
+
+.skill-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.skill-btn.ready {
+    animation: skillReady 1s ease-in-out infinite;
+}
+
+@keyframes skillReady {
+    0%, 100% { box-shadow: 0 0 10px rgba(0, 234, 255, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(0, 234, 255, 0.8); }
+}
+
+.skill-cd {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+/* 結果畫面 */
+.result-content {
+    text-align: center;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.result-content h3 {
+    color: var(--glow-cyan);
+    margin-bottom: 15px;
+}
+
+.result-content p {
+    margin: 10px 0;
+    font-size: 1.1rem;
+}
+
+.result-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .top-status-bar {
+        flex-direction: column;
+        height: auto;
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .status-left, .status-center, .status-right {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .puzzle-board {
+        width: 100%;
+        max-width: 350px;
+    }
+
+    .team-slots {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .enemy-area {
+        flex-wrap: wrap;
+    }
+
+    .player-team {
+        flex-wrap: wrap;
+    }
+}
+
+/* ===============================
+   轉珠反饋與動畫
+   =============================== */
+
+/* 拖珠反饋 */
+.orb-dragging {
+    transform: scale(1.15);
+    filter: brightness(1.25);
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.8);
+    z-index: 50;
+    cursor: grabbing;
+}
+
+.orb-dragging::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    animation: pulse 0.5s ease-in-out infinite;
+}
+
+/* Ghost orb（跟隨手指的珠子） */
+.dragging-orb-ghost {
+    position: fixed;
+    pointer-events: none;
+    z-index: 100;
+    transform: scale(1.15);
+    filter: brightness(1.25);
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.8);
+    transition: transform 0.05s ease-out;
+}
+
+/* 交換動畫 */
+.orb-swap {
+    transition: transform 0.1s ease-out;
+}
+
+/* 消除動畫 */
+.orb-clearing {
+    animation: orbClear 0.3s ease-out forwards;
+}
+
+@keyframes orbClear {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    40% {
+        transform: scale(1.25);
+        filter: brightness(1.6);
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+/* 不同屬性的粒子效果 */
+.orb-clearing.fire {
+    animation: orbClearFire 0.3s ease-out forwards;
+}
+
+@keyframes orbClearFire {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    40% {
+        transform: scale(1.25);
+        filter: brightness(1.6) hue-rotate(0deg);
+        box-shadow: 0 0 20px rgba(255, 100, 0, 0.8);
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+.orb-clearing.water {
+    animation: orbClearWater 0.3s ease-out forwards;
+}
+
+@keyframes orbClearWater {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    40% {
+        transform: scale(1.25);
+        filter: brightness(1.6) hue-rotate(200deg);
+        box-shadow: 0 0 20px rgba(0, 150, 255, 0.8);
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+.orb-clearing.wood {
+    animation: orbClearWood 0.3s ease-out forwards;
+}
+
+@keyframes orbClearWood {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    40% {
+        transform: scale(1.25);
+        filter: brightness(1.6) hue-rotate(100deg);
+        box-shadow: 0 0 20px rgba(0, 200, 100, 0.8);
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+.orb-clearing.light {
+    animation: orbClearLight 0.3s ease-out forwards;
+}
+
+@keyframes orbClearLight {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    40% {
+        transform: scale(1.25);
+        filter: brightness(2);
+        box-shadow: 0 0 30px rgba(255, 255, 0, 0.9);
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+.orb-clearing.dark {
+    animation: orbClearDark 0.3s ease-out forwards;
+}
+
+@keyframes orbClearDark {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    40% {
+        transform: scale(1.25);
+        filter: brightness(1.6) hue-rotate(280deg);
+        box-shadow: 0 0 20px rgba(100, 0, 150, 0.8);
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+.orb-clearing.heart {
+    animation: orbClearHeart 0.3s ease-out forwards;
+}
+
+@keyframes orbClearHeart {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    40% {
+        transform: scale(1.25);
+        filter: brightness(1.6) hue-rotate(320deg);
+        box-shadow: 0 0 20px rgba(255, 50, 150, 0.8);
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+/* 珠子掉落動畫 */
+.orb-dropping {
+    animation: orbDrop 0.2s ease-out forwards;
+}
+
+@keyframes orbDrop {
+    0% {
+        transform: translateY(-80px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* 新珠補入動畫 */
+.orb-spawning {
+    animation: orbSpawn 0.25s ease-out forwards;
+}
+
+@keyframes orbSpawn {
+    0% {
+        transform: translateY(-60px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Combo 顯示 */
+.combo-display {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+    pointer-events: none;
+    z-index: 200;
+    animation: comboPop 0.5s ease-out forwards;
+}
+
+.combo-display.combo-1-3 {
+    color: #00ffff;
+}
+
+.combo-display.combo-4-6 {
+    color: #ff00ff;
+}
+
+.combo-display.combo-7-9 {
+    color: #ffd700;
+}
+
+.combo-display.combo-10-plus {
+    color: #ffffff;
+    text-shadow: 0 0 30px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 0, 255, 0.8);
+    animation: comboPopUltimate 0.6s ease-out forwards;
+}
+
+@keyframes comboPop {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes comboPopUltimate {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+    30% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 1;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.3);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0;
+    }
+}
+
+/* 天降提示 */
+.skyfall-display {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    pointer-events: none;
+    z-index: 200;
+    animation: skyfallPop 0.5s ease-out forwards;
+}
+
+@keyframes skyfallPop {
+    0% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0;
+    }
+}
+
+/* 時間進度條 */
+.timer-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+.timer-progress-fill {
+    height: 100%;
+    transition: width 0.1s linear, background-color 0.3s ease;
+}
+
+.timer-progress-fill.high {
+    background: linear-gradient(90deg, #00ffff, #00ff88);
+}
+
+.timer-progress-fill.medium {
+    background: linear-gradient(90deg, #ffff00, #ff8800);
+}
+
+.timer-progress-fill.low {
+    background: linear-gradient(90deg, #ff0000, #ff4400);
+    animation: timerPulse 0.5s ease-in-out infinite;
+}
+
+@keyframes timerPulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+/* 角色攻擊動畫 */
+.player-card.attacking {
+    animation: cardAttack 0.3s ease-out;
+}
+
+@keyframes cardAttack {
+    0% {
+        transform: translateX(0) scale(1);
+    }
+    50% {
+        transform: translateX(30px) scale(1.08);
+    }
+    100% {
+        transform: translateX(0) scale(1);
+    }
+}
+
+/* 敵人受擊反饋 */
+.enemy-card.hit {
+    animation: enemyHit 0.2s ease-out;
+}
+
+@keyframes enemyHit {
+    0% {
+        transform: translateX(0);
+        filter: brightness(1);
+    }
+    25% {
+        transform: translateX(-5px);
+        filter: brightness(2);
+    }
+    50% {
+        transform: translateX(5px);
+        filter: brightness(1.5);
+    }
+    75% {
+        transform: translateX(-3px);
+        filter: brightness(1.2);
+    }
+    100% {
+        transform: translateX(0);
+        filter: brightness(1);
+    }
+}
+
+/* HP 條平滑動畫 */
+.enemy-hp-fill {
+    transition: width 0.3s ease-out;
+}
+
+.player-hp-fill {
+    transition: width 0.3s ease-out;
+}
+
+/* 傷害數字 */
+.damage-number {
+    position: absolute;
+    font-size: 1.5rem;
+    font-weight: bold;
+    pointer-events: none;
+    z-index: 300;
+    animation: damageFloat 0.8s ease-out forwards;
+}
+
+.damage-number.normal {
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+.damage-number.weak {
+    color: #ffff00;
+    text-shadow: 0 0 10px rgba(255, 255, 0, 0.8);
+}
+
+.damage-number.resist {
+    color: #888888;
+    text-shadow: 0 0 10px rgba(100, 100, 100, 0.8);
+}
+
+.damage-number.critical {
+    color: #ffd700;
+    font-size: 2rem;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 1);
+    animation: damageFloatCritical 0.8s ease-out forwards;
+}
+
+@keyframes damageFloat {
+    0% {
+        transform: translateY(0) scale(0.8);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-30px) scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-60px) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes damageFloatCritical {
+    0% {
+        transform: translateY(0) scale(0.8);
+        opacity: 1;
+    }
+    30% {
+        transform: translateY(-20px) scale(1.5);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-80px) scale(1.2);
+        opacity: 0;
+    }
+}
+
+/* 回血數字 */
+.heal-number {
+    position: absolute;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #00ff00;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+    pointer-events: none;
+    z-index: 300;
+    animation: healFloat 0.8s ease-out forwards;
+}
+
+@keyframes healFloat {
+    0% {
+        transform: translateY(0) scale(0.8);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-30px) scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-60px) scale(1);
+        opacity: 0;
+    }
+}
+
+/* 擊殺反饋 */
+.enemy-card.defeated {
+    animation: enemyDefeated 0.5s ease-out forwards;
+}
+
+@keyframes enemyDefeated {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+        filter: brightness(1);
+    }
+    30% {
+        transform: scale(1.1);
+        opacity: 1;
+        filter: brightness(2);
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+        filter: brightness(0.5);
+    }
+}
+
+.defeated-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ff0000;
+    text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+    pointer-events: none;
+    z-index: 300;
+    animation: defeatedTextPop 0.5s ease-out forwards;
+}
+
+@keyframes defeatedTextPop {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0;
+    }
+}
+
+/* 技能 READY 閃爍 */
+.skill-btn.ready {
+    animation: skillReady 0.5s ease-in-out infinite;
+}
+
+@keyframes skillReady {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+    }
+}
+
+/* 轉珠時降低其他區塊亮度 */
+#battle-screen.dragging .enemy-area {
+    opacity: 0.85;
+    transition: opacity 0.2s ease;
+}
+
+#battle-screen.dragging .skill-buttons {
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+}
+
+#battle-screen.dragging .puzzle-board {
+    filter: brightness(1.1);
+    transition: filter 0.2s ease;
+}
+
+/* 空位視覺提示 */
+.puzzle-orb.empty-slot {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.25);
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+}
+
+/* 盤面視差效果 */
+.puzzle-board-container {
+    transition: transform 0.05s ease-out;
+}
+
+/* 脈衝動畫 */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.5;
+    }
+}
+
+/* 屬性結果顯示 */
+.element-result {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    pointer-events: none;
+    z-index: 200;
+    animation: elementResultPop 0.4s ease-out forwards;
+}
+
+.element-result-item {
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+@keyframes elementResultPop {
+    0% {
+        transform: translateX(-50%) translateY(-20px);
+        opacity: 0;
+    }
+    50% {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-50%) translateY(-20px);
+        opacity: 0;
+    }
+}
+
+/* 戰鬥結果快速顯示 */
+.battle-result-quick {
+    position: fixed;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px 25px;
+    border-radius: 10px;
+    border: 2px solid rgba(0, 234, 255, 0.5);
+    pointer-events: none;
+    z-index: 200;
+    animation: resultQuickPop 0.8s ease-out forwards;
+}
+
+.battle-result-quick h3 {
+    margin: 0 0 10px 0;
+    color: #00ffff;
+    font-size: 1.5rem;
+}
+
+.battle-result-quick p {
+    margin: 5px 0;
+    color: #ffffff;
+    font-size: 1.1rem;
+}
+
+@keyframes resultQuickPop {
+    0% {
+        transform: translateX(-50%) translateY(-20px);
+        opacity: 0;
+    }
+    20% {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+    80% {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-50%) translateY(-20px);
+        opacity: 0;
+    }
+}

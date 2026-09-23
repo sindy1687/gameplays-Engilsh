@@ -90,6 +90,7 @@ class AchievementSystem {
       { id: 'zodiac_legend', name: '星座傳奇', requirement: 20, reward: 200, icon: '🌠', type: 'zodiac_total', description: '通過所有星座關卡，成就傳奇' }
     );
     
+    if (window.AchievementProgress) AchievementProgress.extend(this.achievements);
     this.init();
   }
 
@@ -392,6 +393,10 @@ class AchievementSystem {
 
   // 檢查成就是否解鎖
   checkAchievementUnlocked(achievement, ownedCards, shards) {
+    if (window.AchievementProgress) {
+      const shared = AchievementProgress.progress(achievement);
+      if (shared !== null) return shared >= achievement.requirement;
+    }
     switch (achievement.type) {
       case 'collection':
       case 'special':
@@ -518,7 +523,7 @@ class AchievementSystem {
     }
     
     stars += reward;
-    localStorage.setItem('totalStars', stars);
+    window.StarSystem.setTotalStars(stars);
     claimed.push(achievement.id);
     localStorage.setItem('claimedAchievements', JSON.stringify(claimed));
     

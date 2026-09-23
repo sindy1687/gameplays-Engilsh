@@ -1,3 +1,7 @@
+// 使用 if 保護，避免此檔案被同一頁面重複載入時
+// 造成 "Identifier 'CharacterDialogue' has already been declared" 的 SyntaxError
+if (typeof window.CharacterDialogue === 'undefined') {
+
 const CharacterDialogue = {
   // 角色對話數據
   dialogues: {
@@ -189,95 +193,187 @@ const CharacterDialogue = {
     const dialogueBox = document.createElement('div');
     dialogueBox.id = 'character-dialogue-box';
     
-    const isMobile = window.innerWidth <= 768;
+    const isMobile = window.innerWidth <= 600;
     
     const mobileStyles = `
       position: fixed;
-      top: 10px;
-      right: 10px;
-      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-      border: 3px solid #333;
-      border-radius: 20px;
-      padding: 20px;
-      max-width: 85vw;
+      left: 12px;
+      right: 12px;
+      bottom: 82px;
       width: auto;
-      z-index: 10000;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      animation: bubbleAppear 0.5s ease-out;
-      font-family: 'Comic Sans MS', 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
+      max-height: 130px;
+      padding: 14px 15px;
+      border-radius: 16px;
+      background: rgba(10, 16, 30, 0.94);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.42);
+      backdrop-filter: blur(14px);
+      z-index: 700;
+      overflow-y: auto;
+      font-size: 0.95rem;
+      animation: dialogueIn 0.3s ease-out;
+      font-family: 'Segoe UI', 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
     `;
     
     const desktopStyles = `
       position: fixed;
-      top: 20px;
-      right: 20px;
-      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-      border: 3.5px solid #333;
-      border-radius: 28px;
-      padding: 36px;
-      max-width: 450px;
-      width: auto;
-      z-index: 10000;
-      box-shadow: 0 6px 32px rgba(0, 0, 0, 0.32);
-      animation: bubbleAppear 0.5s ease-out;
-      font-family: 'Comic Sans MS', 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
+      right: 24px;
+      bottom: 85px;
+      width: min(360px, calc(100vw - 32px));
+      max-height: 160px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(10, 16, 30, 0.94);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.42);
+      backdrop-filter: blur(14px);
+      z-index: 700;
+      overflow-y: auto;
+      font-size: 1rem;
+      animation: dialogueIn 0.3s ease-out;
+      font-family: 'Segoe UI', 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
     `;
     
     dialogueBox.style.cssText = isMobile ? mobileStyles : desktopStyles;
 
+    // 建立對話框內容
+    const dialogueContent = document.createElement('div');
+    dialogueContent.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    `;
+
+    // 建立標題區
+    const header = document.createElement('div');
+    header.className = 'dialogue-header';
+    header.style.cssText = `
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+    `;
+
+    const titleLeft = document.createElement('div');
+    titleLeft.style.cssText = `
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    `;
+
+    const icon = document.createElement('span');
+    icon.className = 'dialogue-icon';
+    icon.textContent = '🔥';
+    icon.style.cssText = `
+      font-size: 1.1rem;
+    `;
+
+    const name = document.createElement('strong');
+    name.textContent = characterName || '戰士';
+    name.style.cssText = `
+      font-size: 0.95rem;
+      color: #ffd700;
+    `;
+
+    titleLeft.appendChild(icon);
+    titleLeft.appendChild(name);
+
+    // 關閉按鈕
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'dialogue-close';
+    closeBtn.textContent = '×';
+    closeBtn.setAttribute('aria-label', '關閉提示');
+    closeBtn.style.cssText = `
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: color 0.2s ease;
+    `;
+    closeBtn.onmouseover = () => closeBtn.style.color = '#fff';
+    closeBtn.onmouseout = () => closeBtn.style.color = 'rgba(255, 255, 255, 0.6)';
+    closeBtn.onclick = () => this.hideDialogueBox();
+
+    header.appendChild(titleLeft);
+    header.appendChild(closeBtn);
+
+    // 建立訊息區
     const messageElement = document.createElement('div');
+    messageElement.className = 'dialogue-text';
     messageElement.style.cssText = `
-      font-size: ${isMobile ? '1rem' : '1.35rem'};
-      color: #333;
-      line-height: 1.7;
-      text-align: center;
-      font-weight: bold;
+      font-size: 1rem;
+      color: #fff;
+      line-height: 1.6;
+      font-weight: 700;
+      text-align: left;
       word-wrap: break-word;
     `;
     messageElement.textContent = message;
 
+    dialogueContent.appendChild(header);
+    dialogueContent.appendChild(messageElement);
+    dialogueBox.appendChild(dialogueContent);
+
     const style = document.createElement('style');
     style.textContent = `
-      @keyframes bubbleAppear {
+      @keyframes dialogueIn {
         from {
           opacity: 0;
-          transform: translateX(100px);
+          transform: translateY(10px);
         }
         to {
           opacity: 1;
-          transform: translateX(0);
+          transform: translateY(0);
         }
       }
       
-      @keyframes bubbleDisappear {
+      @keyframes dialogueOut {
         from {
           opacity: 1;
-          transform: translateX(0);
+          transform: translateY(0);
         }
         to {
           opacity: 0;
-          transform: translateX(100px);
+          transform: translateY(8px);
         }
+      }
+      
+      .dialogue-box.hide {
+        opacity: 0;
+        transform: translateY(8px);
+        pointer-events: none;
+        transition: opacity 0.22s ease, transform 0.22s ease;
       }
     `;
     document.head.appendChild(style);
 
-    dialogueBox.appendChild(messageElement);
     document.body.appendChild(dialogueBox);
 
+    // 自動消失
     setTimeout(() => {
       this.hideDialogueBox();
-    }, 5000);
+    }, 3500);
   },
 
   // 隱藏對話框
   hideDialogueBox() {
     const dialogueBox = document.getElementById('character-dialogue-box');
     if (dialogueBox) {
-      dialogueBox.style.animation = 'bubbleDisappear 0.3s ease-out';
+      dialogueBox.style.animation = 'dialogueOut 0.22s ease-out';
       setTimeout(() => {
         dialogueBox.remove();
-      }, 300);
+      }, 220);
     }
   },
 
@@ -340,3 +436,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 導出到全局
 window.CharacterDialogue = CharacterDialogue;
+
+} // end guard: typeof window.CharacterDialogue === 'undefined'
