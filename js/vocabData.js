@@ -2,7 +2,7 @@ const vocabData = {
   aries: [
     { zh: "我", en: "I" }, { zh: "你；你們", en: "you" }, { zh: "他", en: "he" }, { zh: "她", en: "she" },
     { zh: "牠；它", en: "it" }, { zh: "我們", en: "we" }, { zh: "他們", en: "they" }, { zh: "男孩", en: "boy" },
-    { zh: "女孩", en: "girl" }, { zh: "嬰兒", en: "baby" }, { zh: "一個", en: "an" }, { zh: "一個", en: "a an" },
+    { zh: "女孩", en: "girl" }, { zh: "嬰兒", en: "baby" }, { zh: "一個", en: "an" }, { zh: "一個", en: "an" },
     { zh: "這 那", en: "the" }, { zh: "這", en: "this" }, { zh: "那", en: "that" }, { zh: "這些", en: "these" },
     { zh: "那些", en: "those" }, { zh: "是；成為", en: "be" }, { zh: "是", en: "is" }, { zh: "是", en: "are" },
     { zh: "助動詞", en: "do" }, { zh: "做", en: "does" }, { zh: "爸爸", en: "father" }, { zh: "媽媽", en: "mother" }

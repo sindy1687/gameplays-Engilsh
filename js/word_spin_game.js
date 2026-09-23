@@ -1073,7 +1073,7 @@ function showExchangeShop() {
                         const currentStars = parseInt(savedStars);
                         const deductFromLocalStorage = Math.min(remainingStars, currentStars);
                         if (deductFromLocalStorage > 0) {
-                            localStorage.setItem('totalStars', (currentStars - deductFromLocalStorage).toString());
+                            window.StarSystem.setTotalStars((currentStars - deductFromLocalStorage).toString());
                         }
                     }
                 } catch (error) {

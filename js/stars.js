@@ -7,6 +7,13 @@
 (function(window) {
   'use strict';
 
+  if (window.StarSystem) return;
+
+  function validStars(value) {
+    const number = Number(value);
+    return Number.isFinite(number) ? Math.max(0, number) : 0;
+  }
+
   // ================================
   // 基礎星星管理函式
   // ================================
@@ -16,7 +23,7 @@
    * @returns {number} 總星星數
    */
   function getTotalStars() {
-    return Number(localStorage.getItem('totalStars') || 0);
+    return validStars(localStorage.getItem('totalStars'));
   }
 
   /**
@@ -25,9 +32,13 @@
    * @returns {number} 設定後的星星數
    */
   function setTotalStars(value) {
-    const nextValue = Math.max(0, Number(value || 0));
+    const number = Number(value);
+    if (!Number.isFinite(number)) return getTotalStars();
+    const previousValue = getTotalStars();
+    const nextValue = validStars(number);
     localStorage.setItem('totalStars', String(nextValue));
     updateAllStarDisplays();
+    if (previousValue !== nextValue) dispatchStarsChanged(previousValue, nextValue);
     return nextValue;
   }
 
@@ -149,8 +160,8 @@
     const accuracy = correctCount / totalCount;
 
     if (accuracy >= 0.95) return 3;
-    if (accuracy >= 0.8) return 2;
-    if (accuracy >= 0.75) return 1;
+    if (accuracy >= 0.90) return 2;
+    if (accuracy >= 0.80) return 1;
 
     return 0;
   }
@@ -195,9 +206,10 @@
     }
 
     const addedStars = Math.max(0, Number(newStars || 0) - oldStars);
+    const newBestStars = Math.max(oldStars, newStars);
 
     if (addedStars > 0) {
-      setLevelBestStars(levelId, newStars);
+      setLevelBestStars(levelId, newBestStars);
       addTotalStars(addedStars, `第 ${levelId} 關刷新星數`);
     } else {
       console.log(`[星星系統] 沒有超過歷史最高星數，不加星星（舊紀錄 ${oldStars} 星，本次 ${newStars} 星）`);
@@ -206,7 +218,7 @@
     return {
       addedStars,
       oldStars,
-      newBestStars: Math.max(oldStars, newStars),
+      newBestStars,
       totalStars: getTotalStars(),
       reason: addedStars > 0
         ? '補差額星星'
@@ -227,6 +239,9 @@
     // 更新常見的星星顯示元素
     const selectors = [
       '[data-star-display]',
+      '[data-global-stars-value]',
+      '[data-asset-value="stars"]',
+      '#stars',
       '#totalStarsDisplay',
       '#starCount',
       '#starsDisplay',
@@ -238,7 +253,9 @@
 
     selectors.forEach(selector => {
       document.querySelectorAll(selector).forEach(el => {
-        el.textContent = total;
+        // Never replace a canvas or a container holding icons, labels or buttons.
+        if (el.children.length || /^(CANVAS|INPUT|SELECT|TEXTAREA)$/.test(el.tagName)) return;
+        el.textContent = el.id === 'totalStarsCount' ? `⭐ ${total}` : String(total);
       });
     });
   }
@@ -256,7 +273,7 @@
    */
   function logStarTransaction(type, amount, reason, meta = {}) {
     const key = 'starTransactions';
-    const list = JSON.parse(localStorage.getItem(key) || '[]');
+    const list = getStarTransactions();
 
     list.unshift({
       id: `star_tx_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
@@ -277,7 +294,12 @@
    * @returns {Array} 交易紀錄陣列
    */
   function getStarTransactions() {
-    return JSON.parse(localStorage.getItem('starTransactions') || '[]');
+    try {
+      const list = JSON.parse(localStorage.getItem('starTransactions') || '[]');
+      return Array.isArray(list) ? list : [];
+    } catch {
+      return [];
+    }
   }
 
   // ================================
@@ -366,6 +388,37 @@
     updateAllStarDisplays();
   }
 
-  console.log('[星星系統] 已載入全站共用星星系統');
+  // 跨分頁同步：監聽 localStorage 變化
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'totalStars' || e.key === null) {
+      console.log('[星星系統] 檢測到跨分頁星星變化:', e.key);
+      updateAllStarDisplays();
+    }
+  });
+
+  // 頁面可見性變化時更新星星（當用戶切換回此頁面時）
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      updateAllStarDisplays();
+    }
+  });
+
+  // 發送星星變更事件（用於同頁面內的同步）
+  function dispatchStarsChanged(oldValue, newValue) {
+    const event = new CustomEvent('starsChanged', {
+      detail: {
+        stars: newValue,
+        oldValue,
+        newValue,
+        delta: newValue - oldValue
+      }
+    });
+    window.dispatchEvent(event);
+    window.dispatchEvent(new CustomEvent('globalStarsChanged', {
+      detail: { oldValue, newValue, delta: newValue - oldValue, reason: 'star_system' }
+    }));
+  }
+
+  console.log('[星星系統] 已載入全站共用星星系統（含跨分頁同步）');
 
 })(typeof window !== 'undefined' ? window : this);

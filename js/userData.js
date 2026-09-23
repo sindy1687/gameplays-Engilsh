@@ -82,13 +82,19 @@ function checkAchievements() {
     
     achievements.forEach(achievement => {
       if (achievement.condition && !claimedAchievements[achievement.id]) {
-        let stars = parseInt(localStorage.getItem("totalStars") || "0");
-        stars += achievement.reward;
-        localStorage.setItem("totalStars", stars.toString());
+        // 使用統一星星系統
+        if (typeof window.StarSystem !== 'undefined' && window.StarSystem.addTotalStars) {
+          window.StarSystem.addTotalStars(achievement.reward, `成就解鎖：${achievement.title}`);
+        } else {
+          // 備用方案：直接操作 localStorage
+          let stars = parseInt(localStorage.getItem("totalStars") || "0");
+          stars += achievement.reward;
+          window.StarSystem.setTotalStars(stars.toString());
+        }
 
         claimedAchievements[achievement.id] = true;
         newAchievementUnlocked = true;
-        
+
         // 使用一個全局的通知函數（如果存在）
         if (typeof showNotification === 'function') {
           showNotification(`🏆 成就解鎖：${achievement.title}！獲得 ${achievement.reward} 顆星星`, 'success');
@@ -440,6 +446,9 @@ function updateStars() {
 }
 
 // ===== 連動系統管理 =====
+// 使用 if 保護，避免此檔案被同一頁面重複載入時
+// 造成 "Identifier 'LinkageSystem' has already been declared" 的 SyntaxError
+if (typeof window.LinkageSystem === 'undefined') {
 
 /**
  * 連動系統管理器
@@ -447,43 +456,11 @@ function updateStars() {
 const LinkageSystem = {
     // 星星系統
     stars: {
-        get: () => parseInt(localStorage.getItem("totalStars") || "0"),
-        set: (amount) => {
-            localStorage.setItem("totalStars", amount.toString());
-            LinkageSystem.stars.updateDisplay();
-        },
-        add: (amount) => {
-            const current = LinkageSystem.stars.get();
-            LinkageSystem.stars.set(current + amount);
-        },
-        subtract: (amount) => {
-            const current = LinkageSystem.stars.get();
-            if (current >= amount) {
-                LinkageSystem.stars.set(current - amount);
-                return true;
-            }
-            return false;
-        },
-        updateDisplay: () => {
-            // 更新所有可能的星星顯示元素
-            const elements = [
-                document.getElementById("stars"),
-                document.getElementById("totalStarsCount"),
-                document.getElementById("starCount"),
-                document.querySelector("#starCount span")
-            ];
-            const currentStars = LinkageSystem.stars.get();
-            elements.forEach(el => {
-                if (el) {
-                    // 為 totalStarsCount 元素加上星星符號
-                    if (el.id === 'totalStarsCount') {
-                        el.textContent = `⭐ ${currentStars}`;
-                    } else {
-                        el.textContent = currentStars;
-                    }
-                }
-            });
-        }
+        get: () => window.StarSystem.getTotalStars(),
+        set: (amount) => window.StarSystem.setTotalStars(amount),
+        add: (amount) => window.StarSystem.addTotalStars(amount, 'LinkageSystem'),
+        subtract: (amount) => window.StarSystem.spendTotalStars(amount, 'LinkageSystem').ok,
+        updateDisplay: () => window.StarSystem.updateAllStarDisplays()
     },
 
     // 玩家資料系統
@@ -915,3 +892,5 @@ window.userDataModuleLoaded = true;
 
 // 將 LinkageSystem 暴露到 window 物件，讓其他腳本可以使用
 window.LinkageSystem = LinkageSystem;
+
+} // end guard: typeof window.LinkageSystem === 'undefined'
